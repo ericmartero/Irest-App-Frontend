@@ -1,5 +1,6 @@
+import React from 'react';
+import { Navigation } from './routes';
 import './App.scss';
-
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 
@@ -30,7 +31,7 @@ export function Login() {
 function App() {
   return (
     <div className="App">
-      <Login />
+      <Navigation/>
     </div>
   );
 }
