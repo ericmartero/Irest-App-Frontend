@@ -1,29 +1,47 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
+import { Toast } from 'primereact/toast';
+import { loginApi } from '../../../api/auth';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import './LoginAdmin.scss';
+import './LoginError.scss';
 
 export function LoginAdmin() {
+
+  const toastError = useRef(null);
+
+  const showError = (error) => {
+    toastError.current.show({severity:'error', summary: 'Error al iniciar sessión', detail: error.message, life: 3000});
+  }
 
   const formik = useFormik({
     initialValues: {
       email: '',
       password: '',
     },
+
     validationSchema: Yup.object({
       email: Yup.string().email(true).required(true),
       password: Yup.string().required(true),
     }),
-    onSubmit: (values) => {
-      console.log('Loign enviado');
-      console.log(values);
+
+    onSubmit: async (values) => {
+      try {
+        const response = await loginApi(values);
+        const { token } = response;
+        console.log(token);
+
+      } catch (error) {
+        showError(error);
+      }
     }
   });
 
   return (
     <div>
+      <Toast ref={toastError} position="bottom-center" className="toast"/>
       <div className="flex align-items-center justify-content-center h-screen">
         <div className="surface-card p-4 shadow-2 border-round w-full lg:w-6 mx-auto">
           <div className="text-center mb-5">
