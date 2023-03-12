@@ -19,6 +19,12 @@ export function AuthProvider(props) {
             const token = getToken();
             if (token) {
                 const me = await getMe(token);
+
+                if (me.statusCode === 401) {
+                    setAuth(null);
+                    return;
+                }
+
                 setAuth({token, me});
             }
 
@@ -26,7 +32,7 @@ export function AuthProvider(props) {
                 setAuth(null);
             }
         })()
-    }, [])
+    }, [getMe])
 
     const login = async (token) => {
         setToken(token);
