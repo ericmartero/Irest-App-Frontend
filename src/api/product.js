@@ -1,3 +1,5 @@
+import { updateImage } from "../helpers/updateImage";
+
 const HOST_API = process.env.REACT_APP_HOST_API;
 
 export const getProductsApi = async() => {
@@ -14,8 +16,69 @@ export const getProductsApi = async() => {
 }
 
 export const addProductApi = async(dtoAddProduct, token) => {
+    const { image, ...product } = dtoAddProduct;
+
     try {
+        // Cloudinary API
+        const urlImage = await updateImage(image);
+
+        // iRest API
         const url = `${HOST_API}/api/products`;
+        const params = {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            body: {
+                ...product,
+                urlImage
+            }
+        }
+
+        const resp = await fetch(url, params);
+        const result = await resp.json();
+
+        return result;
+
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const updateProductApi = async(id, dtoUpdateProduct, token) => {
+    const { image, ...product } = dtoUpdateProduct;
+
+    try {
+        let urlImage;
+        let bodyProduct;
+
+        if (image) {
+            urlImage = await updateImage(image);
+            bodyProduct = {
+                ...product,
+                urlImage
+            }
+        } else {
+            bodyProduct = {
+                ...product
+            }
+        }
+
+        // iRest API
+        const url = `${HOST_API}/api/products/${id}`;
+        const params = {
+            method: 'PATCH',
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            body: bodyProduct
+        }
+
+        const resp = await fetch(url, params);
+        const result = await resp.json();
+
+        return result;
+
     } catch (error) {
         throw error;
     }
