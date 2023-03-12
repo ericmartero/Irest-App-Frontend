@@ -45,7 +45,7 @@ export function LoginAdmin() {
       <div className="flex align-items-center justify-content-center h-screen">
         <div className="surface-card p-4 shadow-2 border-round w-full lg:w-6 mx-auto">
           <div className="text-center mb-5">
-            <img src="https://res.cloudinary.com/djwjh0wpw/image/upload/v1678566572/logo_b3jhhd.png" alt="hyper" height={110} className="mb-3" />
+            <img src="https://res.cloudinary.com/djwjh0wpw/image/upload/v1678620459/irest-logo-white_ys7y6y.png" alt="hyper" height={110} className="mb-3" />
             <div className="text-900 text-3xl font-medium mb-3">Panel de control</div>
             <span className="text-600 font-medium line-height-3">Inicia sesión para acceder al panel de control.</span>
           </div>

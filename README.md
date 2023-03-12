@@ -1,5 +1,5 @@
-<p align="center">
-  <a href="https://irest.netlify.app" target="blank"><img src="./public/logo512.png" width="200" alt="iRest Logo" /></a>
+<p>
+  <a href="https://irest.netlify.app" target="blank"><img src="./public/favicon.ico" width="130" alt="iRest Logo" /></a>
 </p>
 
 # iRest APP
