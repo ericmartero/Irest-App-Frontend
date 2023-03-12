@@ -11,6 +11,7 @@ import './LoginError.scss';
 
 export function LoginAdmin() {
 
+  const { login } = useAuth();
   const toastError = useRef(null);
 
   const showError = (error) => {
@@ -32,7 +33,7 @@ export function LoginAdmin() {
       try {
         const response = await loginApi(values);
         const { token } = response;
-        console.log(token);
+        login(token);
 
       } catch (error) {
         showError(error);
