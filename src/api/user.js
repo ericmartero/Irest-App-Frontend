@@ -1,8 +1,8 @@
-import { BASE_API } from "../utils/constants";
+const HOST_API = process.env.REACT_APP_HOST_API;
 
 export const getUsersApi = async(token) => {
     try {
-        const url = `${BASE_API}/api/users`;
+        const url = `${HOST_API}/api/users`;
         const params = {
             headers: {
                 Authorization: `Bearer ${token}`
@@ -19,7 +19,7 @@ export const getUsersApi = async(token) => {
 
 export const addUserApi = async(dtoAddUser, token) => {
     try {
-        const url = `${BASE_API}/api/users`;
+        const url = `${HOST_API}/api/users`;
         const params = {
             method: 'POST',
             headers: {
@@ -39,7 +39,7 @@ export const addUserApi = async(dtoAddUser, token) => {
 
 export const updateUserApi = async(id, dtoUpdateUser, token) => {
     try {
-        const url = `${BASE_API}/api/users/${id}`;
+        const url = `${HOST_API}/api/users/${id}`;
         const params = {
             method: 'PATCH',
             headers: {
@@ -59,7 +59,7 @@ export const updateUserApi = async(id, dtoUpdateUser, token) => {
 
 export const deleteUserApi = async(id, token) => {
     try {
-        const url = `${BASE_API}/api/users/${id}`;
+        const url = `${HOST_API}/api/users/${id}`;
         const params = {
             method: 'DELETE',
             headers: {

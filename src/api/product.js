@@ -1,8 +1,8 @@
-import { BASE_API } from '../utils/constants';
+const HOST_API = process.env.REACT_APP_HOST_API;
 
 export const getProductsApi = async() => {
     try {
-        const url = `${BASE_API}/api/products`;
+        const url = `${HOST_API}/api/products`;
         const resp = await fetch(url);
         const result = await resp.json();
 
@@ -15,7 +15,7 @@ export const getProductsApi = async() => {
 
 export const addProductApi = async(dtoAddProduct, token) => {
     try {
-        const url = `${BASE_API}/api/products`;
+        const url = `${HOST_API}/api/products`;
     } catch (error) {
         throw error;
     }
@@ -23,7 +23,7 @@ export const addProductApi = async(dtoAddProduct, token) => {
 
 export const deleteProductApi = async(id, token) => {
     try {
-        const url = `${BASE_API}/api/products/${id}`;
+        const url = `${HOST_API}/api/products/${id}`;
         const params = {
             method: 'DELETE',
             headers: {
@@ -43,7 +43,7 @@ export const deleteProductApi = async(id, token) => {
 
 export const getProductByIdApi = async(id) => {
     try {
-        const url = `${BASE_API}/api/products/${id}`;
+        const url = `${HOST_API}/api/products/${id}`;
         const resp = await fetch(url);
         const result = await resp.json();
 

@@ -1,4 +1,4 @@
-import { TOKEN } from "../utils/constants"
+const TOKEN = process.env.REACT_APP_TOKEN;
 
 export const getToken = () => {
     return localStorage.getItem(TOKEN);

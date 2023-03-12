@@ -1,8 +1,8 @@
-import { BASE_API } from "../utils/constants";
+const HOST_API = process.env.REACT_APP_HOST_API;
 
 export const loginApi = async(dtoLogin) => {
     try {
-        const url = `${BASE_API}/api/auth/login`;
+        const url = `${HOST_API}/api/auth/login`;
         const params = {
             method: 'POST',
             headers: {
@@ -26,7 +26,7 @@ export const loginApi = async(dtoLogin) => {
 
 export const getMeApi = async(token) => {
     try {
-        const url = `${BASE_API}/api/auth/me`;
+        const url = `${HOST_API}/api/auth/me`;
         const params = {
             headers: {
                 Authorization: `Bearer ${token}`

@@ -1,9 +1,10 @@
 import { updateImage } from "../helpers/updateImage";
-import { BASE_API } from "../utils/constants";
+
+const HOST_API = process.env.REACT_APP_HOST_API;
 
 export const getCategoriesApi = async() => {
     try {
-        const url = `${BASE_API}/api/categories`;
+        const url = `${HOST_API}/api/categories`;
         const resp = await fetch(url);
         const result = await resp.json();
 
@@ -22,7 +23,7 @@ export const addCategoryApi = async(dtoAddCategory, token) => {
         const urlImage = await updateImage(image);
 
         // iRest API
-        const url = `${BASE_API}/api/categories`;
+        const url = `${HOST_API}/api/categories`;
         const params = {
             method: 'POST',
             headers: {
@@ -64,7 +65,7 @@ export const updateCategoryApi = async(id, dtoUpdateCategory, token) => {
         }
 
         // iRest API
-        const url = `${BASE_API}/api/categories/${id}`;
+        const url = `${HOST_API}/api/categories/${id}`;
         const params = {
             method: 'PATCH',
             headers: {
@@ -85,7 +86,7 @@ export const updateCategoryApi = async(id, dtoUpdateCategory, token) => {
 
 export const deleteCategoryApi = async(id, token) => {
     try {
-        const url = `${BASE_API}/api/categories/${id}`;
+        const url = `${HOST_API}/api/categories/${id}`;
         const params = {
             method: 'DELETE',
             headers: {
@@ -105,7 +106,7 @@ export const deleteCategoryApi = async(id, token) => {
 
 export const getCategoryByIdApi = async(id) => {
     try {
-        const url = `${BASE_API}/api/categories/${id}`;
+        const url = `${HOST_API}/api/categories/${id}`;
         const resp = await fetch(url);
         const result = await resp.json();
 
