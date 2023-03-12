@@ -1,12 +1,13 @@
 import React from 'react';
 import { Navigation } from './routes';
 import './App.scss';
+import { AuthProvider } from './context';
 
 function App() {
   return (
-    <div className="App">
+    <AuthProvider>
       <Navigation/>
-    </div>
+    </AuthProvider>
   );
 }
 
