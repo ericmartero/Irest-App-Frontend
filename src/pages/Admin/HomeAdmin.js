@@ -1,9 +1,9 @@
 import React from 'react';
 
-export function LoginAdmin() {
+export function HomeAdmin() {
   return (
     <div>
-        <p>LoginAdmin</p>
+        <h1>Home Admin</h1>
     </div>
   )
 }
