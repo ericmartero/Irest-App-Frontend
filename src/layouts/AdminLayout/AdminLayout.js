@@ -19,7 +19,7 @@ export function AdminLayout(props) {
         {
             label: 'UI Components', icon: 'pi pi-fw pi-sitemap',
             items: [
-                { label: 'Form Layout', icon: 'pi pi-fw pi-id-card', to: '/formlayout' },
+                { label: 'Usuarios', icon: 'pi pi-fw pi-id-card', to: '/admin/users' },
                 { label: 'Input', icon: 'pi pi-fw pi-check-square', to: '/input' },
                 { label: "Float Label", icon: "pi pi-fw pi-bookmark", to: "/floatlabel" },
                 { label: "Invalid State", icon: "pi pi-fw pi-exclamation-circle", to: "invalidstate" },
