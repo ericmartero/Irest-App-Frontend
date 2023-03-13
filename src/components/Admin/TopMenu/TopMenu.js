@@ -6,7 +6,15 @@ import './TopMenu.scss';
 
 export function TopMenu() {
 
-  const { logout } = useAuth();
+  const { logout, auth } = useAuth();
+
+  const renderName = () => {
+    if (auth.me?.user.firstName && auth.me?.user.lastName) {
+      return `${auth.me.user.firstName} ${auth.me.user.lastName}`;
+    }
+
+    return auth.me?.user.email;
+  };
 
   return (
     <div className="layout-topbar">
@@ -25,10 +33,10 @@ export function TopMenu() {
 
       <ul className="layout-topbar-menu lg:flex origin-top">
         <li style={{ display: "flex", alignItems: "center" }}>
-          <Chip label="Eric Mengual" icon="pi pi-user" className="mr-3" />
+          <Chip label={renderName()} icon="pi pi-user" className="mr-3" />
         </li>
         <li>
-          <Button icon="pi pi-sign-out" className="p-button-rounded p-button-danger mr-2" onClick={logout} />
+          <Button icon="pi pi-sign-out" className="p-button-rounded p-button-secondary mr-2" onClick={logout} />
         </li>
       </ul>
     </div>
