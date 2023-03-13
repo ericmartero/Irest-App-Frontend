@@ -44,10 +44,6 @@ export function UsersAdmin() {
     getUsers();
   }, [])
 
-  const formatCurrency = (value) => {
-    return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-  }
-
   const openNew = () => {
     setProduct(emptyProduct);
     setSubmitted(false);
@@ -189,38 +185,29 @@ export function UsersAdmin() {
     )
   }
 
-  const codeBodyTemplate = (rowData) => {
+  const nombreBodyTemplate = (rowData) => {
     return (
       <>
-        <span className="p-column-title">Code</span>
+        <span className="p-column-title">Nombre</span>
         {rowData.code}
       </>
     );
   }
 
-  const nameBodyTemplate = (rowData) => {
+  const apellidosBodyTemplate = (rowData) => {
     return (
       <>
-        <span className="p-column-title">Name</span>
+        <span className="p-column-title">Apellidos</span>
         {rowData.name}
       </>
     );
   }
 
-  const imageBodyTemplate = (rowData) => {
+  const emailBodyTemplate = (rowData) => {
     return (
       <>
-        <span className="p-column-title">Image</span>
-        <img src={`assets/demo/images/product/${rowData.image}`} alt={rowData.image} className="shadow-2" width="100" />
-      </>
-    )
-  }
-
-  const priceBodyTemplate = (rowData) => {
-    return (
-      <>
-        <span className="p-column-title">Price</span>
-        {formatCurrency(rowData.price)}
+        <span className="p-column-title">Email</span>
+        {rowData.name}
       </>
     );
   }
@@ -303,12 +290,11 @@ export function UsersAdmin() {
             currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} usuarios"
             globalFilter={globalFilter} emptyMessage="No hay usuarios en el sistema." header={header} responsiveLayout="scroll">
             <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
-            <Column field="code" header="Code" sortable body={codeBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-            <Column field="name" header="Name" sortable body={nameBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-            <Column header="Image" body={imageBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-            <Column field="price" header="Price" body={priceBodyTemplate} sortable headerStyle={{ width: '14%', minWidth: '8rem' }}></Column>
+            <Column field="nombre" header="Nombre" sortable body={nombreBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+            <Column field="apellidos" header="Apellidos" sortable body={apellidosBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+            <Column field="email" header="Email" sortable body={emailBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
             <Column field="category" header="Category" sortable body={categoryBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-            <Column field="rating" header="Reviews" body={ratingBodyTemplate} sortable headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+            <Column field="rating" header="Reviews" body={ratingBodyTemplate} sortable headerStyle={{ width: '14%', minWidth: '11rem' }}></Column>
             <Column field="inventoryStatus" header="Status" body={statusBodyTemplate} sortable headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
             <Column body={actionBodyTemplate}></Column>
           </DataTable>
