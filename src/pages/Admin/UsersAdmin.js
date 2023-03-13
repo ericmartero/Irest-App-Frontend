@@ -41,7 +41,8 @@ export function UsersAdmin() {
 
   useEffect(() => {
     getUsers();
-  }, [])
+    setProducts(users);
+  }, [users])
 
   const openNew = () => {
     setProduct(emptyProduct);
@@ -279,13 +280,12 @@ export function UsersAdmin() {
             paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
             currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} usuarios"
             globalFilter={globalFilter} emptyMessage="No hay usuarios en el sistema." header={header} responsiveLayout="scroll">
-            <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
-            <Column field="nombre" header="Nombre" sortable body={nombreBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-            <Column field="apellidos" header="Apellidos" sortable body={apellidosBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-            <Column field="email" header="Email" sortable body={emailBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-            <Column field="activo" header="Activo" sortable body={activoBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-            <Column field="rol" header="Rol" body={rolBodyTemplate} sortable headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-            <Column body={actionBodyTemplate}></Column>
+            <Column field="id" header="ID" />
+            <Column field="email" header="Email" />
+            <Column field="firstName" header="First Name" />
+            <Column field="lastName" header="Last Name" />
+            <Column field="isActive" header="Active" />
+            <Column field="roles" header="Roles" />
           </DataTable>
 
           <Dialog visible={productDialog} style={{ width: '450px' }} header="Product Details" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
