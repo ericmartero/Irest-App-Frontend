@@ -5,7 +5,6 @@ import { Column } from 'primereact/column';
 import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
 import { FileUpload } from 'primereact/fileupload';
-import { Rating } from 'primereact/rating';
 import { Toolbar } from 'primereact/toolbar';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { RadioButton } from 'primereact/radiobutton';
@@ -212,28 +211,19 @@ export function UsersAdmin() {
     );
   }
 
-  const categoryBodyTemplate = (rowData) => {
+  const activoBodyTemplate = (rowData) => {
     return (
       <>
-        <span className="p-column-title">Category</span>
+        <span className="p-column-title">Activo</span>
         {rowData.category}
       </>
     );
   }
 
-  const ratingBodyTemplate = (rowData) => {
+  const rolBodyTemplate = (rowData) => {
     return (
       <>
-        <span className="p-column-title">Reviews</span>
-        <Rating value={rowData.rating} readonly cancel={false} />
-      </>
-    );
-  }
-
-  const statusBodyTemplate = (rowData) => {
-    return (
-      <>
-        <span className="p-column-title">Status</span>
+        <span className="p-column-title">Rol</span>
         <span className={`product-badge status-${rowData.inventoryStatus.toLowerCase()}`}>{rowData.inventoryStatus}</span>
       </>
     )
@@ -293,9 +283,8 @@ export function UsersAdmin() {
             <Column field="nombre" header="Nombre" sortable body={nombreBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
             <Column field="apellidos" header="Apellidos" sortable body={apellidosBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
             <Column field="email" header="Email" sortable body={emailBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-            <Column field="category" header="Category" sortable body={categoryBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
-            <Column field="rating" header="Reviews" body={ratingBodyTemplate} sortable headerStyle={{ width: '14%', minWidth: '11rem' }}></Column>
-            <Column field="inventoryStatus" header="Status" body={statusBodyTemplate} sortable headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+            <Column field="activo" header="Activo" sortable body={activoBodyTemplate} headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
+            <Column field="rol" header="Rol" body={rolBodyTemplate} sortable headerStyle={{ width: '14%', minWidth: '10rem' }}></Column>
             <Column body={actionBodyTemplate}></Column>
           </DataTable>
 
