@@ -41,11 +41,17 @@ export function UsersAdmin() {
   const toast = useRef(null);
   const dt = useRef(null);
   const { users, getUsers, addUser } = useUser();
+  const [refreshTable, setRefreshTable] = useState(false);
 
   useEffect(() => {
     getUsers();
+  }, [refreshTable])
+
+  useEffect(() => {
     setProducts(users);
   }, [users])
+
+  const onRefresh = () => setRefreshTable((state) => !state);
 
   const openNew = () => {
     setProduct(emptyUser);
@@ -91,6 +97,7 @@ export function UsersAdmin() {
 
         try {
           await addUser(product);
+          onRefresh();
           console.log('Usuario creado correctamente');
         } catch (error) {
           console.log(error);
