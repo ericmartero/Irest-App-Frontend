@@ -217,19 +217,6 @@ export function UsersAdmin() {
     }
   };
 
-  const onRowEditComplete = (e) => {
-    let _products = [...products];
-    let { newData, index } = e;
-
-    _products[index] = newData;
-
-    setProducts(_products);
-  };
-
-  const textEditor = (options) => {
-    return <InputText type="text" value={options.value} onChange={(e) => options.editorCallback(e.target.value)} />;
-  };
-
   const header = (
     <div className="flex flex-wrap gap-2 align-items-center justify-content-between">
       <h4 className="m-0">Panel de usuarios</h4>
@@ -264,16 +251,16 @@ export function UsersAdmin() {
       <div className="card">
         <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
 
-        <DataTable ref={dt} value={products} onRowEditComplete={onRowEditComplete} selection={selectedProducts} onSelectionChange={(e) => setSelectedProducts(e.value)}
-          editMode="row" dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
+        <DataTable ref={dt} value={products} selection={selectedProducts} onSelectionChange={(e) => setSelectedProducts(e.value)}
+          dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
           paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
           currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} usuarios" globalFilter={globalFilter} header={header}>
           <Column selectionMode="multiple" exportable={false}></Column>
-          <Column field="email" header="Email" editor={(options) => textEditor(options)} sortable style={{ minWidth: '16rem' }}></Column>
-          <Column field="firstName" header="Nombre" editor={(options) => textEditor(options)} sortable style={{ minWidth: '12rem' }}></Column>
-          <Column field="lastName" header="Apellidos" editor={(options) => textEditor(options)} sortable style={{ minWidth: '12rem' }}></Column>
-          <Column field="roles" header="Roles" editor={(options) => textEditor(options)} sortable style={{ minWidth: '12rem' }}></Column>
-          <Column field="isActive" header="Activo" dataType="boolean" body={activeBodyTemplate} editor={(options) => textEditor(options)} sortable style={{ minWidth: '8rem' }}></Column>
+          <Column field="email" header="Email" sortable style={{ minWidth: '16rem' }}></Column>
+          <Column field="firstName" header="Nombre" sortable style={{ minWidth: '12rem' }}></Column>
+          <Column field="lastName" header="Apellidos" sortable style={{ minWidth: '12rem' }}></Column>
+          <Column field="roles" header="Roles" sortable style={{ minWidth: '12rem' }}></Column>
+          <Column field="isActive" header="Activo" dataType="boolean" body={activeBodyTemplate} sortable style={{ minWidth: '8rem' }}></Column>
           <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
         </DataTable>
       </div>
