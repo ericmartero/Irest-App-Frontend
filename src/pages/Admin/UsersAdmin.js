@@ -40,7 +40,7 @@ export function UsersAdmin() {
 
   const toast = useRef(null);
   const dt = useRef(null);
-  const { users, getUsers, addUser } = useUser();
+  const { users, getUsers, addUser, deleteUser } = useUser();
   const [refreshTable, setRefreshTable] = useState(false);
 
   useEffect(() => {
@@ -124,11 +124,17 @@ export function UsersAdmin() {
     setDeleteProductDialog(true);
   };
 
-  const deleteProduct = () => {
+  const deleteProduct = async () => {
     console.log(product);
 
+    try {
+      await deleteUser(product.id);
+      onRefresh();
+    } catch (error) {
+      console.log(error);
+    }
 
-    //ESTO DE ABAO NO TOCAR, COJE DE NUEVO AL BORRAR 
+    //ESTO DE ABAJO NO TOCAR, COJE DE NUEVO AL BORRAR 
     let _products = products.filter((val) => val.id !== product.id);
     console.log(_products);
 
