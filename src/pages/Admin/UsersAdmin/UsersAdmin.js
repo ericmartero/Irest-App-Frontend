@@ -9,7 +9,7 @@ import { AutoComplete } from "primereact/autocomplete";
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Tag } from 'primereact/tag';
-import { useUser } from '../../hooks';
+import { useUser } from '../../../hooks';
 import './UsersAdmin.scss';
 
 export function UsersAdmin() {
