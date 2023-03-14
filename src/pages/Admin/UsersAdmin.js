@@ -6,11 +6,11 @@ import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
 import { Toolbar } from 'primereact/toolbar';
 import { InputTextarea } from 'primereact/inputtextarea';
-import { Dropdown } from 'primereact/dropdown';
 import { RadioButton } from 'primereact/radiobutton';
 import { InputNumber } from 'primereact/inputnumber';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
+import { Tag } from 'primereact/tag';
 import { useUser } from '../../hooks';
 
 export function UsersAdmin() {
@@ -37,12 +37,10 @@ export function UsersAdmin() {
   const dt = useRef(null);
   const { users, getUsers } = useUser();
 
-  const [statuses] = useState(['SI', 'NO']);
-
   useEffect(() => {
     getUsers();
     setProducts(users);
-  }, [users])
+  }, [users, getUsers])
 
   const openNew = () => {
     setProduct(emptyUser);
@@ -86,6 +84,16 @@ export function UsersAdmin() {
       setProductDialog(false);
       setProduct(emptyUser);
     }
+  };
+
+  const editProduct = (product) => {
+    setProduct({ ...product });
+    setProductDialog(true);
+  };
+
+  const confirmDeleteProduct = (product) => {
+    setProduct(product);
+    setDeleteProductDialog(true);
   };
 
   const deleteProduct = () => {
@@ -166,18 +174,47 @@ export function UsersAdmin() {
   const leftToolbarTemplate = () => {
     return (
       <div className="flex flex-wrap gap-2">
-        <Button label="Nuevo" icon="pi pi-plus" severity="success" onClick={openNew} />
-        <Button label="Borrar" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedProducts || !selectedProducts.length} />
+        <Button label="New" icon="pi pi-plus" severity="success" onClick={openNew} />
+        <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedProducts || !selectedProducts.length} />
       </div>
     );
   };
 
   const rightToolbarTemplate = () => {
-    return <Button label="Exportar" icon="pi pi-upload" className="p-button-help" onClick={exportCSV} />;
+    return <Button label="Export" icon="pi pi-upload" className="p-button-help" onClick={exportCSV} />;
+  };
+
+  const statusBodyTemplate = (rowData) => {
+    return <Tag value={rowData.inventoryStatus} severity={getSeverity(rowData)}></Tag>;
   };
 
   const activeBodyTemplate = (rowData) => {
     return <i className={classNames('pi', { 'text-green-500 pi-check-circle': !rowData.verified, 'text-red-500 pi-times-circle': rowData.verified })}></i>;
+  };
+
+  const actionBodyTemplate = (rowData) => {
+    return (
+      <React.Fragment>
+        <Button icon="pi pi-pencil" rounded outlined className="mr-2" onClick={() => editProduct(rowData)} />
+        <Button icon="pi pi-trash" rounded outlined severity="danger" onClick={() => confirmDeleteProduct(rowData)} />
+      </React.Fragment>
+    );
+  };
+
+  const getSeverity = (product) => {
+    switch (product.inventoryStatus) {
+      case 'INSTOCK':
+        return 'success';
+
+      case 'LOWSTOCK':
+        return 'warning';
+
+      case 'OUTOFSTOCK':
+        return 'danger';
+
+      default:
+        return null;
+    }
   };
 
   const onRowEditComplete = (e) => {
@@ -191,20 +228,6 @@ export function UsersAdmin() {
 
   const textEditor = (options) => {
     return <InputText type="text" value={options.value} onChange={(e) => options.editorCallback(e.target.value)} />;
-  };
-
-  const statusEditor = (options) => {
-    return (
-      <Dropdown
-        value={options.value}
-        options={statuses}
-        onChange={(e) => options.editorCallback(e.value)}
-        placeholder="Es activo"
-        itemTemplate={(option) => {
-          return option;
-        }}
-      />
-    );
   };
 
   const header = (
@@ -250,9 +273,8 @@ export function UsersAdmin() {
           <Column field="firstName" header="Nombre" editor={(options) => textEditor(options)} sortable style={{ minWidth: '12rem' }}></Column>
           <Column field="lastName" header="Apellidos" editor={(options) => textEditor(options)} sortable style={{ minWidth: '12rem' }}></Column>
           <Column field="roles" header="Roles" editor={(options) => textEditor(options)} sortable style={{ minWidth: '12rem' }}></Column>
-          <Column field="isActive" header="Activo" dataType="boolean" body={activeBodyTemplate} editor={(options) => statusEditor(options)}
-            sortable style={{ minWidth: '8rem' }}></Column>
-          <Column rowEditor headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center' }}></Column>
+          <Column field="isActive" header="Activo" dataType="boolean" body={activeBodyTemplate} editor={(options) => textEditor(options)} sortable style={{ minWidth: '8rem' }}></Column>
+          <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
         </DataTable>
       </div>
 
