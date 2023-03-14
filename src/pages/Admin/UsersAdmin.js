@@ -69,7 +69,10 @@ export function UsersAdmin() {
 
   const saveProduct = () => {
     setSubmitted(true);
+    const roleNames = selectedRoles.map(role => role.name.toLowerCase());
+    product.roles = roleNames;
     console.log(product);
+    //console.log(selectedRoles);
 
     if (product.firstName.trim()) {
       let _products = [...products];
@@ -94,6 +97,7 @@ export function UsersAdmin() {
   };
 
   const editProduct = (product) => {
+    console.log(product);
     setProduct({ ...product });
     setProductDialog(true);
     setActionName('Editar Usuario');
@@ -148,6 +152,16 @@ export function UsersAdmin() {
     let _product = { ...product };
 
     _product[`${name}`] = val;
+
+    setProduct(_product);
+  };
+
+  const onRoleChange = (e, name) => {
+    const val = (e.target && e.target.value) || '';
+    let _product = { ...product };
+
+    _product[`${name}`] = val;
+    //_product.roles = selectedRoles;
 
     setProduct(_product);
   };
