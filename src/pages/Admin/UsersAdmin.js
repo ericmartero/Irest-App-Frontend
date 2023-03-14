@@ -86,14 +86,14 @@ export function UsersAdmin() {
       //ENVIAR
       } else {
 
-        const roleNames = selectedRoles.map(role => role.name.toLowerCase());
+        const roleNames = selectedRoles?.map(role => role.name.toLowerCase());
         product.roles = roleNames;
 
         try {
           await addUser(product);
           console.log('Usuario creado correctamente');
         } catch (error) {
-          console.error(error);
+          console.log(error);
         }
 
         toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Usuario creado correctamente', life: 3000 });
@@ -118,7 +118,12 @@ export function UsersAdmin() {
   };
 
   const deleteProduct = () => {
+    console.log(product);
+
+
+    //ESTO DE ABAO NO TOCAR, COJE DE NUEVO AL BORRAR 
     let _products = products.filter((val) => val.id !== product.id);
+    console.log(_products);
 
     setProducts(_products);
     setDeleteProductDialog(false);
