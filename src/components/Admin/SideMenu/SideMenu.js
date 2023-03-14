@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
 import classNames from 'classnames';
-import {Ripple} from "primereact/ripple";
+import { Ripple } from "primereact/ripple";
 import { Badge } from 'primereact/badge';
 import './SideMenu.scss';
 
@@ -83,7 +83,8 @@ const AppSubmenu = (props) => {
         if(props.root) {
             return (
                 <li className={styleClass} key={i} role="none">
-                    {props.root === true && <React.Fragment>
+                    {props.root === true && 
+                    <React.Fragment>
                         <div className="layout-menuitem-root-text" aria-label={item.label}>{item.label}</div>
                         <AppSubmenu items={item.items} onMenuItemClick={props.onMenuItemClick} />
                     </React.Fragment>}

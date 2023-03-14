@@ -40,7 +40,7 @@ export function UsersAdmin() {
 
   const toast = useRef(null);
   const dt = useRef(null);
-  const { users, getUsers } = useUser();
+  const { users, getUsers, addUser } = useUser();
 
   useEffect(() => {
     getUsers();
@@ -67,26 +67,35 @@ export function UsersAdmin() {
     setDeleteProductsDialog(false);
   };
 
-  const saveProduct = () => {
+  const saveProduct = async () => {
     setSubmitted(true);
-    const roleNames = selectedRoles.map(role => role.name.toLowerCase());
-    product.roles = roleNames;
-    console.log(product);
-    //console.log(selectedRoles);
+
+    //console.log(product);
 
     if (product.firstName.trim()) {
       let _products = [...products];
       let _product = { ...product };
-
+      
+      //EDITAR
       if (product.id) {
         const index = findIndexById(product.id);
 
         _products[index] = _product;
         toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Usuario actualizado correctamente', life: 3000 });
+      
+      //ENVIAR
       } else {
-        //_product.id = createId();
-        //_product.image = 'product-placeholder.svg';
-        //_products.push(_product);
+
+        const roleNames = selectedRoles.map(role => role.name.toLowerCase());
+        product.roles = roleNames;
+
+        try {
+          await addUser(product);
+          console.log('Usuario creado correctamente');
+        } catch (error) {
+          console.error(error);
+        }
+
         toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Usuario creado correctamente', life: 3000 });
       }
 
