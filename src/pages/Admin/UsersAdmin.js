@@ -5,9 +5,7 @@ import { Column } from 'primereact/column';
 import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
 import { Toolbar } from 'primereact/toolbar';
-import { InputTextarea } from 'primereact/inputtextarea';
 import { RadioButton } from 'primereact/radiobutton';
-import { InputNumber } from 'primereact/inputnumber';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Tag } from 'primereact/tag';
@@ -41,7 +39,7 @@ export function UsersAdmin() {
   useEffect(() => {
     getUsers();
     setProducts(users);
-  }, [users, getUsers])
+  }, [users])
 
   const openNew = () => {
     setProduct(emptyUser);
@@ -65,7 +63,7 @@ export function UsersAdmin() {
   const saveProduct = () => {
     setSubmitted(true);
 
-    if (product.name.trim()) {
+    if (product.firstName.trim()) {
       let _products = [...products];
       let _product = { ...product };
 
@@ -73,12 +71,12 @@ export function UsersAdmin() {
         const index = findIndexById(product.id);
 
         _products[index] = _product;
-        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
+        toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Usuario actualizado correctamente', life: 3000 });
       } else {
         _product.id = createId();
         _product.image = 'product-placeholder.svg';
         _products.push(_product);
-        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
+        toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Usuario creado correctamente', life: 3000 });
       }
 
       setProducts(_products);
@@ -103,7 +101,7 @@ export function UsersAdmin() {
     setProducts(_products);
     setDeleteProductDialog(false);
     setProduct(emptyUser);
-    toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
+    toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Usuario borrado correctamente', life: 3000 });
   };
 
   const findIndexById = (id) => {
@@ -163,15 +161,6 @@ export function UsersAdmin() {
     setProduct(_product);
   };
 
-  const onInputNumberChange = (e, name) => {
-    const val = e.value || 0;
-    let _product = { ...product };
-
-    _product[`${name}`] = val;
-
-    setProduct(_product);
-  };
-
   const leftToolbarTemplate = () => {
     return (
       <div className="flex flex-wrap gap-2">
@@ -182,11 +171,7 @@ export function UsersAdmin() {
   };
 
   const rightToolbarTemplate = () => {
-    return <Button label="Export" icon="pi pi-upload" className="p-button-help" onClick={exportCSV} />;
-  };
-
-  const statusBodyTemplate = (rowData) => {
-    return <Tag value={rowData.inventoryStatus} severity={getSeverity(rowData)}></Tag>;
+    return <Button label="Exportar" icon="pi pi-upload" className="p-button-help" onClick={exportCSV} />;
   };
 
   const activeBodyTemplate = (rowData) => {
@@ -202,22 +187,6 @@ export function UsersAdmin() {
     );
   };
 
-  const getSeverity = (product) => {
-    switch (product.inventoryStatus) {
-      case 'INSTOCK':
-        return 'success';
-
-      case 'LOWSTOCK':
-        return 'warning';
-
-      case 'OUTOFSTOCK':
-        return 'danger';
-
-      default:
-        return null;
-    }
-  };
-
   const header = (
     <div className="flex flex-wrap gap-2 align-items-center justify-content-between">
       <h4 className="m-0">Panel de usuarios</h4>
@@ -229,20 +198,20 @@ export function UsersAdmin() {
   );
   const productDialogFooter = (
     <React.Fragment>
-      <Button label="Cancel" icon="pi pi-times" outlined onClick={hideDialog} />
-      <Button label="Save" icon="pi pi-check" onClick={saveProduct} />
+      <Button label="Cancelar" icon="pi pi-times" outlined onClick={hideDialog} />
+      <Button label="Guardar" icon="pi pi-check" onClick={saveProduct} />
     </React.Fragment>
   );
   const deleteProductDialogFooter = (
     <React.Fragment>
       <Button label="No" icon="pi pi-times" outlined onClick={hideDeleteProductDialog} />
-      <Button label="Yes" icon="pi pi-check" severity="danger" onClick={deleteProduct} />
+      <Button label="Si" icon="pi pi-check" severity="danger" onClick={deleteProduct} />
     </React.Fragment>
   );
   const deleteProductsDialogFooter = (
     <React.Fragment>
       <Button label="No" icon="pi pi-times" outlined onClick={hideDeleteProductsDialog} />
-      <Button label="Yes" icon="pi pi-check" severity="danger" onClick={deleteSelectedProducts} />
+      <Button label="Si" icon="pi pi-check" severity="danger" onClick={deleteSelectedProducts} />
     </React.Fragment>
   );
 
@@ -295,72 +264,67 @@ export function UsersAdmin() {
 
       <Dialog visible={productDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Añadir Usuario" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
         <div className="field">
-          <label htmlFor="name" className="font-bold">
-            Name
+          <label htmlFor="email" className="font-bold">
+            Email
           </label>
-          <InputText id="name" value={product.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.name })} />
-          {submitted && !product.name && <small className="p-error">Name is required.</small>}
+          <InputText id="email" type="email" value={product.email} onChange={(e) => onInputChange(e, 'email')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.email })} />
+          {submitted && !product.email && <small className="p-error">El email es requerido</small>}
         </div>
         <div className="field">
-          <label htmlFor="description" className="font-bold">
-            Description
+          <label htmlFor="firstName" className="font-bold">
+            Nombre
           </label>
-          <InputTextarea id="description" value={product.description} onChange={(e) => onInputChange(e, 'description')} required rows={3} cols={20} />
+          <InputText id="firstName" value={product.firstName} onChange={(e) => onInputChange(e, 'firstName')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.firstName })} />
+          {submitted && !product.firstName && <small className="p-error">El nombre es requerido</small>}
+        </div>
+        <div className="field">
+          <label htmlFor="lastName" className="font-bold">
+            Apellidos
+          </label>
+          <InputText id="lastName" value={product.lastName} onChange={(e) => onInputChange(e, 'lastName')} />
+        </div>
+        <div className="field">
+          <label htmlFor="password" className="font-bold">
+            Contraseña
+          </label>
+          <InputText id="password" type="password" value={product.password} onChange={(e) => onInputChange(e, 'password')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.password })} />
+          {submitted && !product.password && <small className="p-error">La contraseña es requerida</small>}
         </div>
 
         <div className="field">
-          <label className="mb-3 font-bold">Category</label>
+          <label className="mb-3 font-bold">Roles</label>
           <div className="formgrid grid">
             <div className="field-radiobutton col-6">
-              <RadioButton inputId="category1" name="category" value="Accessories" onChange={onCategoryChange} checked={product.category === 'Accessories'} />
-              <label htmlFor="category1">Accessories</label>
+              <RadioButton inputId="admin" name="admin" value="Admin" onChange={onCategoryChange} checked={product.category === 'Admin'} />
+              <label htmlFor="admin">Admin</label>
             </div>
             <div className="field-radiobutton col-6">
-              <RadioButton inputId="category2" name="category" value="Clothing" onChange={onCategoryChange} checked={product.category === 'Clothing'} />
-              <label htmlFor="category2">Clothing</label>
+              <RadioButton inputId="boss" name="boss" value="Boss" onChange={onCategoryChange} checked={product.category === 'Boss'} />
+              <label htmlFor="boss">Boss</label>
             </div>
             <div className="field-radiobutton col-6">
-              <RadioButton inputId="category3" name="category" value="Electronics" onChange={onCategoryChange} checked={product.category === 'Electronics'} />
-              <label htmlFor="category3">Electronics</label>
+              <RadioButton inputId="employee" name="employee" value="Employee" onChange={onCategoryChange} checked={product.category === 'Employee'} />
+              <label htmlFor="employee">Employee</label>
             </div>
-            <div className="field-radiobutton col-6">
-              <RadioButton inputId="category4" name="category" value="Fitness" onChange={onCategoryChange} checked={product.category === 'Fitness'} />
-              <label htmlFor="category4">Fitness</label>
-            </div>
-          </div>
-        </div>
-
-        <div className="formgrid grid">
-          <div className="field col">
-            <label htmlFor="price" className="font-bold">
-              Price
-            </label>
-            <InputNumber id="price" value={product.price} onValueChange={(e) => onInputNumberChange(e, 'price')} mode="currency" currency="USD" locale="en-US" />
-          </div>
-          <div className="field col">
-            <label htmlFor="quantity" className="font-bold">
-              Quantity
-            </label>
-            <InputNumber id="quantity" value={product.quantity} onValueChange={(e) => onInputNumberChange(e, 'quantity')} />
           </div>
         </div>
       </Dialog>
 
-      <Dialog visible={deleteProductDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirm" modal footer={deleteProductDialogFooter} onHide={hideDeleteProductDialog}>
+      <Dialog visible={deleteProductDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteProductDialogFooter} onHide={hideDeleteProductDialog}>
         <div className="confirmation-content">
           <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
           {product && (
             <span>
-              Are you sure you want to delete <b>{product.name}</b>?
+              Seguro que quieres eliminar el usuario <b>{product.firstName}</b>?
             </span>
           )}
         </div>
       </Dialog>
 
-      <Dialog visible={deleteProductsDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirm" modal footer={deleteProductsDialogFooter} onHide={hideDeleteProductsDialog}>
+      <Dialog visible={deleteProductsDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteProductsDialogFooter} onHide={hideDeleteProductsDialog}>
         <div className="confirmation-content">
           <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-          {product && <span>Are you sure you want to delete the selected products?</span>}
+          {product && <span>Seguro que quieres eliminar los usuarios seleccionados?</span>}
         </div>
       </Dialog>
     </div>
