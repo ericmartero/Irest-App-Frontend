@@ -32,8 +32,8 @@ export function UsersAdmin() {
   const [submitted, setSubmitted] = useState(false);
   const [globalFilter, setGlobalFilter] = useState(null);
 
-  const [selectedCountries, setSelectedCountries] = useState(null);
-  const [filteredCountries, setFilteredCountries] = useState(null);
+  const [selectedRoles, setSelectedRoles] = useState(null);
+  const [filteredRoles, setFilteredRoles] = useState(null);
   let rolesList = [{ name: 'Admin' }, { name: 'Employee' }, { name: 'Boss' }];
 
   const [actionName, setActionName] = useState('');
@@ -179,22 +179,21 @@ export function UsersAdmin() {
   };
 
   const search = (event) => {
-    // Timeout to emulate a network connection
     setTimeout(() => {
-      let _filteredCountries;
+      let _filteredRoles;
 
       if (!event.query.trim().length) {
-        _filteredCountries = [...rolesList];
+        _filteredRoles = [...rolesList];
       } else {
-        _filteredCountries = rolesList.filter((country) => {
-          return country.name
+        _filteredRoles = rolesList.filter((role) => {
+          return role.name
             .toLowerCase()
             .startsWith(event.query.toLowerCase());
         });
       }
 
-      setFilteredCountries(_filteredCountries);
-    }, 250);
+      setFilteredRoles(_filteredRoles);
+    }, 200);
   };
 
   const header = (
@@ -307,10 +306,10 @@ export function UsersAdmin() {
           <AutoComplete
             field="name"
             multiple
-            value={selectedCountries}
-            suggestions={filteredCountries}
+            value={selectedRoles}
+            suggestions={filteredRoles}
             completeMethod={search}
-            onChange={(e) => setSelectedCountries(e.value)}
+            onChange={(e) => setSelectedRoles(e.value)}
           />
         </div>
       </Dialog>
