@@ -5,7 +5,6 @@ import { Column } from 'primereact/column';
 import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
 import { Toolbar } from 'primereact/toolbar';
-import { RadioButton } from 'primereact/radiobutton';
 import { AutoComplete } from "primereact/autocomplete";
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
@@ -37,6 +36,8 @@ export function UsersAdmin() {
   const [filteredCountries, setFilteredCountries] = useState(null);
   let rolesList = [{ name: 'Admin' }, { name: 'Employee' }, { name: 'Boss' }];
 
+  const [actionName, setActionName] = useState('');
+
   const toast = useRef(null);
   const dt = useRef(null);
   const { users, getUsers } = useUser();
@@ -50,6 +51,7 @@ export function UsersAdmin() {
     setProduct(emptyUser);
     setSubmitted(false);
     setProductDialog(true);
+    setActionName('Añadir Usuario');
   };
 
   const hideDialog = () => {
@@ -94,6 +96,7 @@ export function UsersAdmin() {
   const editProduct = (product) => {
     setProduct({ ...product });
     setProductDialog(true);
+    setActionName('Editar Usuario');
   };
 
   const confirmDeleteProduct = (product) => {
@@ -138,13 +141,6 @@ export function UsersAdmin() {
     setDeleteProductsDialog(false);
     setSelectedProducts(null);
     toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
-  };
-
-  const onCategoryChange = (e) => {
-    let _product = { ...product };
-
-    _product['category'] = e.value;
-    setProduct(_product);
   };
 
   const onInputChange = (e, name) => {
@@ -276,7 +272,7 @@ export function UsersAdmin() {
         </DataTable>
       </div>
 
-      <Dialog visible={productDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Añadir Usuario" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
+      <Dialog visible={productDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={actionName} modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
         <div className="field">
           <label htmlFor="email" className="font-bold">
             Email
