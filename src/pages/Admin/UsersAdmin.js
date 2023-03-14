@@ -11,7 +11,6 @@ import { RadioButton } from 'primereact/radiobutton';
 import { InputNumber } from 'primereact/inputnumber';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
-import { Tag } from 'primereact/tag';
 import { useUser } from '../../hooks';
 
 export function UsersAdmin() {
@@ -38,7 +37,7 @@ export function UsersAdmin() {
   const dt = useRef(null);
   const { users, getUsers } = useUser();
 
-  const [statuses] = useState(['INSTOCK', 'LOWSTOCK', 'OUTOFSTOCK']);
+  const [statuses] = useState(['SI', 'NO']);
 
   useEffect(() => {
     getUsers();
@@ -181,22 +180,6 @@ export function UsersAdmin() {
     return <i className={classNames('pi', { 'text-green-500 pi-check-circle': !rowData.verified, 'text-red-500 pi-times-circle': rowData.verified })}></i>;
   };
 
-  const getSeverity = (product) => {
-    switch (product.inventoryStatus) {
-      case 'INSTOCK':
-        return 'success';
-
-      case 'LOWSTOCK':
-        return 'warning';
-
-      case 'OUTOFSTOCK':
-        return 'danger';
-
-      default:
-        return null;
-    }
-  };
-
   const onRowEditComplete = (e) => {
     let _products = [...products];
     let { newData, index } = e;
@@ -216,9 +199,9 @@ export function UsersAdmin() {
         value={options.value}
         options={statuses}
         onChange={(e) => options.editorCallback(e.value)}
-        placeholder="Select a Status"
+        placeholder="Es activo"
         itemTemplate={(option) => {
-          return <Tag value={option} severity={getSeverity(option)}></Tag>;
+          return option;
         }}
       />
     );
