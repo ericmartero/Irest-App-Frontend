@@ -6,6 +6,7 @@ import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
 import { Toolbar } from 'primereact/toolbar';
 import { RadioButton } from 'primereact/radiobutton';
+import { AutoComplete } from "primereact/autocomplete";
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Tag } from 'primereact/tag';
@@ -15,7 +16,6 @@ import './UsersAdmin.scss';
 export function UsersAdmin() {
 
   let emptyUser = {
-    id: null,
     email: '',
     firstName: '',
     lastName: '',
@@ -32,6 +32,11 @@ export function UsersAdmin() {
   const [selectedProducts, setSelectedProducts] = useState(null);
   const [submitted, setSubmitted] = useState(false);
   const [globalFilter, setGlobalFilter] = useState(null);
+
+  const [selectedCountries, setSelectedCountries] = useState(null);
+  const [filteredCountries, setFilteredCountries] = useState(null);
+  let rolesList = [{ name: 'Admin' }, { name: 'Employee' }, { name: 'Boss' }];
+
   const toast = useRef(null);
   const dt = useRef(null);
   const { users, getUsers } = useUser();
@@ -62,6 +67,7 @@ export function UsersAdmin() {
 
   const saveProduct = () => {
     setSubmitted(true);
+    console.log(product);
 
     if (product.firstName.trim()) {
       let _products = [...products];
@@ -73,9 +79,9 @@ export function UsersAdmin() {
         _products[index] = _product;
         toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Usuario actualizado correctamente', life: 3000 });
       } else {
-        _product.id = createId();
-        _product.image = 'product-placeholder.svg';
-        _products.push(_product);
+        //_product.id = createId();
+        //_product.image = 'product-placeholder.svg';
+        //_products.push(_product);
         toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Usuario creado correctamente', life: 3000 });
       }
 
@@ -115,17 +121,6 @@ export function UsersAdmin() {
     }
 
     return index;
-  };
-
-  const createId = () => {
-    let id = '';
-    let chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-    for (let i = 0; i < 5; i++) {
-      id += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-
-    return id;
   };
 
   const exportCSV = () => {
@@ -187,6 +182,25 @@ export function UsersAdmin() {
     );
   };
 
+  const search = (event) => {
+    // Timeout to emulate a network connection
+    setTimeout(() => {
+      let _filteredCountries;
+
+      if (!event.query.trim().length) {
+        _filteredCountries = [...rolesList];
+      } else {
+        _filteredCountries = rolesList.filter((country) => {
+          return country.name
+            .toLowerCase()
+            .startsWith(event.query.toLowerCase());
+        });
+      }
+
+      setFilteredCountries(_filteredCountries);
+    }, 250);
+  };
+
   const header = (
     <div className="flex flex-wrap gap-2 align-items-center justify-content-between">
       <h4 className="m-0">Panel de usuarios</h4>
@@ -229,7 +243,7 @@ export function UsersAdmin() {
           <Column field="email" header="Email" sortable style={{ minWidth: '16rem' }}></Column>
           <Column field="firstName" header="Nombre" sortable style={{ minWidth: '12rem' }}></Column>
           <Column field="lastName" header="Apellidos" sortable style={{ minWidth: '12rem' }}></Column>
-          <Column field="roles" header="Roles"sortable style={{ minWidth: '12rem' }}
+          <Column field="roles" header="Roles" sortable style={{ minWidth: '12rem' }}
             body={(rowData) =>
               rowData.roles.map((role) => {
                 let tagClass = '';
@@ -257,7 +271,7 @@ export function UsersAdmin() {
               })
             }
           ></Column>
-          <Column field="isActive" header="Activo" dataType="boolean" body={activeBodyTemplate} sortable style={{ minWidth: '8rem' }}></Column>
+          <Column field="isActive" header="Activo" dataType="boolean" body={activeBodyTemplate} style={{ minWidth: '8rem' }}></Column>
           <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
         </DataTable>
       </div>
@@ -290,23 +304,18 @@ export function UsersAdmin() {
           <InputText id="password" type="password" value={product.password} onChange={(e) => onInputChange(e, 'password')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.password })} />
           {submitted && !product.password && <small className="p-error">La contraseña es requerida</small>}
         </div>
-
         <div className="field">
-          <label className="mb-3 font-bold">Roles</label>
-          <div className="formgrid grid">
-            <div className="field-radiobutton col-6">
-              <RadioButton inputId="admin" name="admin" value="Admin" onChange={onCategoryChange} checked={product.category === 'Admin'} />
-              <label htmlFor="admin">Admin</label>
-            </div>
-            <div className="field-radiobutton col-6">
-              <RadioButton inputId="boss" name="boss" value="Boss" onChange={onCategoryChange} checked={product.category === 'Boss'} />
-              <label htmlFor="boss">Boss</label>
-            </div>
-            <div className="field-radiobutton col-6">
-              <RadioButton inputId="employee" name="employee" value="Employee" onChange={onCategoryChange} checked={product.category === 'Employee'} />
-              <label htmlFor="employee">Employee</label>
-            </div>
-          </div>
+          <label htmlFor="roles" className="font-bold">
+            Roles
+          </label>
+          <AutoComplete
+            field="name"
+            multiple
+            value={selectedCountries}
+            suggestions={filteredCountries}
+            completeMethod={search}
+            onChange={(e) => setSelectedCountries(e.value)}
+          />
         </div>
       </Dialog>
 
