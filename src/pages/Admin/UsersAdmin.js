@@ -12,6 +12,7 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Tag } from 'primereact/tag';
 import { useUser } from '../../hooks';
+import './UsersAdmin.scss';
 
 export function UsersAdmin() {
 
@@ -174,8 +175,8 @@ export function UsersAdmin() {
   const leftToolbarTemplate = () => {
     return (
       <div className="flex flex-wrap gap-2">
-        <Button label="New" icon="pi pi-plus" severity="success" onClick={openNew} />
-        <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedProducts || !selectedProducts.length} />
+        <Button label="Nuevo" icon="pi pi-plus" severity="success" onClick={openNew} />
+        <Button label="Borrar" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedProducts || !selectedProducts.length} />
       </div>
     );
   };
@@ -259,14 +260,40 @@ export function UsersAdmin() {
           <Column field="email" header="Email" sortable style={{ minWidth: '16rem' }}></Column>
           <Column field="firstName" header="Nombre" sortable style={{ minWidth: '12rem' }}></Column>
           <Column field="lastName" header="Apellidos" sortable style={{ minWidth: '12rem' }}></Column>
-          <Column field="roles" header="Roles" sortable style={{ minWidth: '12rem' }}></Column>
+          <Column field="roles" header="Roles"sortable style={{ minWidth: '12rem' }}
+            body={(rowData) =>
+              rowData.roles.map((role) => {
+                let tagClass = '';
+                switch (role) {
+                  case 'admin':
+                    tagClass = 'warning';
+                    break;
+                  case 'boss':
+                    tagClass = 'danger';
+                    break;
+                  case 'employee':
+                    tagClass = 'success';
+                    break;
+                  default:
+                    break;
+                }
+                return (
+                  <Tag
+                    key={role}
+                    value={role}
+                    className="my-tag p-mr-2"
+                    severity={tagClass}
+                  />
+                );
+              })
+            }
+          ></Column>
           <Column field="isActive" header="Activo" dataType="boolean" body={activeBodyTemplate} sortable style={{ minWidth: '8rem' }}></Column>
           <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
         </DataTable>
       </div>
 
-      <Dialog visible={productDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Product Details" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
-        {product.image && <img src={`https://primefaces.org/cdn/primereact/images/product/${product.image}`} alt={product.image} className="product-image block m-auto pb-3" />}
+      <Dialog visible={productDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Añadir Usuario" modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
         <div className="field">
           <label htmlFor="name" className="font-bold">
             Name
