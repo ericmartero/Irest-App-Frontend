@@ -218,7 +218,7 @@ export function UsersAdmin() {
   return (
     <div>
       <Toast ref={toast} />
-      <div className="card">
+      <div className="card" >
         <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
 
         <DataTable ref={dt} value={products} selection={selectedProducts} onSelectionChange={(e) => setSelectedProducts(e.value)}

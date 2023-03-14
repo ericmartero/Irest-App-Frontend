@@ -3,8 +3,9 @@ import { useAuth } from '../../../hooks';
 import { Button } from 'primereact/button';
 import { Chip } from 'primereact/chip';
 import './TopMenu.scss';
+import classNames from 'classnames';
 
-export function TopMenu() {
+export function TopMenu(props) {
 
   const { logout, auth } = useAuth();
 
@@ -23,7 +24,7 @@ export function TopMenu() {
         <span>PANEL DE CONTROL</span>
       </div>
 
-      <button type="button" className="p-link  layout-menu-button layout-topbar-button" >
+      <button type="button" className="p-link  layout-menu-button layout-topbar-button" onClick={props.onToggleMenuClick} >
         <i className="pi pi-bars" />
       </button>
 
@@ -31,7 +32,7 @@ export function TopMenu() {
         <i className="pi pi-user" />
       </button>
 
-      <ul className="layout-topbar-menu lg:flex origin-top">
+      <ul className={classNames("layout-topbar-menu lg:flex origin-top", {'layout-topbar-menu-mobile-active': props.mobileTopbarMenuActive })}>
         <li style={{ display: "flex", alignItems: "center" }}>
           <Chip label={renderName()} icon="pi pi-user" className="mr-3" />
         </li>
