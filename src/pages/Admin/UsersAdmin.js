@@ -4,9 +4,9 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
-import { Rating } from 'primereact/rating';
 import { Toolbar } from 'primereact/toolbar';
 import { InputTextarea } from 'primereact/inputtextarea';
+import { Dropdown } from 'primereact/dropdown';
 import { RadioButton } from 'primereact/radiobutton';
 import { InputNumber } from 'primereact/inputnumber';
 import { Dialog } from 'primereact/dialog';
@@ -15,41 +15,38 @@ import { Tag } from 'primereact/tag';
 import { useUser } from '../../hooks';
 
 export function UsersAdmin() {
-  let emptyProduct = {
+
+  let emptyUser = {
     id: null,
-    name: '',
-    image: null,
-    description: '',
-    category: null,
-    price: 0,
-    quantity: 0,
-    rating: 0,
-    inventoryStatus: 'INSTOCK'
+    email: '',
+    firstName: '',
+    lastName: '',
+    password: '',
+    isActive: true,
+    roles: [],
   };
 
   const [products, setProducts] = useState(null);
   const [productDialog, setProductDialog] = useState(false);
   const [deleteProductDialog, setDeleteProductDialog] = useState(false);
   const [deleteProductsDialog, setDeleteProductsDialog] = useState(false);
-  const [product, setProduct] = useState(emptyProduct);
+  const [product, setProduct] = useState(emptyUser);
   const [selectedProducts, setSelectedProducts] = useState(null);
   const [submitted, setSubmitted] = useState(false);
   const [globalFilter, setGlobalFilter] = useState(null);
   const toast = useRef(null);
   const dt = useRef(null);
-  const { loading, users, getUsers } = useUser();
+  const { users, getUsers } = useUser();
+
+  const [statuses] = useState(['INSTOCK', 'LOWSTOCK', 'OUTOFSTOCK']);
 
   useEffect(() => {
     getUsers();
     setProducts(users);
   }, [users])
 
-  const formatCurrency = (value) => {
-    return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
-  };
-
   const openNew = () => {
-    setProduct(emptyProduct);
+    setProduct(emptyUser);
     setSubmitted(false);
     setProductDialog(true);
   };
@@ -88,18 +85,8 @@ export function UsersAdmin() {
 
       setProducts(_products);
       setProductDialog(false);
-      setProduct(emptyProduct);
+      setProduct(emptyUser);
     }
-  };
-
-  const editProduct = (product) => {
-    setProduct({ ...product });
-    setProductDialog(true);
-  };
-
-  const confirmDeleteProduct = (product) => {
-    setProduct(product);
-    setDeleteProductDialog(true);
   };
 
   const deleteProduct = () => {
@@ -107,7 +94,7 @@ export function UsersAdmin() {
 
     setProducts(_products);
     setDeleteProductDialog(false);
-    setProduct(emptyProduct);
+    setProduct(emptyUser);
     toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
   };
 
@@ -180,39 +167,18 @@ export function UsersAdmin() {
   const leftToolbarTemplate = () => {
     return (
       <div className="flex flex-wrap gap-2">
-        <Button label="New" icon="pi pi-plus" severity="success" onClick={openNew} />
-        <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedProducts || !selectedProducts.length} />
+        <Button label="Nuevo" icon="pi pi-plus" severity="success" onClick={openNew} />
+        <Button label="Borrar" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedProducts || !selectedProducts.length} />
       </div>
     );
   };
 
   const rightToolbarTemplate = () => {
-    return <Button label="Export" icon="pi pi-upload" className="p-button-help" onClick={exportCSV} />;
+    return <Button label="Exportar" icon="pi pi-upload" className="p-button-help" onClick={exportCSV} />;
   };
 
-  const imageBodyTemplate = (rowData) => {
-    return <img src={`https://primefaces.org/cdn/primereact/images/product/${rowData.image}`} alt={rowData.image} className="shadow-2 border-round" style={{ width: '64px' }} />;
-  };
-
-  const priceBodyTemplate = (rowData) => {
-    return formatCurrency(rowData.price);
-  };
-
-  const ratingBodyTemplate = (rowData) => {
-    return <Rating value={rowData.rating} readOnly cancel={false} />;
-  };
-
-  const statusBodyTemplate = (rowData) => {
-    return <Tag value={rowData.inventoryStatus} severity={getSeverity(rowData)}></Tag>;
-  };
-
-  const actionBodyTemplate = (rowData) => {
-    return (
-      <React.Fragment>
-        <Button icon="pi pi-pencil" rounded outlined className="mr-2" onClick={() => editProduct(rowData)} />
-        <Button icon="pi pi-trash" rounded outlined severity="danger" onClick={() => confirmDeleteProduct(rowData)} />
-      </React.Fragment>
-    );
+  const activeBodyTemplate = (rowData) => {
+    return <i className={classNames('pi', { 'text-green-500 pi-check-circle': !rowData.verified, 'text-red-500 pi-times-circle': rowData.verified })}></i>;
   };
 
   const getSeverity = (product) => {
@@ -231,12 +197,39 @@ export function UsersAdmin() {
     }
   };
 
+  const onRowEditComplete = (e) => {
+    let _products = [...products];
+    let { newData, index } = e;
+
+    _products[index] = newData;
+
+    setProducts(_products);
+  };
+
+  const textEditor = (options) => {
+    return <InputText type="text" value={options.value} onChange={(e) => options.editorCallback(e.target.value)} />;
+  };
+
+  const statusEditor = (options) => {
+    return (
+      <Dropdown
+        value={options.value}
+        options={statuses}
+        onChange={(e) => options.editorCallback(e.value)}
+        placeholder="Select a Status"
+        itemTemplate={(option) => {
+          return <Tag value={option} severity={getSeverity(option)}></Tag>;
+        }}
+      />
+    );
+  };
+
   const header = (
     <div className="flex flex-wrap gap-2 align-items-center justify-content-between">
-      <h4 className="m-0">Manage Products</h4>
+      <h4 className="m-0">Panel de usuarios</h4>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
-        <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Search..." />
+        <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Buscar..." />
       </span>
     </div>
   );
@@ -265,19 +258,18 @@ export function UsersAdmin() {
       <div className="card">
         <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
 
-        <DataTable ref={dt} value={products} selection={selectedProducts} onSelectionChange={(e) => setSelectedProducts(e.value)}
-          dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
+        <DataTable ref={dt} value={products} onRowEditComplete={onRowEditComplete} selection={selectedProducts} onSelectionChange={(e) => setSelectedProducts(e.value)}
+          editMode="row" dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
           paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products" globalFilter={globalFilter} header={header}>
+          currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} usuarios" globalFilter={globalFilter} header={header}>
           <Column selectionMode="multiple" exportable={false}></Column>
-          <Column field="id" header="ID" sortable style={{ minWidth: '12rem' }}></Column>
-          <Column field="email" header="Email" sortable style={{ minWidth: '16rem' }}></Column>
-          <Column field="firstName" header="First Name" sortable style={{ minWidth: '12rem' }}></Column>
-          <Column field="lastName" header="Last Name" sortable style={{ minWidth: '12rem' }}></Column>
-          <Column field="isActive" header="Active" sortable style={{ minWidth: '10rem' }}></Column>
-          <Column field="roles" header="Roles" sortable style={{ minWidth: '12rem' }}></Column>
-          <Column field="inventoryStatus" header="Status" sortable style={{ minWidth: '12rem' }}></Column>
-          <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
+          <Column field="email" header="Email" editor={(options) => textEditor(options)} sortable style={{ minWidth: '16rem' }}></Column>
+          <Column field="firstName" header="Nombre" editor={(options) => textEditor(options)} sortable style={{ minWidth: '12rem' }}></Column>
+          <Column field="lastName" header="Apellidos" editor={(options) => textEditor(options)} sortable style={{ minWidth: '12rem' }}></Column>
+          <Column field="roles" header="Roles" editor={(options) => textEditor(options)} sortable style={{ minWidth: '12rem' }}></Column>
+          <Column field="isActive" header="Activo" dataType="boolean" body={activeBodyTemplate} editor={(options) => statusEditor(options)}
+            sortable style={{ minWidth: '8rem' }}></Column>
+          <Column rowEditor headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center' }}></Column>
         </DataTable>
       </div>
 
