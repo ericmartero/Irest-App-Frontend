@@ -34,7 +34,7 @@ export function UsersAdmin() {
 
   const [selectedRoles, setSelectedRoles] = useState(null);
   const [filteredRoles, setFilteredRoles] = useState(null);
-  let rolesList = [{ name: 'Admin' }, { name: 'Employee' }, { name: 'Boss' }];
+  let rolesList = ['admin', 'employee', 'boss'];
 
   const [actionName, setActionName] = useState('');
 
@@ -55,6 +55,7 @@ export function UsersAdmin() {
 
   const openNew = () => {
     setProduct(emptyUser);
+    setSelectedRoles(null);
     setSubmitted(false);
     setProductDialog(true);
     setActionName('Añadir Usuario');
@@ -74,56 +75,51 @@ export function UsersAdmin() {
   };
 
   const saveProduct = async () => {
-    setSubmitted(true);
+    const lowerCaseSelectedRoles = selectedRoles?.map(role => role.toLowerCase());
+    setSubmitted(true); 
 
-    //console.log(product);
+    //EDITAR
+    if (product.id) {
 
-    if (product.firstName.trim()) {
-      let _products = [...products];
-      let _product = { ...product };
-      
-      //EDITAR
-      if (product.id) {
-        console.log(users);
-        try {
-          await updateUser(product.id, _product);
-          onRefresh();
-          console.log('Usuario editado correctamente');
-        } catch (error) {
-          console.log(error.message);
-        }
+      const _product = { ...product, roles: lowerCaseSelectedRoles };
 
-        const index = findIndexById(product.id);
-        _products[index] = _product;
-
-        toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Usuario actualizado correctamente', life: 3000 });
-      
-      //ENVIAR
-      } else {
-
-        const roleNames = selectedRoles?.map(role => role.name.toLowerCase());
-        product.roles = roleNames;
-
-        try {
-          await addUser(product);
-          onRefresh();
-          console.log('Usuario creado correctamente');
-        } catch (error) {
-          console.log(error.message);
-        }
-
-        toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Usuario creado correctamente', life: 3000 });
+      try {
+        await updateUser(product.id, _product);
+        onRefresh();
+        console.log('Usuario editado correctamente');
+      } catch (error) {
+        console.log(error.message);
       }
 
-      setProducts(_products);
-      setProductDialog(false);
-      setProduct(emptyUser);
+      console.log(_product)
+      console.log(selectedRoles);
+
+      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: `Usuario ${product.firstName} actualizado correctamente`, life: 3000 });
+
+      //ENVIAR
+    } else {
+
+      product.roles = lowerCaseSelectedRoles;
+      console.log(selectedRoles);
+
+      try {
+        await addUser(product);
+        onRefresh();
+        console.log('Usuario creado correctamente');
+      } catch (error) {
+        console.log(error.message);
+      }
+
+      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Usuario creado correctamente', life: 3000 });
     }
+
+    setProductDialog(false);
+    setProduct(emptyUser);
   };
 
-  const editProduct = (product) => {
-    console.log(product);
-    setProduct({ ...product });
+  const editProduct = (userEdit) => {
+    setProduct({ ...userEdit, password: '' });
+    setSelectedRoles(userEdit.roles);
     setProductDialog(true);
     setActionName('Editar Usuario');
   };
@@ -148,19 +144,6 @@ export function UsersAdmin() {
     toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Usuario borrado correctamente', life: 3000 });
   };
 
-  const findIndexById = (id) => {
-    let index = -1;
-
-    for (let i = 0; i < products.length; i++) {
-      if (products[i].id === id) {
-        index = i;
-        break;
-      }
-    }
-
-    return index;
-  };
-
   const exportCSV = () => {
     dt.current.exportCSV();
   };
@@ -181,26 +164,19 @@ export function UsersAdmin() {
 
     setDeleteProductsDialog(false);
     setSelectedProducts(null);
-    toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Usuario borrado correctamente', life: 3000 });
+
+    if (selectedProducts.length === 1) {
+      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Usuario borrado correctamente', life: 3000 });
+    }
+
+    else {
+      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Usuarios borrados correctamente', life: 3000 });
+    }
   };
 
   const onInputChange = (e, name) => {
-    const val = (e.target && e.target.value) || '';
-    let _product = { ...product };
-
-    _product[`${name}`] = val;
-
-    setProduct(_product);
-  };
-
-  const onRoleChange = (e, name) => {
-    const val = (e.target && e.target.value) || '';
-    let _product = { ...product };
-
-    _product[`${name}`] = val;
-    //_product.roles = selectedRoles;
-
-    setProduct(_product);
+    const val = e.target.value || '';
+    setProduct(prevUser => ({ ...prevUser, [name]: val }));
   };
 
   const leftToolbarTemplate = () => {
@@ -232,17 +208,17 @@ export function UsersAdmin() {
   const search = (event) => {
     setTimeout(() => {
       let _filteredRoles;
-
+  
       if (!event.query.trim().length) {
         _filteredRoles = [...rolesList];
       } else {
         _filteredRoles = rolesList.filter((role) => {
-          return role.name
+          return role
             .toLowerCase()
             .startsWith(event.query.toLowerCase());
         });
       }
-
+  
       setFilteredRoles(_filteredRoles);
     }, 200);
   };
@@ -310,7 +286,7 @@ export function UsersAdmin() {
                   <Tag
                     key={role}
                     value={role}
-                    className={classNames('p-mr-2 my-tag',{ 'my-tag-bottom': rowData.roles.length===3 })}
+                    className={classNames('p-mr-2 my-tag', { 'my-tag-bottom': rowData.roles.length === 3 })}
                     severity={tagClass}
                   />
                 );
@@ -341,7 +317,7 @@ export function UsersAdmin() {
           <label htmlFor="lastName" className="font-bold">
             Apellidos
           </label>
-          <InputText id="lastName" value={product.lastName} onChange={(e) => onInputChange(e, 'lastName')} />
+          <InputText id="lastName" value={product.lastName || ''} onChange={(e) => onInputChange(e, 'lastName')} />
         </div>
         <div className="field">
           <label htmlFor="password" className="font-bold">
@@ -355,7 +331,7 @@ export function UsersAdmin() {
             Roles
           </label>
           <AutoComplete
-            field="name"
+            label="role"
             multiple
             value={selectedRoles}
             suggestions={filteredRoles}
