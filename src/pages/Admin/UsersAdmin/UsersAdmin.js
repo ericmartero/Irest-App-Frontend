@@ -43,7 +43,7 @@ export function UsersAdmin() {
 
   const toast = useRef(null);
   const dt = useRef(null);
-  const { users, getUsers, addUser, deleteUser, updateUser } = useUser();
+  const { error, users, getUsers, addUser, deleteUser, updateUser } = useUser();
   const [refreshTable, setRefreshTable] = useState(false);
 
   useEffect(() => {
@@ -379,7 +379,7 @@ export function UsersAdmin() {
           <div className="p-field-checkbox" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
             <InputSwitch
               id='isActive'
-              checked={valid}
+              checked={product.isActive}
               onChange={(e) => handleInputSwitch(e, 'isActive')}
             />
             <label htmlFor="isActive" className="font-bold" style={{ marginLeft: "1rem", alignSelf: "center" }}>
