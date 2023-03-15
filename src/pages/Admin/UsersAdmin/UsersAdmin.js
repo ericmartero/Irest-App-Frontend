@@ -177,10 +177,7 @@ export function UsersAdmin() {
     } catch (error) {
       console.log(error);
     }
-
-    let _products = products.filter((val) => !selectedProducts.includes(val));
-
-    //setProducts(_products);
+    
     setDeleteProductsDialog(false);
     setSelectedProducts(null);
     toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
@@ -313,7 +310,6 @@ export function UsersAdmin() {
                     key={role}
                     value={role}
                     className={classNames('p-mr-2 my-tag',{ 'my-tag-bottom': rowData.roles.length===3 })}
-                    //className="my-tag p-mr-2"
                     severity={tagClass}
                   />
                 );
