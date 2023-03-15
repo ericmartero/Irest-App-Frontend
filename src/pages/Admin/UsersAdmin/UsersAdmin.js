@@ -165,10 +165,22 @@ export function UsersAdmin() {
     setDeleteProductsDialog(true);
   };
 
-  const deleteSelectedProducts = () => {
+  const deleteSelectedProducts = async () => {
+
+    console.log(selectedProducts)
+
+    try {
+      selectedProducts.forEach(async (product) => {
+        await deleteUser(product.id);
+      });
+      onRefresh();
+    } catch (error) {
+      console.log(error);
+    }
+
     let _products = products.filter((val) => !selectedProducts.includes(val));
 
-    setProducts(_products);
+    //setProducts(_products);
     setDeleteProductsDialog(false);
     setSelectedProducts(null);
     toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
@@ -300,7 +312,8 @@ export function UsersAdmin() {
                   <Tag
                     key={role}
                     value={role}
-                    className="my-tag p-mr-2"
+                    className={classNames('p-mr-2 my-tag',{ 'my-tag-bottom': rowData.roles.length===3 })}
+                    //className="my-tag p-mr-2"
                     severity={tagClass}
                   />
                 );
