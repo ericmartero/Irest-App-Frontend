@@ -107,35 +107,40 @@ export function AdminLayout(props) {
         return window.innerWidth >= 992;
     }
 
-    const menu = [
-        {
-            label: 'Home',
-            items: [{
-                label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/'
-            }]
-        },
-        {
-            label: 'UI Components', icon: 'pi pi-fw pi-sitemap',
-            items: [
-                { label: 'Usuarios', icon: 'pi pi-fw pi-id-card', to: '/admin/users' },
-                { label: 'Input', icon: 'pi pi-fw pi-check-square', to: '/input' },
-                { label: "Float Label", icon: "pi pi-fw pi-bookmark", to: "/floatlabel" },
-                { label: "Invalid State", icon: "pi pi-fw pi-exclamation-circle", to: "invalidstate" },
-                { label: 'Button', icon: 'pi pi-fw pi-mobile', to: '/button' },
-                { label: 'Table', icon: 'pi pi-fw pi-table', to: '/table' },
-                { label: 'List', icon: 'pi pi-fw pi-list', to: '/list' },
-                { label: 'Tree', icon: 'pi pi-fw pi-share-alt', to: '/tree' },
-                { label: 'Panel', icon: 'pi pi-fw pi-tablet', to: '/panel' },
-                { label: 'Overlay', icon: 'pi pi-fw pi-clone', to: '/overlay' },
-                { label: "Media", icon: "pi pi-fw pi-image", to: "/media" },
-                { label: 'Menu', icon: 'pi pi-fw pi-bars', to: '/menu' },
-                { label: 'Message', icon: 'pi pi-fw pi-comment', to: '/messages' },
-                { label: 'File', icon: 'pi pi-fw pi-file', to: '/file' },
-                { label: 'Chart', icon: 'pi pi-fw pi-chart-bar', to: '/chart' },
-                { label: 'Misc', icon: 'pi pi-fw pi-circle-off', to: '/misc' },
-            ]
-        }
-    ];
+    let menu;
+
+    //console.log(auth.me);
+
+    /*const adminOrBoss = () => {
+        auth.me.user.roles.map((role) => {
+            if (role === 'admin' || role === 'boss') {
+    
+            }
+        })
+    }*/
+
+    if (auth?.me.user.roles.includes('admin') || auth?.me.user.roles.includes('boss')) {
+        menu = [
+            {
+                label: 'Home',
+                items: [
+                    { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' },
+                    { label: 'Usuarios', icon: 'pi pi-fw pi-id-card', to: '/admin/users' },
+                ]
+            }
+        ];
+    }
+
+    else {
+        menu = [
+            {
+                label: 'Home',
+                items: [
+                    { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' },
+                ]
+            }
+        ];
+    }
 
     const addClass = (element, className) => {
         if (element.classList)
