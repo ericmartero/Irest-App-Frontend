@@ -6,6 +6,7 @@ import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
 import { Toolbar } from 'primereact/toolbar';
 import { AutoComplete } from "primereact/autocomplete";
+import { InputSwitch } from "primereact/inputswitch";
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Tag } from 'primereact/tag';
@@ -35,6 +36,8 @@ export function UsersAdmin() {
   const [selectedRoles, setSelectedRoles] = useState(null);
   const [filteredRoles, setFilteredRoles] = useState(null);
   let rolesList = ['admin', 'employee', 'boss'];
+
+  const [valid, setValid] = useState(true);
 
   const [actionName, setActionName] = useState('');
 
@@ -76,7 +79,7 @@ export function UsersAdmin() {
 
   const saveProduct = async () => {
     const lowerCaseSelectedRoles = selectedRoles?.map(role => role.toLowerCase());
-    setSubmitted(true); 
+    setSubmitted(true);
 
     //EDITAR
     if (product.id) {
@@ -100,12 +103,36 @@ export function UsersAdmin() {
     } else {
 
       product.roles = lowerCaseSelectedRoles;
+      product.isActive = valid;
+      console.log(valid);
       console.log(selectedRoles);
+
+      let newUser = {
+        email: product.email,
+        firstName: product.firstName,
+        //lastName: '',
+        password: product.password,
+        isActive: true,
+        //roles: lowerCaseSelectedRoles,
+      };
+
+      /*if (product.lastName === '' && product.roles === undefined) {
+
+      }
+
+      else if (product.lastName === '') {
+
+      }
+
+      else if (product.roles === undefined) {
+
+      }*/
 
       try {
         await addUser(product);
         onRefresh();
         console.log('Usuario creado correctamente');
+        console.log(product);
       } catch (error) {
         console.log(error.message);
       }
@@ -193,7 +220,7 @@ export function UsersAdmin() {
   };
 
   const activeBodyTemplate = (rowData) => {
-    return <i className={classNames('pi', { 'text-green-500 pi-check-circle': !rowData.verified, 'text-red-500 pi-times-circle': rowData.verified })}></i>;
+    return <i className={classNames('pi', (valid ? 'text-green-500 pi-check-circle' : 'text-red-500 pi-times-circle'))}></i>;
   };
 
   const actionBodyTemplate = (rowData) => {
@@ -208,7 +235,7 @@ export function UsersAdmin() {
   const search = (event) => {
     setTimeout(() => {
       let _filteredRoles;
-  
+
       if (!event.query.trim().length) {
         _filteredRoles = [...rolesList];
       } else {
@@ -218,7 +245,7 @@ export function UsersAdmin() {
             .startsWith(event.query.toLowerCase());
         });
       }
-  
+
       setFilteredRoles(_filteredRoles);
     }, 200);
   };
@@ -338,6 +365,19 @@ export function UsersAdmin() {
             completeMethod={search}
             onChange={(e) => setSelectedRoles(e.value)}
           />
+        </div>
+
+        <div className="field" style={{ height: "2.5rem", display: "flex", alignItems: "center" }}>
+          <div className="p-field-checkbox" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <InputSwitch
+              id='isActive'
+              checked={valid}
+              onChange={(e) => setValid(e.value)}
+            />
+            <label htmlFor="isActive" className="font-bold" style={{ marginLeft: "1rem", alignSelf: "center" }}>
+              Usuario Activo
+            </label>
+          </div>
         </div>
       </Dialog>
 
