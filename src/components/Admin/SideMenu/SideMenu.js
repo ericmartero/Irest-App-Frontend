@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
 import classNames from 'classnames';
 import { Ripple } from "primereact/ripple";
@@ -36,12 +36,13 @@ const AppSubmenu = (props) => {
     }
 
     const onKeyDown = (event) => {
-        if (event.code === 'Enter' || event.code === 'Space'){
+        if (event.code === 'Enter' || event.code === 'Space') {
             event.preventDefault();
             event.target.click();
         }
     }
 
+    //CARGA EN SI LOS ENLACES EN EL SIDEBAR CON EL LOGO
     const renderLinkContent = (item) => {
         let submenuIcon = item.items && <i className="pi pi-fw pi-angle-down menuitem-toggle-icon"></i>;
         let badge = item.badge && <Badge value={item.badge} />
@@ -52,42 +53,43 @@ const AppSubmenu = (props) => {
                 <span>{item.label}</span>
                 {submenuIcon}
                 {badge}
-                <Ripple/>
+                <Ripple />
             </React.Fragment>
         );
     }
 
     const renderLink = (item, i) => {
-        let content = renderLinkContent(item);
+        const content = renderLinkContent(item);
 
-        if (item.to) {
-            return (
-                <NavLink aria-label={item.label} onKeyDown={onKeyDown} role="menuitem" className="p-ripple" activeClassName="router-link-active router-link-exact-active" to={item.to} onClick={(e) => onMenuItemClick(e, item, i)} exact target={item.target}>
-                    {content}
-                </NavLink>
-            )
-        }
-        else {
-            return (
-                <a tabIndex="0" aria-label={item.label} onKeyDown={onKeyDown} role="menuitem" href={item.url} className="p-ripple" onClick={(e) => onMenuItemClick(e, item, i)} target={item.target}>
-                    {content}
-                </a>
-            );
-        }
-    }
+        return (
+            <NavLink
+                aria-label={item.label}
+                onKeyDown={onKeyDown}
+                role="menuitem"
+                className="p-ripple"
+                activeClassName="router-link-active router-link-exact-active"
+                to={item.to}
+                onClick={(e) => onMenuItemClick(e, item, i)}
+                exact
+                target={item.target}
+            >
+                {content}
+            </NavLink>
+        );
+    };
 
     let items = props.items && props.items.map((item, i) => {
         let active = activeIndex === i;
-        let styleClass = classNames(item.badgeStyleClass, {'layout-menuitem-category': props.root, 'active-menuitem': active && !item.to });
+        let styleClass = classNames(item.badgeStyleClass, { 'layout-menuitem-category': props.root, 'active-menuitem': active && !item.to });
 
-        if(props.root) {
+        if (props.root) {
             return (
                 <li className={styleClass} key={i} role="none">
-                    {props.root === true && 
-                    <React.Fragment>
-                        <div className="layout-menuitem-root-text" aria-label={item.label}>{item.label}</div>
-                        <AppSubmenu items={item.items} onMenuItemClick={props.onMenuItemClick} />
-                    </React.Fragment>}
+                    {props.root === true &&
+                        <React.Fragment>
+                            <div className="layout-menuitem-root-text" aria-label={item.label}>{item.label}</div>
+                            <AppSubmenu items={item.items} onMenuItemClick={props.onMenuItemClick} />
+                        </React.Fragment>}
                 </li>
             );
         }
