@@ -100,7 +100,7 @@ export function UsersAdmin() {
           onRefresh();
           console.log('Usuario creado correctamente');
         } catch (error) {
-          console.log(error);
+          console.log(error.message);
         }
 
         toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Usuario creado correctamente', life: 3000 });
@@ -166,18 +166,15 @@ export function UsersAdmin() {
   };
 
   const deleteSelectedProducts = async () => {
-
-    console.log(selectedProducts)
-
     try {
-      selectedProducts.forEach(async (product) => {
+      await Promise.all(selectedProducts.map(async (product) => {
         await deleteUser(product.id);
-      });
+      }));
       onRefresh();
     } catch (error) {
       console.log(error);
     }
-    
+
     setDeleteProductsDialog(false);
     setSelectedProducts(null);
     toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
