@@ -40,7 +40,7 @@ export function UsersAdmin() {
 
   const toast = useRef(null);
   const dt = useRef(null);
-  const { users, getUsers, addUser, deleteUser } = useUser();
+  const { users, getUsers, addUser, deleteUser, updateUser } = useUser();
   const [refreshTable, setRefreshTable] = useState(false);
 
   useEffect(() => {
@@ -84,9 +84,18 @@ export function UsersAdmin() {
       
       //EDITAR
       if (product.id) {
-        const index = findIndexById(product.id);
+        console.log(users);
+        try {
+          await updateUser(product.id, _product);
+          onRefresh();
+          console.log('Usuario editado correctamente');
+        } catch (error) {
+          console.log(error.message);
+        }
 
+        const index = findIndexById(product.id);
         _products[index] = _product;
+
         toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Usuario actualizado correctamente', life: 3000 });
       
       //ENVIAR
@@ -134,11 +143,6 @@ export function UsersAdmin() {
       console.log(error);
     }
 
-    //ESTO DE ABAJO NO TOCAR, COJE DE NUEVO AL BORRAR 
-    let _products = products.filter((val) => val.id !== product.id);
-    console.log(_products);
-
-    setProducts(_products);
     setDeleteProductDialog(false);
     setProduct(emptyUser);
     toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Usuario borrado correctamente', life: 3000 });
@@ -177,7 +181,7 @@ export function UsersAdmin() {
 
     setDeleteProductsDialog(false);
     setSelectedProducts(null);
-    toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
+    toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Usuario borrado correctamente', life: 3000 });
   };
 
   const onInputChange = (e, name) => {

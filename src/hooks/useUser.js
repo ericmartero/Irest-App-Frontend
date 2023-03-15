@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { getMeApi } from '../api/auth';
-import { getUsersApi, addUserApi, deleteUserApi } from '../api/user';
+import { getUsersApi, addUserApi, deleteUserApi, updateUserApi } from '../api/user';
 import { useAuth } from '.';
 
 export function useUser() {
@@ -44,6 +44,14 @@ export function useUser() {
         }
     }
 
+    const updateUser = async (id, data) => {
+        try {
+            await updateUserApi(id, data, auth.token);
+        } catch (error) {
+            setError(error); 
+        }
+    }
+
     return {
         error,
         users,
@@ -51,5 +59,6 @@ export function useUser() {
         getUsers,
         addUser,
         deleteUser,
+        updateUser,
     };
 }
