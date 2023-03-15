@@ -206,6 +206,14 @@ export function UsersAdmin() {
     setProduct(prevUser => ({ ...prevUser, [name]: val }));
   };
 
+
+  const handleInputSwitch = (e, valid) => {
+    const val = e.target.value;
+    console.log(val);
+    setValid(val);
+    setProduct(prevUser => ({ ...prevUser, [valid]: val }));
+  }
+
   const leftToolbarTemplate = () => {
     return (
       <div className="flex flex-wrap gap-2">
@@ -220,7 +228,7 @@ export function UsersAdmin() {
   };
 
   const activeBodyTemplate = (rowData) => {
-    return <i className={classNames('pi', (valid ? 'text-green-500 pi-check-circle' : 'text-red-500 pi-times-circle'))}></i>;
+    return <i className={classNames('pi', (rowData.isActive ? 'text-green-500 pi-check-circle' : 'text-red-500 pi-times-circle'))}></i>;
   };
 
   const actionBodyTemplate = (rowData) => {
@@ -372,7 +380,7 @@ export function UsersAdmin() {
             <InputSwitch
               id='isActive'
               checked={valid}
-              onChange={(e) => setValid(e.value)}
+              onChange={(e) => handleInputSwitch(e, 'isActive')}
             />
             <label htmlFor="isActive" className="font-bold" style={{ marginLeft: "1rem", alignSelf: "center" }}>
               Usuario Activo
