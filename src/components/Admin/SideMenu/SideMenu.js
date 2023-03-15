@@ -11,6 +11,7 @@ const AppSubmenu = (props) => {
     const [activeIndex, setActiveIndex] = useState(null)
 
     const onMenuItemClick = (event, item, index) => {
+
         //avoid processing disabled items
         if (item.disabled) {
             event.preventDefault();
@@ -60,6 +61,7 @@ const AppSubmenu = (props) => {
 
     const renderLink = (item, i) => {
         const content = renderLinkContent(item);
+        console.log(item);
 
         return (
             <NavLink
@@ -71,7 +73,6 @@ const AppSubmenu = (props) => {
                 to={item.to}
                 onClick={(e) => onMenuItemClick(e, item, i)}
                 exact
-                target={item.target}
             >
                 {content}
             </NavLink>
