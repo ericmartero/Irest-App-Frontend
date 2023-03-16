@@ -5,7 +5,6 @@ import { Column } from 'primereact/column';
 import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
 import { Toolbar } from 'primereact/toolbar';
-import { AutoComplete } from "primereact/autocomplete";
 import { MultiSelect } from 'primereact/multiselect';
 import { InputSwitch } from "primereact/inputswitch";
 import { Dialog } from 'primereact/dialog';
@@ -35,10 +34,7 @@ export function UsersAdmin() {
   const [globalFilter, setGlobalFilter] = useState(null);
 
   const [selectedRoles, setSelectedRoles] = useState(null);
-  const [filteredRoles, setFilteredRoles] = useState(null);
   let rolesList = ['admin', 'employee', 'boss'];
-
-  const [valid, setValid] = useState(true);
 
   const [actionName, setActionName] = useState('');
 
@@ -117,12 +113,13 @@ export function UsersAdmin() {
         password: product.password,
         isActive: product.isActive,
         ...(product.lastName && { lastName: product.lastName }),
-        ...(product.roles && { roles: lowerCaseSelectedRoles })
+        ...(product.roles ? { roles: lowerCaseSelectedRoles } : { roles: ['employee'] })
       };
 
       try {
         await addUser(newUser);
         onRefresh();
+        console.log(error);
       } catch (error) {
         console.log(error);
       }
@@ -228,24 +225,6 @@ export function UsersAdmin() {
         <Button icon="pi pi-trash" rounded outlined severity="danger" onClick={() => confirmDeleteProduct(rowData)} />
       </React.Fragment>
     );
-  };
-
-  const search = (event) => {
-    setTimeout(() => {
-      let _filteredRoles;
-
-      if (!event.query.trim().length) {
-        _filteredRoles = [...rolesList];
-      } else {
-        _filteredRoles = rolesList.filter((role) => {
-          return role
-            .toLowerCase()
-            .startsWith(event.query.toLowerCase());
-        });
-      }
-
-      setFilteredRoles(_filteredRoles);
-    }, 200);
   };
 
   const header = (
