@@ -4,7 +4,7 @@ import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
 import { loginApi } from '../../../api/auth';
 import { useAuth } from '../../../hooks';
-import { useFormik } from 'formik';
+import { Form, useFormik } from 'formik';
 import * as Yup from 'yup';
 import './LoginAdmin.scss';
 import './LoginError.scss';
@@ -41,6 +41,12 @@ export function LoginAdmin() {
     }
   });
 
+  const onFormSubmit = e => {
+    e.preventDefault();
+    formik.handleSubmit();
+  }
+  
+
   return (
     <div>
       <Toast ref={toastError} position="bottom-center" className="toast" />
@@ -52,7 +58,7 @@ export function LoginAdmin() {
             <span className="text-600 font-medium line-height-3">Inicia sesión para acceder al panel de control.</span>
           </div>
 
-          <div>
+          <form onSubmit={onFormSubmit}>
             <label htmlFor="email" className="block text-900 font-medium mb-2">Correo electrónico</label>
             <InputText id="email" type="text" placeholder="Introduce tu correo electrónico" className={formik.errors.email ? "w-full mb-1 p-invalid" : "w-full mb-3"}
               value={formik.values.email} onChange={formik.handleChange} />
@@ -70,8 +76,8 @@ export function LoginAdmin() {
               value={formik.values.password} onChange={formik.handleChange} />
             {formik.errors.password && <small className="p-error">Contraseña requerida</small>}
 
-            <Button type="submit" label="Iniciar sesión" icon="pi pi-user" disabled={formik.errors.email || formik.errors.password ? true : false } className={formik.errors.password ? "w-full mt-3" : "w-full"} onClick={formik.handleSubmit} />
-          </div>
+            <Button type="submit" label="Iniciar sesión" icon="pi pi-user" disabled={formik.errors.email || formik.errors.password ? true : false } className={formik.errors.password ? "w-full mt-3" : "w-full"} />
+          </form>
         </div>
       </div>
     </div>
