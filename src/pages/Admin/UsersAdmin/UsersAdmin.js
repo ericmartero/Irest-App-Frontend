@@ -6,6 +6,7 @@ import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
 import { Toolbar } from 'primereact/toolbar';
 import { AutoComplete } from "primereact/autocomplete";
+import { MultiSelect } from 'primereact/multiselect';
 import { InputSwitch } from "primereact/inputswitch";
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
@@ -84,18 +85,23 @@ export function UsersAdmin() {
     //EDITAR
     if (product.id) {
 
-      const _product = { ...product, roles: lowerCaseSelectedRoles };
+      const editUser = {
+        isActive: product.isActive,
+        ...(product.email && { email: product.email }),
+        ...(product.firstName && { firstName: product.firstName }),
+        ...(product.password && { password: product.password }),
+        ...(product.lastName && { lastName: product.lastName }),
+        ...(product.roles && { roles: lowerCaseSelectedRoles })
+      };
 
       try {
-        await updateUser(product.id, _product);
+        await updateUser(product.id, editUser);
         onRefresh();
-        console.log('Usuario editado correctamente');
       } catch (error) {
         console.log(error.message);
       }
 
-      console.log(_product)
-      console.log(selectedRoles);
+      console.log(editUser)
 
       toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: `Usuario ${product.firstName} actualizado correctamente`, life: 3000 });
 
@@ -121,7 +127,7 @@ export function UsersAdmin() {
         console.log(error);
       }
 
-      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Usuario creado correctamente', life: 3000 });
+      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: `Usuario ${product.firstName} creado correctamente`, life: 3000 });
     }
 
     setProductDialog(false);
@@ -270,6 +276,26 @@ export function UsersAdmin() {
     </React.Fragment>
   );
 
+  const itemTemplate = (option) => {
+    return (
+      <div className="flex align-items-center">
+        <span>{option}</span>
+      </div>
+    );
+  };
+
+  const selectedItemTemplate = (option) => {
+    if (option) {
+      return (
+        <div className="inline-flex align-items-center py-1 px-2 bg-primary text-primary border-round mr-2">
+          <span>{option}</span>
+        </div>
+      );
+    }
+
+    return 'Selecciona los roles';
+  };
+
   return (
     <div>
       <Toast ref={toast} />
@@ -325,6 +351,23 @@ export function UsersAdmin() {
           <InputText id="email" type="email" value={product.email} onChange={(e) => onInputChange(e, 'email')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.email })} />
           {submitted && !product.email && <small className="p-error">El email es requerido</small>}
         </div>
+
+        <div className="field">
+          <label htmlFor="roles" className="font-bold">
+            Roles
+          </label>
+          <MultiSelect
+            value={selectedRoles}
+            onChange={(e) => setSelectedRoles(e.value)}
+            options={rolesList}
+            optionLabel="role"
+            placeholder="Selecciona los roles"
+            itemTemplate={itemTemplate}
+            selectedItemTemplate={selectedItemTemplate}
+            appendTo="self"
+          />
+        </div>
+
         <div className="field">
           <label htmlFor="firstName" className="font-bold">
             Nombre
@@ -344,19 +387,6 @@ export function UsersAdmin() {
           </label>
           <InputText id="password" type="password" value={product.password} onChange={(e) => onInputChange(e, 'password')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.password })} />
           {submitted && !product.password && <small className="p-error">La contraseña es requerida</small>}
-        </div>
-        <div className="field">
-          <label htmlFor="roles" className="font-bold">
-            Roles
-          </label>
-          <AutoComplete
-            label="role"
-            multiple
-            value={selectedRoles}
-            suggestions={filteredRoles}
-            completeMethod={search}
-            onChange={(e) => setSelectedRoles(e.value)}
-          />
         </div>
 
         <div className="field" style={{ height: "2.5rem", display: "flex", alignItems: "center" }}>
