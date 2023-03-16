@@ -50,6 +50,11 @@ export const updateUserApi = async(id, dtoUpdateUser, token) => {
         }
 
         const resp = await fetch(url, params);
+
+        if (resp.status === 400) {
+            throw new Error("No se ha podido actualizar el usuario");
+        }
+
         return await resp.json();
 
     } catch (error) {

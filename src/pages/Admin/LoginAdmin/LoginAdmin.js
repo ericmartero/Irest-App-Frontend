@@ -4,7 +4,7 @@ import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
 import { loginApi } from '../../../api/auth';
 import { useAuth } from '../../../hooks';
-import { Form, useFormik } from 'formik';
+import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import './LoginAdmin.scss';
 import './LoginError.scss';

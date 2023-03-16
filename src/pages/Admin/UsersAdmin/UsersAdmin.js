@@ -80,25 +80,24 @@ export function UsersAdmin() {
 
     //EDITAR
     if (product.id) {
-
+      console.log(product);
       const editUser = {
         isActive: product.isActive,
         ...(product.email && { email: product.email }),
         ...(product.firstName && { firstName: product.firstName }),
         ...(product.password && { password: product.password }),
         ...(product.lastName && { lastName: product.lastName }),
-        ...(product.roles && { roles: lowerCaseSelectedRoles })
+        ...(product.roles ? { roles: lowerCaseSelectedRoles } : { roles: ['employee'] })
       };
 
       try {
+        console.log(editUser)
+
         await updateUser(product.id, editUser);
         onRefresh();
       } catch (error) {
-        console.log(error.message);
+        showEditError(error);
       }
-
-      console.log(editUser)
-
       toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: `Usuario ${product.firstName} actualizado correctamente`, life: 3000 });
 
       //ENVIAR
@@ -275,6 +274,10 @@ export function UsersAdmin() {
     return 'Selecciona los roles';
   };
 
+  const showEditError = (error) => {
+    toast.current.show({ severity: 'error', summary: 'Error al editar', detail: error.message, life: 3000 });
+  }
+
   return (
     <div>
       <Toast ref={toast} />
@@ -317,7 +320,7 @@ export function UsersAdmin() {
               })
             }
           ></Column>
-          <Column field="isActive" header="Activo" dataType="boolean" body={activeBodyTemplate} style={{ minWidth: '8rem' }}></Column>
+          <Column field="isActive" header="Activo" sortable dataType="boolean" body={activeBodyTemplate} style={{ minWidth: '8rem' }}></Column>
           <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
         </DataTable>
       </div>
