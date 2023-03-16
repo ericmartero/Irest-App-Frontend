@@ -104,7 +104,6 @@ export function UsersAdmin() {
 
       product.roles = lowerCaseSelectedRoles;
       //product.isActive = valid;
-      console.log(product);
 
       const newUser = {
         email: product.email,
@@ -115,14 +114,11 @@ export function UsersAdmin() {
         ...(product.roles && { roles: lowerCaseSelectedRoles })
       };
 
-      console.log(newUser);
-
       try {
         await addUser(newUser);
         onRefresh();
-        console.log('Usuario creado correctamente');
       } catch (error) {
-        console.log(error.message);
+        console.log(error);
       }
 
       toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Usuario creado correctamente', life: 3000 });
