@@ -10,7 +10,7 @@ import { InputSwitch } from "primereact/inputswitch";
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Tag } from 'primereact/tag';
-import { useUser } from '../../../hooks';
+import { useUser, useAuth } from '../../../hooks';
 import './UsersAdmin.scss';
 
 export function UsersAdmin() {
@@ -40,6 +40,7 @@ export function UsersAdmin() {
 
   const toast = useRef(null);
   const dt = useRef(null);
+  const { auth } = useAuth();
   const { error, users, getUsers, addUser, deleteUser, updateUser } = useUser();
   const [refreshTable, setRefreshTable] = useState(false);
 
@@ -48,8 +49,11 @@ export function UsersAdmin() {
   }, [refreshTable])
 
   useEffect(() => {
-    setProducts(users);
-  }, [users])
+    if (users) {
+      const filteredUsers = users.filter(user => user.id !== auth.me.user.id);
+      setProducts(filteredUsers);
+    }
+  }, [users, auth]);
 
   const onRefresh = () => setRefreshTable((state) => !state);
 
