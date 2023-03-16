@@ -61,7 +61,6 @@ const AppSubmenu = (props) => {
 
     const renderLink = (item, i) => {
         const content = renderLinkContent(item);
-        console.log(item);
 
         return (
             <NavLink

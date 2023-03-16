@@ -103,36 +103,24 @@ export function UsersAdmin() {
     } else {
 
       product.roles = lowerCaseSelectedRoles;
-      product.isActive = valid;
-      console.log(valid);
-      console.log(selectedRoles);
+      //product.isActive = valid;
+      console.log(product);
 
-      let newUser = {
+      const newUser = {
         email: product.email,
         firstName: product.firstName,
-        //lastName: '',
         password: product.password,
-        isActive: true,
-        //roles: lowerCaseSelectedRoles,
+        isActive: product.isActive,
+        ...(product.lastName && { lastName: product.lastName }),
+        ...(product.roles && { roles: lowerCaseSelectedRoles })
       };
 
-      /*if (product.lastName === '' && product.roles === undefined) {
-
-      }
-
-      else if (product.lastName === '') {
-
-      }
-
-      else if (product.roles === undefined) {
-
-      }*/
+      console.log(newUser);
 
       try {
-        await addUser(product);
+        await addUser(newUser);
         onRefresh();
         console.log('Usuario creado correctamente');
-        console.log(product);
       } catch (error) {
         console.log(error.message);
       }
@@ -209,8 +197,8 @@ export function UsersAdmin() {
 
   const handleInputSwitch = (e, valid) => {
     const val = e.target.value;
-    console.log(val);
-    setValid(val);
+    //console.log(val);
+    //setValid(val);
     setProduct(prevUser => ({ ...prevUser, [valid]: val }));
   }
 
