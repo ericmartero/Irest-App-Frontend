@@ -44,6 +44,8 @@ export function UsersAdmin() {
   const { error, users, getUsers, addUser, deleteUser, updateUser } = useUser();
   const [refreshTable, setRefreshTable] = useState(false);
 
+  const [validationErrors, setValidationErrors] = useState({});
+
   useEffect(() => {
     getUsers();
   }, [refreshTable])
@@ -79,59 +81,66 @@ export function UsersAdmin() {
   };
 
   const saveProduct = async () => {
-    const lowerCaseSelectedRoles = selectedRoles?.map(role => role.toLowerCase());
+
+    const isValid = validateFields();
+    console.log(isValid);
     setSubmitted(true);
+    if (isValid) {
 
-    //EDITAR
-    if (product.id) {
-      console.log(product);
-      const editUser = {
-        isActive: product.isActive,
-        ...(product.email && { email: product.email }),
-        ...(product.firstName && { firstName: product.firstName }),
-        ...(product.password && { password: product.password }),
-        ...(product.lastName && { lastName: product.lastName }),
-        ...(product.roles ? { roles: lowerCaseSelectedRoles } : { roles: ['employee'] })
-      };
+      const lowerCaseSelectedRoles = selectedRoles?.map(role => role.toLowerCase());
 
-      try {
-        console.log(editUser)
+      //EDITAR
+      if (product.id) {
 
-        await updateUser(product.id, editUser);
-        onRefresh();
-      } catch (error) {
-        showEditError(error);
+        console.log(product);
+        const editUser = {
+          isActive: product.isActive,
+          ...(product.email && { email: product.email }),
+          ...(product.firstName && { firstName: product.firstName }),
+          ...(product.password && { password: product.password }),
+          ...(product.lastName && { lastName: product.lastName }),
+          ...(product.roles ? { roles: lowerCaseSelectedRoles } : { roles: ['employee'] })
+        };
+
+        try {
+          console.log(editUser)
+
+          await updateUser(product.id, editUser);
+          onRefresh();
+        } catch (error) {
+          showEditError(error);
+        }
+        toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: `Usuario ${product.firstName} actualizado correctamente`, life: 3000 });
+
+        //ENVIAR
+      } else {
+
+        product.roles = lowerCaseSelectedRoles;
+        //product.isActive = valid;
+
+        const newUser = {
+          email: product.email,
+          firstName: product.firstName,
+          password: product.password,
+          isActive: product.isActive,
+          ...(product.lastName && { lastName: product.lastName }),
+          ...(product.roles ? { roles: lowerCaseSelectedRoles } : { roles: ['employee'] })
+        };
+
+        try {
+          await addUser(newUser);
+          onRefresh();
+          console.log(error);
+        } catch (error) {
+          console.log(error);
+        }
+
+        toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: `Usuario ${product.firstName} creado correctamente`, life: 3000 });
       }
-      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: `Usuario ${product.firstName} actualizado correctamente`, life: 3000 });
 
-      //ENVIAR
-    } else {
-
-      product.roles = lowerCaseSelectedRoles;
-      //product.isActive = valid;
-
-      const newUser = {
-        email: product.email,
-        firstName: product.firstName,
-        password: product.password,
-        isActive: product.isActive,
-        ...(product.lastName && { lastName: product.lastName }),
-        ...(product.roles ? { roles: lowerCaseSelectedRoles } : { roles: ['employee'] })
-      };
-
-      try {
-        await addUser(newUser);
-        onRefresh();
-        console.log(error);
-      } catch (error) {
-        console.log(error);
-      }
-
-      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: `Usuario ${product.firstName} creado correctamente`, life: 3000 });
-    }
-
-    setProductDialog(false);
-    setProduct(emptyUser);
+      setProductDialog(false);
+      setProduct(emptyUser);
+    };
   };
 
   const editProduct = (userEdit) => {
@@ -282,6 +291,29 @@ export function UsersAdmin() {
     toast.current.show({ severity: 'error', summary: 'Error al editar', detail: error.message, life: 3000 });
   }
 
+  const isValidEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validateFields = () => {
+    const errors = {};
+    if (!product.email) {
+      errors.email = "El email es requerido";
+    } else if (!isValidEmail(product.email)) {
+      console.log('entraaa');
+      errors.email = "El email no es válido";
+    }
+    if (!product.firstName) {
+      errors.firstName = "El nombre es requerido";
+    }
+    if (!product.password) {
+      errors.password = "La contraseña es requerida";
+    }
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   return (
     <div>
       <Toast ref={toast} />
@@ -334,8 +366,12 @@ export function UsersAdmin() {
           <label htmlFor="email" className="font-bold">
             Email
           </label>
-          <InputText id="email" type="email" value={product.email} onChange={(e) => onInputChange(e, 'email')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.email })} />
-          {submitted && !product.email && <small className="p-error">El email es requerido</small>}
+          <InputText id="email" type="email" value={product.email} onChange={(e) => onInputChange(e, 'email')} required autoFocus
+            className={classNames({ "p-invalid": submitted && (!product.email || validationErrors.email) })} />
+            {submitted && !product.email 
+              ? (<small className="p-error">El email es requerido</small>) 
+              : validationErrors.email && (<small className="p-error">{validationErrors.email}</small>)
+            }
         </div>
 
         <div className="field">
