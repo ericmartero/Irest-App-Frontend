@@ -70,6 +70,7 @@ export function UsersAdmin() {
   const hideDialog = () => {
     setSubmitted(false);
     setProductDialog(false);
+    setValidationErrors({});
   };
 
   const hideDeleteProductDialog = () => {
@@ -140,7 +141,7 @@ export function UsersAdmin() {
 
       setProductDialog(false);
       setProduct(emptyUser);
-    };
+    }
   };
 
   const editProduct = (userEdit) => {
@@ -202,14 +203,27 @@ export function UsersAdmin() {
 
   const onInputChange = (e, name) => {
     const val = e.target.value || '';
+
+    let errors = { ...validationErrors };
+
+    switch (name) {
+      case "email":
+        if (!isValidEmail(val)) {
+          errors.email = "El formato de correo electrónico es inválido";
+        } else {
+          delete errors.email;
+        }
+        break;
+      // ...
+    }
+
     setProduct(prevUser => ({ ...prevUser, [name]: val }));
+    setValidationErrors(errors);
   };
 
 
   const handleInputSwitch = (e, valid) => {
     const val = e.target.value;
-    //console.log(val);
-    //setValid(val);
     setProduct(prevUser => ({ ...prevUser, [valid]: val }));
   }
 
@@ -301,8 +315,7 @@ export function UsersAdmin() {
     if (!product.email) {
       errors.email = "El email es requerido";
     } else if (!isValidEmail(product.email)) {
-      console.log('entraaa');
-      errors.email = "El email no es válido";
+      errors.email = "El formato de correo electrónico es inválido";
     }
     if (!product.firstName) {
       errors.firstName = "El nombre es requerido";
@@ -368,10 +381,10 @@ export function UsersAdmin() {
           </label>
           <InputText id="email" type="email" value={product.email} onChange={(e) => onInputChange(e, 'email')} required autoFocus
             className={classNames({ "p-invalid": submitted && (!product.email || validationErrors.email) })} />
-            {submitted && !product.email 
-              ? (<small className="p-error">El email es requerido</small>) 
-              : validationErrors.email && (<small className="p-error">{validationErrors.email}</small>)
-            }
+          {submitted && !product.email 
+            ? (<small className="p-error">El email es requerido</small>)
+            : submitted && validationErrors.email && (<small className="p-error">{validationErrors.email}</small>)
+          }
         </div>
 
         <div className="field">
