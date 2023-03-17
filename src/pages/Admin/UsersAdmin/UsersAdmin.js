@@ -220,11 +220,17 @@ export function UsersAdmin() {
         } else {
           delete errors.firstName;
         }
+        break;
       case "password":
-        if (val.length > 1) {
+        if (!validatePassword(val)) {
+          errors.password = "La contraseña tiene que tener mínimo 6 caracteres, una mayúscula, una minúscula y un número"
+        }
+        else {
           delete errors.password;
         }
-      // ...
+        break;
+      default:
+        break;
     }
 
     setProduct(prevUser => ({ ...prevUser, [name]: val }));
@@ -242,6 +248,11 @@ export function UsersAdmin() {
     return emailRegex.test(email);
   };
 
+  function validatePassword(password) {
+    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,}$/;
+    return passwordRegex.test(password);
+  }
+
   const validateFields = () => {
     const errors = {};
     if (!product.email) {
@@ -256,6 +267,8 @@ export function UsersAdmin() {
     }
     if (!product.password) {
       errors.password = "La contraseña es requerida";
+    } else if (!validatePassword(product.password)) {
+      errors.password = "La contraseña tiene que tener mínimo 6 caracteres, una mayúscula, una minúscula y un número"
     }
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
@@ -299,7 +312,7 @@ export function UsersAdmin() {
   const productDialogFooter = (
     <React.Fragment>
       <Button label="Cancelar" icon="pi pi-times" outlined onClick={hideDialog} />
-      <Button label="Guardar" icon="pi pi-check" onClick={saveProduct} disabled={ Object.keys(validationErrors).length === 0  ? false : true } />
+      <Button label="Guardar" icon="pi pi-check" onClick={saveProduct} disabled={ !submitted || Object.keys(validationErrors).length === 0  ? false : true } />
     </React.Fragment>
   );
   const deleteProductDialogFooter = (
@@ -436,7 +449,10 @@ export function UsersAdmin() {
             Contraseña
           </label>
           <InputText id="password" type="password" value={product.password} onChange={(e) => onInputChange(e, 'password')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.password })} />
-          {submitted && !product.password && <small className="p-error">La contraseña es requerida</small>}
+          {submitted && !product.password 
+            ? (<small className="p-error">La contraseña es requerida</small>)
+            : submitted && validationErrors.password && (<small className="p-error">{validationErrors.password}</small>)
+          }
         </div>
 
         <div className="field" style={{ height: "2.5rem", display: "flex", alignItems: "center" }}>
