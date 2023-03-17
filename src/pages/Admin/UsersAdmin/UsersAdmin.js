@@ -205,6 +205,7 @@ export function UsersAdmin() {
     const val = e.target.value || '';
 
     let errors = { ...validationErrors };
+    console.log(val.length);
 
     switch (name) {
       case "email":
@@ -214,6 +215,12 @@ export function UsersAdmin() {
           delete errors.email;
         }
         break;
+      case "firstName":
+        if (val.length < 2) {
+          errors.firstName = "El nombre tiene que tener mínimo 2 letras";
+        } else {
+          delete errors.firstName;
+        }
       // ...
     }
 
@@ -319,6 +326,8 @@ export function UsersAdmin() {
     }
     if (!product.firstName) {
       errors.firstName = "El nombre es requerido";
+    } else if (product.firstName.length < 2) {
+      errors.firstName = "El nombre tiene que tener mínimo 2 letras";
     }
     if (!product.password) {
       errors.password = "La contraseña es requerida";
@@ -407,8 +416,11 @@ export function UsersAdmin() {
           <label htmlFor="firstName" className="font-bold">
             Nombre
           </label>
-          <InputText id="firstName" value={product.firstName} onChange={(e) => onInputChange(e, 'firstName')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.firstName })} />
-          {submitted && !product.firstName && <small className="p-error">El nombre es requerido</small>}
+          <InputText id="firstName" value={product.firstName} onChange={(e) => onInputChange(e, 'firstName')} required autoFocus className={classNames({ "p-invalid": submitted && (!product.firstName || validationErrors.firstName) })} />
+          {submitted && !product.firstName 
+            ? <small className="p-error">El nombre es requerido</small>
+            : submitted && validationErrors.firstName && (<small className="p-error">{validationErrors.firstName}</small>)
+          }
         </div>
         <div className="field">
           <label htmlFor="lastName" className="font-bold">
