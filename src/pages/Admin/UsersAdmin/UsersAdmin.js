@@ -45,6 +45,7 @@ export function UsersAdmin() {
   const [refreshTable, setRefreshTable] = useState(false);
 
   const [validationErrors, setValidationErrors] = useState({});
+  const [editUser, setEditUser] = useState(false)
 
   useEffect(() => {
     getUsers();
@@ -60,6 +61,7 @@ export function UsersAdmin() {
   const onRefresh = () => setRefreshTable((state) => !state);
 
   const openNew = () => {
+    setEditUser(false);
     setProduct(emptyUser);
     setSelectedRoles(null);
     setSubmitted(false);
@@ -145,6 +147,7 @@ export function UsersAdmin() {
   };
 
   const editProduct = (userEdit) => {
+    setEditUser(true);
     setProduct({ ...userEdit, password: '' });
     setSelectedRoles(userEdit.roles);
     setProductDialog(true);
@@ -265,11 +268,21 @@ export function UsersAdmin() {
     } else if (product.firstName.length < 2) {
       errors.firstName = "El nombre tiene que tener mínimo 2 letras";
     }
-    if (!product.password) {
-      errors.password = "La contraseña es requerida";
-    } else if (!validatePassword(product.password)) {
-      errors.password = "La contraseña tiene que tener mínimo 6 caracteres, una mayúscula, una minúscula y un número"
+
+    if (editUser) {
+      if (!validatePassword(product.password)) {
+        errors.password = "La contraseña tiene que tener mínimo 6 caracteres, una mayúscula, una minúscula y un número"
+      }
     }
+
+    else {
+      if (!product.password) {
+        errors.password = "La contraseña es requerida";
+      } else if (!validatePassword(product.password)) {
+        errors.password = "La contraseña tiene que tener mínimo 6 caracteres, una mayúscula, una minúscula y un número"
+      }
+    }
+
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -312,7 +325,7 @@ export function UsersAdmin() {
   const productDialogFooter = (
     <React.Fragment>
       <Button label="Cancelar" icon="pi pi-times" outlined onClick={hideDialog} />
-      <Button label="Guardar" icon="pi pi-check" onClick={saveProduct} disabled={ !submitted || Object.keys(validationErrors).length === 0  ? false : true } />
+      <Button label="Guardar" icon="pi pi-check" onClick={saveProduct} disabled={!submitted || Object.keys(validationErrors).length === 0 ? false : true} />
     </React.Fragment>
   );
   const deleteProductDialogFooter = (
@@ -406,7 +419,7 @@ export function UsersAdmin() {
           </label>
           <InputText id="email" type="email" value={product.email} onChange={(e) => onInputChange(e, 'email')} required autoFocus
             className={classNames({ "p-invalid": submitted && (!product.email || validationErrors.email) })} />
-          {submitted && !product.email 
+          {submitted && !product.email
             ? (<small className="p-error">El email es requerido</small>)
             : submitted && validationErrors.email && (<small className="p-error">{validationErrors.email}</small>)
           }
@@ -433,7 +446,7 @@ export function UsersAdmin() {
             Nombre
           </label>
           <InputText id="firstName" value={product.firstName} onChange={(e) => onInputChange(e, 'firstName')} required autoFocus className={classNames({ "p-invalid": submitted && (!product.firstName || validationErrors.firstName) })} />
-          {submitted && !product.firstName 
+          {submitted && !product.firstName
             ? <small className="p-error">El nombre es requerido</small>
             : submitted && validationErrors.firstName && (<small className="p-error">{validationErrors.firstName}</small>)
           }
@@ -448,11 +461,19 @@ export function UsersAdmin() {
           <label htmlFor="password" className="font-bold">
             Contraseña
           </label>
-          <InputText id="password" type="password" value={product.password} onChange={(e) => onInputChange(e, 'password')} required autoFocus className={classNames({ 'p-invalid': submitted && !product.password })} />
-          {submitted && !product.password 
-            ? (<small className="p-error">La contraseña es requerida</small>)
-            : submitted && validationErrors.password && (<small className="p-error">{validationErrors.password}</small>)
-          }
+          <InputText id="password" type="password" value={product.password} onChange={(e) => onInputChange(e, 'password')} required autoFocus className={classNames({ "p-invalid": submitted && (!product.password || validationErrors.password) })} />
+          {editUser ? (
+            <>
+              {submitted && validationErrors.password && (<small className="p-error">{validationErrors.password}</small>)}
+            </>
+          ) : (
+            <>
+              {submitted && !product.password
+                ? (<small className="p-error">La contraseña es requerida</small>)
+                : submitted && validationErrors.password && (<small className="p-error">{validationErrors.password}</small>)
+              }
+            </>
+          )}
         </div>
 
         <div className="field" style={{ height: "2.5rem", display: "flex", alignItems: "center" }}>
