@@ -141,12 +141,15 @@ export function UsersAdmin() {
         toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: `Usuario ${product.firstName} creado correctamente`, life: 3000 });
       }
 
+      setSubmitted(false);
+      setValidationErrors({});
       setProductDialog(false);
       setProduct(emptyUser);
     }
   };
 
   const editProduct = (userEdit) => {
+    setSubmitted(false);
     setEditUser(true);
     setProduct({ ...userEdit, password: '' });
     setSelectedRoles(userEdit.roles);
