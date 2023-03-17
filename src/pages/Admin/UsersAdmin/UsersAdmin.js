@@ -225,11 +225,20 @@ export function UsersAdmin() {
         }
         break;
       case "password":
-        if (!validatePassword(val)) {
-          errors.password = "La contraseña tiene que tener mínimo 6 caracteres, una mayúscula, una minúscula y un número"
-        }
+        if (editUser)
+          if (val.length > 0 && !validatePassword(val)) {
+            errors.password = "La contraseña tiene que tener mínimo 6 caracteres, una mayúscula, una minúscula y un número"
+          }
+          else {
+            delete errors.password;
+          }
         else {
-          delete errors.password;
+          if (!validatePassword(val)) {
+            errors.password = "La contraseña tiene que tener mínimo 6 caracteres, una mayúscula, una minúscula y un número"
+          }
+          else {
+            delete errors.password;
+          }
         }
         break;
       default:
@@ -270,7 +279,7 @@ export function UsersAdmin() {
     }
 
     if (editUser) {
-      if (!validatePassword(product.password)) {
+      if (product.password.length > 0 && !validatePassword(product.password)) {
         errors.password = "La contraseña tiene que tener mínimo 6 caracteres, una mayúscula, una minúscula y un número"
       }
     }
@@ -461,13 +470,14 @@ export function UsersAdmin() {
           <label htmlFor="password" className="font-bold">
             Contraseña
           </label>
-          <InputText id="password" type="password" value={product.password} onChange={(e) => onInputChange(e, 'password')} required autoFocus className={classNames({ "p-invalid": submitted && (!product.password || validationErrors.password) })} />
           {editUser ? (
             <>
+              <InputText id="password" type="password" value={product.password} onChange={(e) => onInputChange(e, 'password')} required autoFocus className={classNames({ "p-invalid": submitted && (validationErrors.password) })} />
               {submitted && validationErrors.password && (<small className="p-error">{validationErrors.password}</small>)}
             </>
           ) : (
             <>
+              <InputText id="password" type="password" value={product.password} onChange={(e) => onInputChange(e, 'password')} required autoFocus className={classNames({ "p-invalid": submitted && (!product.password || validationErrors.password) })} />
               {submitted && !product.password
                 ? (<small className="p-error">La contraseña es requerida</small>)
                 : submitted && validationErrors.password && (<small className="p-error">{validationErrors.password}</small>)
