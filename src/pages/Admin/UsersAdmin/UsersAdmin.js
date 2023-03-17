@@ -205,7 +205,6 @@ export function UsersAdmin() {
     const val = e.target.value || '';
 
     let errors = { ...validationErrors };
-    console.log(val.length);
 
     switch (name) {
       case "email":
@@ -221,6 +220,10 @@ export function UsersAdmin() {
         } else {
           delete errors.firstName;
         }
+      case "password":
+        if (val.length > 1) {
+          delete errors.password;
+        }
       // ...
     }
 
@@ -233,6 +236,30 @@ export function UsersAdmin() {
     const val = e.target.value;
     setProduct(prevUser => ({ ...prevUser, [valid]: val }));
   }
+
+  const isValidEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validateFields = () => {
+    const errors = {};
+    if (!product.email) {
+      errors.email = "El email es requerido";
+    } else if (!isValidEmail(product.email)) {
+      errors.email = "El formato de correo electrónico es inválido";
+    }
+    if (!product.firstName) {
+      errors.firstName = "El nombre es requerido";
+    } else if (product.firstName.length < 2) {
+      errors.firstName = "El nombre tiene que tener mínimo 2 letras";
+    }
+    if (!product.password) {
+      errors.password = "La contraseña es requerida";
+    }
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
   const leftToolbarTemplate = () => {
     return (
@@ -272,7 +299,7 @@ export function UsersAdmin() {
   const productDialogFooter = (
     <React.Fragment>
       <Button label="Cancelar" icon="pi pi-times" outlined onClick={hideDialog} />
-      <Button label="Guardar" icon="pi pi-check" onClick={saveProduct} />
+      <Button label="Guardar" icon="pi pi-check" onClick={saveProduct} disabled={ Object.keys(validationErrors).length === 0  ? false : true } />
     </React.Fragment>
   );
   const deleteProductDialogFooter = (
@@ -311,30 +338,6 @@ export function UsersAdmin() {
   const showEditError = (error) => {
     toast.current.show({ severity: 'error', summary: 'Error al editar', detail: error.message, life: 3000 });
   }
-
-  const isValidEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  const validateFields = () => {
-    const errors = {};
-    if (!product.email) {
-      errors.email = "El email es requerido";
-    } else if (!isValidEmail(product.email)) {
-      errors.email = "El formato de correo electrónico es inválido";
-    }
-    if (!product.firstName) {
-      errors.firstName = "El nombre es requerido";
-    } else if (product.firstName.length < 2) {
-      errors.firstName = "El nombre tiene que tener mínimo 2 letras";
-    }
-    if (!product.password) {
-      errors.password = "La contraseña es requerida";
-    }
-    setValidationErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
 
   return (
     <div>
