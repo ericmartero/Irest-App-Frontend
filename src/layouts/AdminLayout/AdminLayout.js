@@ -173,10 +173,10 @@ export function AdminLayout(props) {
         <div className={wrapperClass} onClick={onWrapperClick} >
             <Tooltip ref={copyTooltipRef} target=".block-action-copy" position="bottom" content="Copied to clipboard" event="focus" />
 
-            <TopMenu onToggleMenuClick={onToggleMenuClick} layoutColorMode={layoutColorMode}
-                mobileTopbarMenuActive={mobileTopbarMenuActive} onMobileTopbarMenuClick={onMobileTopbarMenuClick} onMobileSubTopbarMenuClick={onMobileSubTopbarMenuClick}/>
+            <TopMenu onToggleMenuClick={onToggleMenuClick} mobileTopbarMenuActive={mobileTopbarMenuActive} 
+                onMobileTopbarMenuClick={onMobileTopbarMenuClick} onMobileSubTopbarMenuClick={onMobileSubTopbarMenuClick}/>
             <div className="layout-sidebar">
-                <SideMenu model={menu} onMenuItemClick={onMenuItemClick} layoutColorMode={layoutColorMode} />
+                <SideMenu model={menu} onMenuItemClick={onMenuItemClick} />
             </div>
             <div className="layout-main-container">
                 <div className="layout-main">
