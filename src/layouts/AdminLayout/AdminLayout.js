@@ -1,14 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
+import PrimeReact from 'primereact/api';
+import classNames from 'classnames';
+import { Tooltip } from 'primereact/tooltip';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../hooks';
 import { LoginAdmin } from '../../pages/Admin';
 import { TopMenu, SideMenu } from '../../components/Admin';
 import './AdminLayout.scss';
-
-import PrimeReact from 'primereact/api';
-import classNames from 'classnames';
-import { CSSTransition } from 'react-transition-group';
-import { Tooltip } from 'primereact/tooltip';
 
 export function AdminLayout(props) {
 
@@ -20,7 +18,6 @@ export function AdminLayout(props) {
     const [mobileTopbarMenuActive, setMobileTopbarMenuActive] = useState(false);
     const copyTooltipRef = useRef();
     const location = useLocation();
-
     const layoutMode = 'static';
     const layoutColorMode = 'light';
     const inputStyle = 'outlined';
@@ -153,10 +150,6 @@ export function AdminLayout(props) {
                     {children}
                 </div>
             </div>
-
-            <CSSTransition classNames="layout-mask" timeout={{ enter: 200, exit: 200 }} in={mobileMenuActive} unmountOnExit>
-                <div className="layout-mask p-component-overlay"></div>
-            </CSSTransition>
         </div>
     )
 }
