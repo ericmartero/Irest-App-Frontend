@@ -15,16 +15,17 @@ export function AdminLayout(props) {
     const { children } = props;
     const { auth } = useAuth();
 
-    const [layoutMode, setLayoutMode] = useState('static');
-    const [layoutColorMode, setLayoutColorMode] = useState('light')
-    const [inputStyle, setInputStyle] = useState('outlined');
-    const [ripple, setRipple] = useState(true);
     const [staticMenuInactive, setStaticMenuInactive] = useState(false);
     const [overlayMenuActive, setOverlayMenuActive] = useState(false);
     const [mobileMenuActive, setMobileMenuActive] = useState(false);
     const [mobileTopbarMenuActive, setMobileTopbarMenuActive] = useState(false);
     const copyTooltipRef = useRef();
     const location = useLocation();
+
+    const layoutMode = 'static';
+    const layoutColorMode = 'light';
+    const inputStyle = 'outlined';
+    const ripple = true;
 
     PrimeReact.ripple = true;
 
@@ -80,10 +81,6 @@ export function AdminLayout(props) {
         event.preventDefault();
     }
 
-    const onSidebarClick = () => {
-        menuClick = true;
-    }
-
     const onMobileTopbarMenuClick = (event) => {
         mobileTopbarMenuClick = true;
 
@@ -108,16 +105,6 @@ export function AdminLayout(props) {
     }
 
     let menu;
-
-    //console.log(auth.me);
-
-    /*const adminOrBoss = () => {
-        auth.me.user.roles.map((role) => {
-            if (role === 'admin' || role === 'boss') {
-    
-            }
-        })
-    }*/
 
     if (auth?.me.user.roles.includes('admin') || auth?.me.user.roles.includes('boss')) {
         menu = [
