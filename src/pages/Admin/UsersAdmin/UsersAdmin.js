@@ -86,8 +86,8 @@ export function UsersAdmin() {
   const saveProduct = async () => {
 
     const isValid = validateFields();
-    console.log(isValid);
     setSubmitted(true);
+
     if (isValid) {
 
       const lowerCaseSelectedRoles = selectedRoles?.map(role => role.toLowerCase());
@@ -95,31 +95,28 @@ export function UsersAdmin() {
       //EDITAR
       if (product.id) {
 
-        console.log(product);
         const editUser = {
           isActive: product.isActive,
           ...(product.email && { email: product.email }),
           ...(product.firstName && { firstName: product.firstName }),
           ...(product.password && { password: product.password }),
           ...(product.lastName && { lastName: product.lastName }),
-          ...(product.roles ? { roles: lowerCaseSelectedRoles } : { roles: ['employee'] })
+          ...(selectedRoles.length !== 0 ? { roles: lowerCaseSelectedRoles } : { roles: ['employee'] })
         };
 
         try {
-          console.log(editUser)
-
           await updateUser(product.id, editUser);
           onRefresh();
         } catch (error) {
-          showEditError(error);
+          console.log(error);
         }
-        toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: `Usuario ${product.firstName} actualizado correctamente`, life: 3000 });
+
+        toast.current.show({ severity: 'success', summary: 'Operación Exitosa', detail: `Usuario ${product.firstName} actualizado correctamente`, life: 3000 });
 
         //ENVIAR
       } else {
 
         product.roles = lowerCaseSelectedRoles;
-        //product.isActive = valid;
 
         const newUser = {
           email: product.email,
@@ -133,7 +130,6 @@ export function UsersAdmin() {
         try {
           await addUser(newUser);
           onRefresh();
-          console.log(error);
         } catch (error) {
           console.log(error);
         }
@@ -372,10 +368,6 @@ export function UsersAdmin() {
 
     return 'Selecciona los roles';
   };
-
-  const showEditError = (error) => {
-    toast.current.show({ severity: 'error', summary: 'Error al editar', detail: error.message, life: 3000 });
-  }
 
   return (
     <div>
