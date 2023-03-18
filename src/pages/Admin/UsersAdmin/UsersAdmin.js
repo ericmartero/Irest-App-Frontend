@@ -100,7 +100,7 @@ export function UsersAdmin() {
           ...(product.email && { email: product.email }),
           ...(product.firstName && { firstName: product.firstName }),
           ...(product.password && { password: product.password }),
-          ...(product.lastName !== '' ? { lastName: product.lastName } : { lastName: '' }),
+          ...(product.lastName !== '' ? { lastName: product.lastName } : { lastName: null }),
           ...(selectedRoles.length !== 0 ? { roles: lowerCaseSelectedRoles } : { roles: ['employee'] })
         };
 
