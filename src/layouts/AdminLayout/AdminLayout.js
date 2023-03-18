@@ -62,17 +62,7 @@ export function AdminLayout(props) {
         menuClick = true;
 
         if (isDesktop()) {
-            if (layoutMode === 'overlay') {
-                if (mobileMenuActive === true) {
-                    setOverlayMenuActive(true);
-                }
-
-                setOverlayMenuActive((prevState) => !prevState);
-                setMobileMenuActive(false);
-            }
-            else if (layoutMode === 'static') {
-                setStaticMenuInactive((prevState) => !prevState);
-            }
+            setStaticMenuInactive((prevState) => !prevState);
         }
         else {
             setMobileMenuActive((prevState) => !prevState);
@@ -144,10 +134,8 @@ export function AdminLayout(props) {
     }
 
     const wrapperClass = classNames('layout-wrapper', {
-        'layout-overlay': layoutMode === 'overlay',
         'layout-static': layoutMode === 'static',
         'layout-static-sidebar-inactive': staticMenuInactive && layoutMode === 'static',
-        'layout-overlay-sidebar-active': overlayMenuActive && layoutMode === 'overlay',
         'layout-mobile-sidebar-active': mobileMenuActive,
         'p-input-filled': inputStyle === 'filled',
         'p-ripple-disabled': ripple === false,
