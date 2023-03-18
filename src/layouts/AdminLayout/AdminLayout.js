@@ -124,7 +124,7 @@ export function AdminLayout(props) {
             {
                 label: 'Home',
                 items: [
-                    { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' },
+                    { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/admin' },
                     { label: 'Usuarios', icon: 'pi pi-fw pi-id-card', to: '/admin/users' },
                 ]
             }
