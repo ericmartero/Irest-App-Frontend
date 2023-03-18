@@ -16,7 +16,6 @@ export function AdminLayout(props) {
     const { auth } = useAuth();
 
     const [staticMenuInactive, setStaticMenuInactive] = useState(false);
-    const [overlayMenuActive, setOverlayMenuActive] = useState(false);
     const [mobileMenuActive, setMobileMenuActive] = useState(false);
     const [mobileTopbarMenuActive, setMobileTopbarMenuActive] = useState(false);
     const copyTooltipRef = useRef();
@@ -25,7 +24,6 @@ export function AdminLayout(props) {
     const layoutMode = 'static';
     const layoutColorMode = 'light';
     const inputStyle = 'outlined';
-    const ripple = true;
 
     PrimeReact.ripple = true;
 
@@ -46,7 +44,6 @@ export function AdminLayout(props) {
 
     const onWrapperClick = (event) => {
         if (!menuClick) {
-            setOverlayMenuActive(false);
             setMobileMenuActive(false);
         }
 
@@ -86,7 +83,6 @@ export function AdminLayout(props) {
 
     const onMenuItemClick = (event) => {
         if (!event.item.items) {
-            setOverlayMenuActive(false);
             setMobileMenuActive(false);
         }
     }
@@ -138,7 +134,6 @@ export function AdminLayout(props) {
         'layout-static-sidebar-inactive': staticMenuInactive && layoutMode === 'static',
         'layout-mobile-sidebar-active': mobileMenuActive,
         'p-input-filled': inputStyle === 'filled',
-        'p-ripple-disabled': ripple === false,
         'layout-theme-light': layoutColorMode === 'light'
     });
 
@@ -148,8 +143,8 @@ export function AdminLayout(props) {
         <div className={wrapperClass} onClick={onWrapperClick} >
             <Tooltip ref={copyTooltipRef} target=".block-action-copy" position="bottom" content="Copied to clipboard" event="focus" />
 
-            <TopMenu onToggleMenuClick={onToggleMenuClick} mobileTopbarMenuActive={mobileTopbarMenuActive} 
-                onMobileTopbarMenuClick={onMobileTopbarMenuClick} onMobileSubTopbarMenuClick={onMobileSubTopbarMenuClick}/>
+            <TopMenu onToggleMenuClick={onToggleMenuClick} mobileTopbarMenuActive={mobileTopbarMenuActive}
+                onMobileTopbarMenuClick={onMobileTopbarMenuClick} onMobileSubTopbarMenuClick={onMobileSubTopbarMenuClick} />
             <div className="layout-sidebar">
                 <SideMenu model={menu} onMenuItemClick={onMenuItemClick} />
             </div>
