@@ -41,7 +41,7 @@ export function UsersAdmin() {
   const toast = useRef(null);
   const dt = useRef(null);
   const { auth } = useAuth();
-  const { error, users, getUsers, addUser, deleteUser, updateUser } = useUser();
+  const { users, getUsers, addUser, deleteUser, updateUser } = useUser();
   const [refreshTable, setRefreshTable] = useState(false);
 
   const [validationErrors, setValidationErrors] = useState({});
@@ -260,7 +260,7 @@ export function UsersAdmin() {
   };
 
   function validatePassword(password) {
-    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{6,}$/;
+    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[\w,.-]{6,}$/;
     return passwordRegex.test(password);
   }
 
