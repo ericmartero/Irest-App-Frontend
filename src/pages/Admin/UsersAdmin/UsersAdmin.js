@@ -105,7 +105,6 @@ export function UsersAdmin() {
         };
 
         try {
-          console.log(editUser);
           await updateUser(product.id, editUser);
           onRefresh();
         } catch (error) {
