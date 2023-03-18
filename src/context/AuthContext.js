@@ -1,6 +1,7 @@
 import React, { useState, useEffect, createContext } from 'react';
 import { setToken, getToken, removeToken } from '../api/token';
 import { useUser } from '../hooks';
+import { useHistory } from "react-router-dom";
 
 export const AuthContext = createContext({
     auth: undefined,
@@ -10,6 +11,7 @@ export const AuthContext = createContext({
 
 export function AuthProvider(props) {
 
+    const history = useHistory();
     const { children } = props;
     const [auth, setAuth] = useState(undefined);
     const { getMe } = useUser();
@@ -44,6 +46,7 @@ export function AuthProvider(props) {
         if (auth) {
             removeToken();
             setAuth(null);
+            history.push("/admin");
         }
     };
 
