@@ -5,7 +5,6 @@ import { useAuth } from '.';
 
 export function useUser() {
 
-    const [error, setError] = useState(null);
     const [users, setUsers] = useState(null);
     const { auth } = useAuth();
 
@@ -24,7 +23,7 @@ export function useUser() {
             const response = await getUsersApi(auth.token);
             setUsers(response);
         } catch (error) {
-            setError(error);
+            throw(error);
         }
     };
 
@@ -40,7 +39,7 @@ export function useUser() {
         try {
             await deleteUserApi(id, auth.token);
         } catch (error) {
-            setError(error);
+            throw(error);
         }
     }
 
@@ -53,7 +52,6 @@ export function useUser() {
     }
 
     return {
-        error,
         users,
         getMe,
         getUsers,
