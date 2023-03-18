@@ -32,7 +32,7 @@ export function useUser() {
         try {
             await addUserApi(data, auth.token);
         } catch (error) {
-            setError(error);
+            throw error;
         }
     }
 
@@ -40,7 +40,7 @@ export function useUser() {
         try {
             await deleteUserApi(id, auth.token);
         } catch (error) {
-            setError(error); 
+            setError(error);
         }
     }
 
@@ -48,7 +48,7 @@ export function useUser() {
         try {
             await updateUserApi(id, data, auth.token);
         } catch (error) {
-            setError(error); 
+            throw error;
         }
     }
 

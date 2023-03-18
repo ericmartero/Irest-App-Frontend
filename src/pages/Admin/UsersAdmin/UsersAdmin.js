@@ -83,6 +83,10 @@ export function UsersAdmin() {
     setDeleteProductsDialog(false);
   };
 
+  const showError = (error) => {
+    toast.current.show({ severity: 'error', summary: 'Operación Fallida', detail: error.message, life: 3000 });
+  }
+
   const saveProduct = async () => {
 
     const isValid = validateFields();
@@ -107,11 +111,10 @@ export function UsersAdmin() {
         try {
           await updateUser(product.id, editUser);
           onRefresh();
+          toast.current.show({ severity: 'success', summary: 'Operación Exitosa', detail: `Usuario ${product.firstName} actualizado correctamente`, life: 3000 });
         } catch (error) {
-          console.log(error);
+          showError(error);
         }
-
-        toast.current.show({ severity: 'success', summary: 'Operación Exitosa', detail: `Usuario ${product.firstName} actualizado correctamente`, life: 3000 });
 
         //ENVIAR
       } else {
@@ -130,11 +133,10 @@ export function UsersAdmin() {
         try {
           await addUser(newUser);
           onRefresh();
+          toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: `Usuario ${product.firstName} creado correctamente`, life: 3000 });
         } catch (error) {
-          console.log(error);
+          showError(error);
         }
-
-        toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: `Usuario ${product.firstName} creado correctamente`, life: 3000 });
       }
 
       setSubmitted(false);
