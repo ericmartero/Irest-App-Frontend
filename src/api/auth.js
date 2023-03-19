@@ -34,6 +34,11 @@ export const getMeApi = async(token) => {
         }
 
         const resp = await fetch(url, params);
+
+        if (resp.status === 401) {
+            throw new Error("El usuario con el que intenta acceder no esta activo");
+        }
+
         return await resp.json();
 
     } catch (error) {

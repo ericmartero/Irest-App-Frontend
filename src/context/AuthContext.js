@@ -1,7 +1,9 @@
-import React, { useState, useEffect, createContext } from 'react';
+import React, { useState, useEffect, createContext, useRef } from 'react';
 import { setToken, getToken, removeToken } from '../api/token';
 import { useUser } from '../hooks';
 import { useHistory } from "react-router-dom";
+import { Toast } from 'primereact/toast';
+import '../scss/ToastCenterError.scss';
 
 export const AuthContext = createContext({
     auth: undefined,
@@ -15,6 +17,11 @@ export function AuthProvider(props) {
     const { children } = props;
     const [auth, setAuth] = useState(undefined);
     const { getMe } = useUser();
+    const toastError = useRef(null);
+
+    const showError = (error) => {
+      toastError.current.show({ severity: 'error', summary: 'Error al iniciar sessión', detail: error.message, life: 3000 });
+    }
 
     useEffect(() => {
         (async () => {
@@ -27,7 +34,7 @@ export function AuthProvider(props) {
                     return;
                 }
 
-                setAuth({token, me});
+                setAuth({ token, me });
             }
 
             else {
@@ -37,10 +44,15 @@ export function AuthProvider(props) {
     }, [getMe])
 
     const login = async (token) => {
-        setToken(token);
-        const me = await getMe(token);
-        setAuth({ token, me });
+        try {
+            const me = await getMe(token);
+            setToken(token);
+            setAuth({ token, me });
+        } catch (error) {
+            showError(error);
+        }
     };
+
 
     const logout = () => {
         if (auth) {
@@ -60,7 +72,8 @@ export function AuthProvider(props) {
 
     return (
         <AuthContext.Provider value={valueContext}>
-            { children }
+            <Toast ref={toastError} position="bottom-center" className="toast" />
+            {children}
         </AuthContext.Provider>
     );
 }

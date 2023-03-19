@@ -7,7 +7,7 @@ import { useAuth } from '../../../hooks';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import './LoginAdmin.scss';
-import './LoginError.scss';
+import '../../../scss/ToastCenterError.scss';
 
 export function LoginAdmin() {
 
