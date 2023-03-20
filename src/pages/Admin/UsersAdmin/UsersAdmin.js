@@ -382,9 +382,9 @@ export function UsersAdmin() {
           paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
           currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} usuarios" globalFilter={globalFilter} header={header}>
           <Column selectionMode="multiple" exportable={false}></Column>
-          <Column field="email" header="Email" sortable style={{ minWidth: '20rem' }}></Column>
-          <Column field="firstName" header="Nombre" sortable style={{ minWidth: '15rem' }}></Column>
-          <Column field="lastName" header="Apellidos" sortable style={{ minWidth: '20rem' }}></Column>
+          <Column field="email" header="Email" sortable style={{ minWidth: '16rem' }}></Column>
+          <Column field="firstName" header="Nombre" sortable style={{ minWidth: '12rem' }}></Column>
+          <Column field="lastName" header="Apellidos" sortable style={{ minWidth: '12rem' }}></Column>
           <Column field="roles" header="Roles" sortable style={{ minWidth: '12rem' }}
             body={(rowData) =>
               rowData.roles.map((role) => {
