@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { getMeApi } from '../api/auth';
 import { getUsersApi, addUserApi, deleteUserApi, updateUserApi } from '../api/user';
 import { useAuth } from '.';
@@ -18,14 +18,14 @@ export function useUser() {
         }
     };
 
-    const getUsers = async () => {
+    const getUsers = useCallback( async () => {
         try {
             const response = await getUsersApi(auth.token);
             setUsers(response);
         } catch (error) {
             throw(error);
         }
-    };
+    }, [auth?.token]);
 
     const addUser = async (data) => {
         try {

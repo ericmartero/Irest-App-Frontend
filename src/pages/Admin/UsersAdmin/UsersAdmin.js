@@ -47,7 +47,7 @@ export function UsersAdmin() {
 
   useEffect(() => {
     getUsers();
-  }, [refreshTable])
+  }, [refreshTable, getUsers])
 
   useEffect(() => {
     if (users) {
