@@ -25,11 +25,11 @@ export function UsersAdmin() {
   };
 
   const [products, setProducts] = useState(null);
-  const [productDialog, setProductDialog] = useState(false);
-  const [deleteProductDialog, setDeleteProductDialog] = useState(false);
-  const [deleteProductsDialog, setDeleteProductsDialog] = useState(false);
+  const [userDialog, setUserDialog] = useState(false);
+  const [deleteUserDialog, setDeleteUserDialog] = useState(false);
+  const [deleteUsersDialog, setDeleteUsersDialog] = useState(false);
   const [product, setProduct] = useState(emptyUser);
-  const [selectedProducts, setSelectedProducts] = useState(null);
+  const [selectedUsers, setSelectedUsers] = useState(null);
   const [submitted, setSubmitted] = useState(false);
   const [globalFilter, setGlobalFilter] = useState(null);
 
@@ -45,7 +45,7 @@ export function UsersAdmin() {
   const [refreshTable, setRefreshTable] = useState(false);
 
   const [validationErrors, setValidationErrors] = useState({});
-  const [editUser, setEditUser] = useState(false)
+  const [isEditUser, setIsEditUser] = useState(false)
 
   useEffect(() => {
     getUsers();
@@ -61,33 +61,33 @@ export function UsersAdmin() {
   const onRefresh = () => setRefreshTable((state) => !state);
 
   const openNew = () => {
-    setEditUser(false);
+    setIsEditUser(false);
     setProduct(emptyUser);
     setSelectedRoles(null);
     setSubmitted(false);
-    setProductDialog(true);
+    setUserDialog(true);
     setActionName('Añadir Usuario');
   };
 
   const hideDialog = () => {
     setSubmitted(false);
-    setProductDialog(false);
+    setUserDialog(false);
     setValidationErrors({});
   };
 
-  const hideDeleteProductDialog = () => {
-    setDeleteProductDialog(false);
+  const hideDeleteUserDialog = () => {
+    setDeleteUserDialog(false);
   };
 
-  const hideDeleteProductsDialog = () => {
-    setDeleteProductsDialog(false);
+  const hideDeleteUsersDialog = () => {
+    setDeleteUsersDialog(false);
   };
 
   const showError = (error) => {
     toast.current.show({ severity: 'error', summary: 'Operación Fallida', detail: error.message, life: 3000 });
   }
 
-  const saveProduct = async () => {
+  const saveUser = async () => {
 
     const isValid = validateFields();
     setSubmitted(true);
@@ -141,28 +141,26 @@ export function UsersAdmin() {
 
       setSubmitted(false);
       setValidationErrors({});
-      setProductDialog(false);
+      setUserDialog(false);
       setProduct(emptyUser);
     }
   };
 
-  const editProduct = (userEdit) => {
+  const editUser = (userEdit) => {
     setSubmitted(false);
-    setEditUser(true);
+    setIsEditUser(true);
     setProduct({ ...userEdit, password: '' });
     setSelectedRoles(userEdit.roles);
-    setProductDialog(true);
+    setUserDialog(true);
     setActionName('Editar Usuario');
   };
 
-  const confirmDeleteProduct = (product) => {
-    setProduct(product);
-    setDeleteProductDialog(true);
+  const confirmDeleteUser = (user) => {
+    setProduct(user);
+    setDeleteUserDialog(true);
   };
 
-  const deleteProduct = async () => {
-    console.log(product);
-
+  const deleteSelectedUser = async () => {
     try {
       await deleteUser(product.id);
       onRefresh();
@@ -170,7 +168,7 @@ export function UsersAdmin() {
       console.log(error);
     }
 
-    setDeleteProductDialog(false);
+    setDeleteUserDialog(false);
     setProduct(emptyUser);
     toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Usuario borrado correctamente', life: 3000 });
   };
@@ -180,12 +178,12 @@ export function UsersAdmin() {
   };
 
   const confirmDeleteSelected = () => {
-    setDeleteProductsDialog(true);
+    setDeleteUsersDialog(true);
   };
 
-  const deleteSelectedProducts = async () => {
+  const deleteSelectedUsers = async () => {
     try {
-      await Promise.all(selectedProducts.map(async (product) => {
+      await Promise.all(selectedUsers.map(async (product) => {
         await deleteUser(product.id);
       }));
       onRefresh();
@@ -193,10 +191,10 @@ export function UsersAdmin() {
       console.log(error);
     }
 
-    setDeleteProductsDialog(false);
-    setSelectedProducts(null);
+    setDeleteUsersDialog(false);
+    setSelectedUsers(null);
 
-    if (selectedProducts.length === 1) {
+    if (selectedUsers.length === 1) {
       toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Usuario borrado correctamente', life: 3000 });
     }
 
@@ -226,7 +224,7 @@ export function UsersAdmin() {
         }
         break;
       case "password":
-        if (editUser)
+        if (isEditUser)
           if (val.length > 0 && !validatePassword(val)) {
             errors.password = "La contraseña tiene que tener mínimo 6 caracteres, una mayúscula, una minúscula y un número"
           }
@@ -279,7 +277,7 @@ export function UsersAdmin() {
       errors.firstName = "El nombre tiene que tener mínimo 2 letras";
     }
 
-    if (editUser) {
+    if (isEditUser) {
       if (product.password.length > 0 && !validatePassword(product.password)) {
         errors.password = "La contraseña tiene que tener mínimo 6 caracteres, una mayúscula, una minúscula y un número"
       }
@@ -301,7 +299,7 @@ export function UsersAdmin() {
     return (
       <div className="flex flex-wrap gap-2">
         <Button label="Nuevo" icon="pi pi-plus" severity="success" onClick={openNew} />
-        <Button label="Borrar" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedProducts || !selectedProducts.length} />
+        <Button label="Borrar" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedUsers || !selectedUsers.length} />
       </div>
     );
   };
@@ -317,8 +315,8 @@ export function UsersAdmin() {
   const actionBodyTemplate = (rowData) => {
     return (
       <React.Fragment>
-        <Button icon="pi pi-pencil" rounded outlined className="mr-2" onClick={() => editProduct(rowData)} />
-        <Button icon="pi pi-trash" rounded outlined severity="danger" onClick={() => confirmDeleteProduct(rowData)} />
+        <Button icon="pi pi-pencil" rounded outlined className="mr-2" onClick={() => editUser(rowData)} />
+        <Button icon="pi pi-trash" rounded outlined severity="danger" onClick={() => confirmDeleteUser(rowData)} />
       </React.Fragment>
     );
   };
@@ -332,22 +330,22 @@ export function UsersAdmin() {
       </span>
     </div>
   );
-  const productDialogFooter = (
+  const userDialogFooter = (
     <React.Fragment>
       <Button label="Cancelar" icon="pi pi-times" outlined onClick={hideDialog} />
-      <Button label="Guardar" icon="pi pi-check" onClick={saveProduct} disabled={!submitted || Object.keys(validationErrors).length === 0 ? false : true} />
+      <Button label="Guardar" icon="pi pi-check" onClick={saveUser} disabled={!submitted || Object.keys(validationErrors).length === 0 ? false : true} />
     </React.Fragment>
   );
-  const deleteProductDialogFooter = (
+  const deleteUserDialogFooter = (
     <React.Fragment>
-      <Button label="No" icon="pi pi-times" outlined onClick={hideDeleteProductDialog} />
-      <Button label="Si" icon="pi pi-check" severity="danger" onClick={deleteProduct} />
+      <Button label="No" icon="pi pi-times" outlined onClick={hideDeleteUserDialog} />
+      <Button label="Si" icon="pi pi-check" severity="danger" onClick={deleteSelectedUser} />
     </React.Fragment>
   );
-  const deleteProductsDialogFooter = (
+  const deleteUsersDialogFooter = (
     <React.Fragment>
-      <Button label="No" icon="pi pi-times" outlined onClick={hideDeleteProductsDialog} />
-      <Button label="Si" icon="pi pi-check" severity="danger" onClick={deleteSelectedProducts} />
+      <Button label="No" icon="pi pi-times" outlined onClick={hideDeleteUsersDialog} />
+      <Button label="Si" icon="pi pi-check" severity="danger" onClick={deleteSelectedUsers} />
     </React.Fragment>
   );
 
@@ -377,7 +375,7 @@ export function UsersAdmin() {
       <div className="card" >
         <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
 
-        <DataTable ref={dt} value={products} selection={selectedProducts} onSelectionChange={(e) => setSelectedProducts(e.value)}
+        <DataTable ref={dt} value={products} selection={selectedUsers} onSelectionChange={(e) => setSelectedUsers(e.value)}
           dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
           paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
           currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} usuarios" globalFilter={globalFilter} header={header}>
@@ -418,7 +416,7 @@ export function UsersAdmin() {
         </DataTable>
       </div>
 
-      <Dialog visible={productDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={actionName} modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
+      <Dialog visible={userDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={actionName} modal className="p-fluid" footer={userDialogFooter} onHide={hideDialog}>
         <div className="field">
           <label htmlFor="email" className="font-bold">
             Email
@@ -467,7 +465,7 @@ export function UsersAdmin() {
           <label htmlFor="password" className="font-bold">
             Contraseña
           </label>
-          {editUser ? (
+          {isEditUser ? (
             <>
               <InputText id="password" type="password" value={product.password} onChange={(e) => onInputChange(e, 'password')} required autoFocus className={classNames({ "p-invalid": submitted && (validationErrors.password) })} />
               {submitted && validationErrors.password && (<small className="p-error">{validationErrors.password}</small>)}
@@ -497,7 +495,7 @@ export function UsersAdmin() {
         </div>
       </Dialog>
 
-      <Dialog visible={deleteProductDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteProductDialogFooter} onHide={hideDeleteProductDialog}>
+      <Dialog visible={deleteUserDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteUserDialogFooter} onHide={hideDeleteUserDialog}>
         <div className="confirmation-content">
           <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
           {product && (
@@ -508,7 +506,7 @@ export function UsersAdmin() {
         </div>
       </Dialog>
 
-      <Dialog visible={deleteProductsDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteProductsDialogFooter} onHide={hideDeleteProductsDialog}>
+      <Dialog visible={deleteUsersDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteUsersDialogFooter} onHide={hideDeleteUsersDialog}>
         <div className="confirmation-content">
           <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
           {product && <span>Seguro que quieres eliminar los usuarios seleccionados?</span>}
