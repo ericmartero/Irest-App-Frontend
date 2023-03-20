@@ -13,7 +13,11 @@ export const loginApi = async(dtoLogin) => {
 
         const resp = await fetch(url, params);
 
-        if (resp.status !== 201) {
+        if (resp.status === 403) {
+            throw new Error("El usuario con el que intenta acceder no está activo, comuníquese con el administrador");
+        }  
+        
+        else if (resp.status !== 201) {
             throw new Error("Usuario o contraseña incorrectos");
         }
 
@@ -34,10 +38,6 @@ export const getMeApi = async(token) => {
         }
 
         const resp = await fetch(url, params);
-
-        if (resp.status === 401) {
-            throw new Error("El usuario con el que intenta acceder no esta activo");
-        }
 
         return await resp.json();
 
