@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { classNames } from 'primereact/utils';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -8,6 +8,8 @@ import { Toolbar } from 'primereact/toolbar';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { FileUpload } from 'primereact/fileupload';
+import { useDropzone } from 'react-dropzone';
+
 //
 import { useCategory } from '../../hooks';
 
@@ -212,6 +214,25 @@ export function CategoriesAdmin() {
     return Object.keys(errors).length === 0;
   };
 
+  const handleFileDrop = (acceptedFiles) => {
+    setCategory({ ...category, image: acceptedFiles[0] });
+  };
+
+  const onDrop = useCallback((acceptedFile) => {
+    const file = acceptedFile[0];
+    console.log(file);
+  }, []);
+
+  const { getRootProps, getInputProps } = useDropzone({
+      accept: {
+        'image/png': ['.png'],
+        'image/jpeg': ['.jpeg'],
+      },
+      noKeyboard: true,
+      multiple: false,
+      onDrop
+  })
+
   const leftToolbarTemplate = () => {
     return (
       <div className="flex flex-wrap gap-2">
@@ -296,10 +317,11 @@ export function CategoriesAdmin() {
           }
         </div>
         <div className="field">
-          <label htmlFor="image" className="font-bold" style={{ marginBottom: '1rem' }}>
+          <label htmlFor="image" className="font-bold" style={{ marginBottom: '0.5rem' }}>
             Imagen
           </label>
-          <FileUpload mode="basic" name="image" url="/api/upload" accept="image/*" maxFileSize={1000000} onUpload={onUpload} auto chooseLabel="Escojer imagen" />
+          <Button label="Subir Imagen" { ...getRootProps() } />
+          <input { ...getInputProps() } />
         </div>
       </Dialog>
 
