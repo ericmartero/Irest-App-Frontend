@@ -7,7 +7,7 @@ import { Button } from 'primereact/button';
 import { Toolbar } from 'primereact/toolbar';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
-import { FileUpload } from 'primereact/fileupload';
+import { Image } from 'primereact/image';
 import { useDropzone } from 'react-dropzone';
 
 //
@@ -33,6 +33,8 @@ export function CategoriesAdmin() {
   const [globalFilter, setGlobalFilter] = useState(null);
   const [validationErrors, setValidationErrors] = useState({});
   const [actionName, setActionName] = useState('');
+
+  const [previewImage, setPreviewImage] = useState(null);
 
   const [isEditUser, setIsEditUser] = useState(false)
   const [refreshTable, setRefreshTable] = useState(false);
@@ -220,7 +222,7 @@ export function CategoriesAdmin() {
 
   const onDrop = useCallback((acceptedFile) => {
     const file = acceptedFile[0];
-    console.log(file);
+    setPreviewImage(URL.createObjectURL(file));
   }, []);
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -322,6 +324,7 @@ export function CategoriesAdmin() {
           </label>
           <Button label="Subir Imagen" { ...getRootProps() } />
           <input { ...getInputProps() } />
+          <Image src={previewImage} alt="Image" width="250" preview />
         </div>
       </Dialog>
 
