@@ -95,6 +95,7 @@ export function AdminLayout(props) {
                 ...(auth?.me.user.roles.includes('admin') || auth?.me.user.roles.includes('boss') ? 
                     [{ label: 'Usuarios', icon: 'pi pi-fw pi-id-card', to: '/admin/users' }] : []
                 ),
+                { label: 'Categorias', icon: 'pi pi-fw pi-tag', to: '/admin/categories' },
             ]
         }
     ];
