@@ -7,6 +7,7 @@ import { Button } from 'primereact/button';
 import { Toolbar } from 'primereact/toolbar';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
+import { FileUpload } from 'primereact/fileupload';
 //
 import { useCategory } from '../../hooks';
 
@@ -120,7 +121,7 @@ export function CategoriesAdmin() {
   const editCategory = (categoryEdit) => {
     setSubmitted(false);
     setIsEditUser(true);
-    setCategory({ ...categoryEdit});
+    setCategory({ ...categoryEdit });
     setCategoryDialog(true);
     setActionName('Editar Categoria');
   };
@@ -181,7 +182,7 @@ export function CategoriesAdmin() {
     switch (name) {
       case "title":
         if (val.length < 2) {
-          errors.title = "El nombre tiene que tener mínimo 2 letras";
+          errors.title = "El título tiene que tener mínimo 2 letras";
         } else {
           delete errors.title;
         }
@@ -194,13 +195,17 @@ export function CategoriesAdmin() {
     setValidationErrors(errors);
   };
 
+  const onUpload = () => {
+    toast.current.show({ severity: 'info', summary: 'Success', detail: 'File Uploaded', life: 3000 });
+  }
+
   const validateFields = () => {
     const errors = {};
 
     if (!category.title) {
-      errors.title = "El email es requerido";
+      errors.title = "El título es requerido";
     } else if (category.title.length < 2) {
-      errors.title = "El formato de correo electrónico es inválido";
+      errors.title = "El título tiene que tener mínimo 2 letras";
     }
 
     setValidationErrors(errors);
@@ -289,6 +294,12 @@ export function CategoriesAdmin() {
             ? (<small className="p-error">El título es requerido</small>)
             : submitted && validationErrors.title && (<small className="p-error">{validationErrors.title}</small>)
           }
+        </div>
+        <div className="field">
+          <label htmlFor="image" className="font-bold" style={{ marginBottom: '1rem' }}>
+            Imagen
+          </label>
+          <FileUpload mode="basic" name="image" url="/api/upload" accept="image/*" maxFileSize={1000000} onUpload={onUpload} auto chooseLabel="Escojer imagen" />
         </div>
       </Dialog>
 
