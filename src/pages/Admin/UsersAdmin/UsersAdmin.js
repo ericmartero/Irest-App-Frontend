@@ -321,7 +321,7 @@ export function UsersAdmin() {
 
   const header = (
     <div className="flex flex-wrap gap-2 align-items-center justify-content-between">
-      <h4 className="m-0">Panel de usuarios</h4>
+      <h3 className="m-0">PANEL DE USUARIOS</h3>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Buscar..." />
