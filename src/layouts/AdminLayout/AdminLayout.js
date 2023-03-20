@@ -87,30 +87,17 @@ export function AdminLayout(props) {
         return window.innerWidth >= 992;
     }
 
-    let menu;
-
-    if (auth?.me.user.roles.includes('admin') || auth?.me.user.roles.includes('boss')) {
-        menu = [
-            {
-                label: 'Home',
-                items: [
-                    { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/admin' },
-                    { label: 'Usuarios', icon: 'pi pi-fw pi-id-card', to: '/admin/users' },
-                ]
-            }
-        ];
-    }
-
-    else {
-        menu = [
-            {
-                label: 'Home',
-                items: [
-                    { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/admin' },
-                ]
-            }
-        ];
-    }
+    let menu = [
+        {
+            label: 'Home',
+            items: [
+                { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/admin' },
+                ...(auth?.me.user.roles.includes('admin') || auth?.me.user.roles.includes('boss') ? 
+                    [{ label: 'Usuarios', icon: 'pi pi-fw pi-id-card', to: '/admin/users' }] : []
+                ),
+            ]
+        }
+    ];
 
     const addClass = (element, className) => {
         if (element.classList)
