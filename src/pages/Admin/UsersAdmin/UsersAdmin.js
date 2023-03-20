@@ -24,28 +24,26 @@ export function UsersAdmin() {
     roles: [],
   };
 
-  const [products, setProducts] = useState(null);
-  const [userDialog, setUserDialog] = useState(false);
-  const [deleteUserDialog, setDeleteUserDialog] = useState(false);
-  const [deleteUsersDialog, setDeleteUsersDialog] = useState(false);
-  const [product, setProduct] = useState(emptyUser);
-  const [selectedUsers, setSelectedUsers] = useState(null);
-  const [submitted, setSubmitted] = useState(false);
-  const [globalFilter, setGlobalFilter] = useState(null);
-
-  const [selectedRoles, setSelectedRoles] = useState(null);
   let rolesList = ['admin', 'employee', 'boss'];
-
-  const [actionName, setActionName] = useState('');
 
   const toast = useRef(null);
   const dt = useRef(null);
   const { auth } = useAuth();
   const { users, getUsers, addUser, deleteUser, updateUser } = useUser();
-  const [refreshTable, setRefreshTable] = useState(false);
 
+  const [usersTable, setUsersTable] = useState(null);
+  const [userDialog, setUserDialog] = useState(false);
+  const [deleteUserDialog, setDeleteUserDialog] = useState(false);
+  const [deleteUsersDialog, setDeleteUsersDialog] = useState(false);
+  const [user, setUser] = useState(emptyUser);
+  const [selectedUsers, setSelectedUsers] = useState(null);
+  const [submitted, setSubmitted] = useState(false);
+  const [globalFilter, setGlobalFilter] = useState(null);
   const [validationErrors, setValidationErrors] = useState({});
   const [isEditUser, setIsEditUser] = useState(false)
+  const [actionName, setActionName] = useState('');
+  const [refreshTable, setRefreshTable] = useState(false);
+  const [selectedRoles, setSelectedRoles] = useState(null);
 
   useEffect(() => {
     getUsers();
@@ -54,7 +52,7 @@ export function UsersAdmin() {
   useEffect(() => {
     if (users) {
       const filteredUsers = users.filter(user => user.id !== auth.me.user.id);
-      setProducts(filteredUsers);
+      setUsersTable(filteredUsers);
     }
   }, [users, auth]);
 
@@ -62,7 +60,7 @@ export function UsersAdmin() {
 
   const openNew = () => {
     setIsEditUser(false);
-    setProduct(emptyUser);
+    setUser(emptyUser);
     setSelectedRoles(null);
     setSubmitted(false);
     setUserDialog(true);
@@ -97,21 +95,21 @@ export function UsersAdmin() {
       const lowerCaseSelectedRoles = selectedRoles?.map(role => role.toLowerCase());
 
       //EDITAR
-      if (product.id) {
+      if (user.id) {
 
         const editUser = {
-          isActive: product.isActive,
-          ...(product.email && { email: product.email }),
-          ...(product.firstName && { firstName: product.firstName }),
-          ...(product.password && { password: product.password }),
-          ...(product.lastName !== '' ? { lastName: product.lastName } : { lastName: null }),
+          isActive: user.isActive,
+          ...(user.email && { email: user.email }),
+          ...(user.firstName && { firstName: user.firstName }),
+          ...(user.password && { password: user.password }),
+          ...(user.lastName !== '' ? { lastName: user.lastName } : { lastName: null }),
           ...(selectedRoles.length !== 0 ? { roles: lowerCaseSelectedRoles } : { roles: ['employee'] })
         };
 
         try {
-          await updateUser(product.id, editUser);
+          await updateUser(user.id, editUser);
           onRefresh();
-          toast.current.show({ severity: 'success', summary: 'Operación Exitosa', detail: `Usuario ${product.firstName} actualizado correctamente`, life: 3000 });
+          toast.current.show({ severity: 'success', summary: 'Operación Exitosa', detail: `Usuario ${user.firstName} actualizado correctamente`, life: 3000 });
         } catch (error) {
           showError(error);
         }
@@ -119,21 +117,21 @@ export function UsersAdmin() {
         //ENVIAR
       } else {
 
-        product.roles = lowerCaseSelectedRoles;
+        user.roles = lowerCaseSelectedRoles;
 
         const newUser = {
-          email: product.email,
-          firstName: product.firstName,
-          password: product.password,
-          isActive: product.isActive,
-          ...(product.lastName && { lastName: product.lastName }),
-          ...(product.roles ? { roles: lowerCaseSelectedRoles } : { roles: ['employee'] })
+          email: user.email,
+          firstName: user.firstName,
+          password: user.password,
+          isActive: user.isActive,
+          ...(user.lastName && { lastName: user.lastName }),
+          ...(user.roles ? { roles: lowerCaseSelectedRoles } : { roles: ['employee'] })
         };
 
         try {
           await addUser(newUser);
           onRefresh();
-          toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: `Usuario ${product.firstName} creado correctamente`, life: 3000 });
+          toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: `Usuario ${user.firstName} creado correctamente`, life: 3000 });
         } catch (error) {
           showError(error);
         }
@@ -142,34 +140,34 @@ export function UsersAdmin() {
       setSubmitted(false);
       setValidationErrors({});
       setUserDialog(false);
-      setProduct(emptyUser);
+      setUser(emptyUser);
     }
   };
 
   const editUser = (userEdit) => {
     setSubmitted(false);
     setIsEditUser(true);
-    setProduct({ ...userEdit, password: '' });
+    setUser({ ...userEdit, password: '' });
     setSelectedRoles(userEdit.roles);
     setUserDialog(true);
     setActionName('Editar Usuario');
   };
 
   const confirmDeleteUser = (user) => {
-    setProduct(user);
+    setUser(user);
     setDeleteUserDialog(true);
   };
 
   const deleteSelectedUser = async () => {
     try {
-      await deleteUser(product.id);
+      await deleteUser(user.id);
       onRefresh();
     } catch (error) {
       console.log(error);
     }
 
     setDeleteUserDialog(false);
-    setProduct(emptyUser);
+    setUser(emptyUser);
     toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Usuario borrado correctamente', life: 3000 });
   };
 
@@ -183,8 +181,8 @@ export function UsersAdmin() {
 
   const deleteSelectedUsers = async () => {
     try {
-      await Promise.all(selectedUsers.map(async (product) => {
-        await deleteUser(product.id);
+      await Promise.all(selectedUsers.map(async (user) => {
+        await deleteUser(user.id);
       }));
       onRefresh();
     } catch (error) {
@@ -244,14 +242,14 @@ export function UsersAdmin() {
         break;
     }
 
-    setProduct(prevUser => ({ ...prevUser, [name]: val }));
+    setUser(prevUser => ({ ...prevUser, [name]: val }));
     setValidationErrors(errors);
   };
 
 
   const handleInputSwitch = (e, valid) => {
     const val = e.target.value;
-    setProduct(prevUser => ({ ...prevUser, [valid]: val }));
+    setUser(prevUser => ({ ...prevUser, [valid]: val }));
   }
 
   const isValidEmail = (email) => {
@@ -266,27 +264,27 @@ export function UsersAdmin() {
 
   const validateFields = () => {
     const errors = {};
-    if (!product.email) {
+    if (!user.email) {
       errors.email = "El email es requerido";
-    } else if (!isValidEmail(product.email)) {
+    } else if (!isValidEmail(user.email)) {
       errors.email = "El formato de correo electrónico es inválido";
     }
-    if (!product.firstName) {
+    if (!user.firstName) {
       errors.firstName = "El nombre es requerido";
-    } else if (product.firstName.length < 2) {
+    } else if (user.firstName.length < 2) {
       errors.firstName = "El nombre tiene que tener mínimo 2 letras";
     }
 
     if (isEditUser) {
-      if (product.password.length > 0 && !validatePassword(product.password)) {
+      if (user.password.length > 0 && !validatePassword(user.password)) {
         errors.password = "La contraseña tiene que tener mínimo 6 caracteres, una mayúscula, una minúscula y un número"
       }
     }
 
     else {
-      if (!product.password) {
+      if (!user.password) {
         errors.password = "La contraseña es requerida";
-      } else if (!validatePassword(product.password)) {
+      } else if (!validatePassword(user.password)) {
         errors.password = "La contraseña tiene que tener mínimo 6 caracteres, una mayúscula, una minúscula y un número"
       }
     }
@@ -375,7 +373,7 @@ export function UsersAdmin() {
       <div className="card" >
         <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
 
-        <DataTable ref={dt} value={products} selection={selectedUsers} onSelectionChange={(e) => setSelectedUsers(e.value)}
+        <DataTable ref={dt} value={usersTable} selection={selectedUsers} onSelectionChange={(e) => setSelectedUsers(e.value)}
           dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
           paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
           currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} usuarios" globalFilter={globalFilter} header={header}>
@@ -421,9 +419,9 @@ export function UsersAdmin() {
           <label htmlFor="email" className="font-bold">
             Email
           </label>
-          <InputText id="email" type="email" value={product.email} onChange={(e) => onInputChange(e, 'email')} required autoFocus
-            className={classNames({ "p-invalid": submitted && (!product.email || validationErrors.email) })} />
-          {submitted && !product.email
+          <InputText id="email" type="email" value={user.email} onChange={(e) => onInputChange(e, 'email')} required autoFocus
+            className={classNames({ "p-invalid": submitted && (!user.email || validationErrors.email) })} />
+          {submitted && !user.email
             ? (<small className="p-error">El email es requerido</small>)
             : submitted && validationErrors.email && (<small className="p-error">{validationErrors.email}</small>)
           }
@@ -449,8 +447,8 @@ export function UsersAdmin() {
           <label htmlFor="firstName" className="font-bold">
             Nombre
           </label>
-          <InputText id="firstName" value={product.firstName} onChange={(e) => onInputChange(e, 'firstName')} required autoFocus className={classNames({ "p-invalid": submitted && (!product.firstName || validationErrors.firstName) })} />
-          {submitted && !product.firstName
+          <InputText id="firstName" value={user.firstName} onChange={(e) => onInputChange(e, 'firstName')} required autoFocus className={classNames({ "p-invalid": submitted && (!user.firstName || validationErrors.firstName) })} />
+          {submitted && !user.firstName
             ? <small className="p-error">El nombre es requerido</small>
             : submitted && validationErrors.firstName && (<small className="p-error">{validationErrors.firstName}</small>)
           }
@@ -459,7 +457,7 @@ export function UsersAdmin() {
           <label htmlFor="lastName" className="font-bold">
             Apellidos
           </label>
-          <InputText id="lastName" value={product.lastName || ''} onChange={(e) => onInputChange(e, 'lastName')} />
+          <InputText id="lastName" value={user.lastName || ''} onChange={(e) => onInputChange(e, 'lastName')} />
         </div>
         <div className="field">
           <label htmlFor="password" className="font-bold">
@@ -467,13 +465,13 @@ export function UsersAdmin() {
           </label>
           {isEditUser ? (
             <>
-              <InputText id="password" type="password" value={product.password} onChange={(e) => onInputChange(e, 'password')} required autoFocus className={classNames({ "p-invalid": submitted && (validationErrors.password) })} />
+              <InputText id="password" type="password" value={user.password} onChange={(e) => onInputChange(e, 'password')} required autoFocus className={classNames({ "p-invalid": submitted && (validationErrors.password) })} />
               {submitted && validationErrors.password && (<small className="p-error">{validationErrors.password}</small>)}
             </>
           ) : (
             <>
-              <InputText id="password" type="password" value={product.password} onChange={(e) => onInputChange(e, 'password')} required autoFocus className={classNames({ "p-invalid": submitted && (!product.password || validationErrors.password) })} />
-              {submitted && !product.password
+              <InputText id="password" type="password" value={user.password} onChange={(e) => onInputChange(e, 'password')} required autoFocus className={classNames({ "p-invalid": submitted && (!user.password || validationErrors.password) })} />
+              {submitted && !user.password
                 ? (<small className="p-error">La contraseña es requerida</small>)
                 : submitted && validationErrors.password && (<small className="p-error">{validationErrors.password}</small>)
               }
@@ -485,7 +483,7 @@ export function UsersAdmin() {
           <div className="p-field-checkbox" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
             <InputSwitch
               id='isActive'
-              checked={product.isActive}
+              checked={user.isActive}
               onChange={(e) => handleInputSwitch(e, 'isActive')}
             />
             <label htmlFor="isActive" className="font-bold" style={{ marginLeft: "1rem", alignSelf: "center" }}>
@@ -498,9 +496,9 @@ export function UsersAdmin() {
       <Dialog visible={deleteUserDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteUserDialogFooter} onHide={hideDeleteUserDialog}>
         <div className="confirmation-content">
           <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-          {product && (
+          {user && (
             <span>
-              Seguro que quieres eliminar el usuario <b>{product.firstName}</b>?
+              Seguro que quieres eliminar el usuario <b>{user.firstName}</b>?
             </span>
           )}
         </div>
@@ -509,7 +507,7 @@ export function UsersAdmin() {
       <Dialog visible={deleteUsersDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteUsersDialogFooter} onHide={hideDeleteUsersDialog}>
         <div className="confirmation-content">
           <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-          {product && <span>Seguro que quieres eliminar los usuarios seleccionados?</span>}
+          {user && <span>Seguro que quieres eliminar los usuarios seleccionados?</span>}
         </div>
       </Dialog>
     </div>
