@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { getCategoriesApi, addCategoryApi } from '../api/category';
+import { getCategoriesApi, addCategoryApi, deleteCategoryApi } from '../api/category';
 import { useAuth } from './';
 
 export function useCategory() {
@@ -18,10 +18,17 @@ export function useCategory() {
 
     const addCategory = async (data) => {
         try {
-            console.log(data);
             await addCategoryApi(data, auth.token);
         } catch (error) {
             console.log(error);
+            throw error;
+        }
+    }
+
+    const deleteCategory = async (id) => {
+        try {
+            await deleteCategoryApi(id, auth.token);
+        } catch (error) {
             throw error;
         }
     }
@@ -30,5 +37,6 @@ export function useCategory() {
         categories,
         getCategories,
         addCategory,
+        deleteCategory,
     }
 }

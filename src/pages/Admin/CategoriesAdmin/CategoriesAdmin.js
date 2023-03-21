@@ -22,7 +22,7 @@ export function CategoriesAdmin() {
 
   const toast = useRef(null);
   const dt = useRef(null);
-  const { categories, getCategories, addCategory } = useCategory();
+  const { categories, getCategories, addCategory, deleteCategory } = useCategory();
   const [categoriesTable, setCategoriesTable] = useState(null);
   const [categoryDialog, setCategoryDialog] = useState(false);
   const [deleteCategoryDialog, setDeleteCategoryDialog] = useState(false);
@@ -90,7 +90,7 @@ export function CategoriesAdmin() {
 
         const editUser = {
           ...(category.title && { title: category.title }),
-          //IMAGEN
+          ...(category.imageFile && { image: category.imageFile }),
         };
 
         /*try {
@@ -110,14 +110,6 @@ export function CategoriesAdmin() {
         };
 
         console.log(newCategory);
-
-        /*try {
-          await addUser(newUser);
-          onRefresh();
-          toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: `Usuario ${category.firstName} creado correctamente`, life: 3000 });
-        } catch (error) {
-          showError(error);
-        }*/
 
         try {
           await addCategory(newCategory);
@@ -150,12 +142,12 @@ export function CategoriesAdmin() {
   };
 
   const deleteSelectedCategory = async () => {
-    /*try {
-      await deleteUser(category.id);
+    try {
+      await deleteCategory(category.id);
       onRefresh();
     } catch (error) {
       console.log(error);
-    }*/
+    }
 
     setDeleteCategoryDialog(false);
     setCategory(emptyCategory);
@@ -171,14 +163,14 @@ export function CategoriesAdmin() {
   };
 
   const deleteSelectedCategories = async () => {
-    /*try {
+    try {
       await Promise.all(selectedCategories.map(async (category) => {
-        await deleteUser(category.id);
+        await deleteCategory(category.id);
       }));
       onRefresh();
     } catch (error) {
       console.log(error);
-    }*/
+    }
 
     setDeleteCategoriesDialog(false);
     setSelectedCategories(null);
