@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useCategory } from '../../../hooks';
 import { classNames } from 'primereact/utils';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -9,19 +10,19 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Image } from 'primereact/image';
 import { useDropzone } from 'react-dropzone';
-import { useCategory } from '../../../hooks';
 import './CategoriesAdmin.scss';
 
 export function CategoriesAdmin() {
 
   let emptyCategory = {
     title: '',
+    imageFile: '',
     image: '',
   };
 
   const toast = useRef(null);
   const dt = useRef(null);
-  const { categories, getCategories } = useCategory();
+  const { categories, getCategories, addCategory } = useCategory();
   const [categoriesTable, setCategoriesTable] = useState(null);
   const [categoryDialog, setCategoryDialog] = useState(false);
   const [deleteCategoryDialog, setDeleteCategoryDialog] = useState(false);
@@ -41,7 +42,7 @@ export function CategoriesAdmin() {
   useEffect(() => {
     getCategories();
     setCategoriesTable(categories);
-  }, [categories])
+  }, [categories, refreshTable])
 
   const onRefresh = () => setRefreshTable((state) => !state);
 
@@ -100,7 +101,7 @@ export function CategoriesAdmin() {
 
         const newCategory = {
           title: category.title,
-          image: category.image,
+          image: category.imageFile,
         };
 
         console.log(newCategory);
@@ -112,6 +113,13 @@ export function CategoriesAdmin() {
         } catch (error) {
           showError(error);
         }*/
+
+        try {
+          await addCategory(newCategory);
+          onRefresh();
+        } catch (error) {
+          console.log(error);
+        }
       }
 
       setSubmitted(false);
@@ -123,6 +131,7 @@ export function CategoriesAdmin() {
   };
 
   const editCategory = (categoryEdit) => {
+    console.log(categoryEdit);
     setSubmitted(false);
     setIsEditUser(true);
     setCategory({ ...categoryEdit });
@@ -183,16 +192,10 @@ export function CategoriesAdmin() {
 
     let errors = { ...validationErrors };
 
-    switch (name) {
-      case "title":
-        if (val.length < 2) {
-          errors.title = "El título tiene que tener mínimo 2 letras";
-        } else {
-          delete errors.title;
-        }
-        break;
-      default:
-        break;
+    if (val.length < 2) {
+      errors.title = "El título tiene que tener mínimo 2 letras";
+    } else {
+      delete errors.title;
     }
 
     setCategory(prevCategory => ({ ...prevCategory, [name]: val }));
@@ -218,7 +221,10 @@ export function CategoriesAdmin() {
 
   const onDrop = useCallback((acceptedFile) => {
     const file = acceptedFile[0];
-    setCategory({ ...category, image: URL.createObjectURL(file) });
+    console.log(file);
+    //setCategory({ ...category, image: URL.createObjectURL(file) });
+    setCategory({ ...category, imageFile: file, image: URL.createObjectURL(file) });
+    console.log(category);
     let errors = { ...validationErrors };
     delete errors.image;
     setValidationErrors(errors);

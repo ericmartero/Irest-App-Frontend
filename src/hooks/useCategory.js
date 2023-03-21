@@ -18,8 +18,10 @@ export function useCategory() {
 
     const addCategory = async (data) => {
         try {
+            console.log(data);
             await addCategoryApi(data, auth.token);
         } catch (error) {
+            console.log(error);
             throw error;
         }
     }

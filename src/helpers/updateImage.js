@@ -13,7 +13,7 @@ export const updateImage = async(image) => {
         const resp = await fetch(url, params);
         const urlImage = await resp.json();
 
-        return urlImage;
+        return urlImage.url;
 
     } catch (error) {
         throw error;

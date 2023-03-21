@@ -16,7 +16,7 @@ export const getCategoriesApi = async() => {
 }
 
 export const addCategoryApi = async(dtoAddCategory, token) => {
-    const { image, ...category } = dtoAddCategory;
+    const { image, title } = dtoAddCategory;
 
     try {
         // Cloudinary API
@@ -28,11 +28,12 @@ export const addCategoryApi = async(dtoAddCategory, token) => {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
             },
-            body: {
-                ...category,
-                urlImage
-            }
+            body: JSON.stringify({
+                title,
+                image: urlImage
+            })
         }
 
         const resp = await fetch(url, params);
