@@ -33,6 +33,8 @@ export function CategoriesAdmin() {
   const [validationErrors, setValidationErrors] = useState({});
   const [actionName, setActionName] = useState('');
 
+  const [uploadedImage, setUploadedImage] = useState(false);
+
   const [isEditUser, setIsEditUser] = useState(false)
   const [refreshTable, setRefreshTable] = useState(false);
 
@@ -55,6 +57,7 @@ export function CategoriesAdmin() {
     setSubmitted(false);
     setCategoryDialog(false);
     setValidationErrors({});
+    setUploadedImage(false);
   };
 
   const hideDeleteCategoryDialog = () => {
@@ -113,6 +116,7 @@ export function CategoriesAdmin() {
       }
 
       setSubmitted(false);
+      setUploadedImage(false);
       setValidationErrors({});
       setCategoryDialog(false);
       setCategory(emptyCategory);
@@ -205,6 +209,10 @@ export function CategoriesAdmin() {
       errors.title = "El título tiene que tener mínimo 2 letras";
     }
 
+    if (!category.image) {
+      errors.image = "La imagen es requerida";
+    }
+
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -212,7 +220,11 @@ export function CategoriesAdmin() {
   const onDrop = useCallback((acceptedFile) => {
     const file = acceptedFile[0];
     setCategory({ ...category, image: URL.createObjectURL(file) });
-  }, [category]);
+    let errors = { ...validationErrors };
+    delete errors.image;
+    setValidationErrors(errors);
+    setUploadedImage(true);
+  }, [category, validationErrors]);
 
   const { getRootProps, getInputProps } = useDropzone({
       accept: {
@@ -313,6 +325,7 @@ export function CategoriesAdmin() {
           </label>
           <Button label="Subir Imagen" { ...getRootProps() }/>
           <input { ...getInputProps() } />
+          {submitted && validationErrors.image && !uploadedImage && (<small className="p-error">{validationErrors.image}</small>)}
           <div className="imageContent">
             <Image src={category.image} alt="Image" width="100%"/>
           </div>
