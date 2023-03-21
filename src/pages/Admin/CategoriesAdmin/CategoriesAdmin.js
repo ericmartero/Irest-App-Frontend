@@ -117,6 +117,7 @@ export function CategoriesAdmin() {
         try {
           await addCategory(newCategory);
           onRefresh();
+          toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: `Categoria ${category.title} creada correctamente`, life: 3000 });
         } catch (error) {
           console.log(error);
         }
@@ -131,7 +132,6 @@ export function CategoriesAdmin() {
   };
 
   const editCategory = (categoryEdit) => {
-    console.log(categoryEdit);
     setSubmitted(false);
     setIsEditUser(true);
     setCategory({ ...categoryEdit });
@@ -191,8 +191,7 @@ export function CategoriesAdmin() {
     const val = e.target.value || '';
 
     let errors = { ...validationErrors };
-    const filteredCategory = categories.filter(category => category.title === val);
-    console.log(filteredCategory);
+    const filteredCategory = categories.filter(category => category.title.toLowerCase() === val.toLowerCase());
 
     if (val.length < 2) {
       errors.title = "El título tiene que tener mínimo 2 letras";
@@ -210,7 +209,7 @@ export function CategoriesAdmin() {
 
   const validateFields = () => {
     const errors = {};
-    const filteredCategory = categories.filter(cat => cat.title === category.title);
+    const filteredCategory = categories.filter(cat => cat.title.toLowerCase() === category.title.toLowerCase());
 
     if (!category.title) {
       errors.title = "El título es requerido";
@@ -230,10 +229,7 @@ export function CategoriesAdmin() {
 
   const onDrop = useCallback((acceptedFile) => {
     const file = acceptedFile[0];
-    console.log(file);
-    //setCategory({ ...category, image: URL.createObjectURL(file) });
     setCategory({ ...category, imageFile: file, image: URL.createObjectURL(file) });
-    console.log(category);
     let errors = { ...validationErrors };
     delete errors.image;
     setValidationErrors(errors);
