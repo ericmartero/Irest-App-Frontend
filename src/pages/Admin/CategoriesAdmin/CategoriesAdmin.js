@@ -98,13 +98,12 @@ export function CategoriesAdmin() {
         //ENVIAR
       } else {
 
-        const newUser = {
-          email: category.email,
-          firstName: category.firstName,
-          password: category.password,
-          isActive: category.isActive,
-          ...(category.lastName && { lastName: category.lastName }),
+        const newCategory = {
+          title: category.title,
+          image: category.image,
         };
+
+        console.log(newCategory);
 
         /*try {
           await addUser(newUser);

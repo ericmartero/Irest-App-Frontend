@@ -1,8 +1,11 @@
 import { useState } from "react";
-import { getCategoriesApi } from '../api/category';
+import { getCategoriesApi, addCategoryApi } from '../api/category';
+import { useAuth } from './';
 
 export function useCategory() {
+
     const [categories, setCategories] = useState(null);
+    const { auth } = useAuth();
 
     const getCategories = async () => {
         try {
@@ -13,8 +16,17 @@ export function useCategory() {
         }
     };
 
+    const addCategory = async (data) => {
+        try {
+            await addCategoryApi(data, auth.token);
+        } catch (error) {
+            throw error;
+        }
+    }
+
     return {
         categories,
         getCategories,
+        addCategory,
     }
 }
