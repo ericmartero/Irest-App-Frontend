@@ -216,6 +216,8 @@ export function CategoriesAdmin() {
       errors.title = "El título tiene que tener mínimo 2 letras";
     } else if (!isEditUser && filteredCategory.length > 0) {
       errors.title = "El título de la categoria ya esta utilizada";
+    } else if (isEditUser && filteredCategory.length > 0 && titleCategoryEdit !== category.title) {
+      errors.title = "El título de la categoria ya esta utilizada";
     }
 
     if (!category.image) {
