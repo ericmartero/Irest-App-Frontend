@@ -47,7 +47,7 @@ export const addCategoryApi = async(dtoAddCategory, token) => {
 }
 
 export const updateCategoryApi = async(id, dtoUpdateCategory, token) => {
-    const { image, ...category } = dtoUpdateCategory;
+    const { image, title } = dtoUpdateCategory;
 
     try {
         let urlImage;
@@ -56,12 +56,12 @@ export const updateCategoryApi = async(id, dtoUpdateCategory, token) => {
         if (image) {
             urlImage = await updateImage(image);
             bodyCategory = {
-                ...category,
-                urlImage
+                title,
+                image: urlImage
             }
         } else {
             bodyCategory = {
-                ...category
+                title,
             }
         }
 
@@ -71,6 +71,7 @@ export const updateCategoryApi = async(id, dtoUpdateCategory, token) => {
             method: 'PATCH',
             headers: {
                 Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
             },
             body: bodyCategory
         }
