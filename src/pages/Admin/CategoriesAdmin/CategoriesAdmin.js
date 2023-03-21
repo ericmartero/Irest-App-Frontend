@@ -9,9 +9,8 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Image } from 'primereact/image';
 import { useDropzone } from 'react-dropzone';
-
-//
-import { useCategory } from '../../hooks';
+import { useCategory } from '../../../hooks';
+import './CategoriesAdmin.scss';
 
 export function CategoriesAdmin() {
 
@@ -319,12 +318,15 @@ export function CategoriesAdmin() {
           }
         </div>
         <div className="field">
-          <label htmlFor="image" className="font-bold" style={{ marginBottom: '0.5rem' }}>
+          <label htmlFor="image" className="font-bold" style={{ marginBottom: '0.8rem' }}>
             Imagen
           </label>
-          <Button label="Subir Imagen" { ...getRootProps() } />
+          <Button label="Subir Imagen" { ...getRootProps() }/>
           <input { ...getInputProps() } />
-          <Image src={previewImage} alt="Image" width="250" preview />
+          <div className="imageContent">
+            <Image src={previewImage} alt="Image" width="100%"/>
+          </div>
+          
         </div>
       </Dialog>
 
