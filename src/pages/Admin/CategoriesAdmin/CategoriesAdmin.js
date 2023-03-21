@@ -39,6 +39,8 @@ export function CategoriesAdmin() {
   const [isEditUser, setIsEditUser] = useState(false)
   const [refreshTable, setRefreshTable] = useState(false);
 
+  const [titleCategoryEdit, setTitleCategoryEdit] = useState('');
+
   useEffect(() => {
     getCategories();
   }, [refreshTable, getCategories])
@@ -92,6 +94,7 @@ export function CategoriesAdmin() {
           ...(category.title && { title: category.title }),
           ...(category.imageFile && { image: category.imageFile }),
         };
+        console.log(editUser);
 
         /*try {
           await updateUser(category.id, editUser);
@@ -129,6 +132,7 @@ export function CategoriesAdmin() {
   };
 
   const editCategory = (categoryEdit) => {
+    setTitleCategoryEdit(categoryEdit.title);
     setSubmitted(false);
     setIsEditUser(true);
     setCategory({ ...categoryEdit });
@@ -188,6 +192,7 @@ export function CategoriesAdmin() {
     const val = e.target.value || '';
 
     let errors = { ...validationErrors };
+    
     const filteredCategory = categories.filter(category => category.title.toLowerCase() === val.toLowerCase());
 
     if (val.length < 2) {
@@ -196,7 +201,7 @@ export function CategoriesAdmin() {
       delete errors.title;
     }
 
-    if (filteredCategory.length > 0) {
+    if (!isEditUser && filteredCategory.length > 0) {
       errors.title = "El título de la categoria ya esta utilizada";
     }
 
@@ -212,7 +217,7 @@ export function CategoriesAdmin() {
       errors.title = "El título es requerido";
     } else if (category.title.length < 2) {
       errors.title = "El título tiene que tener mínimo 2 letras";
-    } else if (filteredCategory.length > 0) {
+    } else if (!isEditUser && filteredCategory.length > 0) {
       errors.title = "El título de la categoria ya esta utilizada";
     }
 
@@ -330,7 +335,7 @@ export function CategoriesAdmin() {
           <label htmlFor="image" className="font-bold" style={{ marginBottom: '0.8rem' }}>
             Imagen
           </label>
-          <Button label="Subir Imagen" { ...getRootProps() }/>
+          <Button label={ isEditUser ? "Cambiar Imagen" : "Subir Imagen"} { ...getRootProps() }/>
           <input { ...getInputProps() } />
           {submitted && validationErrors.image && !uploadedImage && (<small className="p-error">{validationErrors.image}</small>)}
           <div className="imageContent">
