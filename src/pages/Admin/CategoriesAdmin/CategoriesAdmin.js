@@ -22,7 +22,7 @@ export function CategoriesAdmin() {
 
   const toast = useRef(null);
   const dt = useRef(null);
-  const { categories, getCategories, addCategory, deleteCategory } = useCategory();
+  const { categories, getCategories, addCategory, updateCategory, deleteCategory } = useCategory();
   const [categoriesTable, setCategoriesTable] = useState(null);
   const [categoryDialog, setCategoryDialog] = useState(false);
   const [deleteCategoryDialog, setDeleteCategoryDialog] = useState(false);
@@ -94,15 +94,14 @@ export function CategoriesAdmin() {
           ...(category.title && { title: category.title }),
           ...(category.imageFile && { image: category.imageFile }),
         };
-        console.log(editUser);
 
-        /*try {
-          await updateUser(category.id, editUser);
+        try {
+          await updateCategory(category.id, editUser);
           onRefresh();
-          toast.current.show({ severity: 'success', summary: 'Operación Exitosa', detail: `Usuario ${category.firstName} actualizado correctamente`, life: 3000 });
+          toast.current.show({ severity: 'success', summary: 'Operación Exitosa', detail: `Categoria ${category.title} actualizada correctamente`, life: 3000 });
         } catch (error) {
-          showError(error);
-        }*/
+          console.log(error);
+        }
 
         //ENVIAR
       } else {
@@ -111,8 +110,6 @@ export function CategoriesAdmin() {
           title: category.title,
           image: category.imageFile,
         };
-
-        console.log(newCategory);
 
         try {
           await addCategory(newCategory);

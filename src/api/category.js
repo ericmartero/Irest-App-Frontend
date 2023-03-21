@@ -73,7 +73,7 @@ export const updateCategoryApi = async(id, dtoUpdateCategory, token) => {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json'
             },
-            body: bodyCategory
+            body: JSON.stringify(bodyCategory)
         }
 
         const resp = await fetch(url, params);
