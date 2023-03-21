@@ -191,11 +191,17 @@ export function CategoriesAdmin() {
     const val = e.target.value || '';
 
     let errors = { ...validationErrors };
+    const filteredCategory = categories.filter(category => category.title === val);
+    console.log(filteredCategory);
 
     if (val.length < 2) {
       errors.title = "El título tiene que tener mínimo 2 letras";
     } else {
       delete errors.title;
+    }
+
+    if (filteredCategory.length > 0) {
+      errors.title = "El título de la categoria ya esta utilizada";
     }
 
     setCategory(prevCategory => ({ ...prevCategory, [name]: val }));
@@ -204,11 +210,14 @@ export function CategoriesAdmin() {
 
   const validateFields = () => {
     const errors = {};
+    const filteredCategory = categories.filter(cat => cat.title === category.title);
 
     if (!category.title) {
       errors.title = "El título es requerido";
     } else if (category.title.length < 2) {
       errors.title = "El título tiene que tener mínimo 2 letras";
+    } else if (filteredCategory.length > 0) {
+      errors.title = "El título de la categoria ya esta utilizada";
     }
 
     if (!category.image) {
