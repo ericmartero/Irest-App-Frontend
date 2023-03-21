@@ -41,8 +41,13 @@ export function CategoriesAdmin() {
 
   useEffect(() => {
     getCategories();
-    setCategoriesTable(categories);
-  }, [categories, refreshTable])
+  }, [refreshTable, getCategories])
+
+  useEffect(() => {
+    if (categories) {
+      setCategoriesTable(categories);
+    }
+  }, [categories]);
 
   const onRefresh = () => setRefreshTable((state) => !state);
 
