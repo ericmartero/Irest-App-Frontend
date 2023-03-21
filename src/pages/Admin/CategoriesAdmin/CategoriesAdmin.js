@@ -33,8 +33,6 @@ export function CategoriesAdmin() {
   const [validationErrors, setValidationErrors] = useState({});
   const [actionName, setActionName] = useState('');
 
-  const [previewImage, setPreviewImage] = useState(null);
-
   const [isEditUser, setIsEditUser] = useState(false)
   const [refreshTable, setRefreshTable] = useState(false);
 
@@ -198,10 +196,6 @@ export function CategoriesAdmin() {
     setValidationErrors(errors);
   };
 
-  const onUpload = () => {
-    toast.current.show({ severity: 'info', summary: 'Success', detail: 'File Uploaded', life: 3000 });
-  }
-
   const validateFields = () => {
     const errors = {};
 
@@ -215,14 +209,10 @@ export function CategoriesAdmin() {
     return Object.keys(errors).length === 0;
   };
 
-  const handleFileDrop = (acceptedFiles) => {
-    setCategory({ ...category, image: acceptedFiles[0] });
-  };
-
   const onDrop = useCallback((acceptedFile) => {
     const file = acceptedFile[0];
-    setPreviewImage(URL.createObjectURL(file));
-  }, []);
+    setCategory({ ...category, image: URL.createObjectURL(file) });
+  }, [category]);
 
   const { getRootProps, getInputProps } = useDropzone({
       accept: {
@@ -324,7 +314,7 @@ export function CategoriesAdmin() {
           <Button label="Subir Imagen" { ...getRootProps() }/>
           <input { ...getInputProps() } />
           <div className="imageContent">
-            <Image src={previewImage} alt="Image" width="100%"/>
+            <Image src={category.image} alt="Image" width="100%"/>
           </div>
           
         </div>
