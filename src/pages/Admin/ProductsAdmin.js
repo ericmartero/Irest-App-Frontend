@@ -22,7 +22,11 @@ export function ProductsAdmin() {
   };
 
   const categories = [
-    
+    { name: 'New York', code: 'NY' },
+    { name: 'Rome', code: 'RM' },
+    { name: 'London', code: 'LDN' },
+    { name: 'Istanbul', code: 'IST' },
+    { name: 'Paris', code: 'PRS' }
   ]
 
   const toast = useRef(null);
@@ -46,6 +50,8 @@ export function ProductsAdmin() {
   const [isEditProduct, setIsEditProduct] = useState(false)
   const [refreshTable, setRefreshTable] = useState(false);
 
+  const [selectedCategories, setSelectedCategories] = useState(null);
+
   useEffect(() => {
     getProducts();
   }, [refreshTable, getProducts])
@@ -61,6 +67,7 @@ export function ProductsAdmin() {
   const openNew = () => {
     setIsEditProduct(false);
     setProduct(emptyProduct);
+    setSelectedCategories(null);
     setSubmitted(false);
     setProductDialog(true);
     setActionName('Añadir Producto');
@@ -137,6 +144,7 @@ export function ProductsAdmin() {
     setSubmitted(false);
     setIsEditProduct(true);
     setProduct({ ...productEdit });
+    setSelectedCategories(productEdit.category);
     setProductDialog(true);
     setActionName('Editar Producto');
   };
@@ -352,8 +360,8 @@ export function ProductsAdmin() {
           <label htmlFor="categoria" className="font-bold">
             Categoría
           </label>
-          <Dropdown value={product.category.title} onChange={(e) => onInputChange(e, 'category')} options={categories} optionLabel="category"
-            placeholder="Selecciona una categoría" className="w-full md:w-14rem" />
+          <Dropdown value={selectedCategories} onChange={(e) => setSelectedCategories(e.value)} options={categories} optionLabel="name"
+            placeholder="Selecciona una categoría" />
         </div>
 
         <div className="field" style={{ height: "2.5rem", display: "flex", alignItems: "center" }}>
