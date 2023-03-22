@@ -182,6 +182,10 @@ export function ProductsAdmin() {
     }
   };
 
+  const formatCurrency = (value) => {
+    return value.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' });
+  };
+
   const onInputChange = (e, name) => {
     const val = e.target.value || '';
 
@@ -250,6 +254,14 @@ export function ProductsAdmin() {
     return <img src={rowData.image} alt={rowData.image} className="shadow-2 border-round" style={{ width: '100px' }} />;
   };
 
+  const activeBodyTemplate = (rowData) => {
+    return <i className={classNames('pi', (rowData.active ? 'text-green-500 pi-check-circle' : 'text-red-500 pi-times-circle'))}></i>;
+  };
+
+  const priceBodyTemplate = (rowData) => {
+    return formatCurrency(rowData.price);
+  };
+
   const actionBodyTemplate = (rowData) => {
     return (
       <React.Fragment>
@@ -298,8 +310,11 @@ export function ProductsAdmin() {
           paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
           currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} productos" globalFilter={globalFilter} header={header}>
           <Column selectionMode="multiple" exportable={false}></Column>
-          <Column field="title" header="Título" sortable style={{ minWidth: '22rem' }}></Column>
-          <Column field="image" header="Imagen" body={imageBodyTemplate} style={{ minWidth: '16rem' }}></Column>
+          <Column field="title" header="Producto" sortable style={{ minWidth: '14rem' }}></Column>
+          <Column field="image" header="Imagen" body={imageBodyTemplate} style={{ minWidth: '12rem' }}></Column>
+          <Column field="price" header="Precio" body={priceBodyTemplate} sortable style={{ minWidth: '8rem' }}></Column>
+          <Column field="category.title" header="Categoría" sortable style={{ minWidth: '12rem' }}></Column>
+          <Column field="active" header="Activo" sortable dataType="boolean" body={activeBodyTemplate} style={{ minWidth: '8rem' }}></Column>
           <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
         </DataTable>
       </div>
