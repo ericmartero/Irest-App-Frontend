@@ -20,6 +20,9 @@ export function ProductsAdmin() {
     title: '',
     imageFile: '',
     image: '',
+    category: {},
+    active: true,
+    price: 0,
   };
 
   const toast = useRef(null);
@@ -145,10 +148,11 @@ export function ProductsAdmin() {
   };
 
   const editProduct = (productEdit) => {
+    console.log(productEdit);
     setSubmitted(false);
     setIsEditProduct(true);
     setProduct({ ...productEdit });
-    setSelectedCategories(productEdit.category);
+    setSelectedCategories(productEdit.category.title);
     setProductDialog(true);
     setActionName('Editar Producto');
   };
@@ -205,16 +209,16 @@ export function ProductsAdmin() {
     return value.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' });
   };
 
-  function formatDropdownData(data) {
+  const formatDropdownData = (data) => {
     return map(data, (item) => ({
-      key: item.id,
-      text: item.title,
-      value: item.id,
+      id: item.id,
+      value: item.title,
     }));
   }
 
   const onInputChange = (e, name) => {
     const val = e.target.value || '';
+    console.log(val);
 
     let errors = { ...validationErrors };
 
@@ -372,7 +376,7 @@ export function ProductsAdmin() {
           <label htmlFor="categoria" className="font-bold">
             Categoría
           </label>
-          <Dropdown value={product.category} onChange={(e) => onInputChange(e, 'category')} options={categoriesDropdown} optionLabel="text"
+          <Dropdown value={selectedCategories} onChange={(e) => setSelectedCategories(e.value)} options={categoriesDropdown} optionLabel="value"
             placeholder="Selecciona una categoría" />
         </div>
 
