@@ -40,7 +40,6 @@ export function ProductsAdmin() {
   const [refreshTable, setRefreshTable] = useState(false);
 
   useEffect(() => {
-    //getCategories();
     getProducts();
   }, [refreshTable])
 

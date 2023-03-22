@@ -58,7 +58,7 @@ export function CategoriesAdmin() {
     setCategory(emptyCategory);
     setSubmitted(false);
     setCategoryDialog(true);
-    setActionName('Añadir Categoria');
+    setActionName('Añadir Categoría');
   };
 
   const hideDialog = () => {
@@ -94,7 +94,7 @@ export function CategoriesAdmin() {
         try {
           await updateCategory(category.id, editCategory);
           onRefresh();
-          toast.current.show({ severity: 'success', summary: 'Operación Exitosa', detail: `Categoria ${category.title} actualizada correctamente`, life: 3000 });
+          toast.current.show({ severity: 'success', summary: 'Operación Exitosa', detail: `Categoría ${category.title} actualizada correctamente`, life: 3000 });
         } catch (error) {
           console.log(error);
         }
@@ -110,7 +110,7 @@ export function CategoriesAdmin() {
         try {
           await addCategory(newCategory);
           onRefresh();
-          toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: `Categoria ${category.title} creada correctamente`, life: 3000 });
+          toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: `Categoría ${category.title} creada correctamente`, life: 3000 });
         } catch (error) {
           console.log(error);
         }
@@ -130,7 +130,7 @@ export function CategoriesAdmin() {
     setIsEditCategory(true);
     setCategory({ ...categoryEdit });
     setCategoryDialog(true);
-    setActionName('Editar Categoria');
+    setActionName('Editar Categoría');
   };
 
   const confirmDeleteCategory = (category) => {
@@ -148,7 +148,7 @@ export function CategoriesAdmin() {
 
     setDeleteCategoryDialog(false);
     setCategory(emptyCategory);
-    toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Categoria borrada correctamente', life: 3000 });
+    toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Categoría borrada correctamente', life: 3000 });
   };
 
   const exportCSV = () => {
@@ -173,11 +173,11 @@ export function CategoriesAdmin() {
     setSelectedCategories(null);
 
     if (selectedCategories.length === 1) {
-      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Categoria borrada correctamente', life: 3000 });
+      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Categoría borrada correctamente', life: 3000 });
     }
 
     else {
-      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Categorias borradas correctamente', life: 3000 });
+      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Categorías borradas correctamente', life: 3000 });
     }
   };
 
@@ -195,7 +195,7 @@ export function CategoriesAdmin() {
     }
 
     if (!isEditCategory && filteredCategory.length > 0) {
-      errors.title = "El título de la categoria ya esta utilizada";
+      errors.title = "El título de la categoría ya esta utilizada";
     }
 
     setCategory(prevCategory => ({ ...prevCategory, [name]: val }));
@@ -211,9 +211,9 @@ export function CategoriesAdmin() {
     } else if (category.title.length < 2) {
       errors.title = "El título tiene que tener mínimo 2 letras";
     } else if (!isEditCategory && filteredCategory.length > 0) {
-      errors.title = "El título de la categoria ya esta utilizada";
+      errors.title = "El título de la categoría ya esta utilizada";
     } else if (isEditCategory && filteredCategory.length > 0 && titleCategoryEdit !== category.title) {
-      errors.title = "El título de la categoria ya esta utilizada";
+      errors.title = "El título de la categoría ya esta utilizada";
     }
 
     if (!category.image) {
@@ -271,7 +271,7 @@ export function CategoriesAdmin() {
 
   const header = (
     <div className="flex flex-wrap gap-2 align-items-center justify-content-between">
-      <h3 className="m-0">PANEL DE CATEGORIAS</h3>
+      <h3 className="m-0">PANEL DE CATEGORÍAS</h3>
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Buscar..." />
@@ -306,9 +306,9 @@ export function CategoriesAdmin() {
         <DataTable ref={dt} value={categoriesTable} selection={selectedCategories} onSelectionChange={(e) => setSelectedCategories(e.value)}
           dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
           paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-          currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} categorias" globalFilter={globalFilter} header={header}>
+          currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} categorías" globalFilter={globalFilter} header={header}>
           <Column selectionMode="multiple" exportable={false}></Column>
-          <Column field="title" header="Título" sortable style={{ minWidth: '22rem' }}></Column>
+          <Column field="title" header="Categoría" sortable style={{ minWidth: '22rem' }}></Column>
           <Column field="image" header="Imagen" body={imageBodyTemplate} style={{ minWidth: '16rem' }}></Column>
           <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
         </DataTable>
@@ -345,7 +345,7 @@ export function CategoriesAdmin() {
           <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
           {category && (
             <span>
-              Seguro que quieres eliminar la categoria <b>{category.title}</b>?
+              Seguro que quieres eliminar la categoría <b>{category.title}</b>?
             </span>
           )}
         </div>
@@ -354,7 +354,7 @@ export function CategoriesAdmin() {
       <Dialog visible={deleteCategoriesDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteCategoriesDialogFooter} onHide={hideDeleteCategoriesDialog}>
         <div className="confirmation-content">
           <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-          {category && <span>Seguro que quieres eliminar las categorias seleccionadas?</span>}
+          {category && <span>Seguro que quieres eliminar las categorías seleccionadas?</span>}
         </div>
       </Dialog>
     </div>
