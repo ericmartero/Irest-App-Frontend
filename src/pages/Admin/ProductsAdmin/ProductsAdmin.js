@@ -240,6 +240,10 @@ export function ProductsAdmin() {
       errors.title = "El nombre del producto tiene que tener mínimo 2 letras";
     }
 
+    if (selectedCategories === null) {
+      errors.category = "La categoría es requerida";
+    }
+
     if (!product.image) {
       errors.image = "La imagen es requerida";
     }
@@ -367,7 +371,7 @@ export function ProductsAdmin() {
             Precio
           </label>
           <InputNumber inputId="price" value={product.price} onValueChange={(e) => onInputChange(e, 'price')} showButtons buttonLayout="horizontal" step={0.25}
-            decrementButtonClassName="p-button-danger" incrementButtonClassName="p-button-success" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+            decrementButtonClassName="p-button-primary" incrementButtonClassName="p-button-primary" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
             mode="currency" currency="EUR" min={0} />
         </div>
 
@@ -376,7 +380,8 @@ export function ProductsAdmin() {
             Categoría
           </label>
           <Dropdown value={selectedCategories} onChange={(e) => setSelectedCategories(e.value)} options={categoriesDropdown} optionLabel="value"
-            placeholder="Selecciona una categoría" appendTo="self" />
+            placeholder="Selecciona una categoría" appendTo="self" className={classNames({ "p-invalid": submitted && (validationErrors.category) })} />
+          {submitted && validationErrors.category && (<small className="p-error">{validationErrors.category}</small>)}
         </div>
 
         <div className="field" style={{ height: "2.5rem", display: "flex", alignItems: "center" }}>
@@ -387,7 +392,7 @@ export function ProductsAdmin() {
               onChange={(e) => onInputChange(e, 'active')}
             />
             <label htmlFor="active" className="font-bold" style={{ marginLeft: "1rem", alignSelf: "center" }}>
-              Usuario Activo
+              Producto Activo
             </label>
           </div>
         </div>
