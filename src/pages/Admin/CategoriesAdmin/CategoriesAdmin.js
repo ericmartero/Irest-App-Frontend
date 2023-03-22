@@ -189,13 +189,13 @@ export function CategoriesAdmin() {
     const filteredCategory = categories.filter(category => category.title.toLowerCase() === val.toLowerCase());
 
     if (val.length < 2) {
-      errors.title = "El título tiene que tener mínimo 2 letras";
+      errors.title = "El nombre de la categoría tiene que tener mínimo 2 letras";
     } else {
       delete errors.title;
     }
 
     if (!isEditCategory && filteredCategory.length > 0) {
-      errors.title = "El título de la categoría ya esta utilizada";
+      errors.title = "El nombre de la categoría ya esta utilizada";
     }
 
     setCategory(prevCategory => ({ ...prevCategory, [name]: val }));
@@ -207,13 +207,13 @@ export function CategoriesAdmin() {
     const filteredCategory = categories.filter(cat => cat.title.toLowerCase() === category.title.toLowerCase());
 
     if (!category.title) {
-      errors.title = "El título es requerido";
+      errors.title = "El nombre de la categoría es requerida";
     } else if (category.title.length < 2) {
-      errors.title = "El título tiene que tener mínimo 2 letras";
+      errors.title = "El nombre de la categoría tiene que tener mínimo 2 letras";
     } else if (!isEditCategory && filteredCategory.length > 0) {
-      errors.title = "El título de la categoría ya esta utilizada";
+      errors.title = "El nombre de la categoría ya esta utilizada";
     } else if (isEditCategory && filteredCategory.length > 0 && titleCategoryEdit !== category.title) {
-      errors.title = "El título de la categoría ya esta utilizada";
+      errors.title = "El nombre de la categoría ya esta utilizada";
     }
 
     if (!category.image) {
@@ -317,12 +317,12 @@ export function CategoriesAdmin() {
       <Dialog visible={categoryDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={actionName} modal className="p-fluid" footer={categoryDialogFooter} onHide={hideDialog}>
         <div className="field">
           <label htmlFor="title" className="font-bold">
-            Título
+            Categoría
           </label>
           <InputText id="title" value={category.title} onChange={(e) => onInputChange(e, 'title')} required autoFocus
             className={classNames({ "p-invalid": submitted && (!category.title || validationErrors.title) })} />
           {submitted && !category.title
-            ? (<small className="p-error">El título es requerido</small>)
+            ? (<small className="p-error">El nombre de la categoría es requerida</small>)
             : submitted && validationErrors.title && (<small className="p-error">{validationErrors.title}</small>)
           }
         </div>
