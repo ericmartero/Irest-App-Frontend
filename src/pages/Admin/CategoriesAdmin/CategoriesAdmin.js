@@ -76,10 +76,6 @@ export function CategoriesAdmin() {
     setDeleteCategoriesDialog(false);
   };
 
-  const showError = (error) => {
-    toast.current.show({ severity: 'error', summary: 'Operación Fallida', detail: error.message, life: 3000 });
-  }
-
   const saveCategory = async () => {
 
     const isValid = validateFields();

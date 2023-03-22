@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useCategory, useProduct } from '../../hooks';
+import { useProduct } from '../../hooks';
 import { classNames } from 'primereact/utils';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -12,7 +12,7 @@ import { Image } from 'primereact/image';
 import { useDropzone } from 'react-dropzone';
 
 export function ProductsAdmin() {
-  let emptyCategory = {
+  let emptyProduct = {
     title: '',
     imageFile: '',
     image: '',
@@ -21,15 +21,15 @@ export function ProductsAdmin() {
   const toast = useRef(null);
   const dt = useRef(null);
 
-  const { categories, getCategories } = useCategory();
-
   const { products, getProducts } = useProduct();
 
-  const [categoriesTable, setCategoriesTable] = useState(null);
-  const [categoryDialog, setCategoryDialog] = useState(false);
-  const [deleteCategoryDialog, setDeleteCategoryDialog] = useState(false);
-  const [deleteCategoriesDialog, setDeleteCategoriesDialog] = useState(false);
-  const [category, setCategory] = useState(emptyCategory);
+  const [productsTable, setProductsTable] = useState(null);
+  const [productDialog, setProductDialog] = useState(false);
+  const [deleteProductDialog, setDeleteProductDialog] = useState(false);
+  const [deleteProductsDialog, setDeleteProductsDialog] = useState(false);
+
+  const [product, setProduct] = useState(emptyProduct);
+
   const [selectedCategories, setSelectedCategories] = useState(null);
   const [submitted, setSubmitted] = useState(false);
   const [globalFilter, setGlobalFilter] = useState(null);
@@ -41,8 +41,6 @@ export function ProductsAdmin() {
   const [isEditUser, setIsEditUser] = useState(false)
   const [refreshTable, setRefreshTable] = useState(false);
 
-  const [titleCategoryEdit, setTitleCategoryEdit] = useState('');
-
   useEffect(() => {
     //getCategories();
     getProducts();
@@ -50,7 +48,7 @@ export function ProductsAdmin() {
 
   useEffect(() => {
     if (products) {
-      setCategoriesTable(products);
+      setProductsTable(products);
     }
   }, [products]);
 
@@ -58,25 +56,25 @@ export function ProductsAdmin() {
 
   const openNew = () => {
     setIsEditUser(false);
-    setCategory(emptyCategory);
+    setProduct(emptyProduct);
     setSubmitted(false);
-    setCategoryDialog(true);
-    setActionName('Añadir Categoria');
+    setProductDialog(true);
+    setActionName('Añadir Producto');
   };
 
   const hideDialog = () => {
     setSubmitted(false);
-    setCategoryDialog(false);
+    setProductDialog(false);
     setValidationErrors({});
     setUploadedImage(false);
   };
 
   const hideDeleteCategoryDialog = () => {
-    setDeleteCategoryDialog(false);
+    setDeleteProductDialog(false);
   };
 
   const hideDeleteCategoriesDialog = () => {
-    setDeleteCategoriesDialog(false);
+    setDeleteProductsDialog(false);
   };
 
   const showError = (error) => {
@@ -91,11 +89,11 @@ export function ProductsAdmin() {
     if (isValid) {
 
       //EDITAR
-      if (category.id) {
+      if (product.id) {
 
         const editUser = {
-          ...(category.title && { title: category.title }),
-          ...(category.imageFile && { image: category.imageFile }),
+          ...(product.title && { title: product.title }),
+          ...(product.imageFile && { image: product.imageFile }),
         };
 
         /*try {
@@ -110,8 +108,8 @@ export function ProductsAdmin() {
       } else {
 
         const newCategory = {
-          title: category.title,
-          image: category.imageFile,
+          title: product.title,
+          image: product.imageFile,
         };
 
         /*try {
@@ -126,23 +124,22 @@ export function ProductsAdmin() {
       setSubmitted(false);
       setUploadedImage(false);
       setValidationErrors({});
-      setCategoryDialog(false);
-      setCategory(emptyCategory);
+      setProductDialog(false);
+      setProduct(emptyProduct);
     }
   };
 
   const editCategory = (categoryEdit) => {
-    setTitleCategoryEdit(categoryEdit.title);
     setSubmitted(false);
     setIsEditUser(true);
-    setCategory({ ...categoryEdit });
-    setCategoryDialog(true);
-    setActionName('Editar Categoria');
+    setProduct({ ...categoryEdit });
+    setProductDialog(true);
+    setActionName('Editar Producto');
   };
 
   const confirmDeleteCategory = (category) => {
-    setCategory(category);
-    setDeleteCategoryDialog(true);
+    setProduct(category);
+    setDeleteProductDialog(true);
   };
 
   const deleteSelectedCategory = async () => {
@@ -153,8 +150,8 @@ export function ProductsAdmin() {
       console.log(error);
     }*/
 
-    setDeleteCategoryDialog(false);
-    setCategory(emptyCategory);
+    setDeleteProductDialog(false);
+    setProduct(emptyProduct);
     toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Categoria borrada correctamente', life: 3000 });
   };
 
@@ -163,7 +160,7 @@ export function ProductsAdmin() {
   };
 
   const confirmDeleteSelected = () => {
-    setDeleteCategoriesDialog(true);
+    setDeleteProductsDialog(true);
   };
 
   const deleteSelectedCategories = async () => {
@@ -176,7 +173,7 @@ export function ProductsAdmin() {
       console.log(error);
     }*/
 
-    setDeleteCategoriesDialog(false);
+    setDeleteProductsDialog(false);
     setSelectedCategories(null);
 
     if (selectedCategories.length === 1) {
@@ -193,37 +190,26 @@ export function ProductsAdmin() {
 
     let errors = { ...validationErrors };
 
-    const filteredCategory = categories.filter(category => category.title.toLowerCase() === val.toLowerCase());
-
     if (val.length < 2) {
       errors.title = "El título tiene que tener mínimo 2 letras";
     } else {
       delete errors.title;
     }
 
-    if (!isEditUser && filteredCategory.length > 0) {
-      errors.title = "El título de la categoria ya esta utilizada";
-    }
-
-    setCategory(prevCategory => ({ ...prevCategory, [name]: val }));
+    setProduct(prevProduct => ({ ...prevProduct, [name]: val }));
     setValidationErrors(errors);
   };
 
   const validateFields = () => {
     const errors = {};
-    const filteredCategory = categories.filter(cat => cat.title.toLowerCase() === category.title.toLowerCase());
 
-    if (!category.title) {
+    if (!product.title) {
       errors.title = "El título es requerido";
-    } else if (category.title.length < 2) {
+    } else if (product.title.length < 2) {
       errors.title = "El título tiene que tener mínimo 2 letras";
-    } else if (!isEditUser && filteredCategory.length > 0) {
-      errors.title = "El título de la categoria ya esta utilizada";
-    } else if (isEditUser && filteredCategory.length > 0 && titleCategoryEdit !== category.title) {
-      errors.title = "El título de la categoria ya esta utilizada";
     }
 
-    if (!category.image) {
+    if (!product.image) {
       errors.image = "La imagen es requerida";
     }
 
@@ -233,12 +219,12 @@ export function ProductsAdmin() {
 
   const onDrop = useCallback((acceptedFile) => {
     const file = acceptedFile[0];
-    setCategory({ ...category, imageFile: file, image: URL.createObjectURL(file) });
+    setProduct({ ...product, imageFile: file, image: URL.createObjectURL(file) });
     let errors = { ...validationErrors };
     delete errors.image;
     setValidationErrors(errors);
     setUploadedImage(true);
-  }, [category, validationErrors]);
+  }, [product, validationErrors]);
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
@@ -310,7 +296,7 @@ export function ProductsAdmin() {
       <div className="card" >
         <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
 
-        <DataTable ref={dt} value={categoriesTable} selection={selectedCategories} onSelectionChange={(e) => setSelectedCategories(e.value)}
+        <DataTable ref={dt} value={productsTable} selection={selectedCategories} onSelectionChange={(e) => setSelectedCategories(e.value)}
           dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
           paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
           currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} productos" globalFilter={globalFilter} header={header}>
@@ -321,14 +307,14 @@ export function ProductsAdmin() {
         </DataTable>
       </div>
 
-      <Dialog visible={categoryDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={actionName} modal className="p-fluid" footer={userDialogFooter} onHide={hideDialog}>
+      <Dialog visible={productDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={actionName} modal className="p-fluid" footer={userDialogFooter} onHide={hideDialog}>
         <div className="field">
           <label htmlFor="title" className="font-bold">
             Título
           </label>
-          <InputText id="title" value={category.title} onChange={(e) => onInputChange(e, 'title')} required autoFocus
-            className={classNames({ "p-invalid": submitted && (!category.title || validationErrors.title) })} />
-          {submitted && !category.title
+          <InputText id="title" value={product.title} onChange={(e) => onInputChange(e, 'title')} required autoFocus
+            className={classNames({ "p-invalid": submitted && (!product.title || validationErrors.title) })} />
+          {submitted && !product.title
             ? (<small className="p-error">El título es requerido</small>)
             : submitted && validationErrors.title && (<small className="p-error">{validationErrors.title}</small>)
           }
@@ -341,27 +327,27 @@ export function ProductsAdmin() {
           <input {...getInputProps()} />
           {submitted && validationErrors.image && !uploadedImage && (<small className="p-error">{validationErrors.image}</small>)}
           <div className="imageContent">
-            <Image src={category.image} alt="Image" width="100%" />
+            <Image src={product.image} alt="Image" width="100%" />
           </div>
 
         </div>
       </Dialog>
 
-      <Dialog visible={deleteCategoryDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteUserDialogFooter} onHide={hideDeleteCategoryDialog}>
+      <Dialog visible={deleteProductDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteUserDialogFooter} onHide={hideDeleteCategoryDialog}>
         <div className="confirmation-content">
           <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-          {category && (
+          {product && (
             <span>
-              Seguro que quieres eliminar la categoria <b>{category.title}</b>?
+              Seguro que quieres eliminar el producto <b>{product.title}</b>?
             </span>
           )}
         </div>
       </Dialog>
 
-      <Dialog visible={deleteCategoriesDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteUsersDialogFooter} onHide={hideDeleteCategoriesDialog}>
+      <Dialog visible={deleteProductsDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteUsersDialogFooter} onHide={hideDeleteCategoriesDialog}>
         <div className="confirmation-content">
           <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-          {category && <span>Seguro que quieres eliminar las categorias seleccionadas?</span>}
+          {product && <span>Seguro que quieres eliminar los productos seleccionados?</span>}
         </div>
       </Dialog>
     </div>
