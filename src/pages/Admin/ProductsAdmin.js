@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useProduct } from '../../hooks';
+import { useProduct, useCategory } from '../../hooks';
 import { classNames } from 'primereact/utils';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -13,6 +13,7 @@ import { InputNumber } from 'primereact/inputnumber';
 import { Dropdown } from 'primereact/dropdown';
 import { Image } from 'primereact/image';
 import { useDropzone } from 'react-dropzone';
+import { map } from 'lodash';
 
 export function ProductsAdmin() {
   let emptyProduct = {
@@ -21,18 +22,11 @@ export function ProductsAdmin() {
     image: '',
   };
 
-  const categories = [
-    { name: 'New York', code: 'NY' },
-    { name: 'Rome', code: 'RM' },
-    { name: 'London', code: 'LDN' },
-    { name: 'Istanbul', code: 'IST' },
-    { name: 'Paris', code: 'PRS' }
-  ]
-
   const toast = useRef(null);
   const dt = useRef(null);
 
   const { products, getProducts } = useProduct();
+  const { categories, getCategories } = useCategory();
 
   const [productsTable, setProductsTable] = useState(null);
   const [productDialog, setProductDialog] = useState(false);
@@ -51,6 +45,7 @@ export function ProductsAdmin() {
   const [refreshTable, setRefreshTable] = useState(false);
 
   const [selectedCategories, setSelectedCategories] = useState(null);
+  const [categoriesDropdown, setCategoriesDropdown] = useState([])
 
   useEffect(() => {
     getProducts();
@@ -61,6 +56,15 @@ export function ProductsAdmin() {
       setProductsTable(products);
     }
   }, [products]);
+
+  useEffect(() => {
+    getCategories();
+  }, [getCategories])
+
+  useEffect(() => {
+    setCategoriesDropdown(formatDropdownData(categories));
+  }, [categories])
+  
 
   const onRefresh = () => setRefreshTable((state) => !state);
 
@@ -200,6 +204,14 @@ export function ProductsAdmin() {
   const formatCurrency = (value) => {
     return value.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' });
   };
+
+  function formatDropdownData(data) {
+    return map(data, (item) => ({
+      key: item.id,
+      text: item.title,
+      value: item.id,
+    }));
+  }
 
   const onInputChange = (e, name) => {
     const val = e.target.value || '';
@@ -360,7 +372,7 @@ export function ProductsAdmin() {
           <label htmlFor="categoria" className="font-bold">
             Categoría
           </label>
-          <Dropdown value={selectedCategories} onChange={(e) => setSelectedCategories(e.value)} options={categories} optionLabel="name"
+          <Dropdown value={product.category} onChange={(e) => onInputChange(e, 'category')} options={categoriesDropdown} optionLabel="text"
             placeholder="Selecciona una categoría" />
         </div>
 
