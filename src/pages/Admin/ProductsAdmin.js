@@ -27,10 +27,8 @@ export function ProductsAdmin() {
   const [productDialog, setProductDialog] = useState(false);
   const [deleteProductDialog, setDeleteProductDialog] = useState(false);
   const [deleteProductsDialog, setDeleteProductsDialog] = useState(false);
-
   const [product, setProduct] = useState(emptyProduct);
-
-  const [selectedCategories, setSelectedCategories] = useState(null);
+  const [selectedProducts, setSelectedProducts] = useState(null);
   const [submitted, setSubmitted] = useState(false);
   const [globalFilter, setGlobalFilter] = useState(null);
   const [validationErrors, setValidationErrors] = useState({});
@@ -38,7 +36,7 @@ export function ProductsAdmin() {
 
   const [uploadedImage, setUploadedImage] = useState(false);
 
-  const [isEditUser, setIsEditUser] = useState(false)
+  const [isEditProduct, setIsEditProduct] = useState(false)
   const [refreshTable, setRefreshTable] = useState(false);
 
   useEffect(() => {
@@ -55,7 +53,7 @@ export function ProductsAdmin() {
   const onRefresh = () => setRefreshTable((state) => !state);
 
   const openNew = () => {
-    setIsEditUser(false);
+    setIsEditProduct(false);
     setProduct(emptyProduct);
     setSubmitted(false);
     setProductDialog(true);
@@ -131,7 +129,7 @@ export function ProductsAdmin() {
 
   const editCategory = (categoryEdit) => {
     setSubmitted(false);
-    setIsEditUser(true);
+    setIsEditProduct(true);
     setProduct({ ...categoryEdit });
     setProductDialog(true);
     setActionName('Editar Producto');
@@ -174,9 +172,9 @@ export function ProductsAdmin() {
     }*/
 
     setDeleteProductsDialog(false);
-    setSelectedCategories(null);
+    setSelectedProducts(null);
 
-    if (selectedCategories.length === 1) {
+    if (selectedProducts.length === 1) {
       toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Categoria borrada correctamente', life: 3000 });
     }
 
@@ -240,7 +238,7 @@ export function ProductsAdmin() {
     return (
       <div className="flex flex-wrap gap-2">
         <Button label="Nuevo" icon="pi pi-plus" severity="success" onClick={openNew} />
-        <Button label="Borrar" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedCategories || !selectedCategories.length} />
+        <Button label="Borrar" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedProducts || !selectedProducts.length} />
       </div>
     );
   };
@@ -296,7 +294,7 @@ export function ProductsAdmin() {
       <div className="card" >
         <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
 
-        <DataTable ref={dt} value={productsTable} selection={selectedCategories} onSelectionChange={(e) => setSelectedCategories(e.value)}
+        <DataTable ref={dt} value={productsTable} selection={selectedProducts} onSelectionChange={(e) => setSelectedProducts(e.value)}
           dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
           paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
           currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} productos" globalFilter={globalFilter} header={header}>
@@ -323,7 +321,7 @@ export function ProductsAdmin() {
           <label htmlFor="image" className="font-bold" style={{ marginBottom: '0.8rem' }}>
             Imagen
           </label>
-          <Button label={isEditUser ? "Cambiar Imagen" : "Subir Imagen"} {...getRootProps()} />
+          <Button label={isEditProduct ? "Cambiar Imagen" : "Subir Imagen"} {...getRootProps()} />
           <input {...getInputProps()} />
           {submitted && validationErrors.image && !uploadedImage && (<small className="p-error">{validationErrors.image}</small>)}
           <div className="imageContent">

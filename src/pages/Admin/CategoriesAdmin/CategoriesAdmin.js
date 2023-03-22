@@ -36,7 +36,7 @@ export function CategoriesAdmin() {
 
   const [uploadedImage, setUploadedImage] = useState(false);
 
-  const [isEditUser, setIsEditUser] = useState(false)
+  const [isEditCategory, setIsEditCategory] = useState(false)
   const [refreshTable, setRefreshTable] = useState(false);
 
   const [titleCategoryEdit, setTitleCategoryEdit] = useState('');
@@ -54,7 +54,7 @@ export function CategoriesAdmin() {
   const onRefresh = () => setRefreshTable((state) => !state);
 
   const openNew = () => {
-    setIsEditUser(false);
+    setIsEditCategory(false);
     setCategory(emptyCategory);
     setSubmitted(false);
     setCategoryDialog(true);
@@ -127,7 +127,7 @@ export function CategoriesAdmin() {
   const editCategory = (categoryEdit) => {
     setTitleCategoryEdit(categoryEdit.title);
     setSubmitted(false);
-    setIsEditUser(true);
+    setIsEditCategory(true);
     setCategory({ ...categoryEdit });
     setCategoryDialog(true);
     setActionName('Editar Categoria');
@@ -194,7 +194,7 @@ export function CategoriesAdmin() {
       delete errors.title;
     }
 
-    if (!isEditUser && filteredCategory.length > 0) {
+    if (!isEditCategory && filteredCategory.length > 0) {
       errors.title = "El título de la categoria ya esta utilizada";
     }
 
@@ -210,9 +210,9 @@ export function CategoriesAdmin() {
       errors.title = "El título es requerido";
     } else if (category.title.length < 2) {
       errors.title = "El título tiene que tener mínimo 2 letras";
-    } else if (!isEditUser && filteredCategory.length > 0) {
+    } else if (!isEditCategory && filteredCategory.length > 0) {
       errors.title = "El título de la categoria ya esta utilizada";
-    } else if (isEditUser && filteredCategory.length > 0 && titleCategoryEdit !== category.title) {
+    } else if (isEditCategory && filteredCategory.length > 0 && titleCategoryEdit !== category.title) {
       errors.title = "El título de la categoria ya esta utilizada";
     }
 
@@ -278,19 +278,19 @@ export function CategoriesAdmin() {
       </span>
     </div>
   );
-  const userDialogFooter = (
+  const categoryDialogFooter = (
     <React.Fragment>
       <Button label="Cancelar" icon="pi pi-times" outlined onClick={hideDialog} />
       <Button label="Guardar" icon="pi pi-check" onClick={saveCategory} disabled={!submitted || Object.keys(validationErrors).length === 0 ? false : true} />
     </React.Fragment>
   );
-  const deleteUserDialogFooter = (
+  const deleteCategoryDialogFooter = (
     <React.Fragment>
       <Button label="No" icon="pi pi-times" outlined onClick={hideDeleteCategoryDialog} />
       <Button label="Si" icon="pi pi-check" severity="danger" onClick={deleteSelectedCategory} />
     </React.Fragment>
   );
-  const deleteUsersDialogFooter = (
+  const deleteCategoriesDialogFooter = (
     <React.Fragment>
       <Button label="No" icon="pi pi-times" outlined onClick={hideDeleteCategoriesDialog} />
       <Button label="Si" icon="pi pi-check" severity="danger" onClick={deleteSelectedCategories} />
@@ -314,7 +314,7 @@ export function CategoriesAdmin() {
         </DataTable>
       </div>
 
-      <Dialog visible={categoryDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={actionName} modal className="p-fluid" footer={userDialogFooter} onHide={hideDialog}>
+      <Dialog visible={categoryDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={actionName} modal className="p-fluid" footer={categoryDialogFooter} onHide={hideDialog}>
         <div className="field">
           <label htmlFor="title" className="font-bold">
             Título
@@ -330,7 +330,7 @@ export function CategoriesAdmin() {
           <label htmlFor="image" className="font-bold" style={{ marginBottom: '0.8rem' }}>
             Imagen
           </label>
-          <Button label={ isEditUser ? "Cambiar Imagen" : "Subir Imagen"} { ...getRootProps() }/>
+          <Button label={ isEditCategory ? "Cambiar Imagen" : "Subir Imagen"} { ...getRootProps() }/>
           <input { ...getInputProps() } />
           {submitted && validationErrors.image && !uploadedImage && (<small className="p-error">{validationErrors.image}</small>)}
           <div className="imageContent">
@@ -340,7 +340,7 @@ export function CategoriesAdmin() {
         </div>
       </Dialog>
 
-      <Dialog visible={deleteCategoryDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteUserDialogFooter} onHide={hideDeleteCategoryDialog}>
+      <Dialog visible={deleteCategoryDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteCategoryDialogFooter} onHide={hideDeleteCategoryDialog}>
         <div className="confirmation-content">
           <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
           {category && (
@@ -351,7 +351,7 @@ export function CategoriesAdmin() {
         </div>
       </Dialog>
 
-      <Dialog visible={deleteCategoriesDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteUsersDialogFooter} onHide={hideDeleteCategoriesDialog}>
+      <Dialog visible={deleteCategoriesDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteCategoriesDialogFooter} onHide={hideDeleteCategoriesDialog}>
         <div className="confirmation-content">
           <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
           {category && <span>Seguro que quieres eliminar las categorias seleccionadas?</span>}
