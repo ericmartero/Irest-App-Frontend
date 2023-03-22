@@ -8,6 +8,9 @@ import { Button } from 'primereact/button';
 import { Toolbar } from 'primereact/toolbar';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
+import { InputSwitch } from "primereact/inputswitch";
+import { InputNumber } from 'primereact/inputnumber';
+import { Dropdown } from 'primereact/dropdown';
 import { Image } from 'primereact/image';
 import { useDropzone } from 'react-dropzone';
 
@@ -17,6 +20,10 @@ export function ProductsAdmin() {
     imageFile: '',
     image: '',
   };
+
+  const categories = [
+    
+  ]
 
   const toast = useRef(null);
   const dt = useRef(null);
@@ -149,7 +156,7 @@ export function ProductsAdmin() {
 
     setDeleteProductDialog(false);
     setProduct(emptyProduct);
-    toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Categoria borrada correctamente', life: 3000 });
+    toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Producto borrado correctamente', life: 3000 });
   };
 
   const exportCSV = () => {
@@ -174,11 +181,11 @@ export function ProductsAdmin() {
     setSelectedProducts(null);
 
     if (selectedProducts.length === 1) {
-      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Categoria borrada correctamente', life: 3000 });
+      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Producto borrado correctamente', life: 3000 });
     }
 
     else {
-      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Categorias borradas correctamente', life: 3000 });
+      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Productos borrados correctamente', life: 3000 });
     }
   };
 
@@ -192,7 +199,7 @@ export function ProductsAdmin() {
     let errors = { ...validationErrors };
 
     if (val.length < 2) {
-      errors.title = "El título tiene que tener mínimo 2 letras";
+      errors.title = "El nombre del producto tiene que tener mínimo 2 letras";
     } else {
       delete errors.title;
     }
@@ -205,9 +212,9 @@ export function ProductsAdmin() {
     const errors = {};
 
     if (!product.title) {
-      errors.title = "El título es requerido";
+      errors.title = "El nombre del producto es requerido";
     } else if (product.title.length < 2) {
-      errors.title = "El título tiene que tener mínimo 2 letras";
+      errors.title = "El nombre del producto tiene que tener mínimo 2 letras";
     }
 
     if (!product.image) {
@@ -322,15 +329,46 @@ export function ProductsAdmin() {
       <Dialog visible={productDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={actionName} modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
         <div className="field">
           <label htmlFor="title" className="font-bold">
-            Título
+            Producto
           </label>
           <InputText id="title" value={product.title} onChange={(e) => onInputChange(e, 'title')} required autoFocus
             className={classNames({ "p-invalid": submitted && (!product.title || validationErrors.title) })} />
           {submitted && !product.title
-            ? (<small className="p-error">El título es requerido</small>)
+            ? (<small className="p-error">El nombre del producto es requerido</small>)
             : submitted && validationErrors.title && (<small className="p-error">{validationErrors.title}</small>)
           }
         </div>
+
+        <div className="field">
+          <label htmlFor="price" className="font-bold">
+            Precio
+          </label>
+          <InputNumber inputId="price" value={product.price} onValueChange={(e) => onInputChange(e, 'price')} showButtons buttonLayout="horizontal" step={0.25}
+            decrementButtonClassName="p-button-danger" incrementButtonClassName="p-button-success" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+            mode="currency" currency="EUR" />
+        </div>
+
+        <div className="field">
+          <label htmlFor="categoria" className="font-bold">
+            Categoría
+          </label>
+          <Dropdown value={product.category.title} onChange={(e) => onInputChange(e, 'category')} options={categories} optionLabel="category"
+            placeholder="Selecciona una categoría" className="w-full md:w-14rem" />
+        </div>
+
+        <div className="field" style={{ height: "2.5rem", display: "flex", alignItems: "center" }}>
+          <div className="p-field-checkbox" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <InputSwitch
+              id='active'
+              checked={product.active}
+              onChange={(e) => onInputChange(e, 'active')}
+            />
+            <label htmlFor="active" className="font-bold" style={{ marginLeft: "1rem", alignSelf: "center" }}>
+              Usuario Activo
+            </label>
+          </div>
+        </div>
+
         <div className="field">
           <label htmlFor="image" className="font-bold" style={{ marginBottom: '0.8rem' }}>
             Imagen

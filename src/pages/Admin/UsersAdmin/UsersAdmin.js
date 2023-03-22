@@ -24,7 +24,7 @@ export function UsersAdmin() {
     roles: [],
   };
 
-  let rolesList = ['admin', 'employee', 'boss'];
+  const rolesList = ['admin', 'employee', 'boss'];
 
   const toast = useRef(null);
   const dt = useRef(null);
