@@ -86,13 +86,13 @@ export function CategoriesAdmin() {
       //EDITAR
       if (category.id) {
 
-        const editUser = {
+        const editCategory = {
           ...(category.title && { title: category.title }),
           ...(category.imageFile && { image: category.imageFile }),
         };
 
         try {
-          await updateCategory(category.id, editUser);
+          await updateCategory(category.id, editCategory);
           onRefresh();
           toast.current.show({ severity: 'success', summary: 'Operación Exitosa', detail: `Categoria ${category.title} actualizada correctamente`, life: 3000 });
         } catch (error) {

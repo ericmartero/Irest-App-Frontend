@@ -67,11 +67,11 @@ export function ProductsAdmin() {
     setUploadedImage(false);
   };
 
-  const hideDeleteCategoryDialog = () => {
+  const hideDeleteProductDialog = () => {
     setDeleteProductDialog(false);
   };
 
-  const hideDeleteCategoriesDialog = () => {
+  const hideDeleteProductsDialog = () => {
     setDeleteProductsDialog(false);
   };
 
@@ -79,7 +79,7 @@ export function ProductsAdmin() {
     toast.current.show({ severity: 'error', summary: 'Operación Fallida', detail: error.message, life: 3000 });
   }
 
-  const saveCategory = async () => {
+  const saveProduct = async () => {
 
     const isValid = validateFields();
     setSubmitted(true);
@@ -89,7 +89,7 @@ export function ProductsAdmin() {
       //EDITAR
       if (product.id) {
 
-        const editUser = {
+        const editProduct = {
           ...(product.title && { title: product.title }),
           ...(product.imageFile && { image: product.imageFile }),
         };
@@ -105,7 +105,7 @@ export function ProductsAdmin() {
         //ENVIAR
       } else {
 
-        const newCategory = {
+        const newProduct = {
           title: product.title,
           image: product.imageFile,
         };
@@ -127,20 +127,20 @@ export function ProductsAdmin() {
     }
   };
 
-  const editCategory = (categoryEdit) => {
+  const editProduct = (productEdit) => {
     setSubmitted(false);
     setIsEditProduct(true);
-    setProduct({ ...categoryEdit });
+    setProduct({ ...productEdit });
     setProductDialog(true);
     setActionName('Editar Producto');
   };
 
-  const confirmDeleteCategory = (category) => {
-    setProduct(category);
+  const confirmDeleteProduct = (product) => {
+    setProduct(product);
     setDeleteProductDialog(true);
   };
 
-  const deleteSelectedCategory = async () => {
+  const deleteSelectedProduct = async () => {
     /*try {
       await deleteCategory(category.id);
       onRefresh();
@@ -161,7 +161,7 @@ export function ProductsAdmin() {
     setDeleteProductsDialog(true);
   };
 
-  const deleteSelectedCategories = async () => {
+  const deleteSelectedProducts = async () => {
     /*try {
       await Promise.all(selectedCategories.map(async (category) => {
         await deleteCategory(category.id);
@@ -254,8 +254,8 @@ export function ProductsAdmin() {
   const actionBodyTemplate = (rowData) => {
     return (
       <React.Fragment>
-        <Button icon="pi pi-pencil" rounded outlined className="mr-2" onClick={() => editCategory(rowData)} />
-        <Button icon="pi pi-trash" rounded outlined severity="danger" onClick={() => confirmDeleteCategory(rowData)} />
+        <Button icon="pi pi-pencil" rounded outlined className="mr-2" onClick={() => editProduct(rowData)} />
+        <Button icon="pi pi-trash" rounded outlined severity="danger" onClick={() => confirmDeleteProduct(rowData)} />
       </React.Fragment>
     );
   };
@@ -269,22 +269,22 @@ export function ProductsAdmin() {
       </span>
     </div>
   );
-  const userDialogFooter = (
+  const productDialogFooter = (
     <React.Fragment>
       <Button label="Cancelar" icon="pi pi-times" outlined onClick={hideDialog} />
-      <Button label="Guardar" icon="pi pi-check" onClick={saveCategory} disabled={!submitted || Object.keys(validationErrors).length === 0 ? false : true} />
+      <Button label="Guardar" icon="pi pi-check" onClick={saveProduct} disabled={!submitted || Object.keys(validationErrors).length === 0 ? false : true} />
     </React.Fragment>
   );
-  const deleteUserDialogFooter = (
+  const deleteProductDialogFooter = (
     <React.Fragment>
-      <Button label="No" icon="pi pi-times" outlined onClick={hideDeleteCategoryDialog} />
-      <Button label="Si" icon="pi pi-check" severity="danger" onClick={deleteSelectedCategory} />
+      <Button label="No" icon="pi pi-times" outlined onClick={hideDeleteProductDialog} />
+      <Button label="Si" icon="pi pi-check" severity="danger" onClick={deleteSelectedProduct} />
     </React.Fragment>
   );
-  const deleteUsersDialogFooter = (
+  const deleteProductsDialogFooter = (
     <React.Fragment>
-      <Button label="No" icon="pi pi-times" outlined onClick={hideDeleteCategoriesDialog} />
-      <Button label="Si" icon="pi pi-check" severity="danger" onClick={deleteSelectedCategories} />
+      <Button label="No" icon="pi pi-times" outlined onClick={hideDeleteProductsDialog} />
+      <Button label="Si" icon="pi pi-check" severity="danger" onClick={deleteSelectedProducts} />
     </React.Fragment>
   );
 
@@ -305,7 +305,7 @@ export function ProductsAdmin() {
         </DataTable>
       </div>
 
-      <Dialog visible={productDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={actionName} modal className="p-fluid" footer={userDialogFooter} onHide={hideDialog}>
+      <Dialog visible={productDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={actionName} modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
         <div className="field">
           <label htmlFor="title" className="font-bold">
             Título
@@ -331,7 +331,7 @@ export function ProductsAdmin() {
         </div>
       </Dialog>
 
-      <Dialog visible={deleteProductDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteUserDialogFooter} onHide={hideDeleteCategoryDialog}>
+      <Dialog visible={deleteProductDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteProductDialogFooter} onHide={hideDeleteProductDialog}>
         <div className="confirmation-content">
           <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
           {product && (
@@ -342,7 +342,7 @@ export function ProductsAdmin() {
         </div>
       </Dialog>
 
-      <Dialog visible={deleteProductsDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteUsersDialogFooter} onHide={hideDeleteCategoriesDialog}>
+      <Dialog visible={deleteProductsDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteProductsDialogFooter} onHide={hideDeleteProductsDialog}>
         <div className="confirmation-content">
           <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
           {product && <span>Seguro que quieres eliminar los productos seleccionados?</span>}
