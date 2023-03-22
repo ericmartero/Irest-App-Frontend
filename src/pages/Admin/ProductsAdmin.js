@@ -41,7 +41,7 @@ export function ProductsAdmin() {
 
   useEffect(() => {
     getProducts();
-  }, [refreshTable])
+  }, [refreshTable, getProducts])
 
   useEffect(() => {
     if (products) {
