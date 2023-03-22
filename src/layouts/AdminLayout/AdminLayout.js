@@ -96,6 +96,7 @@ export function AdminLayout(props) {
                     [{ label: 'Usuarios', icon: 'pi pi-fw pi-id-card', to: '/admin/users' }] : []
                 ),
                 { label: 'Categorias', icon: 'pi pi-fw pi-tag', to: '/admin/categories' },
+                { label: 'Productos', icon: 'pi pi-fw pi-shopping-cart', to: '/admin/products' },
             ]
         }
     ];
