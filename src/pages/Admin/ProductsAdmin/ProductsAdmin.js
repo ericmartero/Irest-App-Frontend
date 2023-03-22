@@ -68,7 +68,6 @@ export function ProductsAdmin() {
   useEffect(() => {
     setCategoriesDropdown(formatDropdownData(categories));
   }, [categories])
-  
 
   const onRefresh = () => setRefreshTable((state) => !state);
 
@@ -231,6 +230,20 @@ export function ProductsAdmin() {
     setValidationErrors(errors);
   };
 
+  const onDropdownChange = (value) => {
+    
+    let errors = { ...validationErrors };
+    setSelectedCategories(value);
+
+    if (value === null) {
+      errors.category = "La categoría es requerida";
+    } else {
+      delete errors.category;
+    }
+
+    setValidationErrors(errors);
+  };
+
   const validateFields = () => {
     const errors = {};
 
@@ -379,7 +392,7 @@ export function ProductsAdmin() {
           <label htmlFor="categoria" className="font-bold">
             Categoría
           </label>
-          <Dropdown value={selectedCategories} onChange={(e) => setSelectedCategories(e.value)} options={categoriesDropdown} optionLabel="value"
+          <Dropdown value={selectedCategories} onChange={(e) => onDropdownChange(e.value)} options={categoriesDropdown} optionLabel="value"
             placeholder="Selecciona una categoría" appendTo="self" className={classNames({ "p-invalid": submitted && (validationErrors.category) })} />
           {submitted && validationErrors.category && (<small className="p-error">{validationErrors.category}</small>)}
         </div>
