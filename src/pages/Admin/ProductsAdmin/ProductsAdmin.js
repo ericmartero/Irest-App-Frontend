@@ -23,7 +23,7 @@ export function ProductsAdmin() {
     image: '',
     category: {},
     active: true,
-    price: 0,
+    price: 0.00,
   };
 
   const toast = useRef(null);
@@ -216,14 +216,25 @@ export function ProductsAdmin() {
   }
 
   const onInputChange = (e, name) => {
-    const val = e.target.value || '';
 
     let errors = { ...validationErrors };
+    let val;
 
-    if (val.length < 2) {
-      errors.title = "El nombre del producto tiene que tener mínimo 2 letras";
-    } else {
-      delete errors.title;
+    switch (name) {
+      case "title":
+        val = e.target.value || '';
+        if (val.length < 2) {
+          errors.title = "El nombre del producto tiene que tener mínimo 2 letras";
+        } else {
+          delete errors.title;
+        }
+        break;
+      case "price":
+        val = parseFloat(e.value).toFixed(2);
+        console.log(val);
+        break;
+      default:
+        break;
     }
 
     setProduct(prevProduct => ({ ...prevProduct, [name]: val }));
@@ -385,7 +396,7 @@ export function ProductsAdmin() {
           </label>
           <InputNumber inputId="price" value={product.price} onValueChange={(e) => onInputChange(e, 'price')} showButtons buttonLayout="horizontal" step={0.25}
             decrementButtonClassName="p-button-primary" incrementButtonClassName="p-button-primary" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-            mode="currency" currency="EUR" min={0} />
+            mode="currency" currency="EUR" min={0.01} />
         </div>
 
         <div className="field">
