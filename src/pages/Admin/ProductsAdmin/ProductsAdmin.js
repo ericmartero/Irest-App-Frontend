@@ -128,8 +128,8 @@ export function ProductsAdmin() {
         const newProduct = {
           title: product.title,
           image: product.imageFile,
-          price: product.price,
-          category: selectedCategories,
+          price: Number(product.price),
+          categoryId: selectedCategories,
           active: product.active,
         };
 
@@ -215,8 +215,8 @@ export function ProductsAdmin() {
 
   const formatDropdownData = (data) => {
     return map(data, (item) => ({
-      id: item.id,
-      value: item.title,
+      value: item.id,
+      label: item.title
     }));
   }
 
@@ -237,6 +237,9 @@ export function ProductsAdmin() {
       case "price":
         val = parseFloat(e.value).toFixed(2);
         break;
+      case "active":
+        val = e.target.value;
+        break;
       default:
         break;
     }
@@ -246,7 +249,7 @@ export function ProductsAdmin() {
   };
 
   const onDropdownChange = (value) => {
-    
+
     let errors = { ...validationErrors };
     setSelectedCategories(value);
 
@@ -407,7 +410,7 @@ export function ProductsAdmin() {
           <label htmlFor="categoria" className="font-bold">
             Categoría
           </label>
-          <Dropdown value={selectedCategories} onChange={(e) => onDropdownChange(e.value)} options={categoriesDropdown} optionLabel="value"
+          <Dropdown value={selectedCategories} onChange={(e) => onDropdownChange(e.value)} options={categoriesDropdown} optionLabel="label"
             placeholder="Selecciona una categoría" appendTo="self" className={classNames({ "p-invalid": submitted && (validationErrors.category) })} />
           {submitted && validationErrors.category && (<small className="p-error">{validationErrors.category}</small>)}
         </div>
