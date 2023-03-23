@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useTable } from '../../../hooks';
 import { classNames } from 'primereact/utils';
 import { DataTable } from 'primereact/datatable';
@@ -7,6 +7,8 @@ import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
 import { Toolbar } from 'primereact/toolbar';
 import { Dialog } from 'primereact/dialog';
+import { InputSwitch } from "primereact/inputswitch";
+import { InputNumber } from 'primereact/inputnumber';
 import { InputText } from 'primereact/inputtext';
 
 export function TablesAdmin() {
@@ -14,7 +16,7 @@ export function TablesAdmin() {
   const { tables, getTables } = useTable();
 
   let emptyTable = {
-    number: null,
+    number: 0,
     active: true,
   };
 
@@ -71,7 +73,7 @@ export function TablesAdmin() {
     setDeleteTablesDialog(false);
   };
 
-  const saveTable= async () => {
+  const saveTable = async () => {
 
     const isValid = validateFields();
     setSubmitted(true);
@@ -97,8 +99,8 @@ export function TablesAdmin() {
       } else {
 
         const newTable = {
-          title: table.title,
-          image: table.imageFile,
+          number: table.number,
+          active: table.active,
         };
 
         /*try {
@@ -124,7 +126,7 @@ export function TablesAdmin() {
     setIsEditTable(true);
     setTable({ ...tableEdit });
     setTableDialog(true);
-    setActionName('Editar Categoría');
+    setActionName('Editar Mesa');
   };
 
   const confirmDeleteTable = (table) => {
@@ -176,20 +178,19 @@ export function TablesAdmin() {
   };
 
   const onInputChange = (e, name) => {
-    const val = e.target.value || '';
+    let val;
 
     let errors = { ...validationErrors };
 
-    const filteredTable = tables.filter(table => table.title.toLowerCase() === val.toLowerCase());
-
-    if (val.length < 2) {
-      errors.title = "El nombre de la mesa tiene que tener mínimo 2 letras";
-    } else {
-      delete errors.title;
-    }
-
-    if (!isEditTable && filteredTable.length > 0) {
-      errors.title = "El nombre de la mesa ya esta utilizada";
+    switch (name) {
+      case "number":
+        val = parseFloat(e.value).toFixed(2);
+        break;
+      case "active":
+        val = e.target.value;
+        break;
+      default:
+        break;
     }
 
     setTable(prevTable => ({ ...prevTable, [name]: val }));
@@ -198,16 +199,11 @@ export function TablesAdmin() {
 
   const validateFields = () => {
     const errors = {};
-    const filteredTable = tables.filter(cat => cat.title.toLowerCase() === table.title.toLowerCase());
 
     if (!table.title) {
       errors.title = "El nombre de la categoría es requerida";
     } else if (table.title.length < 2) {
       errors.title = "El nombre de la categoría tiene que tener mínimo 2 letras";
-    } else if (!isEditTable && filteredTable.length > 0) {
-      errors.title = "El nombre de la categoría ya esta utilizada";
-    } else if (isEditTable && filteredTable.length > 0 && titleTableEdit !== table.title) {
-      errors.title = "El nombre de la categoría ya esta utilizada";
     }
 
     if (!table.image) {
@@ -291,15 +287,28 @@ export function TablesAdmin() {
 
       <Dialog visible={tableDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={actionName} modal className="p-fluid" footer={tableDialogFooter} onHide={hideDialog}>
         <div className="field">
-          <label htmlFor="title" className="font-bold">
+          <label htmlFor="number" className="font-bold">
             Número
           </label>
-          <InputText id="title" value={table.title} onChange={(e) => onInputChange(e, 'title')} required autoFocus
-            className={classNames({ "p-invalid": submitted && (!table.title || validationErrors.title) })} />
-          {submitted && !table.title
-            ? (<small className="p-error">El nombre de la mesa es requerida</small>)
-            : submitted && validationErrors.title && (<small className="p-error">{validationErrors.title}</small>)
+          <InputNumber inputId="number" value={table.number} onValueChange={(e) => onInputChange(e, 'number')} mode="decimal"
+            showButtons min={0} className={classNames({ "p-invalid": submitted && (!table.number || validationErrors.number) })} />
+          {submitted && !table.number
+            ? (<small className="p-error">El número de la mesa es requerida</small>)
+            : submitted && validationErrors.number && (<small className="p-error">{validationErrors.number}</small>)
           }
+        </div>
+
+        <div className="field" style={{ height: "2.5rem", display: "flex", alignItems: "center" }}>
+          <div className="p-field-checkbox" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <InputSwitch
+              id='active'
+              checked={table.active}
+              onChange={(e) => onInputChange(e, 'active')}
+            />
+            <label htmlFor="active" className="font-bold" style={{ marginLeft: "1rem", alignSelf: "center" }}>
+              Mesa Activa
+            </label>
+          </div>
         </div>
       </Dialog>
 
@@ -308,7 +317,7 @@ export function TablesAdmin() {
           <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
           {table && (
             <span>
-              Seguro que quieres eliminar la mesa <b>{table.title}</b>?
+              Seguro que quieres eliminar la mesa número <b>{table.number}</b>?
             </span>
           )}
         </div>
