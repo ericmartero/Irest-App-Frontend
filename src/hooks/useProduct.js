@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { getProductsApi, addProductApi } from '../api/product';
+import { getProductsApi, addProductApi, updateProductApi } from '../api/product';
 import { useAuth } from './';
 
 export function useProduct() {
@@ -24,9 +24,18 @@ export function useProduct() {
         }
     }
 
+    const updateProduct = async (id, data) => {
+        try {
+            await updateProductApi(id, data, auth.token);
+        } catch (error) {
+            throw error;
+        }
+    }
+
     return {
         products,
         getProducts,
         addProduct,
+        updateProduct,
     }
 }

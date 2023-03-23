@@ -17,6 +17,7 @@ import { map } from 'lodash';
 import './ProductsAdmin.scss';
 
 export function ProductsAdmin() {
+
   let emptyProduct = {
     title: '',
     imageFile: '',
@@ -28,8 +29,7 @@ export function ProductsAdmin() {
 
   const toast = useRef(null);
   const dt = useRef(null);
-
-  const { products, getProducts, addProduct } = useProduct();
+  const { products, getProducts, addProduct, updateProduct } = useProduct();
   const { categories, getCategories } = useCategory();
 
   const [productsTable, setProductsTable] = useState(null);
@@ -117,15 +117,13 @@ export function ProductsAdmin() {
           ...(lastProductEdit.active !== product.active && { active: product.active }),
         };
 
-        console.log(editProduct);
-
-        /*try {
-          await updateCategory(category.id, editUser);
+        try {
+          await updateProduct(product.id, editProduct);
           onRefresh();
           toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: `Producto ${product.title} actualizado correctamente`, life: 3000 });
         } catch (error) {
           console.log(error);
-        }*/
+        }
 
         //ENVIAR
       } else {

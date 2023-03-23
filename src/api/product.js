@@ -60,7 +60,7 @@ export const updateProductApi = async(id, dtoUpdateProduct, token) => {
             urlImage = await updateImage(image);
             bodyProduct = {
                 ...product,
-                urlImage
+                image: urlImage
             }
         } else {
             bodyProduct = {
@@ -74,8 +74,9 @@ export const updateProductApi = async(id, dtoUpdateProduct, token) => {
             method: 'PATCH',
             headers: {
                 Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
             },
-            body: bodyProduct
+            body: JSON.stringify(bodyProduct)
         }
 
         const resp = await fetch(url, params);
