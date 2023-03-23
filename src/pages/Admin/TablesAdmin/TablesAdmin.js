@@ -36,7 +36,6 @@ export function TablesAdmin() {
 
   const [isEditTable, setIsEditTable] = useState(false);
   const [refreshTable, setRefreshTable] = useState(false);
-  const [titleTableEdit, setTitleTableEdit] = useState('');
   const [lastTableEdit, setlastTableEdit] = useState({});
 
   useEffect(() => {
@@ -83,9 +82,11 @@ export function TablesAdmin() {
       if (table.id) {
 
         const editTable = {
-          ...(lastTableEdit.title !== table.title && { title: table.title }),
-          ...(lastTableEdit.imageFile !== table.imageFile && { image: table.imageFile }),
+          ...(lastTableEdit.number !== table.number && { number: table.number }),
+          ...(lastTableEdit.active !== table.active && { active: table.active }),
         };
+
+        console.log(editTable);
 
         /*try {
           await updateCategory(category.id, editCategory);
@@ -102,6 +103,8 @@ export function TablesAdmin() {
           number: table.number,
           active: table.active,
         };
+
+        console.log(newTable);
 
         /*try {
           await addCategory(newCategory);
@@ -120,7 +123,6 @@ export function TablesAdmin() {
   };
 
   const editTable = (tableEdit) => {
-    setTitleTableEdit(tableEdit.number);
     setlastTableEdit(tableEdit);
     setSubmitted(false);
     setIsEditTable(true);
@@ -178,16 +180,17 @@ export function TablesAdmin() {
   };
 
   const onInputChange = (e, name) => {
-    let val;
-
+    let val = e.target.value;
     let errors = { ...validationErrors };
 
     switch (name) {
       case "number":
-        val = parseFloat(e.value).toFixed(2);
-        break;
-      case "active":
-        val = e.target.value;
+        const filteredTable = tables.filter(table => table.number === val);
+        if (val !== lastTableEdit.number &&  filteredTable.length > 0) {
+          errors.number = "El número de mesa ya esta utilizado";
+        } else {
+          delete errors.number;
+        }
         break;
       default:
         break;
@@ -199,15 +202,12 @@ export function TablesAdmin() {
 
   const validateFields = () => {
     const errors = {};
+    const filteredTable = tables.filter(tab => tab.number === table.number);
 
-    if (!table.title) {
-      errors.title = "El nombre de la categoría es requerida";
-    } else if (table.title.length < 2) {
-      errors.title = "El nombre de la categoría tiene que tener mínimo 2 letras";
-    }
-
-    if (!table.image) {
-      errors.image = "La imagen es requerida";
+    if (!isEditTable && filteredTable.length > 0) {
+      errors.number = "El número de mesa ya esta utilizado";
+    } else if (isEditTable && filteredTable.length > 0 && lastTableEdit.number !== table.number) {
+      errors.number = "El número de mesa ya esta utilizado";
     }
 
     setValidationErrors(errors);
@@ -291,11 +291,8 @@ export function TablesAdmin() {
             Número
           </label>
           <InputNumber inputId="number" value={table.number} onValueChange={(e) => onInputChange(e, 'number')} mode="decimal"
-            showButtons min={0} className={classNames({ "p-invalid": submitted && (!table.number || validationErrors.number) })} />
-          {submitted && !table.number
-            ? (<small className="p-error">El número de la mesa es requerida</small>)
-            : submitted && validationErrors.number && (<small className="p-error">{validationErrors.number}</small>)
-          }
+            showButtons min={1} className={classNames({ "p-invalid": submitted && (!table.number || validationErrors.number) })} />
+          {submitted && validationErrors.number && (<small className="p-error">{validationErrors.number}</small>)}
         </div>
 
         <div className="field" style={{ height: "2.5rem", display: "flex", alignItems: "center" }}>
