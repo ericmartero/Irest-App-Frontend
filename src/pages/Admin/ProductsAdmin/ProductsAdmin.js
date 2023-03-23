@@ -444,7 +444,7 @@ export function ProductsAdmin() {
           <label htmlFor="image" className="font-bold" style={{ marginBottom: '0.8rem' }}>
             Imagen
           </label>
-          <Button className='buttonImage' label={isEditProduct ? "Cambiar Imagen" : "Subir Imagen"} {...getRootProps()} />
+          <Button className='buttonImage' label={isEditProduct || uploadedImage ? "Cambiar Imagen" : "Subir Imagen"} {...getRootProps()} />
           <input {...getInputProps()} />
           {submitted && validationErrors.image && !uploadedImage && (<small className="p-error">{validationErrors.image}</small>)}
           <div className="imageContent">
