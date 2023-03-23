@@ -1,9 +1,11 @@
 import { useState, useCallback } from "react";
-import { getProductsApi } from '../api/product';
+import { getProductsApi, addProductApi } from '../api/product';
+import { useAuth } from './';
 
 export function useProduct() {
 
     const [products, setProducts] = useState(null);
+    const { auth } = useAuth();
 
     const getProducts = useCallback( async () => {
         try {
@@ -14,8 +16,17 @@ export function useProduct() {
         }
     }, []);
 
+    const addProduct = async (data) => {
+        try {
+            await addProductApi(data, auth.token);
+        } catch (error) {
+            throw error;
+        }
+    }
+
     return {
         products,
         getProducts,
+        addProduct,
     }
 }

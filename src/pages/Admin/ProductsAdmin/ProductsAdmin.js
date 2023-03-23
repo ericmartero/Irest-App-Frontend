@@ -29,7 +29,7 @@ export function ProductsAdmin() {
   const toast = useRef(null);
   const dt = useRef(null);
 
-  const { products, getProducts } = useProduct();
+  const { products, getProducts, addProduct } = useProduct();
   const { categories, getCategories } = useCategory();
 
   const [productsTable, setProductsTable] = useState(null);
@@ -136,7 +136,13 @@ export function ProductsAdmin() {
           active: product.active,
         };
 
-        console.log(newProduct);
+        try {
+          await addProduct(newProduct);
+          onRefresh();
+          toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: `Producto ${product.title} creado correctamente`, life: 3000 });
+        } catch (error) {
+          console.log(error);
+        }
 
         /*try {
           await addCategory(newCategory);

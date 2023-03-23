@@ -16,7 +16,7 @@ export const getProductsApi = async() => {
 }
 
 export const addProductApi = async(dtoAddProduct, token) => {
-    const { image, ...product } = dtoAddProduct;
+    const { image, title, price, active, categoryId } = dtoAddProduct;
 
     try {
         // Cloudinary API
@@ -28,11 +28,15 @@ export const addProductApi = async(dtoAddProduct, token) => {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
             },
-            body: {
-                ...product,
-                urlImage
-            }
+            body: JSON.stringify({
+                title,
+                image: urlImage,
+                price,
+                active,
+                categoryId,
+            })
         }
 
         const resp = await fetch(url, params);
