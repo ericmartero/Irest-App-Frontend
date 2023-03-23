@@ -51,6 +51,7 @@ export function ProductsAdmin() {
   const [selectedCategories, setSelectedCategories] = useState(null);
   const [categoriesDropdown, setCategoriesDropdown] = useState([])
   const [titleProductEdit, setTitleProductEdit] = useState('');
+  const [lastProductEdit, setlastProductEdit] = useState({});
 
   useEffect(() => {
     getProducts();
@@ -112,10 +113,10 @@ export function ProductsAdmin() {
 
         const editProduct = {
           active: product.active,
-          ...(product.title && { title: product.title }),
-          ...(product.imageFile && { image: product.imageFile }),
-          ...(product.price && { price: Number(product.price) }),
-          ...(product.category && { categoryId: product.category.id }),
+          ...(lastProductEdit.title !== product.title && { title: product.title }),
+          ...(lastProductEdit.imageFile !== product.imageFile && { image: product.imageFile }),
+          ...(lastProductEdit.price !== product.price && { price: Number(product.price) }),
+          ...(lastProductEdit.category !== product.category && { categoryId: product.category.id }),
         };
 
         console.log(editProduct);
@@ -168,6 +169,7 @@ export function ProductsAdmin() {
 
   const editProduct = (productEdit) => {
     setTitleProductEdit(productEdit.title);
+    setlastProductEdit(productEdit);
     setSubmitted(false);
     setIsEditProduct(true);
     setProduct({ ...productEdit });
