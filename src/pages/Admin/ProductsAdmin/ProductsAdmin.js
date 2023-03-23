@@ -128,7 +128,12 @@ export function ProductsAdmin() {
         const newProduct = {
           title: product.title,
           image: product.imageFile,
+          price: product.price,
+          category: selectedCategories,
+          active: product.active,
         };
+
+        console.log(newProduct);
 
         /*try {
           await addCategory(newCategory);
@@ -231,7 +236,6 @@ export function ProductsAdmin() {
         break;
       case "price":
         val = parseFloat(e.value).toFixed(2);
-        console.log(val);
         break;
       default:
         break;
