@@ -97,26 +97,24 @@ export function ProductsAdmin() {
     setDeleteProductsDialog(false);
   };
 
-  const showError = (error) => {
-    toast.current.show({ severity: 'error', summary: 'Operación Fallida', detail: error.message, life: 3000 });
-  }
-
   const saveProduct = async () => {
 
     const isValid = validateFields();
     setSubmitted(true);
 
+    const selectedOption = categoriesDropdown.find((option) => option.value === selectedCategories);
+
     if (isValid) {
 
       //EDITAR
       if (product.id) {
-
+        
         const editProduct = {
-          active: product.active,
           ...(lastProductEdit.title !== product.title && { title: product.title }),
           ...(lastProductEdit.imageFile !== product.imageFile && { image: product.imageFile }),
           ...(lastProductEdit.price !== product.price && { price: Number(product.price) }),
-          ...(lastProductEdit.category !== product.category && { categoryId: product.category.id }),
+          ...(lastProductEdit.category.id !== selectedOption.id && { categoryId: selectedOption.id }),
+          ...(lastProductEdit.active !== product.active && { active: product.active }),
         };
 
         console.log(editProduct);
@@ -131,8 +129,6 @@ export function ProductsAdmin() {
 
         //ENVIAR
       } else {
-
-        const selectedOption = categoriesDropdown.find((option) => option.value === selectedCategories);
 
         const newProduct = {
           title: product.title,
@@ -149,14 +145,6 @@ export function ProductsAdmin() {
         } catch (error) {
           console.log(error);
         }
-
-        /*try {
-          await addCategory(newCategory);
-          onRefresh();
-          toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: `Categoria ${category.title} creada correctamente`, life: 3000 });
-        } catch (error) {
-          console.log(error);
-        }*/
       }
 
       setSubmitted(false);
