@@ -13,7 +13,7 @@ import { InputText } from 'primereact/inputtext';
 
 export function TablesAdmin() {
 
-  const { tables, getTables } = useTable();
+  const { tables, getTables, addTable } = useTable();
 
   let emptyTable = {
     number: 0,
@@ -104,15 +104,13 @@ export function TablesAdmin() {
           active: table.active,
         };
 
-        console.log(newTable);
-
-        /*try {
-          await addCategory(newCategory);
+        try {
+          await addTable(newTable);
           onRefresh();
-          toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: `Categoría ${category.title} creada correctamente`, life: 3000 });
+          toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: `Mesa número ${table.number} creada correctamente`, life: 3000 });
         } catch (error) {
           console.log(error);
-        }*/
+        }
       }
 
       setSubmitted(false);
