@@ -1,13 +1,24 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useAuth } from '../../../hooks';
+import { SlideMenu } from 'primereact/slidemenu';
 import { Button } from 'primereact/button';
 import { Chip } from 'primereact/chip';
-import './TopMenu.scss';
+import { TieredMenu } from 'primereact/tieredmenu';
 import classNames from 'classnames';
+import './TopMenu.scss';
+
 
 export function TopMenu(props) {
 
   const { logout, auth } = useAuth();
+  const menu = useRef(null);
+
+  const items = [
+    {
+      label: 'Cerrar sesión',
+      icon: 'pi pi-fw pi-sign-out'
+    }
+  ];
 
   const renderName = () => {
     if (auth.me?.user.firstName && auth.me?.user.lastName) {
@@ -28,11 +39,12 @@ export function TopMenu(props) {
         <i className="pi pi-bars" />
       </button>
 
-      <button type="button" className="p-link layout-topbar-menu-button layout-topbar-button" >
+      <TieredMenu model={items} popup ref={menu} breakpoint="767px" />
+      <button type="button" className="p-link layout-topbar-menu-button layout-topbar-button" onClick={(event) => menu.current.toggle(event)} >
         <i className="pi pi-user" />
       </button>
 
-      <ul className={classNames("layout-topbar-menu lg:flex origin-top", {'layout-topbar-menu-mobile-active': props.mobileTopbarMenuActive })}>
+      <ul className={classNames("layout-topbar-menu lg:flex origin-top", { 'layout-topbar-menu-mobile-active': props.mobileTopbarMenuActive })}>
         <li style={{ display: "flex", alignItems: "center" }}>
           <Chip label={renderName()} icon="pi pi-user" className="mr-3" />
         </li>
