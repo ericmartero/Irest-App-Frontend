@@ -37,7 +37,6 @@ export function CategoriesAdmin() {
   const [uploadedImage, setUploadedImage] = useState(false);
   const [isEditCategory, setIsEditCategory] = useState(false)
   const [refreshTable, setRefreshTable] = useState(false);
-  const [titleCategoryEdit, setTitleCategoryEdit] = useState('');
   const [lastCategoryEdit, setlastCategoryEdit] = useState({});
 
   useEffect(() => {
@@ -122,7 +121,6 @@ export function CategoriesAdmin() {
   };
 
   const editCategory = (categoryEdit) => {
-    setTitleCategoryEdit(categoryEdit.title);
     setlastCategoryEdit(categoryEdit);
     setSubmitted(false);
     setIsEditCategory(true);
@@ -192,7 +190,7 @@ export function CategoriesAdmin() {
       delete errors.title;
     }
 
-    if (!isEditCategory && filteredCategory.length > 0) {
+    if (val !== lastCategoryEdit.title && filteredCategory.length > 0) {
       errors.title = "El nombre de la categoría ya esta utilizada";
     }
 
@@ -210,7 +208,7 @@ export function CategoriesAdmin() {
       errors.title = "El nombre de la categoría tiene que tener mínimo 2 letras";
     } else if (!isEditCategory && filteredCategory.length > 0) {
       errors.title = "El nombre de la categoría ya esta utilizada";
-    } else if (isEditCategory && filteredCategory.length > 0 && titleCategoryEdit !== category.title) {
+    } else if (isEditCategory && filteredCategory.length > 0 && lastCategoryEdit.title !== category.title) {
       errors.title = "El nombre de la categoría ya esta utilizada";
     }
 
