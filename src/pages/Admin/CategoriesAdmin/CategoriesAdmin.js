@@ -23,6 +23,7 @@ export function CategoriesAdmin() {
   const toast = useRef(null);
   const dt = useRef(null);
   const { categories, getCategories, addCategory, updateCategory, deleteCategory } = useCategory();
+
   const [categoriesTable, setCategoriesTable] = useState(null);
   const [categoryDialog, setCategoryDialog] = useState(false);
   const [deleteCategoryDialog, setDeleteCategoryDialog] = useState(false);
@@ -33,12 +34,9 @@ export function CategoriesAdmin() {
   const [globalFilter, setGlobalFilter] = useState(null);
   const [validationErrors, setValidationErrors] = useState({});
   const [actionName, setActionName] = useState('');
-
   const [uploadedImage, setUploadedImage] = useState(false);
-
   const [isEditCategory, setIsEditCategory] = useState(false)
   const [refreshTable, setRefreshTable] = useState(false);
-
   const [titleCategoryEdit, setTitleCategoryEdit] = useState('');
   const [lastCategoryEdit, setlastCategoryEdit] = useState({});
 
@@ -84,7 +82,6 @@ export function CategoriesAdmin() {
 
     if (isValid) {
 
-      //EDITAR
       if (category.id) {
 
         const editCategory = {
@@ -100,7 +97,6 @@ export function CategoriesAdmin() {
           console.log(error);
         }
 
-        //ENVIAR
       } else {
 
         const newCategory = {
@@ -187,7 +183,7 @@ export function CategoriesAdmin() {
     const val = e.target.value || '';
 
     let errors = { ...validationErrors };
-    
+
     const filteredCategory = categories.filter(category => category.title.toLowerCase() === val.toLowerCase());
 
     if (val.length < 2) {
@@ -236,13 +232,13 @@ export function CategoriesAdmin() {
   }, [category, validationErrors]);
 
   const { getRootProps, getInputProps } = useDropzone({
-      accept: {
-        'image/png': ['.png'],
-        'image/jpeg': ['.jpeg'],
-      },
-      noKeyboard: true,
-      multiple: false,
-      onDrop
+    accept: {
+      'image/png': ['.png'],
+      'image/jpeg': ['.jpeg'],
+    },
+    noKeyboard: true,
+    multiple: false,
+    onDrop
   })
 
   const leftToolbarTemplate = () => {
@@ -332,13 +328,13 @@ export function CategoriesAdmin() {
           <label htmlFor="image" className="font-bold" style={{ marginBottom: '0.8rem' }}>
             Imagen
           </label>
-          <Button label={ isEditCategory ? "Cambiar Imagen" : "Subir Imagen"} { ...getRootProps() }/>
-          <input { ...getInputProps() } />
+          <Button label={isEditCategory ? "Cambiar Imagen" : "Subir Imagen"} {...getRootProps()} />
+          <input {...getInputProps()} />
           {submitted && validationErrors.image && !uploadedImage && (<small className="p-error">{validationErrors.image}</small>)}
           <div className="imageContent">
-            <Image src={category.image} alt="Image" width="100%"/>
+            <Image src={category.image} alt="Image" width="100%" />
           </div>
-          
+
         </div>
       </Dialog>
 
