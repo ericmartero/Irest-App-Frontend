@@ -13,8 +13,6 @@ import { InputText } from 'primereact/inputtext';
 
 export function TablesAdmin() {
 
-  const { tables, getTables, addTable, updateTable } = useTable();
-
   let emptyTable = {
     number: 0,
     active: true,
@@ -22,6 +20,7 @@ export function TablesAdmin() {
 
   const toast = useRef(null);
   const dt = useRef(null);
+  const { tables, getTables, addTable, updateTable, deleteTable } = useTable();
 
   const [tablesCrud, setTablesCrud] = useState(null);
   const [tableDialog, setTableDialog] = useState(false);
@@ -133,12 +132,12 @@ export function TablesAdmin() {
   };
 
   const deleteSelectedTable = async () => {
-    /*try {
-      await deleteCategory(category.id);
+    try {
+      await deleteTable(table.id);
       onRefresh();
     } catch (error) {
       console.log(error);
-    }*/
+    }
 
     setDeleteTableDialog(false);
     setTable(emptyTable);
@@ -154,14 +153,14 @@ export function TablesAdmin() {
   };
 
   const deleteSelectedTables = async () => {
-    /*try {
-      await Promise.all(selectedCategories.map(async (category) => {
-        await deleteCategory(category.id);
+    try {
+      await Promise.all(selectedTables.map(async (table) => {
+        await deleteTable(table.id);
       }));
       onRefresh();
     } catch (error) {
       console.log(error);
-    }*/
+    }
 
     setDeleteTablesDialog(false);
     setSelectedTables(null);

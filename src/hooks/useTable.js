@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { getTablesApi, addTableApi, updateTableApi } from '../api/table';
+import { getTablesApi, addTableApi, updateTableApi, deleteTableApi } from '../api/table';
 import { useAuth } from './';
 
 export function useTable() {
@@ -32,10 +32,19 @@ export function useTable() {
         }
     };
 
+    const deleteTable = async (id) => {
+        try {
+            await deleteTableApi(id, auth.token);
+        } catch (error) {
+            throw error;
+        }
+    };
+
     return {
         tables,
         getTables,
         addTable,
         updateTable,
+        deleteTable,
     }
 }
