@@ -1,6 +1,5 @@
 import React, { useRef } from 'react';
 import { useAuth } from '../../../hooks';
-import { SlideMenu } from 'primereact/slidemenu';
 import { Button } from 'primereact/button';
 import { Chip } from 'primereact/chip';
 import { TieredMenu } from 'primereact/tieredmenu';
@@ -16,7 +15,10 @@ export function TopMenu(props) {
   const items = [
     {
       label: 'Cerrar sesión',
-      icon: 'pi pi-fw pi-sign-out'
+      icon: 'pi pi-fw pi-sign-out',
+      command: () => {
+        logout();
+      }
     }
   ];
 
