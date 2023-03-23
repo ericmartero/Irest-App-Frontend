@@ -44,6 +44,7 @@ export function UsersAdmin() {
   const [actionName, setActionName] = useState('');
   const [refreshTable, setRefreshTable] = useState(false);
   const [selectedRoles, setSelectedRoles] = useState(null);
+  const [lastUserEdit, setlastUserEdit] = useState({});
 
   useEffect(() => {
     getUsers();
@@ -94,16 +95,15 @@ export function UsersAdmin() {
 
       const lowerCaseSelectedRoles = selectedRoles?.map(role => role.toLowerCase());
 
-      //EDITAR
       if (user.id) {
 
         const editUser = {
-          isActive: user.isActive,
-          ...(user.email && { email: user.email }),
-          ...(user.firstName && { firstName: user.firstName }),
-          ...(user.password && { password: user.password }),
+          ...(lastUserEdit.email !== user.email && { email: user.email }),
+          ...(lastUserEdit.firstName !== user.firstName && { firstName: user.firstName }),
+          ...(user.password !== '' && { password: user.password }),
           ...(user.lastName !== '' ? { lastName: user.lastName } : { lastName: null }),
-          ...(selectedRoles.length !== 0 ? { roles: lowerCaseSelectedRoles } : { roles: ['employee'] })
+          ...(selectedRoles.length !== 0 ? { roles: lowerCaseSelectedRoles } : { roles: ['employee'] }),
+          ...(lastUserEdit.isActive !== user.isActive && { isActive: user.isActive }),
         };
 
         try {
@@ -114,7 +114,6 @@ export function UsersAdmin() {
           showError(error);
         }
 
-        //ENVIAR
       } else {
 
         user.roles = lowerCaseSelectedRoles;
@@ -147,6 +146,7 @@ export function UsersAdmin() {
   const editUser = (userEdit) => {
     setSubmitted(false);
     setIsEditUser(true);
+    setlastUserEdit(userEdit);
     setUser({ ...userEdit, password: '' });
     setSelectedRoles(userEdit.roles);
     setUserDialog(true);
