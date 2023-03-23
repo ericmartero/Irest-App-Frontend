@@ -29,7 +29,7 @@ export function ProductsAdmin() {
 
   const toast = useRef(null);
   const dt = useRef(null);
-  const { products, getProducts, addProduct, updateProduct } = useProduct();
+  const { products, getProducts, addProduct, updateProduct, deleteProduct } = useProduct();
   const { categories, getCategories } = useCategory();
 
   const [productsTable, setProductsTable] = useState(null);
@@ -42,12 +42,9 @@ export function ProductsAdmin() {
   const [globalFilter, setGlobalFilter] = useState(null);
   const [validationErrors, setValidationErrors] = useState({});
   const [actionName, setActionName] = useState('');
-
   const [uploadedImage, setUploadedImage] = useState(false);
-
   const [isEditProduct, setIsEditProduct] = useState(false)
   const [refreshTable, setRefreshTable] = useState(false);
-
   const [selectedCategories, setSelectedCategories] = useState(null);
   const [categoriesDropdown, setCategoriesDropdown] = useState([])
   const [titleProductEdit, setTitleProductEdit] = useState('');
@@ -170,12 +167,12 @@ export function ProductsAdmin() {
   };
 
   const deleteSelectedProduct = async () => {
-    /*try {
-      await deleteCategory(category.id);
+    try {
+      await deleteProduct(product.id);
       onRefresh();
     } catch (error) {
       console.log(error);
-    }*/
+    }
 
     setDeleteProductDialog(false);
     setProduct(emptyProduct);
@@ -191,14 +188,14 @@ export function ProductsAdmin() {
   };
 
   const deleteSelectedProducts = async () => {
-    /*try {
-      await Promise.all(selectedCategories.map(async (category) => {
-        await deleteCategory(category.id);
+    try {
+      await Promise.all(selectedProducts.map(async (product) => {
+        await deleteProduct(product.id);
       }));
       onRefresh();
     } catch (error) {
       console.log(error);
-    }*/
+    }
 
     setDeleteProductsDialog(false);
     setSelectedProducts(null);
