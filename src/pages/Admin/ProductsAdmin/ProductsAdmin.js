@@ -111,14 +111,19 @@ export function ProductsAdmin() {
       if (product.id) {
 
         const editProduct = {
+          active: product.active,
           ...(product.title && { title: product.title }),
           ...(product.imageFile && { image: product.imageFile }),
+          ...(product.price && { price: Number(product.price) }),
+          ...(product.category && { categoryId: product.category.id }),
         };
+
+        console.log(editProduct);
 
         /*try {
           await updateCategory(category.id, editUser);
           onRefresh();
-          toast.current.show({ severity: 'success', summary: 'Operación Exitosa', detail: `Categoria ${category.title} actualizada correctamente`, life: 3000 });
+          toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: `Producto ${product.title} actualizado correctamente`, life: 3000 });
         } catch (error) {
           console.log(error);
         }*/
