@@ -40,6 +40,7 @@ export function CategoriesAdmin() {
   const [refreshTable, setRefreshTable] = useState(false);
 
   const [titleCategoryEdit, setTitleCategoryEdit] = useState('');
+  const [lastCategoryEdit, setlastCategoryEdit] = useState({});
 
   useEffect(() => {
     getCategories();
@@ -87,8 +88,8 @@ export function CategoriesAdmin() {
       if (category.id) {
 
         const editCategory = {
-          ...(category.title && { title: category.title }),
-          ...(category.imageFile && { image: category.imageFile }),
+          ...(lastCategoryEdit.title !== category.title && { title: category.title }),
+          ...(lastCategoryEdit.imageFile !== category.imageFile && { image: category.imageFile }),
         };
 
         try {
@@ -126,6 +127,7 @@ export function CategoriesAdmin() {
 
   const editCategory = (categoryEdit) => {
     setTitleCategoryEdit(categoryEdit.title);
+    setlastCategoryEdit(categoryEdit);
     setSubmitted(false);
     setIsEditCategory(true);
     setCategory({ ...categoryEdit });
