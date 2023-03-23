@@ -125,11 +125,13 @@ export function ProductsAdmin() {
         //ENVIAR
       } else {
 
+        const selectedOption = categoriesDropdown.find((option) => option.value === selectedCategories);
+
         const newProduct = {
           title: product.title,
           image: product.imageFile,
           price: Number(product.price),
-          categoryId: selectedCategories,
+          categoryId: selectedOption.id,
           active: product.active,
         };
 
@@ -215,8 +217,8 @@ export function ProductsAdmin() {
 
   const formatDropdownData = (data) => {
     return map(data, (item) => ({
-      value: item.id,
-      label: item.title
+      id: item.id,
+      value: item.title
     }));
   }
 
@@ -410,7 +412,7 @@ export function ProductsAdmin() {
           <label htmlFor="categoria" className="font-bold">
             Categoría
           </label>
-          <Dropdown value={selectedCategories} onChange={(e) => onDropdownChange(e.value)} options={categoriesDropdown} optionLabel="label"
+          <Dropdown value={selectedCategories} onChange={(e) => onDropdownChange(e.value)} options={categoriesDropdown} optionLabel="value"
             placeholder="Selecciona una categoría" appendTo="self" className={classNames({ "p-invalid": submitted && (validationErrors.category) })} />
           {submitted && validationErrors.category && (<small className="p-error">{validationErrors.category}</small>)}
         </div>
