@@ -328,7 +328,7 @@ export function CategoriesAdmin() {
           <label htmlFor="image" className="font-bold" style={{ marginBottom: '0.8rem' }}>
             Imagen
           </label>
-          <Button label={isEditCategory ? "Cambiar Imagen" : "Subir Imagen"} {...getRootProps()} />
+          <Button label={isEditCategory || uploadedImage ? "Cambiar Imagen" : "Subir Imagen"} {...getRootProps()} />
           <input {...getInputProps()} />
           {submitted && validationErrors.image && !uploadedImage && (<small className="p-error">{validationErrors.image}</small>)}
           <div className="imageContent">
