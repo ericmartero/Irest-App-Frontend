@@ -13,7 +13,7 @@ import { InputText } from 'primereact/inputtext';
 
 export function TablesAdmin() {
 
-  const { tables, getTables, addTable } = useTable();
+  const { tables, getTables, addTable, updateTable } = useTable();
 
   let emptyTable = {
     number: 0,
@@ -86,15 +86,13 @@ export function TablesAdmin() {
           ...(lastTableEdit.active !== table.active && { active: table.active }),
         };
 
-        console.log(editTable);
-
-        /*try {
-          await updateCategory(category.id, editCategory);
+        try {
+          await updateTable(table.id, editTable);
           onRefresh();
-          toast.current.show({ severity: 'success', summary: 'Operación Exitosa', detail: `Categoría ${category.title} actualizada correctamente`, life: 3000 });
+          toast.current.show({ severity: 'success', summary: 'Operación Exitosa', detail: `Mesa número ${table.number} actualizada correctamente`, life: 3000 });
         } catch (error) {
           console.log(error);
-        }*/
+        }
 
         //SAVE
       } else {
