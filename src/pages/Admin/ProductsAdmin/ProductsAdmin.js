@@ -50,6 +50,7 @@ export function ProductsAdmin() {
 
   const [selectedCategories, setSelectedCategories] = useState(null);
   const [categoriesDropdown, setCategoriesDropdown] = useState([])
+  const [titleProductEdit, setTitleProductEdit] = useState('');
 
   useEffect(() => {
     getProducts();
@@ -155,6 +156,7 @@ export function ProductsAdmin() {
   };
 
   const editProduct = (productEdit) => {
+    setTitleProductEdit(productEdit.title);
     setSubmitted(false);
     setIsEditProduct(true);
     setProduct({ ...productEdit });
@@ -230,8 +232,11 @@ export function ProductsAdmin() {
     switch (name) {
       case "title":
         val = e.target.value || '';
+        const filteredProduct = products.filter(product => product.title.toLowerCase() === val.toLowerCase());
         if (val.length < 2) {
           errors.title = "El nombre del producto tiene que tener mínimo 2 letras";
+        } else if (!isEditProduct && filteredProduct.length > 0) {
+          errors.title = "El nombre del producto ya esta utilizado";
         } else {
           delete errors.title;
         }
@@ -266,11 +271,16 @@ export function ProductsAdmin() {
 
   const validateFields = () => {
     const errors = {};
+    const filteredProduct = products.filter(prod => prod.title.toLowerCase() === product.title.toLowerCase());
 
     if (!product.title) {
       errors.title = "El nombre del producto es requerido";
     } else if (product.title.length < 2) {
       errors.title = "El nombre del producto tiene que tener mínimo 2 letras";
+    } else if (!isEditProduct && filteredProduct.length > 0) {
+      errors.title = "El nombre de la categoría ya esta utilizada";
+    } else if (isEditProduct && filteredProduct.length > 0 && titleProductEdit !== product.title) {
+      errors.title = "El nombre de la categoría ya esta utilizada";
     }
 
     if (selectedCategories === null) {
