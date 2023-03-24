@@ -386,10 +386,10 @@ export function UsersAdmin() {
               paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
               currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} usuarios" globalFilter={globalFilter} header={header}>
               <Column selectionMode="multiple" exportable={false}></Column>
-              <Column field="email" header="Email" sortable style={{ minWidth: '16rem' }}></Column>
-              <Column field="firstName" header="Nombre" sortable style={{ minWidth: '12rem' }}></Column>
+              <Column field="email" header="Email" sortable style={{ minWidth: '14rem' }}></Column>
+              <Column field="firstName" header="Nombre" sortable style={{ minWidth: '10rem' }}></Column>
               <Column field="lastName" header="Apellidos" sortable style={{ minWidth: '12rem' }}></Column>
-              <Column field="roles" header="Roles" sortable style={{ minWidth: '12rem' }}
+              <Column field="roles" header="Roles" sortable style={{ minWidth: '10rem' }}
                 body={(rowData) =>
                   rowData.roles.map((role) => {
                     let tagClass = '';
@@ -417,8 +417,8 @@ export function UsersAdmin() {
                   })
                 }
               ></Column>
-              <Column field="isActive" header="Activo" sortable dataType="boolean" body={activeBodyTemplate} style={{ minWidth: '8rem' }}></Column>
-              <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
+              <Column field="isActive" header="Activo" sortable dataType="boolean" body={activeBodyTemplate} style={{ minWidth: '4rem' }}></Column>
+              <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '10rem' }}></Column>
             </DataTable>
           </div>
 
