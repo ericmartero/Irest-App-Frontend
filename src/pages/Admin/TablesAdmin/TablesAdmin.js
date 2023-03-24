@@ -22,7 +22,7 @@ export function TablesAdmin() {
 
   const toast = useRef(null);
   const dt = useRef(null);
-  const { tables, loading, getTables, addTable, updateTable, deleteTable } = useTable();
+  const { tables, loading, loadingCrud, getTables, addTable, updateTable, deleteTable } = useTable();
 
   const [tablesCrud, setTablesCrud] = useState(null);
   const [tableDialog, setTableDialog] = useState(false);
@@ -267,13 +267,13 @@ export function TablesAdmin() {
 
   return (
     <>
+      <Toast ref={toast} />
       {loading ?
         <div className="progress-spinner-container">
           <ProgressSpinner />
         </div>
         :
         <div>
-          <Toast ref={toast} />
           <div className="card" >
             <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
 
@@ -289,6 +289,7 @@ export function TablesAdmin() {
           </div>
 
           <Dialog visible={tableDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={actionName} modal className="p-fluid" footer={tableDialogFooter} onHide={hideDialog}>
+            {loadingCrud && <ProgressSpinner style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', zIndex: 1 }} />}
             <div className="field">
               <label htmlFor="number" className="font-bold">
                 Número
