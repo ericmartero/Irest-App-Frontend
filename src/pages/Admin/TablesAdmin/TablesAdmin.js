@@ -10,6 +10,8 @@ import { Dialog } from 'primereact/dialog';
 import { InputSwitch } from "primereact/inputswitch";
 import { InputNumber } from 'primereact/inputnumber';
 import { InputText } from 'primereact/inputtext';
+import { ProgressSpinner } from 'primereact/progressspinner';
+import '../../../scss/ProgressLoadPage.scss';
 
 export function TablesAdmin() {
 
@@ -20,7 +22,7 @@ export function TablesAdmin() {
 
   const toast = useRef(null);
   const dt = useRef(null);
-  const { tables, getTables, addTable, updateTable, deleteTable } = useTable();
+  const { tables, loading, getTables, addTable, updateTable, deleteTable } = useTable();
 
   const [tablesCrud, setTablesCrud] = useState(null);
   const [tableDialog, setTableDialog] = useState(false);
@@ -181,7 +183,7 @@ export function TablesAdmin() {
     switch (name) {
       case "number":
         const filteredTable = tables.filter(table => table.number === val);
-        if (val !== lastTableEdit.number &&  filteredTable.length > 0) {
+        if (val !== lastTableEdit.number && filteredTable.length > 0) {
           errors.number = "El número de mesa ya esta utilizado";
         } else {
           delete errors.number;
@@ -264,63 +266,71 @@ export function TablesAdmin() {
   );
 
   return (
-    <div>
-      <Toast ref={toast} />
-      <div className="card" >
-        <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
-
-        <DataTable ref={dt} value={tablesCrud} selection={selectedTables} onSelectionChange={(e) => setSelectedTables(e.value)}
-          dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
-          paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-          currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} mesas" globalFilter={globalFilter} header={header}>
-          <Column selectionMode="multiple" exportable={false}></Column>
-          <Column field="number" header="Número de mesa" sortable style={{ minWidth: '22rem' }}></Column>
-          <Column field="active" header="Activa" sortable dataType="boolean" body={activeBodyTemplate} style={{ minWidth: '8rem' }}></Column>
-          <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
-        </DataTable>
-      </div>
-
-      <Dialog visible={tableDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={actionName} modal className="p-fluid" footer={tableDialogFooter} onHide={hideDialog}>
-        <div className="field">
-          <label htmlFor="number" className="font-bold">
-            Número
-          </label>
-          <InputNumber inputId="number" value={table.number} onValueChange={(e) => onInputChange(e, 'number')} mode="decimal"
-            showButtons min={1} className={classNames({ "p-invalid": submitted && (!table.number || validationErrors.number) })} />
-          {submitted && validationErrors.number && (<small className="p-error">{validationErrors.number}</small>)}
+    <>
+      {loading ?
+        <div className="progress-spinner-container">
+          <ProgressSpinner />
         </div>
+        :
+        <div>
+          <Toast ref={toast} />
+          <div className="card" >
+            <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
 
-        <div className="field" style={{ height: "2.5rem", display: "flex", alignItems: "center" }}>
-          <div className="p-field-checkbox" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <InputSwitch
-              id='active'
-              checked={table.active}
-              onChange={(e) => onInputChange(e, 'active')}
-            />
-            <label htmlFor="active" className="font-bold" style={{ marginLeft: "1rem", alignSelf: "center" }}>
-              Mesa Activa
-            </label>
+            <DataTable ref={dt} value={tablesCrud} selection={selectedTables} onSelectionChange={(e) => setSelectedTables(e.value)}
+              dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
+              paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+              currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} mesas" globalFilter={globalFilter} header={header}>
+              <Column selectionMode="multiple" exportable={false}></Column>
+              <Column field="number" header="Número de mesa" sortable style={{ minWidth: '22rem' }}></Column>
+              <Column field="active" header="Activa" sortable dataType="boolean" body={activeBodyTemplate} style={{ minWidth: '8rem' }}></Column>
+              <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
+            </DataTable>
           </div>
-        </div>
-      </Dialog>
 
-      <Dialog visible={deleteTableDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteTableDialogFooter} onHide={hideDeleteTableDialog}>
-        <div className="confirmation-content">
-          <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-          {table && (
-            <span>
-              Seguro que quieres eliminar la mesa número <b>{table.number}</b>?
-            </span>
-          )}
-        </div>
-      </Dialog>
+          <Dialog visible={tableDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={actionName} modal className="p-fluid" footer={tableDialogFooter} onHide={hideDialog}>
+            <div className="field">
+              <label htmlFor="number" className="font-bold">
+                Número
+              </label>
+              <InputNumber inputId="number" value={table.number} onValueChange={(e) => onInputChange(e, 'number')} mode="decimal"
+                showButtons min={1} className={classNames({ "p-invalid": submitted && (!table.number || validationErrors.number) })} />
+              {submitted && validationErrors.number && (<small className="p-error">{validationErrors.number}</small>)}
+            </div>
 
-      <Dialog visible={deleteTablesDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteTablesDialogFooter} onHide={hideDeleteTablesDialog}>
-        <div className="confirmation-content">
-          <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-          {table && <span>Seguro que quieres eliminar las mesas seleccionadas?</span>}
+            <div className="field" style={{ height: "2.5rem", display: "flex", alignItems: "center" }}>
+              <div className="p-field-checkbox" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <InputSwitch
+                  id='active'
+                  checked={table.active}
+                  onChange={(e) => onInputChange(e, 'active')}
+                />
+                <label htmlFor="active" className="font-bold" style={{ marginLeft: "1rem", alignSelf: "center" }}>
+                  Mesa Activa
+                </label>
+              </div>
+            </div>
+          </Dialog>
+
+          <Dialog visible={deleteTableDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteTableDialogFooter} onHide={hideDeleteTableDialog}>
+            <div className="confirmation-content">
+              <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+              {table && (
+                <span>
+                  Seguro que quieres eliminar la mesa número <b>{table.number}</b>?
+                </span>
+              )}
+            </div>
+          </Dialog>
+
+          <Dialog visible={deleteTablesDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteTablesDialogFooter} onHide={hideDeleteTablesDialog}>
+            <div className="confirmation-content">
+              <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+              {table && <span>Seguro que quieres eliminar las mesas seleccionadas?</span>}
+            </div>
+          </Dialog>
         </div>
-      </Dialog>
-    </div>
+      }
+    </>
   );
 }
