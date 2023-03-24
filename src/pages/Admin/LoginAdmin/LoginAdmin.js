@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
@@ -13,6 +13,7 @@ export function LoginAdmin() {
 
   const { login } = useAuth();
   const toastError = useRef(null);
+  const [submitted, setSubmitted] = useState(false);
 
   const showError = (error) => {
     toastError.current.show({ severity: 'error', summary: 'Error al iniciar sessión', detail: error.message, life: 3000 });
@@ -30,19 +31,24 @@ export function LoginAdmin() {
     }),
 
     onSubmit: async (values) => {
-      try {
-        const response = await loginApi(values);
-        const { token } = response;
-        login(token);
 
-      } catch (error) {
-        showError(error);
+      if (!formik.errors.email || !formik.errors.password) {
+        try {
+          const response = await loginApi(values);
+          const { token } = response;
+          login(token);
+  
+        } catch (error) {
+          showError(error);
+        }
       }
+
     }
   });
 
   const onFormSubmit = e => {
     e.preventDefault();
+    setSubmitted(true);
     formik.handleSubmit();
   }
   
@@ -60,23 +66,23 @@ export function LoginAdmin() {
 
           <form onSubmit={onFormSubmit}>
             <label htmlFor="email" className="block text-900 font-medium mb-2">Correo electrónico</label>
-            <InputText id="email" type="text" placeholder="Introduce tu correo electrónico" className={formik.errors.email ? "w-full mb-1 p-invalid" : "w-full mb-3"}
+            <InputText id="email" type="text" placeholder="Introduce tu correo electrónico" className={submitted && formik.errors.email ? "w-full mb-1 p-invalid" : "w-full mb-3"}
               value={formik.values.email} onChange={formik.handleChange} />
 
-            {formik.errors.email && formik.values.email === '' ? (
+            {submitted && formik.errors.email && formik.values.email === '' ? (
               <small className="p-error mb-2">Correo electrónico requerido</small>
-            ) : formik.errors.email ? (
+            ) : submitted && formik.errors.email ? (
               <small className="p-error mb-2">El correo electrónico no es correcto</small>
             ) : (
               null
             )}
 
-            <label htmlFor="password" className={formik.errors.email ? "block text-900 font-medium mb-2 mt-3" : "block text-900 font-medium mb-2"}>Contraseña</label>
-            <InputText id="password" type="password" placeholder="Introduce tu contraseña" className={formik.errors.password ? "w-full mb-1 p-invalid" : "w-full mb-3"}
+            <label htmlFor="password" className={submitted && formik.errors.email ? "block text-900 font-medium mb-2 mt-3" : "block text-900 font-medium mb-2"}>Contraseña</label>
+            <InputText id="password" type="password" placeholder="Introduce tu contraseña" className={submitted && formik.errors.password ? "w-full mb-1 p-invalid" : "w-full mb-3"}
               value={formik.values.password} onChange={formik.handleChange} />
-            {formik.errors.password && <small className="p-error">Contraseña requerida</small>}
+            {submitted && formik.errors.password && <small className="p-error">Contraseña requerida</small>}
 
-            <Button type="submit" label="Iniciar sesión" icon="pi pi-user" disabled={formik.errors.email || formik.errors.password ? true : false } className={formik.errors.password ? "w-full mt-3" : "w-full"} />
+            <Button type="submit" label="Iniciar sesión" icon="pi pi-user" disabled={submitted && (formik.errors.email || formik.errors.password) ? true : false } className={submitted && formik.errors.password ? "w-full mt-3" : "w-full mt-2"} />
           </form>
         </div>
       </div>
