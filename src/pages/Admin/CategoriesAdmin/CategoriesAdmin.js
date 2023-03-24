@@ -319,7 +319,7 @@ export function CategoriesAdmin() {
           </div>
 
           <Dialog visible={categoryDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={actionName} modal className="p-fluid" footer={categoryDialogFooter} onHide={hideDialog}>
-            { loadingCrud && <ProgressSpinner style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', zIndex: 1 }} />}
+            {loadingCrud && <ProgressSpinner style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', zIndex: 1 }} />}
             <div className="field">
               <label htmlFor="title" className="font-bold">
                 Categoría
