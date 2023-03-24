@@ -9,7 +9,9 @@ import { Toolbar } from 'primereact/toolbar';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Image } from 'primereact/image';
+import { ProgressSpinner } from 'primereact/progressspinner';
 import { useDropzone } from 'react-dropzone';
+import '../../../scss/ProgressLoadPage.scss';
 import './CategoriesAdmin.scss';
 
 export function CategoriesAdmin() {
@@ -22,7 +24,7 @@ export function CategoriesAdmin() {
 
   const toast = useRef(null);
   const dt = useRef(null);
-  const { categories, getCategories, addCategory, updateCategory, deleteCategory } = useCategory();
+  const { categories, loading, getCategories, addCategory, updateCategory, deleteCategory } = useCategory();
 
   const [categoriesTable, setCategoriesTable] = useState(null);
   const [categoryDialog, setCategoryDialog] = useState(false);
@@ -294,65 +296,73 @@ export function CategoriesAdmin() {
   );
 
   return (
-    <div>
-      <Toast ref={toast} />
-      <div className="card" >
-        <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
-
-        <DataTable ref={dt} value={categoriesTable} selection={selectedCategories} onSelectionChange={(e) => setSelectedCategories(e.value)}
-          dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
-          paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-          currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} categorías" globalFilter={globalFilter} header={header}>
-          <Column selectionMode="multiple" exportable={false}></Column>
-          <Column field="title" header="Categoría" sortable style={{ minWidth: '22rem' }}></Column>
-          <Column field="image" header="Imagen" body={imageBodyTemplate} style={{ minWidth: '16rem' }}></Column>
-          <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
-        </DataTable>
-      </div>
-
-      <Dialog visible={categoryDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={actionName} modal className="p-fluid" footer={categoryDialogFooter} onHide={hideDialog}>
-        <div className="field">
-          <label htmlFor="title" className="font-bold">
-            Categoría
-          </label>
-          <InputText id="title" value={category.title} onChange={(e) => onInputChange(e, 'title')} required autoFocus
-            className={classNames({ "p-invalid": submitted && (!category.title || validationErrors.title) })} />
-          {submitted && !category.title
-            ? (<small className="p-error">El nombre de la categoría es requerida</small>)
-            : submitted && validationErrors.title && (<small className="p-error">{validationErrors.title}</small>)
-          }
+    <>
+      {loading ?
+        <div className="progress-spinner-container">
+          <ProgressSpinner />
         </div>
-        <div className="field">
-          <label htmlFor="image" className="font-bold" style={{ marginBottom: '0.8rem' }}>
-            Imagen
-          </label>
-          <Button label={isEditCategory || uploadedImage ? "Cambiar Imagen" : "Subir Imagen"} {...getRootProps()} />
-          <input {...getInputProps()} />
-          {submitted && validationErrors.image && !uploadedImage && (<small className="p-error">{validationErrors.image}</small>)}
-          <div className="imageContent">
-            <Image src={category.image} alt="Image" width="100%" />
+        :
+        <div>
+          <Toast ref={toast} />
+          <div className="card" >
+            <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
+
+            <DataTable ref={dt} value={categoriesTable} selection={selectedCategories} onSelectionChange={(e) => setSelectedCategories(e.value)}
+              dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
+              paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+              currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} categorías" globalFilter={globalFilter} header={header}>
+              <Column selectionMode="multiple" exportable={false}></Column>
+              <Column field="title" header="Categoría" sortable style={{ minWidth: '22rem' }}></Column>
+              <Column field="image" header="Imagen" body={imageBodyTemplate} style={{ minWidth: '16rem' }}></Column>
+              <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
+            </DataTable>
           </div>
 
-        </div>
-      </Dialog>
+          <Dialog visible={categoryDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={actionName} modal className="p-fluid" footer={categoryDialogFooter} onHide={hideDialog}>
+            <div className="field">
+              <label htmlFor="title" className="font-bold">
+                Categoría
+              </label>
+              <InputText id="title" value={category.title} onChange={(e) => onInputChange(e, 'title')} required autoFocus
+                className={classNames({ "p-invalid": submitted && (!category.title || validationErrors.title) })} />
+              {submitted && !category.title
+                ? (<small className="p-error">El nombre de la categoría es requerida</small>)
+                : submitted && validationErrors.title && (<small className="p-error">{validationErrors.title}</small>)
+              }
+            </div>
+            <div className="field">
+              <label htmlFor="image" className="font-bold" style={{ marginBottom: '0.8rem' }}>
+                Imagen
+              </label>
+              <Button label={isEditCategory || uploadedImage ? "Cambiar Imagen" : "Subir Imagen"} {...getRootProps()} />
+              <input {...getInputProps()} />
+              {submitted && validationErrors.image && !uploadedImage && (<small className="p-error">{validationErrors.image}</small>)}
+              <div className="imageContent">
+                <Image src={category.image} alt="Image" width="100%" />
+              </div>
 
-      <Dialog visible={deleteCategoryDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteCategoryDialogFooter} onHide={hideDeleteCategoryDialog}>
-        <div className="confirmation-content">
-          <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-          {category && (
-            <span>
-              Seguro que quieres eliminar la categoría <b>{category.title}</b>?
-            </span>
-          )}
-        </div>
-      </Dialog>
+            </div>
+          </Dialog>
 
-      <Dialog visible={deleteCategoriesDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteCategoriesDialogFooter} onHide={hideDeleteCategoriesDialog}>
-        <div className="confirmation-content">
-          <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-          {category && <span>Seguro que quieres eliminar las categorías seleccionadas?</span>}
+          <Dialog visible={deleteCategoryDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteCategoryDialogFooter} onHide={hideDeleteCategoryDialog}>
+            <div className="confirmation-content">
+              <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+              {category && (
+                <span>
+                  Seguro que quieres eliminar la categoría <b>{category.title}</b>?
+                </span>
+              )}
+            </div>
+          </Dialog>
+
+          <Dialog visible={deleteCategoriesDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteCategoriesDialogFooter} onHide={hideDeleteCategoriesDialog}>
+            <div className="confirmation-content">
+              <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+              {category && <span>Seguro que quieres eliminar las categorías seleccionadas?</span>}
+            </div>
+          </Dialog>
         </div>
-      </Dialog>
-    </div>
+      }
+    </>
   );
 }
