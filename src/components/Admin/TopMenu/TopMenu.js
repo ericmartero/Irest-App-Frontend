@@ -49,7 +49,7 @@ export function TopMenu(props) {
   return (
     <div className="layout-topbar">
       <div to="/" className="layout-topbar-logo">
-        <img src="https://res.cloudinary.com/djwjh0wpw/image/upload/v1678621782/favicon_agaioz.png" alt="logo" />
+        <img src="https://res.cloudinary.com/djwjh0wpw/image/upload/v1679673058/icono-irest_gvyksj.png" alt="logo" />
         <span>PANEL DE CONTROL</span>
       </div>
 
