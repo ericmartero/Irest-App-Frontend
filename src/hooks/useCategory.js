@@ -6,6 +6,7 @@ export function useCategory() {
 
     const [categories, setCategories] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [loadingCrud, setLoadingCrud] = useState(false);
     const { auth } = useAuth();
 
     const getCategories = useCallback( async () => {
@@ -22,33 +23,33 @@ export function useCategory() {
 
     const addCategory = async (data) => {
         try {
-            setLoading(true);
+            setLoadingCrud(true);
             await addCategoryApi(data, auth.token);
-            setLoading(false);
+            setLoadingCrud(false);
         } catch (error) {
-            setLoading(false);
+            setLoadingCrud(false);
             throw error;
         }
     }
 
     const updateCategory = async (id, data) => {
         try {
-            setLoading(true);
+            setLoadingCrud(true);
             await updateCategoryApi(id, data, auth.token);
-            setLoading(false);
+            setLoadingCrud(false);
         } catch (error) {
-            setLoading(false);
+            setLoadingCrud(false);
             throw error;
         }
     }
 
     const deleteCategory = async (id) => {
         try {
-            setLoading(true);
+            setLoadingCrud(true);
             await deleteCategoryApi(id, auth.token);
-            setLoading(false);
+            setLoadingCrud(false);
         } catch (error) {
-            setLoading(false);
+            setLoadingCrud(false);
             throw error;
         }
     }
@@ -56,6 +57,7 @@ export function useCategory() {
     return {
         categories,
         loading,
+        loadingCrud,
         getCategories,
         addCategory,
         updateCategory,
