@@ -12,8 +12,10 @@ import { InputSwitch } from "primereact/inputswitch";
 import { InputNumber } from 'primereact/inputnumber';
 import { Dropdown } from 'primereact/dropdown';
 import { Image } from 'primereact/image';
+import { ProgressSpinner } from 'primereact/progressspinner';
 import { useDropzone } from 'react-dropzone';
 import { map } from 'lodash';
+import '../../../scss/ProgressLoadPage.scss';
 import './ProductsAdmin.scss';
 
 export function ProductsAdmin() {
@@ -29,7 +31,7 @@ export function ProductsAdmin() {
 
   const toast = useRef(null);
   const dt = useRef(null);
-  const { products, getProducts, addProduct, updateProduct, deleteProduct } = useProduct();
+  const { products, loading, getProducts, addProduct, updateProduct, deleteProduct } = useProduct();
   const { categories, getCategories } = useCategory();
 
   const [productsTable, setProductsTable] = useState(null);
@@ -104,7 +106,7 @@ export function ProductsAdmin() {
 
       //EDITAR
       if (product.id) {
-        
+
         const editProduct = {
           ...(lastProductEdit.title !== product.title && { title: product.title }),
           ...(lastProductEdit.imageFile !== product.imageFile && { image: product.imageFile }),
@@ -371,100 +373,108 @@ export function ProductsAdmin() {
   );
 
   return (
-    <div>
-      <Toast ref={toast} />
-      <div className="card" >
-        <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
-
-        <DataTable ref={dt} value={productsTable} selection={selectedProducts} onSelectionChange={(e) => setSelectedProducts(e.value)}
-          dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
-          paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-          currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} productos" globalFilter={globalFilter} header={header}>
-          <Column selectionMode="multiple" exportable={false}></Column>
-          <Column field="title" header="Producto" sortable style={{ minWidth: '14rem' }}></Column>
-          <Column field="image" header="Imagen" body={imageBodyTemplate} style={{ minWidth: '12rem' }}></Column>
-          <Column field="price" header="Precio" body={priceBodyTemplate} sortable style={{ minWidth: '8rem' }}></Column>
-          <Column field="category.title" header="Categoría" sortable style={{ minWidth: '12rem' }}></Column>
-          <Column field="active" header="Activo" sortable dataType="boolean" body={activeBodyTemplate} style={{ minWidth: '8rem' }}></Column>
-          <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
-        </DataTable>
-      </div>
-
-      <Dialog visible={productDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={actionName} modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
-        <div className="field">
-          <label htmlFor="title" className="font-bold">
-            Producto
-          </label>
-          <InputText id="title" value={product.title} onChange={(e) => onInputChange(e, 'title')} required autoFocus
-            className={classNames({ "p-invalid": submitted && (!product.title || validationErrors.title) })} />
-          {submitted && !product.title
-            ? (<small className="p-error">El nombre del producto es requerido</small>)
-            : submitted && validationErrors.title && (<small className="p-error">{validationErrors.title}</small>)
-          }
+    <>
+      {loading ?
+        <div className="progress-spinner-container">
+          <ProgressSpinner />
         </div>
+        :
+        <div>
+          <Toast ref={toast} />
+          <div className="card" >
+            <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
 
-        <div className="field">
-          <label htmlFor="price" className="font-bold">
-            Precio
-          </label>
-          <InputNumber inputId="price" value={product.price} onValueChange={(e) => onInputChange(e, 'price')} showButtons buttonLayout="horizontal" step={0.25}
-            decrementButtonClassName="p-button-primary" incrementButtonClassName="p-button-primary" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-            mode="currency" currency="EUR" min={0.01} />
-        </div>
-
-        <div className="field">
-          <label htmlFor="categoria" className="font-bold">
-            Categoría
-          </label>
-          <Dropdown value={selectedCategories} onChange={(e) => onDropdownChange(e.value)} options={categoriesDropdown} optionLabel="value"
-            placeholder="Selecciona una categoría" appendTo="self" className={classNames({ "p-invalid": submitted && (validationErrors.category) })} />
-          {submitted && validationErrors.category && (<small className="p-error">{validationErrors.category}</small>)}
-        </div>
-
-        <div className="field" style={{ height: "2.5rem", display: "flex", alignItems: "center" }}>
-          <div className="p-field-checkbox switchActive">
-            <InputSwitch
-              id='active'
-              checked={product.active}
-              onChange={(e) => onInputChange(e, 'active')}
-            />
-            <label htmlFor="active" className="font-bold" style={{ marginLeft: "1rem", alignSelf: "center" }}>
-              Producto Activo
-            </label>
-          </div>
-        </div>
-
-        <div className="field imageField">
-          <label htmlFor="image" className="font-bold" style={{ marginBottom: '0.8rem' }}>
-            Imagen
-          </label>
-          <Button className='buttonImage' label={isEditProduct || uploadedImage ? "Cambiar Imagen" : "Subir Imagen"} {...getRootProps()} />
-          <input {...getInputProps()} />
-          {submitted && validationErrors.image && !uploadedImage && (<small className="p-error">{validationErrors.image}</small>)}
-          <div className="imageContent">
-            <Image src={product.image} alt="Image" width="100%" />
+            <DataTable ref={dt} value={productsTable} selection={selectedProducts} onSelectionChange={(e) => setSelectedProducts(e.value)}
+              dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
+              paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+              currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} productos" globalFilter={globalFilter} header={header}>
+              <Column selectionMode="multiple" exportable={false}></Column>
+              <Column field="title" header="Producto" sortable style={{ minWidth: '14rem' }}></Column>
+              <Column field="image" header="Imagen" body={imageBodyTemplate} style={{ minWidth: '12rem' }}></Column>
+              <Column field="price" header="Precio" body={priceBodyTemplate} sortable style={{ minWidth: '8rem' }}></Column>
+              <Column field="category.title" header="Categoría" sortable style={{ minWidth: '12rem' }}></Column>
+              <Column field="active" header="Activo" sortable dataType="boolean" body={activeBodyTemplate} style={{ minWidth: '8rem' }}></Column>
+              <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
+            </DataTable>
           </div>
 
-        </div>
-      </Dialog>
+          <Dialog visible={productDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={actionName} modal className="p-fluid" footer={productDialogFooter} onHide={hideDialog}>
+            <div className="field">
+              <label htmlFor="title" className="font-bold">
+                Producto
+              </label>
+              <InputText id="title" value={product.title} onChange={(e) => onInputChange(e, 'title')} required autoFocus
+                className={classNames({ "p-invalid": submitted && (!product.title || validationErrors.title) })} />
+              {submitted && !product.title
+                ? (<small className="p-error">El nombre del producto es requerido</small>)
+                : submitted && validationErrors.title && (<small className="p-error">{validationErrors.title}</small>)
+              }
+            </div>
 
-      <Dialog visible={deleteProductDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteProductDialogFooter} onHide={hideDeleteProductDialog}>
-        <div className="confirmation-content">
-          <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-          {product && (
-            <span>
-              Seguro que quieres eliminar el producto <b>{product.title}</b>?
-            </span>
-          )}
-        </div>
-      </Dialog>
+            <div className="field">
+              <label htmlFor="price" className="font-bold">
+                Precio
+              </label>
+              <InputNumber inputId="price" value={product.price} onValueChange={(e) => onInputChange(e, 'price')} showButtons buttonLayout="horizontal" step={0.25}
+                decrementButtonClassName="p-button-primary" incrementButtonClassName="p-button-primary" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+                mode="currency" currency="EUR" min={0.01} />
+            </div>
 
-      <Dialog visible={deleteProductsDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteProductsDialogFooter} onHide={hideDeleteProductsDialog}>
-        <div className="confirmation-content">
-          <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-          {product && <span>Seguro que quieres eliminar los productos seleccionados?</span>}
+            <div className="field">
+              <label htmlFor="categoria" className="font-bold">
+                Categoría
+              </label>
+              <Dropdown value={selectedCategories} onChange={(e) => onDropdownChange(e.value)} options={categoriesDropdown} optionLabel="value"
+                placeholder="Selecciona una categoría" appendTo="self" className={classNames({ "p-invalid": submitted && (validationErrors.category) })} />
+              {submitted && validationErrors.category && (<small className="p-error">{validationErrors.category}</small>)}
+            </div>
+
+            <div className="field" style={{ height: "2.5rem", display: "flex", alignItems: "center" }}>
+              <div className="p-field-checkbox switchActive">
+                <InputSwitch
+                  id='active'
+                  checked={product.active}
+                  onChange={(e) => onInputChange(e, 'active')}
+                />
+                <label htmlFor="active" className="font-bold" style={{ marginLeft: "1rem", alignSelf: "center" }}>
+                  Producto Activo
+                </label>
+              </div>
+            </div>
+
+            <div className="field imageField">
+              <label htmlFor="image" className="font-bold" style={{ marginBottom: '0.8rem' }}>
+                Imagen
+              </label>
+              <Button className='buttonImage' label={isEditProduct || uploadedImage ? "Cambiar Imagen" : "Subir Imagen"} {...getRootProps()} />
+              <input {...getInputProps()} />
+              {submitted && validationErrors.image && !uploadedImage && (<small className="p-error">{validationErrors.image}</small>)}
+              <div className="imageContent">
+                <Image src={product.image} alt="Image" width="100%" />
+              </div>
+
+            </div>
+          </Dialog>
+
+          <Dialog visible={deleteProductDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteProductDialogFooter} onHide={hideDeleteProductDialog}>
+            <div className="confirmation-content">
+              <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+              {product && (
+                <span>
+                  Seguro que quieres eliminar el producto <b>{product.title}</b>?
+                </span>
+              )}
+            </div>
+          </Dialog>
+
+          <Dialog visible={deleteProductsDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteProductsDialogFooter} onHide={hideDeleteProductsDialog}>
+            <div className="confirmation-content">
+              <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+              {product && <span>Seguro que quieres eliminar los productos seleccionados?</span>}
+            </div>
+          </Dialog>
         </div>
-      </Dialog>
-    </div>
+      }
+    </>
   );
 }
