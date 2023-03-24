@@ -6,6 +6,7 @@ export function useProduct() {
 
     const [products, setProducts] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [loadingCrud, setLoadingCrud] = useState(false);
     const { auth } = useAuth();
 
     const getProducts = useCallback( async () => {
@@ -22,33 +23,33 @@ export function useProduct() {
 
     const addProduct = async (data) => {
         try {
-            setLoading(true);
+            setLoadingCrud(true);
             await addProductApi(data, auth.token);
-            setLoading(false);
+            setLoadingCrud(false);
         } catch (error) {
-            setLoading(false);
+            setLoadingCrud(false);
             throw error;
         }
     }
 
     const updateProduct = async (id, data) => {
         try {
-            setLoading(true);
+            setLoadingCrud(true);
             await updateProductApi(id, data, auth.token);
-            setLoading(false);
+            setLoadingCrud(false);
         } catch (error) {
-            setLoading(false);
+            setLoadingCrud(false);
             throw error;
         }
     }
 
     const deleteProduct = async (id) => {
         try {
-            setLoading(true);
+            setLoadingCrud(true);
             await deleteProductApi(id, auth.token);
-            setLoading(false);
+            setLoadingCrud(false);
         } catch (error) {
-            setLoading(false);
+            setLoadingCrud(false);
             throw error;
         }
     }
@@ -56,6 +57,7 @@ export function useProduct() {
     return {
         products,
         loading,
+        loadingCrud,
         getProducts,
         addProduct,
         updateProduct,
