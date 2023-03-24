@@ -31,7 +31,7 @@ export function UsersAdmin() {
   const toast = useRef(null);
   const dt = useRef(null);
   const { auth } = useAuth();
-  const { users, loading, getUsers, addUser, deleteUser, updateUser } = useUser();
+  const { users, loading, loadingCrud, getUsers, addUser, deleteUser, updateUser } = useUser();
 
   const [usersTable, setUsersTable] = useState(null);
   const [userDialog, setUserDialog] = useState(false);
@@ -371,13 +371,13 @@ export function UsersAdmin() {
 
   return (
     <>
+      <Toast ref={toast} />
       {loading ?
         <div className="progress-spinner-container">
           <ProgressSpinner />
         </div>
         :
         <div>
-          <Toast ref={toast} />
           <div className="card" >
             <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
 
@@ -423,6 +423,7 @@ export function UsersAdmin() {
           </div>
 
           <Dialog visible={userDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={actionName} modal className="p-fluid" footer={userDialogFooter} onHide={hideDialog}>
+            {loadingCrud && <ProgressSpinner style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', zIndex: 1 }} />}
             <div className="field">
               <label htmlFor="email" className="font-bold">
                 Email

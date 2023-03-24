@@ -7,6 +7,7 @@ export function useUser() {
 
     const [users, setUsers] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [loadingCrud, setLoadingCrud] = useState(false);
     const { auth } = useAuth();
 
     const getMe = async (token) => {
@@ -33,33 +34,33 @@ export function useUser() {
 
     const addUser = async (data) => {
         try {
-            setLoading(true);
+            setLoadingCrud(true);
             await addUserApi(data, auth.token);
-            setLoading(false);
+            setLoadingCrud(false);
         } catch (error) {
-            setLoading(false);
+            setLoadingCrud(false);
             throw error;
         }
     }
 
     const deleteUser = async (id) => {
         try {
-            setLoading(true);
+            setLoadingCrud(true);
             await deleteUserApi(id, auth.token);
-            setLoading(false);
+            setLoadingCrud(false);
         } catch (error) {
-            setLoading(false);
+            setLoadingCrud(false);
             throw(error);
         }
     }
 
     const updateUser = async (id, data) => {
         try {
-            setLoading(true);
+            setLoadingCrud(true);
             await updateUserApi(id, data, auth.token);
-            setLoading(false);
+            setLoadingCrud(false);
         } catch (error) {
-            setLoading(false);
+            setLoadingCrud(false);
             throw error;
         }
     }
@@ -67,6 +68,7 @@ export function useUser() {
     return {
         users,
         loading,
+        loadingCrud,
         getMe,
         getUsers,
         addUser,
