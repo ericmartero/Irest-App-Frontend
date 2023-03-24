@@ -4,6 +4,7 @@ import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
 import { loginApi } from '../../../api/auth';
 import { useAuth } from '../../../hooks';
+import { useHistory } from "react-router-dom";
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import './LoginAdmin.scss';
@@ -13,6 +14,7 @@ export function LoginAdmin() {
 
   const { login } = useAuth();
   const toastError = useRef(null);
+  const history = useHistory();
   const [submitted, setSubmitted] = useState(false);
 
   const showError = (error) => {
@@ -37,6 +39,7 @@ export function LoginAdmin() {
           const response = await loginApi(values);
           const { token } = response;
           login(token);
+          history.push("/admin");
   
         } catch (error) {
           showError(error);
