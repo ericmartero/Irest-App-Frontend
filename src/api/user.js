@@ -10,6 +10,11 @@ export const getUsersApi = async(token) => {
         }
 
         const resp = await fetch(url, params);
+
+        if (resp.status === 403) {
+            return { error: 'No tienes permiso para acceder a esta página' };
+        }
+        
         return await resp.json();
 
     } catch (error) {

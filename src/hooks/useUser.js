@@ -8,6 +8,7 @@ export function useUser() {
     const [users, setUsers] = useState(null);
     const [loading, setLoading] = useState(true);
     const [loadingCrud, setLoadingCrud] = useState(false);
+    const [error, setError] = useState(null);
     const { auth } = useAuth();
 
     const getMe = async (token) => {
@@ -25,7 +26,13 @@ export function useUser() {
             setLoading(true);
             const response = await getUsersApi(auth.token);
             setLoading(false);
-            setUsers(response);
+
+            if (response.error) {
+                setError(response.error);
+            } else {
+                setUsers(response);
+            }
+
         } catch (error) {
             setLoading(false);
             throw(error);
@@ -69,6 +76,7 @@ export function useUser() {
         users,
         loading,
         loadingCrud,
+        error,
         getMe,
         getUsers,
         addUser,

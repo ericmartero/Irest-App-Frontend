@@ -11,7 +11,7 @@ import { InputSwitch } from "primereact/inputswitch";
 import { InputNumber } from 'primereact/inputnumber';
 import { InputText } from 'primereact/inputtext';
 import { ProgressSpinner } from 'primereact/progressspinner';
-import '../../../scss/ProgressLoadPage.scss';
+import '../../../scss/AlignComponent.scss';
 
 export function TablesAdmin() {
 
@@ -269,7 +269,7 @@ export function TablesAdmin() {
     <>
       <Toast ref={toast} />
       {loading ?
-        <div className="progress-spinner-container">
+        <div className="align-container">
           <ProgressSpinner />
         </div>
         :

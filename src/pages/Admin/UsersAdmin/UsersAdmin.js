@@ -12,7 +12,8 @@ import { InputText } from 'primereact/inputtext';
 import { Tag } from 'primereact/tag';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { useUser, useAuth } from '../../../hooks';
-import '../../../scss/ProgressLoadPage.scss';
+import { AccessDenied } from '../../AccessDenied';
+import '../../../scss/AlignComponent.scss';
 import './UsersAdmin.scss';
 
 export function UsersAdmin() {
@@ -31,7 +32,7 @@ export function UsersAdmin() {
   const toast = useRef(null);
   const dt = useRef(null);
   const { auth } = useAuth();
-  const { users, loading, loadingCrud, getUsers, addUser, deleteUser, updateUser } = useUser();
+  const { users, loading, error, loadingCrud, getUsers, addUser, deleteUser, updateUser } = useUser();
 
   const [usersTable, setUsersTable] = useState(null);
   const [userDialog, setUserDialog] = useState(false);
@@ -371,155 +372,159 @@ export function UsersAdmin() {
 
   return (
     <>
-      <Toast ref={toast} />
-      {loading ?
-        <div className="progress-spinner-container">
-          <ProgressSpinner />
-        </div>
-        :
-        <div>
-          <div className="card" >
-            <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
+      {error ? <AccessDenied/> :
+        <>
+          <Toast ref={toast} />
+          {loading ?
+            <div className="align-container">
+              <ProgressSpinner />
+            </div>
+            :
+            <div>
+              <div className="card" >
+                <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
 
-            <DataTable ref={dt} value={usersTable} selection={selectedUsers} onSelectionChange={(e) => setSelectedUsers(e.value)}
-              dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
-              paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-              currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} usuarios" globalFilter={globalFilter} header={header}>
-              <Column selectionMode="multiple" exportable={false}></Column>
-              <Column field="email" header="Email" sortable style={{ minWidth: '14rem' }}></Column>
-              <Column field="firstName" header="Nombre" sortable style={{ minWidth: '10rem' }}></Column>
-              <Column field="lastName" header="Apellidos" sortable style={{ minWidth: '12rem' }}></Column>
-              <Column field="roles" header="Roles" sortable style={{ minWidth: '10rem' }}
-                body={(rowData) =>
-                  rowData.roles.map((role) => {
-                    let tagClass = '';
-                    switch (role) {
-                      case 'admin':
-                        tagClass = 'warning';
-                        break;
-                      case 'boss':
-                        tagClass = 'danger';
-                        break;
-                      case 'employee':
-                        tagClass = 'success';
-                        break;
-                      default:
-                        break;
+                <DataTable ref={dt} value={usersTable} selection={selectedUsers} onSelectionChange={(e) => setSelectedUsers(e.value)}
+                  dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]}
+                  paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                  currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} usuarios" globalFilter={globalFilter} header={header}>
+                  <Column selectionMode="multiple" exportable={false}></Column>
+                  <Column field="email" header="Email" sortable style={{ minWidth: '14rem' }}></Column>
+                  <Column field="firstName" header="Nombre" sortable style={{ minWidth: '10rem' }}></Column>
+                  <Column field="lastName" header="Apellidos" sortable style={{ minWidth: '12rem' }}></Column>
+                  <Column field="roles" header="Roles" sortable style={{ minWidth: '10rem' }}
+                    body={(rowData) =>
+                      rowData.roles.map((role) => {
+                        let tagClass = '';
+                        switch (role) {
+                          case 'admin':
+                            tagClass = 'warning';
+                            break;
+                          case 'boss':
+                            tagClass = 'danger';
+                            break;
+                          case 'employee':
+                            tagClass = 'success';
+                            break;
+                          default:
+                            break;
+                        }
+                        return (
+                          <Tag
+                            key={role}
+                            value={role}
+                            className={classNames('p-mr-2 my-tag', { 'my-tag-bottom': rowData.roles.length === 3 })}
+                            severity={tagClass}
+                          />
+                        );
+                      })
                     }
-                    return (
-                      <Tag
-                        key={role}
-                        value={role}
-                        className={classNames('p-mr-2 my-tag', { 'my-tag-bottom': rowData.roles.length === 3 })}
-                        severity={tagClass}
-                      />
-                    );
-                  })
-                }
-              ></Column>
-              <Column field="isActive" header="Activo" sortable dataType="boolean" body={activeBodyTemplate} style={{ minWidth: '4rem' }}></Column>
-              <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '10rem' }}></Column>
-            </DataTable>
-          </div>
-
-          <Dialog visible={userDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={actionName} modal className="p-fluid" footer={userDialogFooter} onHide={hideDialog}>
-            {loadingCrud && <ProgressSpinner style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', zIndex: 1 }} />}
-            <div className="field">
-              <label htmlFor="email" className="font-bold">
-                Email
-              </label>
-              <InputText id="email" type="email" value={user.email} onChange={(e) => onInputChange(e, 'email')} required autoFocus
-                className={classNames({ "p-invalid": submitted && (!user.email || validationErrors.email) })} />
-              {submitted && !user.email
-                ? (<small className="p-error">El email es requerido</small>)
-                : submitted && validationErrors.email && (<small className="p-error">{validationErrors.email}</small>)
-              }
-            </div>
-
-            <div className="field">
-              <label htmlFor="roles" className="font-bold">
-                Roles
-              </label>
-              <MultiSelect
-                value={selectedRoles}
-                onChange={(e) => setSelectedRoles(e.value)}
-                options={rolesList}
-                optionLabel="role"
-                placeholder="Selecciona los roles"
-                itemTemplate={itemTemplate}
-                selectedItemTemplate={selectedItemTemplate}
-                appendTo="self"
-              />
-            </div>
-
-            <div className="field">
-              <label htmlFor="firstName" className="font-bold">
-                Nombre
-              </label>
-              <InputText id="firstName" value={user.firstName} onChange={(e) => onInputChange(e, 'firstName')} required autoFocus className={classNames({ "p-invalid": submitted && (!user.firstName || validationErrors.firstName) })} />
-              {submitted && !user.firstName
-                ? <small className="p-error">El nombre es requerido</small>
-                : submitted && validationErrors.firstName && (<small className="p-error">{validationErrors.firstName}</small>)
-              }
-            </div>
-            <div className="field">
-              <label htmlFor="lastName" className="font-bold">
-                Apellidos
-              </label>
-              <InputText id="lastName" value={user.lastName || ''} onChange={(e) => onInputChange(e, 'lastName')} />
-            </div>
-            <div className="field">
-              <label htmlFor="password" className="font-bold">
-                Contraseña
-              </label>
-              {isEditUser ? (
-                <>
-                  <InputText id="password" type="password" value={user.password} onChange={(e) => onInputChange(e, 'password')} required autoFocus className={classNames({ "p-invalid": submitted && (validationErrors.password) })} />
-                  {submitted && validationErrors.password && (<small className="p-error">{validationErrors.password}</small>)}
-                </>
-              ) : (
-                <>
-                  <InputText id="password" type="password" value={user.password} onChange={(e) => onInputChange(e, 'password')} required autoFocus className={classNames({ "p-invalid": submitted && (!user.password || validationErrors.password) })} />
-                  {submitted && !user.password
-                    ? (<small className="p-error">La contraseña es requerida</small>)
-                    : submitted && validationErrors.password && (<small className="p-error">{validationErrors.password}</small>)
-                  }
-                </>
-              )}
-            </div>
-
-            <div className="field" style={{ height: "2.5rem", display: "flex", alignItems: "center" }}>
-              <div className="p-field-checkbox" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <InputSwitch
-                  id='isActive'
-                  checked={user.isActive}
-                  onChange={(e) => handleInputSwitch(e, 'isActive')}
-                />
-                <label htmlFor="isActive" className="font-bold" style={{ marginLeft: "1rem", alignSelf: "center" }}>
-                  Usuario Activo
-                </label>
+                  ></Column>
+                  <Column field="isActive" header="Activo" sortable dataType="boolean" body={activeBodyTemplate} style={{ minWidth: '4rem' }}></Column>
+                  <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '10rem' }}></Column>
+                </DataTable>
               </div>
-            </div>
-          </Dialog>
 
-          <Dialog visible={deleteUserDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteUserDialogFooter} onHide={hideDeleteUserDialog}>
-            <div className="confirmation-content">
-              <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-              {user && (
-                <span>
-                  Seguro que quieres eliminar el usuario <b>{user.firstName}</b>?
-                </span>
-              )}
-            </div>
-          </Dialog>
+              <Dialog visible={userDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={actionName} modal className="p-fluid" footer={userDialogFooter} onHide={hideDialog}>
+                {loadingCrud && <ProgressSpinner style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', zIndex: 1 }} />}
+                <div className="field">
+                  <label htmlFor="email" className="font-bold">
+                    Email
+                  </label>
+                  <InputText id="email" type="email" value={user.email} onChange={(e) => onInputChange(e, 'email')} required autoFocus
+                    className={classNames({ "p-invalid": submitted && (!user.email || validationErrors.email) })} />
+                  {submitted && !user.email
+                    ? (<small className="p-error">El email es requerido</small>)
+                    : submitted && validationErrors.email && (<small className="p-error">{validationErrors.email}</small>)
+                  }
+                </div>
 
-          <Dialog visible={deleteUsersDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteUsersDialogFooter} onHide={hideDeleteUsersDialog}>
-            <div className="confirmation-content">
-              <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-              {user && <span>Seguro que quieres eliminar los usuarios seleccionados?</span>}
+                <div className="field">
+                  <label htmlFor="roles" className="font-bold">
+                    Roles
+                  </label>
+                  <MultiSelect
+                    value={selectedRoles}
+                    onChange={(e) => setSelectedRoles(e.value)}
+                    options={rolesList}
+                    optionLabel="role"
+                    placeholder="Selecciona los roles"
+                    itemTemplate={itemTemplate}
+                    selectedItemTemplate={selectedItemTemplate}
+                    appendTo="self"
+                  />
+                </div>
+
+                <div className="field">
+                  <label htmlFor="firstName" className="font-bold">
+                    Nombre
+                  </label>
+                  <InputText id="firstName" value={user.firstName} onChange={(e) => onInputChange(e, 'firstName')} required autoFocus className={classNames({ "p-invalid": submitted && (!user.firstName || validationErrors.firstName) })} />
+                  {submitted && !user.firstName
+                    ? <small className="p-error">El nombre es requerido</small>
+                    : submitted && validationErrors.firstName && (<small className="p-error">{validationErrors.firstName}</small>)
+                  }
+                </div>
+                <div className="field">
+                  <label htmlFor="lastName" className="font-bold">
+                    Apellidos
+                  </label>
+                  <InputText id="lastName" value={user.lastName || ''} onChange={(e) => onInputChange(e, 'lastName')} />
+                </div>
+                <div className="field">
+                  <label htmlFor="password" className="font-bold">
+                    Contraseña
+                  </label>
+                  {isEditUser ? (
+                    <>
+                      <InputText id="password" type="password" value={user.password} onChange={(e) => onInputChange(e, 'password')} required autoFocus className={classNames({ "p-invalid": submitted && (validationErrors.password) })} />
+                      {submitted && validationErrors.password && (<small className="p-error">{validationErrors.password}</small>)}
+                    </>
+                  ) : (
+                    <>
+                      <InputText id="password" type="password" value={user.password} onChange={(e) => onInputChange(e, 'password')} required autoFocus className={classNames({ "p-invalid": submitted && (!user.password || validationErrors.password) })} />
+                      {submitted && !user.password
+                        ? (<small className="p-error">La contraseña es requerida</small>)
+                        : submitted && validationErrors.password && (<small className="p-error">{validationErrors.password}</small>)
+                      }
+                    </>
+                  )}
+                </div>
+
+                <div className="field" style={{ height: "2.5rem", display: "flex", alignItems: "center" }}>
+                  <div className="p-field-checkbox" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <InputSwitch
+                      id='isActive'
+                      checked={user.isActive}
+                      onChange={(e) => handleInputSwitch(e, 'isActive')}
+                    />
+                    <label htmlFor="isActive" className="font-bold" style={{ marginLeft: "1rem", alignSelf: "center" }}>
+                      Usuario Activo
+                    </label>
+                  </div>
+                </div>
+              </Dialog>
+
+              <Dialog visible={deleteUserDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteUserDialogFooter} onHide={hideDeleteUserDialog}>
+                <div className="confirmation-content">
+                  <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                  {user && (
+                    <span>
+                      Seguro que quieres eliminar el usuario <b>{user.firstName}</b>?
+                    </span>
+                  )}
+                </div>
+              </Dialog>
+
+              <Dialog visible={deleteUsersDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteUsersDialogFooter} onHide={hideDeleteUsersDialog}>
+                <div className="confirmation-content">
+                  <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                  {user && <span>Seguro que quieres eliminar los usuarios seleccionados?</span>}
+                </div>
+              </Dialog>
             </div>
-          </Dialog>
-        </div>
+          }
+        </>
       }
     </>
   );

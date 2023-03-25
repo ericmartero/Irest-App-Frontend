@@ -15,7 +15,7 @@ import { Image } from 'primereact/image';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { useDropzone } from 'react-dropzone';
 import { map } from 'lodash';
-import '../../../scss/ProgressLoadPage.scss';
+import '../../../scss/AlignComponent.scss';
 import './ProductsAdmin.scss';
 
 export function ProductsAdmin() {
@@ -376,7 +376,7 @@ export function ProductsAdmin() {
     <>
       <Toast ref={toast} />
       {loading ?
-        <div className="progress-spinner-container">
+        <div className="align-container">
           <ProgressSpinner />
         </div>
         :

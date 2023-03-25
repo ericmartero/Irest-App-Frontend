@@ -11,7 +11,7 @@ import { InputText } from 'primereact/inputtext';
 import { Image } from 'primereact/image';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { useDropzone } from 'react-dropzone';
-import '../../../scss/ProgressLoadPage.scss';
+import '../../../scss/AlignComponent.scss';
 import './CategoriesAdmin.scss';
 
 export function CategoriesAdmin() {
@@ -299,7 +299,7 @@ export function CategoriesAdmin() {
     <>
       <Toast ref={toast} />
       {loading ?
-        <div className="progress-spinner-container">
+        <div className="align-container">
           <ProgressSpinner />
         </div>
         :
