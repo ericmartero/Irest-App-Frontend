@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useTable } from '../../../hooks';
 import { Button } from 'primereact/button';
+import { Badge } from 'primereact/badge';
 import { Dropdown } from 'primereact/dropdown';
 import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
-import { Rating } from 'primereact/rating';
 import { Tag } from 'primereact/tag';
 
 export function OrdersAdmin() {
@@ -11,7 +11,7 @@ export function OrdersAdmin() {
   const { tables, getTables } = useTable();
   const [tablesCrud, setTablesCrud] = useState([]);
   const [layout, setLayout] = useState('grid');
-  
+
   const [sortKey, setSortKey] = useState('');
   const [sortOrder, setSortOrder] = useState(0);
   const [sortField, setSortField] = useState('');
@@ -33,7 +33,7 @@ export function OrdersAdmin() {
 
   const getSeverity = (table) => {
 
-    if (table.tableBooking === null ) {
+    if (table.tableBooking === null) {
       return 'success';
     }
 
@@ -42,7 +42,7 @@ export function OrdersAdmin() {
 
   const onSortChange = (event) => {
     const value = event.value;
-  
+
     if (value.indexOf('!') === null) {
       setSortOrder(-1);
       setSortField(value.substring(1, value.length));
@@ -62,18 +62,15 @@ export function OrdersAdmin() {
           <div className="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
             <div className="flex flex-column align-items-center sm:align-items-start gap-3">
               <div className="text-2xl font-bold text-900">Mesa {table.number}</div>
-              <Rating value={table.rating} readOnly cancel={false}></Rating>
               <div className="flex align-items-center gap-3">
                 <span className="flex align-items-center gap-2">
-                  <i className="pi pi-tag"></i>
-                  <span className="font-semibold">{table.category}</span>
+                  <i>Pedidos: <Badge value="12" severity="warning"></Badge></i>
                 </span>
                 <Tag value={table.tableBooking === null ? 'VACÍA' : 'OCUPADA'} severity={getSeverity(table)}></Tag>
               </div>
             </div>
-            <div className="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2">
-              <span className="text-2xl font-semibold">${table.price}</span>
-              <Button icon="pi pi-shopping-cart" className="p-button-rounded" disabled={table.inventoryStatus === 'OUTOFSTOCK'}></Button>
+            <div>
+              <Button icon="pi pi-shopping-cart" label="Ver Pedidos" className="mr-2 mb-2" />
             </div>
           </div>
         </div>
@@ -87,19 +84,13 @@ export function OrdersAdmin() {
         <div className="p-4 border-1 surface-border surface-card border-round">
           <div className="flex flex-wrap align-items-center justify-content-between gap-2">
             <div className="flex align-items-center gap-2">
-              <i className="pi pi-tag"></i>
-              <span className="font-semibold">{table.category}</span>
+              <i className="pi pi-shopping-cart mr-4 p-text-secondary p-overlay-badge" style={{ fontSize: '2rem' }}><Badge value="12" severity="warning"></Badge></i>
             </div>
             <Tag value={table.tableBooking === null ? 'VACÍA' : 'OCUPADA'} severity={getSeverity(table)}></Tag>
           </div>
           <div className="flex flex-column align-items-center gap-3 py-5">
             <img className="w-9 shadow-2 border-round" src="https://res.cloudinary.com/djwjh0wpw/image/upload/v1679927284/mesa_h2bdwt.jpg" alt={table.number} />
             <div className="text-2xl font-bold">Mesa {table.number}</div>
-            <Rating value={table.rating} readOnly cancel={false}></Rating>
-          </div>
-          <div className="flex align-items-center justify-content-between">
-            <span className="text-2xl font-semibold">${table.price}</span>
-            <Button icon="pi pi-shopping-cart" className="p-button-rounded" disabled={table.inventoryStatus === 'OUTOFSTOCK'}></Button>
           </div>
         </div>
       </div>
