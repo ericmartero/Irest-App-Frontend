@@ -17,8 +17,8 @@ export function OrdersAdmin() {
   const [sortField, setSortField] = useState('');
 
   const sortOptions = [
-      { label: 'Vacias', value: '!tableBooking' },
-      { label: 'Ocupadas', value: 'tableBooking' }
+    { label: 'Vacías', value: '!tableBooking' },
+    { label: 'Ocupadas', value: 'tableBooking' }
   ];
 
   useEffect(() => {
@@ -42,8 +42,8 @@ export function OrdersAdmin() {
 
   const onSortChange = (event) => {
     const value = event.value;
-
-    if (value.indexOf('!') === 0) {
+  
+    if (value.indexOf('!') === null) {
       setSortOrder(-1);
       setSortField(value.substring(1, value.length));
       setSortKey(value);
@@ -68,7 +68,7 @@ export function OrdersAdmin() {
                   <i className="pi pi-tag"></i>
                   <span className="font-semibold">{table.category}</span>
                 </span>
-                <Tag value={table.tableBooking === null ? 'VACIA' : 'OCUPADA'} severity={getSeverity(table)}></Tag>
+                <Tag value={table.tableBooking === null ? 'VACÍA' : 'OCUPADA'} severity={getSeverity(table)}></Tag>
               </div>
             </div>
             <div className="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2">
@@ -90,7 +90,7 @@ export function OrdersAdmin() {
               <i className="pi pi-tag"></i>
               <span className="font-semibold">{table.category}</span>
             </div>
-            <Tag value={table.tableBooking === null ? 'VACIA' : 'OCUPADA'} severity={getSeverity(table)}></Tag>
+            <Tag value={table.tableBooking === null ? 'VACÍA' : 'OCUPADA'} severity={getSeverity(table)}></Tag>
           </div>
           <div className="flex flex-column align-items-center gap-3 py-5">
             <img className="w-9 shadow-2 border-round" src="https://res.cloudinary.com/djwjh0wpw/image/upload/v1679927284/mesa_h2bdwt.jpg" alt={table.number} />
