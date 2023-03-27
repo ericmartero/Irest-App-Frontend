@@ -40,7 +40,7 @@ export function LoginAdmin() {
           const { token } = response;
           login(token);
           history.push("/admin");
-  
+
         } catch (error) {
           showError(error);
         }
@@ -54,7 +54,7 @@ export function LoginAdmin() {
     setSubmitted(true);
     formik.handleSubmit();
   }
-  
+
 
   return (
     <div>
@@ -69,9 +69,13 @@ export function LoginAdmin() {
 
           <form onSubmit={onFormSubmit}>
             <label htmlFor="email" className="block text-900 font-medium mb-2">Correo electrónico</label>
-            <InputText id="email" type="text" placeholder="Introduce tu correo electrónico" className={submitted && formik.errors.email ? "w-full mb-1 p-invalid" : "w-full mb-3"}
-              value={formik.values.email} onChange={formik.handleChange} />
-
+            <div className="p-inputgroup">
+              <span className="p-inputgroup-addon">
+                <i className="pi pi-user"></i>
+              </span>
+              <InputText id="email" type="text" placeholder="Introduce tu correo electrónico" className={submitted && formik.errors.email ? "w-full p-invalid" : "w-full"}
+                value={formik.values.email} onChange={formik.handleChange} />
+            </div>
             {submitted && formik.errors.email && formik.values.email === '' ? (
               <small className="p-error mb-2">Correo electrónico requerido</small>
             ) : submitted && formik.errors.email ? (
@@ -80,12 +84,17 @@ export function LoginAdmin() {
               null
             )}
 
-            <label htmlFor="password" className={submitted && formik.errors.email ? "block text-900 font-medium mb-2 mt-3" : "block text-900 font-medium mb-2"}>Contraseña</label>
-            <InputText id="password" type="password" placeholder="Introduce tu contraseña" className={submitted && formik.errors.password ? "w-full mb-1 p-invalid" : "w-full mb-3"}
+            <label htmlFor="password" className={submitted && formik.errors.email ? "block text-900 font-medium mb-2 mt-3" : "block text-900 font-medium mb-2 mt-3"}>Contraseña</label>
+            <div className="p-inputgroup">
+              <span className="p-inputgroup-addon">
+                <i className="pi pi-lock"></i>
+              </span>
+            <InputText id="password" type="password" placeholder="Introduce tu contraseña" className={submitted && formik.errors.password ? "w-full p-invalid" : "w-full"}
               value={formik.values.password} onChange={formik.handleChange} />
+            </div>
             {submitted && formik.errors.password && <small className="p-error">Contraseña requerida</small>}
 
-            <Button type="submit" label="Iniciar sesión" icon="pi pi-user" disabled={submitted && (formik.errors.email || formik.errors.password) ? true : false } className={submitted && formik.errors.password ? "w-full mt-3" : "w-full mt-2"} />
+            <Button type="submit" label="Iniciar sesión" disabled={submitted && (formik.errors.email || formik.errors.password) ? true : false} className={submitted && formik.errors.password ? "w-full mt-3" : "w-full mt-4"} />
           </form>
         </div>
       </div>
