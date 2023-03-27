@@ -1,8 +1,8 @@
 const HOST_API = process.env.REACT_APP_HOST_API;
 
-export const getOrdersByTableApi = async(idTable, status) => {
+export const getOrdersByTableApi = async(idTableBooking, status) => {
     try {
-        const tableFilter = `table=${idTable}`;
+        const tableFilter = `table=${idTableBooking}`;
         const statusFilter = `status=${status}`;
         const closeFilter = `close=false`;
 
