@@ -90,7 +90,7 @@ export function AdminLayout(props) {
     let menu = [
         {
             items: [
-                { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/admin' },
+                { label: 'Pedidos', icon: 'pi pi-fw pi-home', to: '/admin' },
                 ...(auth?.me.user.roles.includes('admin') || auth?.me.user.roles.includes('boss') ?
                     [{ label: 'Usuarios', icon: 'pi pi-fw pi-id-card', to: '/admin/users' }] : []
                 ),

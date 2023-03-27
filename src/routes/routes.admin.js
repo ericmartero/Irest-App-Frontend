@@ -1,11 +1,11 @@
 import { AdminLayout } from '../layouts';
-import { HomeAdmin, UsersAdmin, CategoriesAdmin, ProductsAdmin, TablesAdmin } from '../pages/Admin';
+import { OrdersAdmin, UsersAdmin, CategoriesAdmin, ProductsAdmin, TablesAdmin } from '../pages/Admin';
 
 const routesAdmin = [
     {
         path: '/admin',
         layout: AdminLayout,
-        component: HomeAdmin,
+        component: OrdersAdmin,
         exact: true
     },
     {
