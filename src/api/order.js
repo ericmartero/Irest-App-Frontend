@@ -1,14 +1,19 @@
 const HOST_API = process.env.REACT_APP_HOST_API;
 
-export const getOrdersByTableApi = async(idTableBooking, status) => {
+export const getOrdersByTableApi = async(idTableBooking, status, token) => {
     try {
         const tableFilter = `table=${idTableBooking}`;
         const statusFilter = `status=${status}`;
         const closeFilter = `close=false`;
 
         const url = `${HOST_API}/api/orders/?${tableFilter}&${statusFilter}&${closeFilter}`;
+        const params = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
         
-        const resp = await fetch(url);
+        const resp = await fetch(url, params);
         const result = await resp.json();
 
         return result;

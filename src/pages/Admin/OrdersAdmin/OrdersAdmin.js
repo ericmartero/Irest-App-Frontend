@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTable } from '../../../hooks';
+import { getOrdersByTableApi } from '../../../api/order';
 import { Button } from 'primereact/button';
 import { Badge } from 'primereact/badge';
 import { Dropdown } from 'primereact/dropdown';
@@ -30,6 +31,12 @@ export function OrdersAdmin() {
       setTablesCrud(tables);
     }
   }, [tables]);
+
+  /*useEffect(() => {
+    (async () => {
+      const response = await getOrdersByTableApi()
+    })()
+  }, [])*/
 
   const getSeverity = (table) => {
 
@@ -78,7 +85,13 @@ export function OrdersAdmin() {
     );
   };
 
-  const gridItem = (table) => {
+  const gridItem = async (table) => {
+
+    if (table.tableBooking !== null) {
+      const response = await getOrdersByTableApi(table.tableBooking.id, 'PENDING');
+      console.log(response);
+    }
+
     return (
       <div className="col-12 sm:col-6 lg:col-12 xl:col-4 p-2">
         <div className="p-4 border-1 surface-border surface-card border-round">
