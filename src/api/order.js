@@ -23,12 +23,13 @@ export const getOrdersByTableApi = async(idTableBooking, status, token) => {
     }
 }
 
-export const checkDeliveredOrderApi = async(id) => {
+export const checkDeliveredOrderApi = async(idOrder, token) => {
     try {
-        const url = `${HOST_API}/api/orders/${id}`;
+        const url = `${HOST_API}/api/orders/${idOrder}`;
         const params = {
             method: 'PATCH',
             headers: {
+                Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
@@ -46,17 +47,18 @@ export const checkDeliveredOrderApi = async(id) => {
     }
 }
 
-export const addOrderToTableApi = async(idTable, idProduct) => {
+export const addOrderToTableApi = async(idTableBooking, idProduct, token) => {
     try {
         const url = `${HOST_API}/api/orders`;
         const params = {
             method: 'POST',
             headers: {
+                Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 status: 'PENDING',
-                table: idTable,
+                table: idTableBooking,
                 product: idProduct
             })
         }
@@ -69,12 +71,13 @@ export const addOrderToTableApi = async(idTable, idProduct) => {
     }
 }
 
-export const addPaymentToOrderApi = async(idOrder, idPayment) => {
+export const addPaymentToOrderApi = async(idOrder, idPayment, token) => {
     try {
         const url = `${HOST_API}/api/orders/${idOrder}`;
         const params = {
             method: 'PATCH',
             headers: {
+                Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
@@ -90,12 +93,13 @@ export const addPaymentToOrderApi = async(idOrder, idPayment) => {
     }
 }
 
-export const closeOrderApi = async(idOrder) => {
+export const closeOrderApi = async(idOrder, token) => {
     try {
         const url = `${HOST_API}/api/orders/${idOrder}`;
         const params = {
             method: 'PATCH',
             headers: {
+                Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
@@ -111,13 +115,18 @@ export const closeOrderApi = async(idOrder) => {
     }
 }
 
-export const getOrdersByPaymentApi = async(idPayment) => {
+export const getOrdersByPaymentApi = async(idPayment, token) => {
     try {
         const paymentFilter = `payment=${idPayment}`;
 
         const url = `${HOST_API}/api/orders/?${paymentFilter}`;
+        const params = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
         
-        const resp = await fetch(url);
+        const resp = await fetch(url, params);
         const result = await resp.json();
 
         return result;

@@ -56,6 +56,7 @@ export const updateProductApi = async(id, dtoUpdateProduct, token) => {
         let urlImage;
         let bodyProduct;
 
+        // Cloudinary API
         if (image) {
             urlImage = await updateImage(image);
             bodyProduct = {
