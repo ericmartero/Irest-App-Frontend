@@ -6,6 +6,7 @@ import { Badge } from 'primereact/badge';
 import { Dropdown } from 'primereact/dropdown';
 import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
 import { Tag } from 'primereact/tag';
+import './OrdersAdmin.scss';
 
 export function OrdersAdmin() {
 
@@ -85,15 +86,19 @@ export function OrdersAdmin() {
     );
   };
 
-  const gridItem = async (table) => {
+  const gridItem = (table) => {
 
-    if (table.tableBooking !== null) {
+    /*if (table.tableBooking !== null) {
       const response = await getOrdersByTableApi(table.tableBooking.id, 'PENDING');
       console.log(response);
+    }*/
+
+    const hola = () => {
+      console.log('holaaa');
     }
 
     return (
-      <div className="col-12 sm:col-6 lg:col-12 xl:col-4 p-2">
+      <div className="col-12 sm:col-6 lg:col-12 xl:col-4 p-2" onClick={hola}>
         <div className="p-4 border-1 surface-border surface-card border-round">
           <div className="flex flex-wrap align-items-center justify-content-between gap-2">
             <div className="flex align-items-center gap-2">
