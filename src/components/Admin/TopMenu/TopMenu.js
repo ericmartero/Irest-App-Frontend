@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import { useHistory, Link } from 'react-router-dom';
 import { useAuth } from '../../../hooks';
 import { Button } from 'primereact/button';
 import { Chip } from 'primereact/chip';
@@ -12,6 +13,7 @@ export function TopMenu(props) {
 
   const { logout, auth } = useAuth();
   const menu = useRef(null);
+  const history = useHistory();
 
   const renderName = () => {
     if (auth.me?.user.firstName && auth.me?.user.lastName) {
@@ -46,12 +48,16 @@ export function TopMenu(props) {
     }
   ];
 
+  const renderHome = () => {
+    history.push("/admin");
+  }
+
   return (
     <div className="layout-topbar">
-      <div to="/" className="layout-topbar-logo">
+      <Link onClick={renderHome} className="layout-topbar-logo">
         <img src="https://res.cloudinary.com/djwjh0wpw/image/upload/v1679673058/icono-irest_gvyksj.png" alt="logo" />
         <span>PANEL DE CONTROL</span>
-      </div>
+      </Link>
 
       <button type="button" className="p-link  layout-menu-button layout-topbar-button" onClick={props.onToggleMenuClick} >
         <i className="pi pi-bars" />
