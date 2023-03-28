@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { size } from 'lodash';
 import { useTable } from '../../../hooks';
+import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
 import { Badge } from 'primereact/badge';
 import { Dropdown } from 'primereact/dropdown';
@@ -11,6 +12,7 @@ import './OrdersAdmin.scss';
 
 export function OrdersAdmin() {
 
+  const toast = useRef(null);
   const history = useHistory();
   const { tables, getTables } = useTable();
   const [tablesCrud, setTablesCrud] = useState([]);
@@ -92,7 +94,13 @@ export function OrdersAdmin() {
     const orderSize = size(table.tableBooking?.orders);
 
     const renderDetails = () => {
-      history.push(`/admin/table/${table.id}`);
+      if (table.tableBooking === null) {
+        toast.current.show({ severity: 'info', summary: 'Mesa vacía', detail: 'Los detalles de la mesa no están disponibles cuando esta vacía.', life: 3000 });
+      }
+
+      else {
+        history.push(`/admin/table/${table.id}`);
+      }
     }
 
     return (
@@ -141,6 +149,7 @@ export function OrdersAdmin() {
 
   return (
     <div className="card">
+      <Toast ref={toast} />
       <DataView value={tablesCrud} itemTemplate={itemTemplate} layout={layout} header={header()} sortField={sortField} sortOrder={sortOrder} />
     </div>
   )
