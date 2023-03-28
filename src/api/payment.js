@@ -1,6 +1,6 @@
 const HOST_API = process.env.REACT_APP_HOST_API;
 
-export const createPaymentApi = async(paymentData, token) => {
+export const createPaymentApi = async(dtoCreatePayment, token) => {
     try {
         const url = `${HOST_API}/api/payments`;
         const params = {
@@ -9,7 +9,7 @@ export const createPaymentApi = async(paymentData, token) => {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(paymentData)
+            body: JSON.stringify(dtoCreatePayment)
         }
 
         const resp = await fetch(url, params);

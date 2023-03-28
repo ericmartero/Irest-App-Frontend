@@ -53,6 +53,7 @@ export const updateCategoryApi = async(id, dtoUpdateCategory, token) => {
         let urlImage;
         let bodyCategory;
 
+        // Cloudinary API
         if (image) {
             urlImage = await updateImage(image);
             bodyCategory = {

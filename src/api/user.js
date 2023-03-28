@@ -37,7 +37,7 @@ export const addUserApi = async(dtoAddUser, token) => {
         const resp = await fetch(url, params);
 
         if (resp.status === 400) {
-            throw new Error("No se ha podido añadir el usuario. El correo del usuario a añadir ya existe");
+            throw new Error('No se ha podido añadir el usuario. El correo del usuario a añadir ya existe');
         }
 
         return await resp.json();
@@ -62,7 +62,7 @@ export const updateUserApi = async(id, dtoUpdateUser, token) => {
         const resp = await fetch(url, params);
 
         if (resp.status === 400) {
-            throw new Error("No se ha podido actualizar el usuario. El correo del usuario a actualizar ya existe");
+            throw new Error('No se ha podido actualizar el usuario. El correo del usuario a actualizar ya existe');
         }
 
         return await resp.json();
