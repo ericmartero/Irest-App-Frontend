@@ -1,28 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { useTable, useOrder } from '../../../hooks';
+import { size } from 'lodash';
+import { useTable } from '../../../hooks';
 import { Button } from 'primereact/button';
 import { Badge } from 'primereact/badge';
 import { Dropdown } from 'primereact/dropdown';
 import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
 import { Tag } from 'primereact/tag';
 import './OrdersAdmin.scss';
-import { size } from 'lodash';
 
 export function OrdersAdmin() {
 
   const { tables, getTables } = useTable();
-  const { getOrders } = useOrder();
   const [tablesCrud, setTablesCrud] = useState([]);
   const [layout, setLayout] = useState('grid');
 
   const [sortKey, setSortKey] = useState('');
-  const [sortOrder, setSortOrder] = useState(0);
-  const [sortField, setSortField] = useState('');
+  const [sortOrder, setSortOrder] = useState(1);
+  const [sortField, setSortField] = useState('tableBooking');
 
   const sortOptions = [
-    
+    { label: 'Vacías', value: '!tableBooking' },
     { label: 'Ocupadas', value: 'tableBooking' },
-    { label: 'Vacías', value: '!tableBooking' }
   ];
 
   useEffect(() => {
