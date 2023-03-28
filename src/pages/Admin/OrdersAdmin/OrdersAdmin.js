@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { size } from 'lodash';
 import { useTable } from '../../../hooks';
 import { Button } from 'primereact/button';
@@ -10,10 +11,10 @@ import './OrdersAdmin.scss';
 
 export function OrdersAdmin() {
 
+  const history = useHistory();
   const { tables, getTables } = useTable();
   const [tablesCrud, setTablesCrud] = useState([]);
   const [layout, setLayout] = useState('grid');
-
   const [sortKey, setSortKey] = useState('');
   const [sortOrder, setSortOrder] = useState(1);
   const [sortField, setSortField] = useState('tableBooking');
@@ -90,12 +91,12 @@ export function OrdersAdmin() {
 
     const orderSize = size(table.tableBooking?.orders);
 
-    const hola = () => {
-      console.log('');
+    const renderDetails = () => {
+      history.push(`/admin/table/${table.id}`);
     }
 
     return (
-      <div className="col-12 sm:col-6 lg:col-12 xl:col-4 p-2" onClick={hola}>
+      <div className="col-12 sm:col-6 lg:col-12 xl:col-4 p-2" onClick={renderDetails}>
         <div className="p-4 border-1 surface-border surface-card border-round">
           <div className="flex flex-wrap align-items-center justify-content-between gap-2">
             <div className="flex align-items-center gap-2">
