@@ -29,7 +29,8 @@ export function OrdersAdmin() {
 
   useEffect(() => {
     if (tables) {
-      setTablesCrud(tables);
+      const filteredTables = tables.filter(table => table.active);
+      setTablesCrud(filteredTables);
     }
   }, [tables]);
 
