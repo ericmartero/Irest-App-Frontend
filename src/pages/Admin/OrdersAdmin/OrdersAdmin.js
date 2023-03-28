@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { useTable } from '../../../hooks';
-import { getOrdersByTableApi } from '../../../api/order';
+import { useTable, useOrder } from '../../../hooks';
 import { Button } from 'primereact/button';
 import { Badge } from 'primereact/badge';
 import { Dropdown } from 'primereact/dropdown';
 import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
 import { Tag } from 'primereact/tag';
 import './OrdersAdmin.scss';
+import { size } from 'lodash';
 
 export function OrdersAdmin() {
 
   const { tables, getTables } = useTable();
+  const { getOrders } = useOrder();
   const [tablesCrud, setTablesCrud] = useState([]);
   const [layout, setLayout] = useState('grid');
 
@@ -19,8 +20,9 @@ export function OrdersAdmin() {
   const [sortField, setSortField] = useState('');
 
   const sortOptions = [
-    { label: 'Vacías', value: '!tableBooking' },
-    { label: 'Ocupadas', value: 'tableBooking' }
+    
+    { label: 'Ocupadas', value: 'tableBooking' },
+    { label: 'Vacías', value: '!tableBooking' }
   ];
 
   useEffect(() => {
@@ -33,12 +35,6 @@ export function OrdersAdmin() {
       setTablesCrud(filteredTables);
     }
   }, [tables]);
-
-  /*useEffect(() => {
-    (async () => {
-      const response = await getOrdersByTableApi()
-    })()
-  }, [])*/
 
   const getSeverity = (table) => {
 
@@ -64,6 +60,9 @@ export function OrdersAdmin() {
   };
 
   const listItem = (table) => {
+
+    const orderSize = size(table.tableBooking?.orders);
+
     return (
       <div className="col-12">
         <div className="flex flex-column xl:flex-row p-4 gap-4">
@@ -72,14 +71,16 @@ export function OrdersAdmin() {
             <div className="flex flex-column align-items-center sm:align-items-start gap-3">
               <div className="text-2xl font-bold text-900">Mesa {table.number}</div>
               <div className="flex align-items-center gap-3">
-                <span className="flex align-items-center gap-2">
-                  <i>Pedidos: <Badge value="12" severity="warning"></Badge></i>
-                </span>
+                {table.tableBooking === null ? null :
+                  <span className="flex align-items-center gap-2">
+                    <i>Pedidos: <Badge value={orderSize > 0 ? orderSize : 0} severity="warning"></Badge></i>
+                  </span>
+                }
                 <Tag value={table.tableBooking === null ? 'VACÍA' : 'OCUPADA'} severity={getSeverity(table)}></Tag>
               </div>
             </div>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-              <Button icon="pi pi-shopping-cart" label="Ver Pedidos" />
+              <Button icon="pi pi-shopping-cart" label="Ver Pedidos" disabled={table.tableBooking === null} />
             </div>
           </div>
         </div>
@@ -89,13 +90,10 @@ export function OrdersAdmin() {
 
   const gridItem = (table) => {
 
-    /*if (table.tableBooking !== null) {
-      const response = await getOrdersByTableApi(table.tableBooking.id, 'PENDING');
-      console.log(response);
-    }*/
+    const orderSize = size(table.tableBooking?.orders);
 
     const hola = () => {
-      console.log('holaaa');
+      console.log('');
     }
 
     return (
@@ -103,7 +101,11 @@ export function OrdersAdmin() {
         <div className="p-4 border-1 surface-border surface-card border-round">
           <div className="flex flex-wrap align-items-center justify-content-between gap-2">
             <div className="flex align-items-center gap-2">
-              <i className="pi pi-shopping-cart mr-4 p-text-secondary p-overlay-badge" style={{ fontSize: '2rem' }}><Badge value="12" severity="warning"></Badge></i>
+              {table.tableBooking === null ? null :
+                <i className="pi pi-shopping-cart mr-4 p-text-secondary p-overlay-badge" style={{ fontSize: '2rem' }}>
+                  <Badge value={orderSize > 0 ? orderSize : 0} severity="warning"></Badge>
+                </i>
+              }
             </div>
             <Tag value={table.tableBooking === null ? 'VACÍA' : 'OCUPADA'} severity={getSeverity(table)}></Tag>
           </div>
