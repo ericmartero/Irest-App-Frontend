@@ -65,9 +65,9 @@ export function OrdersAdmin() {
   const listItem = (table) => {
     return (
       <div className="col-12">
-        <div className="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4">
+        <div className="flex flex-column xl:flex-row p-4 gap-4">
           <img className="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block mx-auto border-round" src="https://res.cloudinary.com/djwjh0wpw/image/upload/v1679927284/mesa_h2bdwt.jpg" alt={table.number} />
-          <div className="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
+          <div className="flex flex-column sm:flex-row justify-content-between align-items-center flex-1 gap-4">
             <div className="flex flex-column align-items-center sm:align-items-start gap-3">
               <div className="text-2xl font-bold text-900">Mesa {table.number}</div>
               <div className="flex align-items-center gap-3">
@@ -77,8 +77,8 @@ export function OrdersAdmin() {
                 <Tag value={table.tableBooking === null ? 'VACÍA' : 'OCUPADA'} severity={getSeverity(table)}></Tag>
               </div>
             </div>
-            <div>
-              <Button icon="pi pi-shopping-cart" label="Ver Pedidos" className="mr-2 mb-2" />
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <Button icon="pi pi-shopping-cart" label="Ver Pedidos" />
             </div>
           </div>
         </div>
