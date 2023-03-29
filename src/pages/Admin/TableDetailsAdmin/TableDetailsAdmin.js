@@ -4,8 +4,9 @@ import { useParams } from 'react-router-dom';
 import { Button } from 'primereact/button';
 import { DataView } from 'primereact/dataview';
 import { Dropdown } from 'primereact/dropdown';
-import { Rating } from 'primereact/rating';
 import { Tag } from 'primereact/tag';
+import moment from 'moment/moment';
+import 'moment/locale/es';
 
 export function TableDetailsAdmin() {
 
@@ -80,12 +81,14 @@ export function TableDetailsAdmin() {
   const itemTemplate = (order) => {
     return (
       <div className="col-12">
-        <div className="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4">
+        <div className="flex flex-column xl:flex-row p-4 gap-4">
           <img className="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block mx-auto border-round" src={order.product.image} alt={order.product.title} />
-          <div className="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
+          <div className="flex flex-column sm:flex-row justify-content-between align-items-center flex-1 gap-4">
             <div className="flex flex-column align-items-center sm:align-items-start gap-3">
               <div className="text-2xl font-bold text-900">{order.product.title}</div>
-              <span className="font-semibold">{order.createdAt}</span>
+              <span className="font-semibold">
+                {moment(order.createdAt).format('HH:mm')} - {moment(order.createdAt).startOf('seconds').fromNow()}
+              </span>
               <div className="flex align-items-center gap-3">
                 <div>
                   <span>Estado: </span>
@@ -93,9 +96,8 @@ export function TableDetailsAdmin() {
                 </div>
               </div>
             </div>
-            <div className="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2">
-              <span className="text-2xl font-semibold">${order.price}</span>
-              <Button icon="pi pi-shopping-cart" className="p-button-rounded"></Button>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <Button icon="pi pi-shopping-cart" label="Ver Pedidos" />
             </div>
           </div>
         </div>
