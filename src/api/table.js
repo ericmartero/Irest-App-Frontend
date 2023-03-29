@@ -83,11 +83,16 @@ export const deleteTableApi = async(id, token) => {
     }
 }
 
-export const getTableApi = async(idOrNumberTable) => {
+export const getTableApi = async(idOrNumberTable, token) => {
     try {
         const url = `${HOST_API}/api/tables/${idOrNumberTable}`;
+        const params = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
 
-        const resp = await fetch(url);
+        const resp = await fetch(url, params);
         const result = await resp.json();
 
         return result;
