@@ -9,7 +9,7 @@ export function useOrder() {
 
     const getOrdersByTable = async (id, status) => {
         try {
-            const response = await getOrdersByTableApi(id, status, auth.token);
+            const response = await getOrdersByTableApi(id, auth.token, status);
             setOrders(response);
         } catch (error) {
             throw error;
