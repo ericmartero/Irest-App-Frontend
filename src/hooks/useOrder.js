@@ -7,9 +7,9 @@ export function useOrder() {
     const { auth } = useAuth();
     const [orders, setOrders] = useState(null);
 
-    const getOrdersByTable = async (id, status, ordering) => {
+    const getOrdersByTable = async (id, status) => {
         try {
-            const response = await getOrdersByTableApi(id, status, ordering, auth.token);
+            const response = await getOrdersByTableApi(id, status, auth.token);
             setOrders(response);
         } catch (error) {
             throw error;
