@@ -5,7 +5,7 @@ import { Button } from 'primereact/button';
 import { DataView } from 'primereact/dataview';
 import { Dropdown } from 'primereact/dropdown';
 import { Tag } from 'primereact/tag';
-import moment from 'moment/moment';
+import moment from 'moment';
 import 'moment/locale/es';
 
 export function TableDetailsAdmin() {
@@ -75,7 +75,16 @@ export function TableDetailsAdmin() {
   };
 
   const header = () => {
-    return <Dropdown options={sortOptions} value={sortKey} optionLabel="label" placeholder="Sort By Price" onChange={onSortChange} className="w-full sm:w-14rem" />;
+    return (
+      <div className="grid grid-nogutter">
+        <div className="col-6" style={{ textAlign: 'left', display: 'flex', alignItems: 'center'  }}>
+          <h3 className="m-0">PEDIDOS MESA NÚMERO {table?.number}</h3>
+        </div>
+        <div className="col-6" style={{ textAlign: 'right' }}>
+          <Dropdown options={sortOptions} value={sortKey} optionLabel="label" placeholder="Sort By Price" onChange={onSortChange} />
+        </div>
+      </div>
+    );
   };
 
   const itemTemplate = (order) => {
