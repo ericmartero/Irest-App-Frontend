@@ -20,6 +20,7 @@ export function TableDetailsAdmin() {
   const [sortKey, setSortKey] = useState('');
   const [sortOrder, setSortOrder] = useState(0);
   const [sortField, setSortField] = useState('');
+
   const sortOptions = [
     { label: 'Price High to Low', value: '!price' },
     { label: 'Price Low to High', value: 'price' }
@@ -39,7 +40,7 @@ export function TableDetailsAdmin() {
     if (table && table.tableBooking !== null) {
       getOrdersByTable(table.tableBooking.id);
     }
-  }, [table]);
+  }, [table, tableURL.id]);
 
   useEffect(() => {
     if (orders) {
@@ -106,7 +107,7 @@ export function TableDetailsAdmin() {
               </div>
             </div>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-              <Button icon="pi pi-shopping-cart" label="Ver Pedidos" />
+              { order.status === 'PENDING' ? <Button label="Entregar pedido" /> : <span>ENTREGADO</span>}
             </div>
           </div>
         </div>
