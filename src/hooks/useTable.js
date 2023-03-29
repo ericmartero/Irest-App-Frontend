@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { getTablesApi, addTableApi, updateTableApi, deleteTableApi } from '../api/table';
+import { getTablesApi, addTableApi, updateTableApi, deleteTableApi, getTableApi } from '../api/table';
 import { useAuth } from './';
 
 export function useTable() {
@@ -54,6 +54,15 @@ export function useTable() {
         }
     };
 
+    const getTableById = useCallback( async (id) => {
+        try {
+            const response = await getTableApi(id, auth.token);
+            setTables(response);
+        } catch (error) {
+            throw error;
+        }
+    }, [auth?.token]) 
+
     return {
         tables,
         loading,
@@ -62,5 +71,6 @@ export function useTable() {
         addTable,
         updateTable,
         deleteTable,
+        getTableById,
     }
 }
