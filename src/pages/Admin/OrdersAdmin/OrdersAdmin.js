@@ -15,6 +15,7 @@ export function OrdersAdmin() {
   const toast = useRef(null);
   const history = useHistory();
   const { tables, getTables } = useTable();
+  const [refreshTables, setRefreshTables] = useState(false);
   const [tablesCrud, setTablesCrud] = useState([]);
   const [layout, setLayout] = useState('grid');
   const [sortKey, setSortKey] = useState('');
@@ -26,9 +27,21 @@ export function OrdersAdmin() {
     { label: 'Ocupadas', value: 'tableBooking' },
   ];
 
+  const onRefresh = () => setRefreshTables((state) => !state);
+
+  useEffect(() => {
+    const autoRefreshTables = () => {
+      onRefresh();
+      setTimeout(() => {
+        autoRefreshTables();
+      }, 5000)
+    } 
+    autoRefreshTables();
+  }, [])
+  
   useEffect(() => {
     getTables();
-  }, [getTables])
+  }, [getTables, refreshTables])
 
   useEffect(() => {
     if (tables) {
