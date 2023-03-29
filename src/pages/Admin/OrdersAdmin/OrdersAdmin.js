@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useHistory } from 'react-router-dom';
 import { size } from 'lodash';
 import { useTable } from '../../../hooks';
+import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
 import { Badge } from 'primereact/badge';
 import { Dropdown } from 'primereact/dropdown';
@@ -10,10 +12,12 @@ import './OrdersAdmin.scss';
 
 export function OrdersAdmin() {
 
+  const toast = useRef(null);
+  const history = useHistory();
   const { tables, getTables } = useTable();
+  const [refreshTables, setRefreshTables] = useState(false);
   const [tablesCrud, setTablesCrud] = useState([]);
   const [layout, setLayout] = useState('grid');
-
   const [sortKey, setSortKey] = useState('');
   const [sortOrder, setSortOrder] = useState(1);
   const [sortField, setSortField] = useState('tableBooking');
@@ -23,9 +27,21 @@ export function OrdersAdmin() {
     { label: 'Ocupadas', value: 'tableBooking' },
   ];
 
+  const onRefresh = () => setRefreshTables((state) => !state);
+
+  useEffect(() => {
+    const autoRefreshTables = () => {
+      onRefresh();
+      setTimeout(() => {
+        autoRefreshTables();
+      }, 5000)
+    } 
+    autoRefreshTables();
+  }, [])
+  
   useEffect(() => {
     getTables();
-  }, [getTables])
+  }, [getTables, refreshTables])
 
   useEffect(() => {
     if (tables) {
@@ -90,12 +106,18 @@ export function OrdersAdmin() {
 
     const orderSize = size(table.tableBooking?.orders);
 
-    const hola = () => {
-      console.log('');
+    const renderDetails = () => {
+      if (table.tableBooking === null) {
+        toast.current.show({ severity: 'info', summary: 'Mesa vacía', detail: 'Los detalles de la mesa no están disponibles cuando esta vacía.', life: 3000 });
+      }
+
+      else {
+        history.push(`/admin/table/${table.id}`);
+      }
     }
 
     return (
-      <div className="col-12 sm:col-6 lg:col-12 xl:col-4 p-2" onClick={hola}>
+      <div className="col-12 sm:col-6 lg:col-12 xl:col-4 p-2" onClick={renderDetails}>
         <div className="p-4 border-1 surface-border surface-card border-round">
           <div className="flex flex-wrap align-items-center justify-content-between gap-2">
             <div className="flex align-items-center gap-2">
@@ -140,6 +162,7 @@ export function OrdersAdmin() {
 
   return (
     <div className="card">
+      <Toast ref={toast} />
       <DataView value={tablesCrud} itemTemplate={itemTemplate} layout={layout} header={header()} sortField={sortField} sortOrder={sortOrder} />
     </div>
   )

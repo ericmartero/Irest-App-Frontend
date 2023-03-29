@@ -27,10 +27,12 @@
         font-weight: 500;
         width: 300px;
         border-radius: 12px;
+        text-decoration: none;
 
         img {
             height: 70px;
             margin-right: .5rem;
+            border-radius: 20px;
         }
 
         &:focus {
