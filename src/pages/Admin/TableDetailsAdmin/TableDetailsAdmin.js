@@ -46,15 +46,12 @@ export function TableDetailsAdmin() {
     }
   }, [orders]);
 
-  const getSeverity = (product) => {
-    switch (product.inventoryStatus) {
-      case 'INSTOCK':
+  const getSeverity = (order) => {
+    switch (order.status) {
+      case 'DELIVERED':
         return 'success';
 
-      case 'LOWSTOCK':
-        return 'warning';
-
-      case 'OUTOFSTOCK':
+      case 'PENDING':
         return 'danger';
 
       default:
@@ -88,18 +85,17 @@ export function TableDetailsAdmin() {
           <div className="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
             <div className="flex flex-column align-items-center sm:align-items-start gap-3">
               <div className="text-2xl font-bold text-900">{order.product.title}</div>
-              <Rating value={order.rating} readOnly cancel={false}></Rating>
+              <span className="font-semibold">{order.createdAt}</span>
               <div className="flex align-items-center gap-3">
-                <span className="flex align-items-center gap-2">
-                  <i className="pi pi-tag"></i>
-                  <span className="font-semibold">{order.category}</span>
-                </span>
-                <Tag value={order.inventoryStatus} severity={getSeverity(order)}></Tag>
+                <div>
+                  <span>Estado: </span>
+                  <Tag value={order.status === 'PENDING' ? 'PENDIENTE' : 'ENTREGADO'} severity={getSeverity(order)}></Tag>
+                </div>
               </div>
             </div>
             <div className="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2">
               <span className="text-2xl font-semibold">${order.price}</span>
-              <Button icon="pi pi-shopping-cart" className="p-button-rounded" disabled={order.inventoryStatus === 'OUTOFSTOCK'}></Button>
+              <Button icon="pi pi-shopping-cart" className="p-button-rounded"></Button>
             </div>
           </div>
         </div>
