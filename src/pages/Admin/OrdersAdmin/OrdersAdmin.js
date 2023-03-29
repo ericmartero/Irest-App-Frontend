@@ -91,7 +91,7 @@ export function OrdersAdmin() {
               <div className="flex align-items-center gap-3">
                 {table.tableBooking === null ? null :
                   <span className="flex align-items-center gap-2">
-                    <i>Pedidos: <Badge value={orderSize > 0 ? orderSize : 0} severity="warning"></Badge></i>
+                    <i>Pedidoss: <Badge value={orderSize > 0 ? orderSize : 0} severity="warning"></Badge></i>
                   </span>
                 }
                 <Tag value={table.tableBooking === null ? 'VACÍA' : 'OCUPADA'} severity={getSeverity(table)}></Tag>
