@@ -70,7 +70,7 @@ export function TableDetailsAdmin() {
   useEffect(() => {
     setCategoriesDropdown(formatDropdownData(products));
   }, [products])
-  
+
 
   const getSeverity = (order) => {
     switch (order.status) {
@@ -110,7 +110,9 @@ export function TableDetailsAdmin() {
   };
 
   const saveOrders = () => {
-    console.log('holaaa');
+    
+    const selectedOption = categoriesDropdown.find((option) => option.value === selectedProduct);
+    console.log(selectedOption);
   }
 
   const onDropdownChange = (value) => {
