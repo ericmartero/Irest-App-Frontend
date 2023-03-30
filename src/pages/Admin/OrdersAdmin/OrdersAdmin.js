@@ -72,6 +72,24 @@ export function OrdersAdmin() {
       setSortField(value);
       setSortKey(value);
     }
+
+    const sortedTables = [...tablesCrud].sort((a, b) => {
+      if (sortField === 'tableBooking') {
+        const tableBookingA = a.tableBooking;
+        const tableBookingB = b.tableBooking;
+        if (!tableBookingA && tableBookingB) {
+          return -1 * sortOrder;
+        } else if (tableBookingA && !tableBookingB) {
+          return 1 * sortOrder;
+        } else {
+          return 0;
+        }
+      } else {
+        return (a[sortField] < b[sortField] ? -1 : 1) * sortOrder;
+      }
+    });
+  
+    setTablesCrud(sortedTables);
   };
 
   const listItem = (table) => {
