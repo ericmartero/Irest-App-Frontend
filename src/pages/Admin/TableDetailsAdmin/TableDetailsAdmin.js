@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useOrder, useTable } from '../../../hooks';
 import { useParams } from 'react-router-dom';
+import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
 import { DataView } from 'primereact/dataview';
+import { InputText } from 'primereact/inputtext';
 import { Toolbar } from 'primereact/toolbar';
 import { Dropdown } from 'primereact/dropdown';
 import { Tag } from 'primereact/tag';
@@ -23,6 +25,12 @@ export function TableDetailsAdmin() {
   const [sortKey, setSortKey] = useState('');
   const [sortOrder, setSortOrder] = useState(0);
   const [sortField, setSortField] = useState('');
+
+  const [submitted, setSubmitted] = useState(false);
+  const [userDialog, setUserDialog] = useState(false);
+
+  const [value, setValue] = useState('');
+
 
   const sortOptions = [
     { label: 'Entregados', value: 'status' },
@@ -80,6 +88,27 @@ export function TableDetailsAdmin() {
     }
   };
 
+  const openNew = () => {
+    setSubmitted(false);
+    setUserDialog(true);
+  };
+
+  const hideDialog = () => {
+    setSubmitted(false);
+    setUserDialog(false);
+  };
+
+  const saveOrders = () => {
+    console.log('holaaa');
+  }
+
+  const userDialogFooter = (
+    <React.Fragment>
+      <Button label="Cancelar" icon="pi pi-times" outlined onClick={hideDialog} />
+      <Button label="Guardar" icon="pi pi-check" onClick={saveOrders} />
+    </React.Fragment>
+  );
+
   const leftToolbarTemplate = () => {
     return (
       <div className="flex flex-wrap gap-2">
@@ -92,7 +121,7 @@ export function TableDetailsAdmin() {
     return (
       <div className="flex flex-wrap gap-2">
         <Dropdown options={sortOptions} value={sortKey} optionLabel="label" placeholder="Ordenar por estado" onChange={onSortChange} />
-        <Button label="Añadir pedido" icon="pi pi-plus" severity="success" className='ml-5' />
+        <Button label="Añadir pedido" icon="pi pi-plus" severity="success" className='ml-5' onClick={openNew} />
       </div>
     );
   };
@@ -111,34 +140,44 @@ export function TableDetailsAdmin() {
     }
 
     return (
-      <div className="col-12">
-        <div className="flex flex-column xl:flex-row p-4 gap-4">
-          <img className="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block mx-auto border-round" src={order.product.image} alt={order.product.title} />
-          <div className="flex flex-column sm:flex-row justify-content-between align-items-center flex-1 gap-4">
-            <div className="flex flex-column align-items-center sm:align-items-start gap-3">
-              <div className="text-2xl font-bold text-900">{order.product.title}</div>
-              <span className="font-semibold">
-                {moment(order.createdAt).format('HH:mm')} - {moment(order.createdAt).startOf('seconds').fromNow()}
-              </span>
-              <div className="flex align-items-center gap-3">
-                <div>
-                  <span>Estado: </span>
-                  <Tag value={order.status === 'PENDING' ? 'PENDIENTE' : 'ENTREGADO'} severity={getSeverity(order)}></Tag>
+      <>
+        <div className="col-12">
+          <div className="flex flex-column xl:flex-row p-4 gap-4">
+            <img className="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block mx-auto border-round" src={order.product.image} alt={order.product.title} />
+            <div className="flex flex-column sm:flex-row justify-content-between align-items-center flex-1 gap-4">
+              <div className="flex flex-column align-items-center sm:align-items-start gap-3">
+                <div className="text-2xl font-bold text-900">{order.product.title}</div>
+                <span className="font-semibold">
+                  {moment(order.createdAt).format('HH:mm')} - {moment(order.createdAt).startOf('seconds').fromNow()}
+                </span>
+                <div className="flex align-items-center gap-3">
+                  <div>
+                    <span>Estado: </span>
+                    <Tag value={order.status === 'PENDING' ? 'PENDIENTE' : 'ENTREGADO'} severity={getSeverity(order)}></Tag>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              {order.status === 'PENDING' ? <Button label="Entregar pedido" onClick={onCheckDeliveredOrder} /> : <span>ENTREGADO</span>}
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                {order.status === 'PENDING' ? <Button label="Entregar pedido" onClick={onCheckDeliveredOrder} /> : <span>ENTREGADO</span>}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </>
     );
   };
 
   return (
     <div className="card">
       <DataView value={ordersBooking} itemTemplate={itemTemplate} header={header()} sortField={sortField} sortOrder={sortOrder} />
+      <Dialog visible={userDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={'Añadir pedidos'} modal className="p-fluid" footer={userDialogFooter} onHide={hideDialog}>
+        <div className="field">
+          <label htmlFor="lastName" className="font-bold">
+            Apellidos
+          </label>
+          <InputText id="lastName" value={value.lastName} onChange={(e) => setValue({ ...value, lastName: e.target.value })} />
+        </div>
+      </Dialog>
     </div>
   )
 }
