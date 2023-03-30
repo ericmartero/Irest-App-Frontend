@@ -89,7 +89,7 @@ export function TableDetailsAdmin() {
         return 'success';
 
       case 'PENDING':
-        return 'danger';
+        return 'warning';
 
       default:
         return null;
@@ -135,6 +135,11 @@ export function TableDetailsAdmin() {
       setSubmitted(false);
       setValidationErrors({});
     }
+  }
+
+  const addProductList = () => {
+    const arrayTemp = [];
+    console.log('hola');
   }
 
   const onDropdownChange = (value) => {
@@ -198,7 +203,7 @@ export function TableDetailsAdmin() {
     return (
       <>
         <div className="col-12">
-          <div className="flex flex-column xl:flex-row p-4 gap-4">
+          <div className="flex flex-column xl:flex-row p-4 gap-4" style={ order.status === 'PENDING' ? {backgroundColor: 'var(--yellow-100)'} : {backgroundColor: 'var(--green-100)'}}>
             <img className="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block mx-auto border-round" src={order.product.image} alt={order.product.title} />
             <div className="flex flex-column sm:flex-row justify-content-between align-items-center flex-1 gap-4">
               <div className="flex flex-column align-items-center sm:align-items-start gap-3">
@@ -208,7 +213,6 @@ export function TableDetailsAdmin() {
                 </span>
                 <div className="flex align-items-center gap-3">
                   <div>
-                    <span>Estado: </span>
                     <Tag value={order.status === 'PENDING' ? 'PENDIENTE' : 'ENTREGADO'} severity={getSeverity(order)}></Tag>
                   </div>
                 </div>
