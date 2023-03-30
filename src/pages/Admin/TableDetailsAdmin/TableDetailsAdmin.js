@@ -16,12 +16,13 @@ export function TableDetailsAdmin() {
 
   const [table, setTable] = useState(null);
   const [ordersBooking, setOrdersBooking] = useState([]);
+  const [refreshOrders, setRefreshOrders] = useState(false);
 
   const [sortKey, setSortKey] = useState('');
   const [sortOrder, setSortOrder] = useState(0);
   const [sortField, setSortField] = useState('');
 
-  const [refreshOrders, setRefreshOrders] = useState(false);
+
 
   const sortOptions = [
     { label: 'Price High to Low', value: '!price' },
@@ -44,7 +45,7 @@ export function TableDetailsAdmin() {
     if (table && table.tableBooking !== null) {
       getOrdersByTable(table.tableBooking.id);
     }
-  }, [table, refreshOrders]);
+  }, [table, refreshOrders, getOrdersByTable]);
 
   useEffect(() => {
     if (orders) {
