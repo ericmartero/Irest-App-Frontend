@@ -11,7 +11,7 @@ import 'moment/locale/es';
 export function TableDetailsAdmin() {
 
   const tableURL = useParams();
-  const { orders, getOrdersByTable } = useOrder();
+  const { orders, getOrdersByTable, checkDeliveredOrder } = useOrder();
   const { tables, getTableById } = useTable();
 
   const [table, setTable] = useState(null);
@@ -21,10 +21,14 @@ export function TableDetailsAdmin() {
   const [sortOrder, setSortOrder] = useState(0);
   const [sortField, setSortField] = useState('');
 
+  const [refreshOrders, setRefreshOrders] = useState(false);
+
   const sortOptions = [
     { label: 'Price High to Low', value: '!price' },
     { label: 'Price Low to High', value: 'price' }
   ];
+
+  const onRefreshOrders = () => setRefreshOrders((prev) => !prev);
 
   useEffect(() => {
     getTableById(tableURL.id);
@@ -40,7 +44,7 @@ export function TableDetailsAdmin() {
     if (table && table.tableBooking !== null) {
       getOrdersByTable(table.tableBooking.id);
     }
-  }, [table, tableURL.id]);
+  }, [table, refreshOrders]);
 
   useEffect(() => {
     if (orders) {
@@ -89,6 +93,12 @@ export function TableDetailsAdmin() {
   };
 
   const itemTemplate = (order) => {
+
+    const onCheckDeliveredOrder = async () => {
+      await checkDeliveredOrder(order.id);
+      onRefreshOrders();
+    }
+
     return (
       <div className="col-12">
         <div className="flex flex-column xl:flex-row p-4 gap-4">
@@ -107,7 +117,7 @@ export function TableDetailsAdmin() {
               </div>
             </div>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-              { order.status === 'PENDING' ? <Button label="Entregar pedido" /> : <span>ENTREGADO</span>}
+              { order.status === 'PENDING' ? <Button label="Entregar pedido" onClick={onCheckDeliveredOrder} /> : <span>ENTREGADO</span>}
             </div>
           </div>
         </div>
