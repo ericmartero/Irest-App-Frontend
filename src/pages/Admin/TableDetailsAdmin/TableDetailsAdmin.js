@@ -86,8 +86,10 @@ export function TableDetailsAdmin() {
         </div>
         <div className="col-6" style={{ textAlign: 'right' }}>
           <Dropdown options={sortOptions} value={sortKey} optionLabel="label" placeholder="Ordenar por estado" onChange={onSortChange} />
+          <Button label="Añadir pedido" icon="pi pi-plus" severity="success" className='ml-5' />
         </div>
       </div>
+      
     );
   };
 
