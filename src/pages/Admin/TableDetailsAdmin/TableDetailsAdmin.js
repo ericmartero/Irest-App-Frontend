@@ -139,11 +139,6 @@ export function TableDetailsAdmin() {
     }
   }
 
-  const addProductList = () => {
-    const arrayTemp = [];
-    console.log('hola');
-  }
-
   const onDropdownChange = (value) => {
 
     let errors = { ...validationErrors };
@@ -197,8 +192,8 @@ export function TableDetailsAdmin() {
 
   const itemTemplate = (order) => {
 
-    const onCheckDeliveredOrder = async () => {
-      await checkDeliveredOrder(order.id, ORDER_STATUS.DELIVERED);
+    const onCheckDeliveredOrder = async (status) => {
+      await checkDeliveredOrder(order.id, status);
       onRefreshOrders();
     }
 
@@ -220,7 +215,7 @@ export function TableDetailsAdmin() {
                 </div>
               </div>
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                {order.status === ORDER_STATUS.PENDING ? <Button label="Entregar pedido" onClick={onCheckDeliveredOrder} /> : <span>ENTREGADO</span>}
+                {order.status === ORDER_STATUS.PENDING ? <Button label="Entregar pedido" icon="pi pi-check" iconPos='right' onClick={() => onCheckDeliveredOrder(ORDER_STATUS.DELIVERED)} /> : <Button label="Revertir pedido" icon="pi pi-times" iconPos='right' onClick={() => onCheckDeliveredOrder(ORDER_STATUS.PENDING)} />}
               </div>
             </div>
           </div>
