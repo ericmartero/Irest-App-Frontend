@@ -16,9 +16,9 @@ export function useOrder() {
         }
     }, [auth?.token]);
 
-    const checkDeliveredOrder = async (id) => {
+    const checkDeliveredOrder = async (id, status) => {
         try {
-            await checkDeliveredOrderApi(id, auth.token);
+            await checkDeliveredOrderApi(id, status, auth.token);
         } catch (error) {
             throw error;
         }
