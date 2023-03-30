@@ -35,10 +35,10 @@ export function OrdersAdmin() {
       setTimeout(() => {
         autoRefreshTables();
       }, 5000)
-    } 
+    }
     autoRefreshTables();
   }, [])
-  
+
   useEffect(() => {
     getTables();
   }, [getTables, refreshTables])
@@ -77,6 +77,10 @@ export function OrdersAdmin() {
 
     const orderSize = size(table.tableBooking?.orders);
 
+    const renderDetails = () => {
+      history.push(`/admin/table/${table.id}`);
+    }
+
     return (
       <div className="col-12">
         <div className="flex flex-column xl:flex-row p-4 gap-4">
@@ -94,7 +98,7 @@ export function OrdersAdmin() {
               </div>
             </div>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-              <Button icon="pi pi-shopping-cart" label="Ver Pedidos" disabled={table.tableBooking === null} />
+              <Button icon="pi pi-shopping-cart" label="Ver Pedidos" onClick={renderDetails} disabled={table.tableBooking === null} />
             </div>
           </div>
         </div>

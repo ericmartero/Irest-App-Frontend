@@ -1,12 +1,21 @@
 const HOST_API = process.env.REACT_APP_HOST_API;
 
-export const getOrdersByTableApi = async(idTableBooking, status, token) => {
+export const getOrdersByTableApi = async(idTableBooking, token, status='') => {
     try {
         const tableFilter = `table=${idTableBooking}`;
         const statusFilter = `status=${status}`;
         const closeFilter = `close=false`;
 
-        const url = `${HOST_API}/api/orders/?${tableFilter}&${statusFilter}&${closeFilter}`;
+        let url;
+
+        if (status === '') {
+            url = `${HOST_API}/api/orders/?${tableFilter}&${closeFilter}`;
+        }
+
+        else {
+            url = `${HOST_API}/api/orders/?${tableFilter}&${statusFilter}&${closeFilter}`;
+        }
+        
         const params = {
             headers: {
                 Authorization: `Bearer ${token}`
