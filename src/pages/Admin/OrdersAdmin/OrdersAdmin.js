@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { ORDER_STATUS } from '../../../utils/constants';
 import { useHistory } from 'react-router-dom';
 import { size } from 'lodash';
 import { useTable } from '../../../hooks';
@@ -75,7 +76,7 @@ export function OrdersAdmin() {
 
   const listItem = (table) => {
 
-    const orderSize = size(table.tableBooking?.orders);
+    const ordersPending = size(table.tableBooking?.orders.filter(order => order.status === ORDER_STATUS.PENDING));
 
     const renderDetails = () => {
       history.push(`/admin/table/${table.id}`);
@@ -91,7 +92,7 @@ export function OrdersAdmin() {
               <div className="flex align-items-center gap-3">
                 {table.tableBooking === null ? null :
                   <span className="flex align-items-center gap-2">
-                    <i>Pedidos: <Badge value={orderSize > 0 ? orderSize : 0} severity="warning"></Badge></i>
+                    <i>Pedidos pendientes: <Badge value={ordersPending > 0 ? ordersPending : 0} severity="warning"></Badge></i>
                   </span>
                 }
                 <Tag value={table.tableBooking === null ? 'VACÍA' : 'OCUPADA'} severity={getSeverity(table)}></Tag>
@@ -108,7 +109,7 @@ export function OrdersAdmin() {
 
   const gridItem = (table) => {
 
-    const orderSize = size(table.tableBooking?.orders);
+    const ordersPending = size(table.tableBooking?.orders.filter(order => order.status === ORDER_STATUS.PENDING));
 
     const renderDetails = () => {
       if (table.tableBooking === null) {
@@ -127,7 +128,7 @@ export function OrdersAdmin() {
             <div className="flex align-items-center gap-2">
               {table.tableBooking === null ? null :
                 <i className="pi pi-shopping-cart mr-4 p-text-secondary p-overlay-badge" style={{ fontSize: '2rem' }}>
-                  <Badge value={orderSize > 0 ? orderSize : 0} severity="warning"></Badge>
+                  <Badge value={ordersPending > 0 ? ordersPending : 0} severity="warning"></Badge>
                 </i>
               }
             </div>
