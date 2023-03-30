@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useOrder, useTable, useProduct } from '../../../hooks';
+import { ORDER_STATUS } from '../../../utils/constants';
 import { useParams } from 'react-router-dom';
 import { classNames } from 'primereact/utils';
 import { Dialog } from 'primereact/dialog';
@@ -12,6 +13,7 @@ import { map } from 'lodash';
 import moment from 'moment';
 import 'moment/locale/es';
 import './TableDetailsAdmin.scss';
+
 
 export function TableDetailsAdmin() {
 
@@ -85,10 +87,10 @@ export function TableDetailsAdmin() {
 
   const getSeverity = (order) => {
     switch (order.status) {
-      case 'DELIVERED':
+      case ORDER_STATUS.DELIVERED:
         return 'success';
 
-      case 'PENDING':
+      case ORDER_STATUS.PENDING:
         return 'warning';
 
       default:
@@ -99,7 +101,7 @@ export function TableDetailsAdmin() {
   const onSortChange = (event) => {
     const value = event.value;
 
-    if (value.indexOf('!') === 'DELIVERED') {
+    if (value.indexOf('!') === ORDER_STATUS.DELIVERED) {
       setSortOrder(-1);
       setSortField(value.substring(1, value.length));
       setSortKey(value);
@@ -196,7 +198,7 @@ export function TableDetailsAdmin() {
   const itemTemplate = (order) => {
 
     const onCheckDeliveredOrder = async () => {
-      await checkDeliveredOrder(order.id);
+      await checkDeliveredOrder(order.id, ORDER_STATUS.DELIVERED);
       onRefreshOrders();
     }
 
@@ -213,12 +215,12 @@ export function TableDetailsAdmin() {
                 </span>
                 <div className="flex align-items-center gap-3">
                   <div>
-                    <Tag value={order.status === 'PENDING' ? 'PENDIENTE' : 'ENTREGADO'} severity={getSeverity(order)}></Tag>
+                    <Tag value={order.status === ORDER_STATUS.PENDING ? 'PENDIENTE' : 'ENTREGADO'} severity={getSeverity(order)}></Tag>
                   </div>
                 </div>
               </div>
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                {order.status === 'PENDING' ? <Button label="Entregar pedido" onClick={onCheckDeliveredOrder} /> : <span>ENTREGADO</span>}
+                {order.status === ORDER_STATUS.PENDING ? <Button label="Entregar pedido" onClick={onCheckDeliveredOrder} /> : <span>ENTREGADO</span>}
               </div>
             </div>
           </div>
