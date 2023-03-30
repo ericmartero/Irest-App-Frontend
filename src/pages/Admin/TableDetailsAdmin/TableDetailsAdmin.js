@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useOrder, useTable, useProduct } from '../../../hooks';
 import { useParams } from 'react-router-dom';
+import { classNames } from 'primereact/utils';
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
 import { DataView } from 'primereact/dataview';
@@ -28,11 +29,11 @@ export function TableDetailsAdmin() {
   const [sortField, setSortField] = useState('');
 
   const [submitted, setSubmitted] = useState(false);
-  const [userDialog, setUserDialog] = useState(false);
+  const [productDialog, setProductDialog] = useState(false);
 
   const [validationErrors, setValidationErrors] = useState({});
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [categoriesDropdown, setCategoriesDropdown] = useState([])
+  const [productsDropdown, setProductsDropdown] = useState([])
 
   const sortOptions = [
     { label: 'Entregados', value: 'status' },
@@ -68,9 +69,19 @@ export function TableDetailsAdmin() {
   }, [getProducts])
 
   useEffect(() => {
-    setCategoriesDropdown(formatDropdownData(products));
+    setProductsDropdown(formatDropdownData(products));
   }, [products])
 
+  const validateFields = () => {
+    const errors = {};
+
+    if (selectedProduct === null) {
+      errors.product = "El producto es requerido";
+    }
+
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
   const getSeverity = (order) => {
     switch (order.status) {
@@ -101,18 +112,29 @@ export function TableDetailsAdmin() {
 
   const openNew = () => {
     setSubmitted(false);
-    setUserDialog(true);
+    setProductDialog(true);
+    setSelectedProduct(null);
   };
 
   const hideDialog = () => {
     setSubmitted(false);
-    setUserDialog(false);
+    setProductDialog(false);
+    setValidationErrors({});
   };
 
   const saveOrders = () => {
-    
-    const selectedOption = categoriesDropdown.find((option) => option.value === selectedProduct);
-    console.log(selectedOption);
+
+    const isValid = validateFields();
+    setSubmitted(true);
+
+    if (isValid) {
+      const selectedOption = productsDropdown.find((option) => option.value === selectedProduct);
+      console.log(selectedOption);
+
+      setProductDialog(false);
+      setSubmitted(false);
+      setValidationErrors({});
+    }
   }
 
   const onDropdownChange = (value) => {
@@ -121,9 +143,9 @@ export function TableDetailsAdmin() {
     setSelectedProduct(value);
 
     if (value === null) {
-      errors.category = "La categoría es requerida";
+      errors.product = "El producto es requerido";
     } else {
-      delete errors.category;
+      delete errors.product;
     }
 
     setValidationErrors(errors);
@@ -139,7 +161,7 @@ export function TableDetailsAdmin() {
   const userDialogFooter = (
     <React.Fragment>
       <Button label="Cancelar" icon="pi pi-times" outlined onClick={hideDialog} />
-      <Button label="Guardar" icon="pi pi-check" onClick={saveOrders} />
+      <Button label="Guardar" icon="pi pi-check" onClick={saveOrders} disabled={!submitted || Object.keys(validationErrors).length === 0 ? false : true} />
     </React.Fragment>
   );
 
@@ -204,13 +226,14 @@ export function TableDetailsAdmin() {
   return (
     <div className="card">
       <DataView value={ordersBooking} itemTemplate={itemTemplate} header={header()} sortField={sortField} sortOrder={sortOrder} />
-      <Dialog visible={userDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={'Añadir pedidos'} modal className="p-fluid" footer={userDialogFooter} onHide={hideDialog}>
+      <Dialog visible={productDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={'Añadir pedidos'} modal className="p-fluid" footer={userDialogFooter} onHide={hideDialog}>
         <div className="field">
           <label htmlFor="categoria" className="font-bold">
             Producto a pedir
           </label>
-          <Dropdown value={selectedProduct} onChange={(e) => onDropdownChange(e.value)} options={categoriesDropdown} optionLabel="value"
-            placeholder="Selecciona una producto" />
+          <Dropdown value={selectedProduct} onChange={(e) => onDropdownChange(e.value)} options={productsDropdown} optionLabel="value"
+            placeholder="Selecciona una producto" className={classNames({ "p-invalid": submitted && (validationErrors.product) })} />
+            {submitted && validationErrors.product && (<small className="p-error">{validationErrors.product}</small>)}
         </div>
       </Dialog>
     </div>
