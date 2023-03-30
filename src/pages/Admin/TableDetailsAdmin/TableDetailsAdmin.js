@@ -3,10 +3,12 @@ import { useOrder, useTable } from '../../../hooks';
 import { useParams } from 'react-router-dom';
 import { Button } from 'primereact/button';
 import { DataView } from 'primereact/dataview';
+import { Toolbar } from 'primereact/toolbar';
 import { Dropdown } from 'primereact/dropdown';
 import { Tag } from 'primereact/tag';
 import moment from 'moment';
 import 'moment/locale/es';
+import './TableDetailsAdmin.scss';
 
 export function TableDetailsAdmin() {
 
@@ -78,18 +80,26 @@ export function TableDetailsAdmin() {
     }
   };
 
+  const leftToolbarTemplate = () => {
+    return (
+      <div className="flex flex-wrap gap-2">
+        <h3 className="m-0">PEDIDOS MESA NÚMERO {table?.number}</h3>
+      </div>
+    );
+  };
+
+  const rightToolbarTemplate = () => {
+    return (
+      <div className="flex flex-wrap gap-2">
+        <Dropdown options={sortOptions} value={sortKey} optionLabel="label" placeholder="Ordenar por estado" onChange={onSortChange} />
+        <Button label="Añadir pedido" icon="pi pi-plus" severity="success" className='ml-5' />
+      </div>
+    );
+  };
+
   const header = () => {
     return (
-      <div className="grid grid-nogutter">
-        <div className="col-6" style={{ textAlign: 'left', display: 'flex', alignItems: 'center'  }}>
-          <h3 className="m-0">PEDIDOS MESA NÚMERO {table?.number}</h3>
-        </div>
-        <div className="col-6" style={{ textAlign: 'right' }}>
-          <Dropdown options={sortOptions} value={sortKey} optionLabel="label" placeholder="Ordenar por estado" onChange={onSortChange} />
-          <Button label="Añadir pedido" icon="pi pi-plus" severity="success" className='ml-5' />
-        </div>
-      </div>
-      
+      <Toolbar left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
     );
   };
 
@@ -118,7 +128,7 @@ export function TableDetailsAdmin() {
               </div>
             </div>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-              { order.status === 'PENDING' ? <Button label="Entregar pedido" onClick={onCheckDeliveredOrder} /> : <span>ENTREGADO</span>}
+              {order.status === 'PENDING' ? <Button label="Entregar pedido" onClick={onCheckDeliveredOrder} /> : <span>ENTREGADO</span>}
             </div>
           </div>
         </div>
