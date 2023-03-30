@@ -23,7 +23,7 @@ export const getOrdersByTableApi = async(idTableBooking, status, token) => {
     }
 }
 
-export const checkDeliveredOrderApi = async(idOrder, token) => {
+export const checkDeliveredOrderApi = async(idOrder, status, token) => {
     try {
         const url = `${HOST_API}/api/orders/${idOrder}`;
         const params = {
@@ -33,7 +33,7 @@ export const checkDeliveredOrderApi = async(idOrder, token) => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                status: 'DELIVERED'
+                status
             })
         }
 
