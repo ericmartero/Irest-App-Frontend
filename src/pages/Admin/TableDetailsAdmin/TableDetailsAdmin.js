@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useOrder, useTable } from '../../../hooks';
+import { useOrder, useTable, useProduct } from '../../../hooks';
 import { useParams } from 'react-router-dom';
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
 import { DataView } from 'primereact/dataview';
-import { InputText } from 'primereact/inputtext';
 import { Toolbar } from 'primereact/toolbar';
 import { Dropdown } from 'primereact/dropdown';
 import { Tag } from 'primereact/tag';
+import { map } from 'lodash';
 import moment from 'moment';
 import 'moment/locale/es';
 import './TableDetailsAdmin.scss';
@@ -17,6 +17,7 @@ export function TableDetailsAdmin() {
   const tableURL = useParams();
   const { orders, getOrdersByTable, checkDeliveredOrder } = useOrder();
   const { tables, getTableById } = useTable();
+  const { products, getProducts } = useProduct();
 
   const [table, setTable] = useState(null);
   const [ordersBooking, setOrdersBooking] = useState([]);
@@ -29,8 +30,9 @@ export function TableDetailsAdmin() {
   const [submitted, setSubmitted] = useState(false);
   const [userDialog, setUserDialog] = useState(false);
 
-  const [value, setValue] = useState('');
-
+  const [validationErrors, setValidationErrors] = useState({});
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [categoriesDropdown, setCategoriesDropdown] = useState([])
 
   const sortOptions = [
     { label: 'Entregados', value: 'status' },
@@ -60,6 +62,15 @@ export function TableDetailsAdmin() {
       setOrdersBooking(orders);
     }
   }, [orders]);
+
+  useEffect(() => {
+    getProducts();
+  }, [getProducts])
+
+  useEffect(() => {
+    setCategoriesDropdown(formatDropdownData(products));
+  }, [products])
+  
 
   const getSeverity = (order) => {
     switch (order.status) {
@@ -100,6 +111,27 @@ export function TableDetailsAdmin() {
 
   const saveOrders = () => {
     console.log('holaaa');
+  }
+
+  const onDropdownChange = (value) => {
+
+    let errors = { ...validationErrors };
+    setSelectedProduct(value);
+
+    if (value === null) {
+      errors.category = "La categoría es requerida";
+    } else {
+      delete errors.category;
+    }
+
+    setValidationErrors(errors);
+  };
+
+  const formatDropdownData = (data) => {
+    return map(data, (item) => ({
+      id: item.id,
+      value: item.title
+    }));
   }
 
   const userDialogFooter = (
@@ -172,10 +204,11 @@ export function TableDetailsAdmin() {
       <DataView value={ordersBooking} itemTemplate={itemTemplate} header={header()} sortField={sortField} sortOrder={sortOrder} />
       <Dialog visible={userDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={'Añadir pedidos'} modal className="p-fluid" footer={userDialogFooter} onHide={hideDialog}>
         <div className="field">
-          <label htmlFor="lastName" className="font-bold">
-            Apellidos
+          <label htmlFor="categoria" className="font-bold">
+            Producto a pedir
           </label>
-          <InputText id="lastName" value={value.lastName} onChange={(e) => setValue({ ...value, lastName: e.target.value })} />
+          <Dropdown value={selectedProduct} onChange={(e) => onDropdownChange(e.value)} options={categoriesDropdown} optionLabel="value"
+            placeholder="Selecciona una producto" />
         </div>
       </Dialog>
     </div>
