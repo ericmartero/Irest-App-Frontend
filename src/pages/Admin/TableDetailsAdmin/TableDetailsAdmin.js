@@ -22,11 +22,9 @@ export function TableDetailsAdmin() {
   const [sortOrder, setSortOrder] = useState(0);
   const [sortField, setSortField] = useState('');
 
-
-
   const sortOptions = [
-    { label: 'Price High to Low', value: '!price' },
-    { label: 'Price Low to High', value: 'price' }
+    { label: 'Entregados', value: 'status' },
+    { label: 'Pendientes', value: '!status' }
   ];
 
   const onRefreshOrders = () => setRefreshOrders((prev) => !prev);
@@ -69,7 +67,7 @@ export function TableDetailsAdmin() {
   const onSortChange = (event) => {
     const value = event.value;
 
-    if (value.indexOf('!') === 0) {
+    if (value.indexOf('!') === 'DELIVERED') {
       setSortOrder(-1);
       setSortField(value.substring(1, value.length));
       setSortKey(value);
@@ -87,7 +85,7 @@ export function TableDetailsAdmin() {
           <h3 className="m-0">PEDIDOS MESA NÚMERO {table?.number}</h3>
         </div>
         <div className="col-6" style={{ textAlign: 'right' }}>
-          <Dropdown options={sortOptions} value={sortKey} optionLabel="label" placeholder="Sort By Price" onChange={onSortChange} />
+          <Dropdown options={sortOptions} value={sortKey} optionLabel="label" placeholder="Ordenar por estado" onChange={onSortChange} />
         </div>
       </div>
     );
