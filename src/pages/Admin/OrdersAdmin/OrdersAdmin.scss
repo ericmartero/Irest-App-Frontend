@@ -10,3 +10,9 @@
     cursor: pointer;
     @include focused-inset();
 }
+
+.textHeader {
+    display: flex;
+    text-align: left;
+    align-items: center;
+}

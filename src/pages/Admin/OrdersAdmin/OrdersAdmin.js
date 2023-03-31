@@ -6,7 +6,6 @@ import { useTable } from '../../../hooks';
 import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
 import { Badge } from 'primereact/badge';
-import { Dropdown } from 'primereact/dropdown';
 import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
 import { Tag } from 'primereact/tag';
 import './OrdersAdmin.scss';
@@ -19,14 +18,6 @@ export function OrdersAdmin() {
   const [refreshTables, setRefreshTables] = useState(false);
   const [tablesCrud, setTablesCrud] = useState([]);
   const [layout, setLayout] = useState('grid');
-  const [sortKey, setSortKey] = useState('');
-  const [sortOrder, setSortOrder] = useState(1);
-  const [sortField, setSortField] = useState('tableBooking');
-
-  const sortOptions = [
-    { label: 'Vacías', value: '!tableBooking' },
-    { label: 'Ocupadas', value: 'tableBooking' },
-  ];
 
   const onRefresh = () => setRefreshTables((state) => !state);
 
@@ -58,38 +49,6 @@ export function OrdersAdmin() {
     }
 
     return 'danger';
-  };
-
-  const onSortChange = (event) => {
-    const value = event.value;
-
-    if (value.indexOf('!') === null) {
-      setSortOrder(-1);
-      setSortField(value.substring(1, value.length));
-      setSortKey(value);
-    } else {
-      setSortOrder(1);
-      setSortField(value);
-      setSortKey(value);
-    }
-
-    const sortedTables = [...tablesCrud].sort((a, b) => {
-      if (sortField === 'tableBooking') {
-        const tableBookingA = a.tableBooking;
-        const tableBookingB = b.tableBooking;
-        if (!tableBookingA && tableBookingB) {
-          return -1 * sortOrder;
-        } else if (tableBookingA && !tableBookingB) {
-          return 1 * sortOrder;
-        } else {
-          return 0;
-        }
-      } else {
-        return (a[sortField] < b[sortField] ? -1 : 1) * sortOrder;
-      }
-    });
-  
-    setTablesCrud(sortedTables);
   };
 
   const listItem = (table) => {
@@ -173,8 +132,8 @@ export function OrdersAdmin() {
   const header = () => {
     return (
       <div className="grid grid-nogutter">
-        <div className="col-6" style={{ textAlign: 'left' }}>
-          <Dropdown value={sortKey} options={sortOptions} optionLabel="label" placeholder="Ordenar por estado" onChange={onSortChange} />
+        <div className="col-6 textHeader">
+          <h3 className="m-0">PANEL DE PEDIDOS MESAS</h3>
         </div>
         <div className="col-6" style={{ textAlign: 'right' }}>
           <DataViewLayoutOptions layout={layout} onChange={(e) => setLayout(e.value)} />
@@ -186,7 +145,7 @@ export function OrdersAdmin() {
   return (
     <div className="card">
       <Toast ref={toast} />
-      <DataView value={tablesCrud} itemTemplate={itemTemplate} layout={layout} header={header()} sortField={sortField} sortOrder={sortOrder} />
+      <DataView value={tablesCrud} itemTemplate={itemTemplate} layout={layout} header={header()} />
     </div>
   )
 }
