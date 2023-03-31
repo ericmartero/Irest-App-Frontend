@@ -37,6 +37,8 @@ export function TableDetailsAdmin() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [productsDropdown, setProductsDropdown] = useState([])
 
+  const [productList, setProductList] = useState([]);
+
   const sortOptions = [
     { label: 'Entregados', value: 'status' },
     { label: 'Pendientes', value: '!status' }
@@ -141,6 +143,12 @@ export function TableDetailsAdmin() {
 
   const onDropdownChange = (value) => {
 
+    const arrayTemp = [...productList];
+    console.log(value);
+
+    arrayTemp.push(value);
+    setProductList(arrayTemp);
+
     let errors = { ...validationErrors };
     setSelectedProduct(value);
 
@@ -198,29 +206,27 @@ export function TableDetailsAdmin() {
     }
 
     return (
-      <>
-        <div className="col-12">
-          <div className="flex flex-column xl:flex-row p-4 gap-4" style={ order.status === 'PENDING' ? {backgroundColor: 'var(--yellow-100)'} : {backgroundColor: 'var(--green-100)'}}>
-            <img className="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block mx-auto border-round" src={order.product.image} alt={order.product.title} />
-            <div className="flex flex-column sm:flex-row justify-content-between align-items-center flex-1 gap-4">
-              <div className="flex flex-column align-items-center sm:align-items-start gap-3">
-                <div className="text-2xl font-bold text-900">{order.product.title}</div>
-                <span className="font-semibold">
-                  {moment(order.createdAt).format('HH:mm')} - {moment(order.createdAt).startOf('seconds').fromNow()}
-                </span>
-                <div className="flex align-items-center gap-3">
-                  <div>
-                    <Tag value={order.status === ORDER_STATUS.PENDING ? 'PENDIENTE' : 'ENTREGADO'} severity={getSeverity(order)}></Tag>
-                  </div>
+      <div className="col-12">
+        <div className="flex flex-column xl:flex-row p-4 gap-4" style={order.status === 'PENDING' ? { backgroundColor: 'var(--yellow-100)' } : { backgroundColor: 'var(--green-100)' }}>
+          <img className="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block mx-auto border-round" src={order.product.image} alt={order.product.title} />
+          <div className="flex flex-column sm:flex-row justify-content-between align-items-center flex-1 gap-4">
+            <div className="flex flex-column align-items-center sm:align-items-start gap-3">
+              <div className="text-2xl font-bold text-900">{order.product.title}</div>
+              <span className="font-semibold">
+                {moment(order.createdAt).format('HH:mm')} - {moment(order.createdAt).startOf('seconds').fromNow()}
+              </span>
+              <div className="flex align-items-center gap-3">
+                <div>
+                  <Tag value={order.status === ORDER_STATUS.PENDING ? 'PENDIENTE' : 'ENTREGADO'} severity={getSeverity(order)}></Tag>
                 </div>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                {order.status === ORDER_STATUS.PENDING ? <Button label="Entregar pedido" icon="pi pi-check" iconPos='right' onClick={() => onCheckDeliveredOrder(ORDER_STATUS.DELIVERED)} /> : <Button label="Revertir pedido" icon="pi pi-times" iconPos='right' onClick={() => onCheckDeliveredOrder(ORDER_STATUS.PENDING)} />}
-              </div>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              {order.status === ORDER_STATUS.PENDING ? <Button label="Entregar pedido" icon="pi pi-check" iconPos='right' onClick={() => onCheckDeliveredOrder(ORDER_STATUS.DELIVERED)} /> : <Button label="Revertir pedido" icon="pi pi-times" iconPos='right' onClick={() => onCheckDeliveredOrder(ORDER_STATUS.PENDING)} />}
             </div>
           </div>
         </div>
-      </>
+      </div>
     );
   };
 
@@ -232,9 +238,9 @@ export function TableDetailsAdmin() {
           <label htmlFor="categoria" className="font-bold">
             Producto a pedir
           </label>
-          <Dropdown value={selectedProduct} onChange={(e) => onDropdownChange(e.value)} options={productsDropdown} optionLabel="value"
+          <Dropdown value={null} onChange={(e) => onDropdownChange(e.value)} options={productsDropdown} optionLabel="value"
             placeholder="Selecciona una producto" className={classNames({ "p-invalid": submitted && (validationErrors.product) })} />
-            {submitted && validationErrors.product && (<small className="p-error">{validationErrors.product}</small>)}
+          {submitted && validationErrors.product && (<small className="p-error">{validationErrors.product}</small>)}
         </div>
       </Dialog>
     </div>
