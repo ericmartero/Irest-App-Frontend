@@ -186,7 +186,7 @@ export function TableDetailsAdmin() {
 
   const header = () => {
     return (
-      <Toolbar left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
+      <Toolbar className='toolbarOrders' left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
     );
   };
 
