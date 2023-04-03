@@ -262,8 +262,8 @@ export function TableDetailsAdmin() {
           {submitted && validationErrors.product && (<small className="p-error">{validationErrors.product}</small>)}
 
           {map(productsData, (product, index) => (
-            <div key={index} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: '1rem' }}>
-              <div style={{ display: "flex", alignItems: "center" }}>
+            <div key={index} className='product-add-order'>
+              <div className='product-add-info'>
                 <img className="w-9 sm:w-13rem xl:w-7rem block xl:block mx-auto border-round" src={product.image} alt={product.title} />
                 <div style={{marginLeft: '1.5rem'}}>
                   <span className="font-bold">{product.title}</span>

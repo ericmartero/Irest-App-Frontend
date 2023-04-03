@@ -3,6 +3,18 @@
     padding: 0.25rem !important;
 }
 
+.product-add-order {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1rem;
+}
+
+.product-add-info {
+    display: flex;
+    align-items: center;
+}
+
 .bttnFoot {
     margin-top: 1rem !important;
 }
