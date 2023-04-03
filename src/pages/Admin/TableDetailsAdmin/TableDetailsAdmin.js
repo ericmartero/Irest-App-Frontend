@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useOrder, useTable, useProduct } from '../../../hooks';
 import { ORDER_STATUS } from '../../../utils/constants';
 import { useParams } from 'react-router-dom';
@@ -20,7 +20,7 @@ export function TableDetailsAdmin() {
   const tableURL = useParams();
   const { orders, getOrdersByTable, checkDeliveredOrder } = useOrder();
   const { tables, getTableById } = useTable();
-  const { products, getProducts } = useProduct();
+  const { products, getProducts, getProductById } = useProduct();
 
   const [table, setTable] = useState(null);
   const [ordersBooking, setOrdersBooking] = useState([]);
@@ -38,6 +38,7 @@ export function TableDetailsAdmin() {
   const [productsDropdown, setProductsDropdown] = useState([])
 
   const [productList, setProductList] = useState([]);
+  const [productData, setproductData] = useState([]);
 
   const sortOptions = [
     { label: 'Entregados', value: 'status' },
@@ -75,6 +76,24 @@ export function TableDetailsAdmin() {
   useEffect(() => {
     setProductsDropdown(formatDropdownData(products));
   }, [products])
+
+  const addProductList = useCallback(async () => {
+    try {
+
+      const arrayTemp = [];
+      for await (const product of productList) {
+        const response = await getProductById(product.key);
+        arrayTemp.push(response);
+      }
+      setproductData(arrayTemp);
+    } catch (error) {
+      console.log(error);
+    }
+  }, [productList]);
+
+  useEffect(() => {
+    addProductList();
+  }, [productList, addProductList])
 
   const validateFields = () => {
     const errors = {};
@@ -144,7 +163,7 @@ export function TableDetailsAdmin() {
   const onDropdownChange = (value) => {
 
     const arrayTemp = [...productList];
-    console.log(value);
+    //console.log(value);
 
     arrayTemp.push(value);
     setProductList(arrayTemp);
@@ -166,7 +185,7 @@ export function TableDetailsAdmin() {
       key: item.id,
       text: item.title
     }));
-  }
+  };
 
   const userDialogFooter = (
     <React.Fragment>
