@@ -8,6 +8,7 @@ import { Button } from 'primereact/button';
 import { DataView } from 'primereact/dataview';
 import { Toolbar } from 'primereact/toolbar';
 import { Dropdown } from 'primereact/dropdown';
+import { Divider } from 'primereact/divider';
 import { Tag } from 'primereact/tag';
 import { map } from 'lodash';
 import moment from 'moment';
@@ -257,24 +258,27 @@ export function TableDetailsAdmin() {
           <label htmlFor="categoria" className="font-bold">
             Producto a pedir
           </label>
-          <Dropdown value={null} onChange={(e) => onDropdownChange(e.value)} options={productsDropdown} optionLabel="text" placeholder="Selecciona una producto" 
+          <Dropdown value={null} onChange={(e) => onDropdownChange(e.value)} options={productsDropdown} optionLabel="text" placeholder="Selecciona una producto"
             style={{ marginBottom: "0.5rem" }} className={classNames({ "p-invalid": submitted && (validationErrors.product) })} />
           {submitted && validationErrors.product && (<small className="p-error">{validationErrors.product}</small>)}
 
           {map(productsData, (product, index) => (
-            <div key={index} className='product-add-order'>
-              <div className='product-add-info'>
-                <img className="w-9 sm:w-13rem xl:w-7rem block xl:block mx-auto border-round" src={product.image} alt={product.title} />
-                <div style={{marginLeft: '1.5rem'}}>
-                  <span className="font-bold">{product.title}</span>
-                  <br />
-                  <span>Cantidad: 1</span>
+            <div key={index}>
+              <div className='product-add-order'>
+                <div className='product-add-info'>
+                  <img className="w-9 sm:w-13rem xl:w-7rem block xl:block mx-auto border-round" src={product.image} alt={product.title} />
+                  <div style={{ marginLeft: '1.5rem' }}>
+                    <span className="font-bold">{product.title}</span>
+                    <br />
+                    <span>Cantidad: 1</span>
+                  </div>
+                </div>
+                <div style={{ display: "flex" }}>
+                  <Button icon="pi pi-minus" severity="danger" style={{ marginRight: "10px" }} />
+                  <Button icon="pi pi-plus" severity="success" />
                 </div>
               </div>
-              <div style={{ display: "flex" }}>
-                <Button icon="pi pi-minus" style={{ marginRight: "10px" }} />
-                <Button icon="pi pi-plus" />
-              </div>
+              <Divider />
             </div>
           ))}
 
