@@ -9,6 +9,7 @@ import { DataView } from 'primereact/dataview';
 import { Toolbar } from 'primereact/toolbar';
 import { Dropdown } from 'primereact/dropdown';
 import { Divider } from 'primereact/divider';
+import { Badge } from 'primereact/badge';
 import { Tag } from 'primereact/tag';
 import { map } from 'lodash';
 import moment from 'moment';
@@ -269,8 +270,10 @@ export function TableDetailsAdmin() {
                   <img className="w-9 sm:w-13rem xl:w-7rem block xl:block mx-auto border-round" src={product.image} alt={product.title} />
                   <div style={{ marginLeft: '1.5rem' }}>
                     <span className="font-bold">{product.title}</span>
-                    <br />
-                    <span>Cantidad: 1</span>
+                    <div style={{ marginTop: '0.5rem' }}>
+                      <span style={{ marginRight: '0.5rem' }}>Cantidad: </span>
+                      <Badge value="1" />
+                    </div>
                   </div>
                 </div>
                 <div style={{ display: "flex" }}>
