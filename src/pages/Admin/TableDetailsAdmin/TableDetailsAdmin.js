@@ -97,6 +97,12 @@ export function TableDetailsAdmin() {
     addProductList();
   }, [productList, addProductList])
 
+  const removeProductList = (index) => {
+    const arrayTemp = [...productList]
+    arrayTemp.splice(index, 1);
+    setProductList(arrayTemp);
+  };
+
   const validateFields = () => {
     const errors = {};
 
@@ -277,7 +283,7 @@ export function TableDetailsAdmin() {
                   </div>
                 </div>
                 <div style={{ display: "flex" }}>
-                  <Button icon="pi pi-minus" severity="danger" style={{ marginRight: "10px" }} />
+                  <Button icon="pi pi-minus" severity="danger" style={{ marginRight: "10px" }} onClick={() => removeProductList(index)} />
                   <Button icon="pi pi-plus" severity="success" />
                 </div>
               </div>
