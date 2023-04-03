@@ -1,3 +1,4 @@
+import { ORDER_STATUS } from '../utils/constants';
 const HOST_API = process.env.REACT_APP_HOST_API;
 
 export const getOrdersByTableApi = async(idTableBooking, token, status = '') => {
@@ -64,7 +65,7 @@ export const addOrderToTableApi = async(idTableBooking, idProduct, token) => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                status: 'PENDING',
+                status: ORDER_STATUS.PENDING,
                 table: idTableBooking,
                 product: idProduct
             })
