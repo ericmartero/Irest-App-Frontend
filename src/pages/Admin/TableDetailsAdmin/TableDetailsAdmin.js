@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useOrder, useTable, useProduct } from '../../../hooks';
 import { ORDER_STATUS } from '../../../utils/constants';
 import { useParams } from 'react-router-dom';
@@ -10,6 +10,7 @@ import { Toolbar } from 'primereact/toolbar';
 import { Dropdown } from 'primereact/dropdown';
 import { Divider } from 'primereact/divider';
 import { Badge } from 'primereact/badge';
+import { Toast } from 'primereact/toast';
 import { Tag } from 'primereact/tag';
 import { map } from 'lodash';
 import moment from 'moment';
@@ -19,8 +20,9 @@ import './TableDetailsAdmin.scss';
 
 export function TableDetailsAdmin() {
 
+  const toast = useRef(null);
   const tableURL = useParams();
-  const { orders, getOrdersByTable, checkDeliveredOrder } = useOrder();
+  const { orders, getOrdersByTable, checkDeliveredOrder, addOrderToTable } = useOrder();
   const { tables, getTableById } = useTable();
   const { products, getProducts, getProductById } = useProduct();
 
@@ -36,7 +38,6 @@ export function TableDetailsAdmin() {
   const [productDialog, setProductDialog] = useState(false);
 
   const [validationErrors, setValidationErrors] = useState({});
-  const [selectedProduct, setSelectedProduct] = useState(null);
   const [productsDropdown, setProductsDropdown] = useState([])
 
   const [productList, setProductList] = useState([]);
@@ -106,8 +107,8 @@ export function TableDetailsAdmin() {
   const validateFields = () => {
     const errors = {};
 
-    if (selectedProduct === null) {
-      errors.product = "El producto es requerido";
+    if (productList.length === 0) {
+      errors.product = "No se ha seleccionado ningún producto";
     }
 
     setValidationErrors(errors);
@@ -154,14 +155,21 @@ export function TableDetailsAdmin() {
     setValidationErrors({});
   };
 
-  const saveOrders = () => {
+  const saveOrders = async () => {
 
     const isValid = validateFields();
     setSubmitted(true);
 
     if (isValid) {
-      const selectedOption = productsDropdown.find((option) => option.value === selectedProduct);
-      console.log(selectedOption);
+      //const selectedOption = productsDropdown.find((option) => option.value === selectedProduct);
+      //console.log(selectedOption);
+
+      for await (const product of productList) {
+        await addOrderToTable(table.tableBooking.id, product.key);
+      }
+
+      onRefreshOrders();
+      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Pedido creado correctamente', life: 3000 });
 
       setProductDialog(false);
       setSubmitted(false);
@@ -178,10 +186,9 @@ export function TableDetailsAdmin() {
     setProductList(arrayTemp);
 
     let errors = { ...validationErrors };
-    setSelectedProduct(value);
 
-    if (value === null) {
-      errors.product = "El producto es requerido";
+    if (value.length === 0) {
+      errors.product = "No se ha seleccionado ningún producto";
     } else {
       delete errors.product;
     }
@@ -260,6 +267,7 @@ export function TableDetailsAdmin() {
 
   return (
     <div className="card">
+      <Toast ref={toast} />
       <DataView value={ordersBooking} itemTemplate={itemTemplate} header={header()} sortField={sortField} sortOrder={sortOrder} />
       <Dialog visible={productDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={'Añadir pedidos'} modal className="p-fluid" footer={userDialogFooter} onHide={hideDialog}>
         <div className="field">
