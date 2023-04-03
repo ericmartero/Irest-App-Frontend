@@ -189,7 +189,7 @@ export function TableDetailsAdmin() {
 
   const userDialogFooter = (
     <React.Fragment>
-      <Button label="Cancelar" icon="pi pi-times" outlined onClick={hideDialog} />
+      <Button label="Cancelar" icon="pi pi-times" className="bttnFoot" outlined onClick={hideDialog} />
       <Button label="Guardar" icon="pi pi-check" onClick={saveOrders} disabled={!submitted || Object.keys(validationErrors).length === 0 ? false : true} />
     </React.Fragment>
   );
@@ -262,12 +262,19 @@ export function TableDetailsAdmin() {
           {submitted && validationErrors.product && (<small className="p-error">{validationErrors.product}</small>)}
 
           {map(productsData, (product, index) => (
-            <div key={index} style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <div key={index} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: '1rem' }}>
               <div style={{ display: "flex", alignItems: "center" }}>
-                <img className="product-image w-9 sm:w-14rem xl:w-8rem block xl:block mx-auto border-round" src={product.image} alt={product.title} style={{ marginRight: "10px" }} />
-                <span>{product.title}</span>
+                <img className="w-9 sm:w-13rem xl:w-7rem block xl:block mx-auto border-round" src={product.image} alt={product.title} />
+                <div style={{marginLeft: '1.5rem'}}>
+                  <span className="font-bold">{product.title}</span>
+                  <br />
+                  <span>Cantidad: 1</span>
+                </div>
               </div>
-              <Button icon="pi pi-times" />
+              <div style={{ display: "flex" }}>
+                <Button icon="pi pi-minus" style={{ marginRight: "10px" }} />
+                <Button icon="pi pi-plus" />
+              </div>
             </div>
           ))}
 
