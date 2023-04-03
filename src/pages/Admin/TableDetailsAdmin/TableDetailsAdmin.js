@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useOrder, useTable, useProduct } from '../../../hooks';
 import { ORDER_STATUS } from '../../../utils/constants';
 import { useParams } from 'react-router-dom';
@@ -80,23 +80,22 @@ export function TableDetailsAdmin() {
     setProductsDropdown(formatDropdownData(products));
   }, [products])
 
-  const addProductList = useCallback(async () => {
-    try {
-
-      const arrayTemp = [];
-      for await (const product of productList) {
-        const response = await getProductById(product.key);
-        arrayTemp.push(response);
-      }
-      setproductsData(arrayTemp);
-    } catch (error) {
-      console.log(error);
-    }
-  }, [productList]);
-
   useEffect(() => {
+    const addProductList = async () => {
+      try {
+        const arrayTemp = [];
+        for await (const product of productList) {
+          const response = await getProductById(product.key);
+          arrayTemp.push(response);
+        }
+        setproductsData(arrayTemp);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     addProductList();
-  }, [productList, addProductList])
+  }, [productList, getProductById])
 
   const removeProductList = (index) => {
     const arrayTemp = [...productList]
@@ -180,7 +179,6 @@ export function TableDetailsAdmin() {
   const onDropdownChange = (value) => {
 
     const arrayTemp = [...productList];
-    //console.log(value);
 
     arrayTemp.push(value);
     setProductList(arrayTemp);
