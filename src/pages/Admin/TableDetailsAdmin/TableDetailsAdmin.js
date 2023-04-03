@@ -144,7 +144,8 @@ export function TableDetailsAdmin() {
   const openNew = () => {
     setSubmitted(false);
     setProductDialog(true);
-    setSelectedProduct(null);
+    setProductList([]);
+    setproductsData([]);
   };
 
   const hideDialog = () => {
