@@ -38,7 +38,7 @@ export function TableDetailsAdmin() {
   const [productsDropdown, setProductsDropdown] = useState([])
 
   const [productList, setProductList] = useState([]);
-  const [productData, setproductData] = useState([]);
+  const [productsData, setproductsData] = useState([]);
 
   const sortOptions = [
     { label: 'Entregados', value: 'status' },
@@ -85,7 +85,7 @@ export function TableDetailsAdmin() {
         const response = await getProductById(product.key);
         arrayTemp.push(response);
       }
-      setproductData(arrayTemp);
+      setproductsData(arrayTemp);
     } catch (error) {
       console.log(error);
     }
@@ -260,6 +260,17 @@ export function TableDetailsAdmin() {
           <Dropdown value={null} onChange={(e) => onDropdownChange(e.value)} options={productsDropdown} optionLabel="text"
             placeholder="Selecciona una producto" className={classNames({ "p-invalid": submitted && (validationErrors.product) })} />
           {submitted && validationErrors.product && (<small className="p-error">{validationErrors.product}</small>)}
+
+          {map(productsData, (product, index) => (
+            <div key={index} style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <img className="product-image w-9 sm:w-14rem xl:w-8rem block xl:block mx-auto border-round" src={product.image} alt={product.title} style={{ marginRight: "10px" }} />
+                <span>{product.title}</span>
+              </div>
+              <Button icon="pi pi-times" />
+            </div>
+          ))}
+
         </div>
       </Dialog>
     </div>
