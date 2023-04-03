@@ -257,8 +257,8 @@ export function TableDetailsAdmin() {
           <label htmlFor="categoria" className="font-bold">
             Producto a pedir
           </label>
-          <Dropdown value={null} onChange={(e) => onDropdownChange(e.value)} options={productsDropdown} optionLabel="text"
-            placeholder="Selecciona una producto" className={classNames({ "p-invalid": submitted && (validationErrors.product) })} />
+          <Dropdown value={null} onChange={(e) => onDropdownChange(e.value)} options={productsDropdown} optionLabel="text" placeholder="Selecciona una producto" 
+            style={{ marginBottom: "0.5rem" }} className={classNames({ "p-invalid": submitted && (validationErrors.product) })} />
           {submitted && validationErrors.product && (<small className="p-error">{validationErrors.product}</small>)}
 
           {map(productsData, (product, index) => (
