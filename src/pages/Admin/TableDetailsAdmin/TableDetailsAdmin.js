@@ -163,8 +163,8 @@ export function TableDetailsAdmin() {
 
   const formatDropdownData = (data) => {
     return map(data, (item) => ({
-      id: item.id,
-      value: item.title
+      key: item.id,
+      text: item.title
     }));
   }
 
@@ -238,7 +238,7 @@ export function TableDetailsAdmin() {
           <label htmlFor="categoria" className="font-bold">
             Producto a pedir
           </label>
-          <Dropdown value={null} onChange={(e) => onDropdownChange(e.value)} options={productsDropdown} optionLabel="value"
+          <Dropdown value={null} onChange={(e) => onDropdownChange(e.value)} options={productsDropdown} optionLabel="text"
             placeholder="Selecciona una producto" className={classNames({ "p-invalid": submitted && (validationErrors.product) })} />
           {submitted && validationErrors.product && (<small className="p-error">{validationErrors.product}</small>)}
         </div>
