@@ -84,22 +84,43 @@ export function TableDetailsAdmin() {
     const addProductList = async () => {
       try {
         const arrayTemp = [];
+        const counts = {};
         for await (const product of productList) {
-          const response = await getProductById(product.key);
-          arrayTemp.push(response);
+          if (counts[product.key]) {
+            counts[product.key]++;
+          } else {
+            counts[product.key] = 1;
+            const response = await getProductById(product.key);
+            arrayTemp.push({ ...response, cuantity: 1 });
+          }
         }
+
+        arrayTemp.forEach((product) => {
+          if (counts[product.id] > 1) {
+            product.cuantity = counts[product.id];
+          } else {
+            product.cuantity = 1;
+          }
+        });
+
         setproductsData(arrayTemp);
       } catch (error) {
         console.log(error);
       }
     };
-
+  
     addProductList();
-  }, [productList, getProductById])
+  }, [productList, getProductById]);
 
   const removeProductList = (index) => {
-    const arrayTemp = [...productList]
+    const arrayTemp = [...productList];
     arrayTemp.splice(index, 1);
+    setProductList(arrayTemp);
+  };
+
+  const addProductListButton = (product) => {
+    const arrayTemp = [...productList];
+    arrayTemp.push({key: product.id, text: product.title});
     setProductList(arrayTemp);
   };
 
@@ -160,8 +181,6 @@ export function TableDetailsAdmin() {
     setSubmitted(true);
 
     if (isValid) {
-      //const selectedOption = productsDropdown.find((option) => option.value === selectedProduct);
-      //console.log(selectedOption);
 
       for await (const product of productList) {
         await addOrderToTable(table.tableBooking.id, product.key);
@@ -285,13 +304,13 @@ export function TableDetailsAdmin() {
                     <span className="font-bold">{product.title}</span>
                     <div style={{ marginTop: '0.5rem' }}>
                       <span style={{ marginRight: '0.5rem' }}>Cantidad: </span>
-                      <Badge value="1" />
+                      <Badge value={product.cuantity} />
                     </div>
                   </div>
                 </div>
                 <div style={{ display: "flex" }}>
                   <Button icon="pi pi-minus" severity="danger" style={{ marginRight: "10px" }} onClick={() => removeProductList(index)} />
-                  <Button icon="pi pi-plus" severity="success" />
+                  <Button icon="pi pi-plus" severity="success" onClick={() => addProductListButton(product)} />
                 </div>
               </div>
               <Divider />
