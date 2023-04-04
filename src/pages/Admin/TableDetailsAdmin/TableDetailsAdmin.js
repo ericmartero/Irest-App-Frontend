@@ -84,43 +84,40 @@ export function TableDetailsAdmin() {
     const addProductList = async () => {
       try {
         const arrayTemp = [];
-        const counts = {};
         for await (const product of productList) {
-          if (counts[product.key]) {
-            counts[product.key]++;
-          } else {
-            counts[product.key] = 1;
-            const response = await getProductById(product.key);
-            arrayTemp.push({ ...response, cuantity: 1 });
-          }
+          const response = await getProductById(product.key);
+          arrayTemp.push({ ...response, quantity: product.quantity });
         }
-
-        arrayTemp.forEach((product) => {
-          if (counts[product.id] > 1) {
-            product.cuantity = counts[product.id];
-          } else {
-            product.cuantity = 1;
-          }
-        });
 
         setproductsData(arrayTemp);
       } catch (error) {
         console.log(error);
       }
     };
-  
+
     addProductList();
-  }, [productList, getProductById]);
+  }, [productList, getProductById])
+
 
   const removeProductList = (index) => {
     const arrayTemp = [...productList];
-    arrayTemp.splice(index, 1);
+    const product = arrayTemp[index];
+
+    if (product.quantity === 1) {
+      arrayTemp.splice(index, 1);
+    } else {
+      product.quantity -= 1;
+    }
+
     setProductList(arrayTemp);
   };
 
-  const addProductListButton = (product) => {
+  const addProductListButton = (index) => {
     const arrayTemp = [...productList];
-    arrayTemp.push({key: product.id, text: product.title});
+    const product = arrayTemp[index];
+
+    product.quantity += 1;
+
     setProductList(arrayTemp);
   };
 
@@ -179,6 +176,7 @@ export function TableDetailsAdmin() {
 
     const isValid = validateFields();
     setSubmitted(true);
+    console.log(productList);
 
     if (isValid) {
 
@@ -199,8 +197,19 @@ export function TableDetailsAdmin() {
 
     const arrayTemp = [...productList];
 
-    arrayTemp.push(value);
-    setProductList(arrayTemp);
+    const index = productList.findIndex(product => product.key === value.key);
+    if (index === -1) {
+      arrayTemp.push(value);
+      setProductList(arrayTemp);
+    }
+
+    else {
+      arrayTemp[index].quantity += 1;
+      setProductList(arrayTemp);
+      console.log('esta repetido');
+    }
+
+    console.log(productList);
 
     let errors = { ...validationErrors };
 
@@ -216,7 +225,8 @@ export function TableDetailsAdmin() {
   const formatDropdownData = (data) => {
     return map(data, (item) => ({
       key: item.id,
-      text: item.title
+      text: item.title,
+      quantity: 1
     }));
   };
 
@@ -304,13 +314,13 @@ export function TableDetailsAdmin() {
                     <span className="font-bold">{product.title}</span>
                     <div style={{ marginTop: '0.5rem' }}>
                       <span style={{ marginRight: '0.5rem' }}>Cantidad: </span>
-                      <Badge value={product.cuantity} />
+                      <Badge value={product.quantity} />
                     </div>
                   </div>
                 </div>
                 <div style={{ display: "flex" }}>
-                  <Button icon="pi pi-minus" severity="danger" style={{ marginRight: "10px" }} onClick={() => removeProductList(index)} />
-                  <Button icon="pi pi-plus" severity="success" onClick={() => addProductListButton(product)} />
+                  <Button icon="pi pi-minus" severity="danger" style={{ marginRight: "10px" }} onClick={() => removeProductList(index, product)} />
+                  <Button icon="pi pi-plus" severity="success" onClick={() => addProductListButton(index)} />
                 </div>
               </div>
               <Divider />
@@ -321,4 +331,5 @@ export function TableDetailsAdmin() {
       </Dialog>
     </div>
   )
+
 }
