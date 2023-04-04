@@ -170,21 +170,31 @@ export function TableDetailsAdmin() {
     setSubmitted(false);
     setProductDialog(false);
     setValidationErrors({});
+
+    const arrayTemp = [...productList];
+    for (const product of arrayTemp) {
+      product.quantity = 1;
+    }
+    setProductList(arrayTemp);
   };
 
   const saveOrders = async () => {
 
     const isValid = validateFields();
     setSubmitted(true);
-    console.log(productList);
 
     if (isValid) {
+      const arrayTemp = [...productList];
 
-      for await (const product of productList) {
-        await addOrderToTable(table.tableBooking.id, product.key);
-      }
+      await Promise.all(arrayTemp.map(async (product) => {
+        for (let i = 0; i < product.quantity; i++) {
+          await addOrderToTable(table.tableBooking.id, product.key);
+        }
+        product.quantity = 1;
+      }));
 
       onRefreshOrders();
+      setProductList(arrayTemp);
       toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Pedido creado correctamente', life: 3000 });
 
       setProductDialog(false);
@@ -200,16 +210,13 @@ export function TableDetailsAdmin() {
     const index = productList.findIndex(product => product.key === value.key);
     if (index === -1) {
       arrayTemp.push(value);
-      setProductList(arrayTemp);
     }
 
     else {
       arrayTemp[index].quantity += 1;
-      setProductList(arrayTemp);
-      console.log('esta repetido');
     }
 
-    console.log(productList);
+    setProductList(arrayTemp);
 
     let errors = { ...validationErrors };
 
