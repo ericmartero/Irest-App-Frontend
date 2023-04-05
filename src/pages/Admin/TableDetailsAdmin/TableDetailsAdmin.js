@@ -36,6 +36,7 @@ export function TableDetailsAdmin() {
 
   const [submitted, setSubmitted] = useState(false);
   const [productDialog, setProductDialog] = useState(false);
+  const [deleteOrderDialog, setDeleteOrderDialog] = useState(false);
 
   const [validationErrors, setValidationErrors] = useState({});
   const [productsDropdown, setProductsDropdown] = useState([])
@@ -179,6 +180,9 @@ export function TableDetailsAdmin() {
     }
     setProductList(arrayTemp);
   };
+  const hideDeleteOrderDialog = () => {
+    setDeleteOrderDialog(false);
+  };
 
   const saveOrders = async () => {
 
@@ -204,6 +208,18 @@ export function TableDetailsAdmin() {
       setValidationErrors({});
     }
   }
+
+  const deleteSelectedOrder = async () => {
+    /*try {
+      await deleteUser(user.id);
+      onRefresh();
+    } catch (error) {
+      console.log(error);
+    }*/
+
+    setDeleteOrderDialog(false);
+    toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Usuario borrado correctamente', life: 3000 });
+  };
 
   const onDropdownChange = (value) => {
 
@@ -254,6 +270,13 @@ export function TableDetailsAdmin() {
     );
   };
 
+  const deleteOrderDialogFooter = (
+    <React.Fragment>
+      <Button label="No" icon="pi pi-times" outlined onClick={hideDeleteOrderDialog} />
+      <Button label="Si" icon="pi pi-check" severity="danger" onClick={deleteSelectedOrder} />
+    </React.Fragment>
+  );
+
   const rightToolbarTemplate = () => {
     return (
       <div className="flex flex-wrap gap-2">
@@ -293,8 +316,8 @@ export function TableDetailsAdmin() {
               </div>
             </div>
             <div className="flex sm:flex-column align-items-center sm:align-items-end gap-3">
-              {order.status === ORDER_STATUS.PENDING ? <Button label="Entregar pedido" icon="pi pi-check" onClick={() => onCheckDeliveredOrder(ORDER_STATUS.DELIVERED)} /> : <Button label="Revertir pedido" icon="pi pi-arrow-circle-right" onClick={() => onCheckDeliveredOrder(ORDER_STATUS.PENDING)} style={{width: '100%'}} />}
-              <Button label="Cancelar pedido" icon="pi pi-times" severity='danger'/>
+              {order.status === ORDER_STATUS.PENDING ? <Button label="Entregar pedido" icon="pi pi-check" onClick={() => onCheckDeliveredOrder(ORDER_STATUS.DELIVERED)} /> : <Button label="Revertir pedido" icon="pi pi-arrow-circle-right" onClick={() => onCheckDeliveredOrder(ORDER_STATUS.PENDING)} style={{ width: '100%' }} />}
+              <Button label="Cancelar pedido" icon="pi pi-times" severity='danger' onClick={() => setDeleteOrderDialog(true)} />
             </div>
           </div>
         </div>
@@ -337,6 +360,13 @@ export function TableDetailsAdmin() {
             </div>
           ))}
 
+        </div>
+      </Dialog>
+      
+      <Dialog visible={deleteOrderDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteOrderDialogFooter} onHide={hideDeleteOrderDialog}>
+        <div className="confirmation-content">
+          <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+          <span>Seguro que quieres cancelar el pedido?</span>
         </div>
       </Dialog>
     </div>
