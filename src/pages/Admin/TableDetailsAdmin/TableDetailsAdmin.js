@@ -292,8 +292,9 @@ export function TableDetailsAdmin() {
                 </div>
               </div>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              {order.status === ORDER_STATUS.PENDING ? <Button label="Entregar pedido" icon="pi pi-check" iconPos='right' onClick={() => onCheckDeliveredOrder(ORDER_STATUS.DELIVERED)} /> : <Button label="Revertir pedido" icon="pi pi-times" iconPos='right' onClick={() => onCheckDeliveredOrder(ORDER_STATUS.PENDING)} />}
+            <div className="flex sm:flex-column align-items-center sm:align-items-end gap-3">
+              {order.status === ORDER_STATUS.PENDING ? <Button label="Entregar pedido" icon="pi pi-check" onClick={() => onCheckDeliveredOrder(ORDER_STATUS.DELIVERED)} /> : <Button label="Revertir pedido" icon="pi pi-times" onClick={() => onCheckDeliveredOrder(ORDER_STATUS.PENDING)} style={{width: '100%'}} />}
+              <Button label="Cancelar pedido" icon="pi pi-times" severity='danger'/>
             </div>
           </div>
         </div>
