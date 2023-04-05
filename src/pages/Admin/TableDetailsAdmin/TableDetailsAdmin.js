@@ -70,7 +70,9 @@ export function TableDetailsAdmin() {
 
   useEffect(() => {
     if (orders) {
-      setOrdersBooking(orders);
+      const pendingOrders = orders.filter((order) => order.status === ORDER_STATUS.PENDING);
+      const deliveredOrders = orders.filter((order) => order.status === ORDER_STATUS.DELIVERED);
+      setOrdersBooking(groupOrdersStatus(pendingOrders).concat(groupOrdersStatus(deliveredOrders)));
     }
   }, [orders]);
 
@@ -100,6 +102,17 @@ export function TableDetailsAdmin() {
     addProductList();
   }, [productList, getProductById])
 
+  const groupOrdersStatus = (data) => {
+    return data.reduce((acc, order) => {
+      const existingOrder = acc.find((o) => o.product.id === order.product.id);
+      if (existingOrder) {
+        existingOrder.quantity += 1;
+      } else {
+        acc.push({ id: order.id, product: order.product, status: order.status, tableBooking: order.tableBooking, quantity: 1 });
+      }
+      return acc;
+    }, []);
+  };
 
   const removeProductList = (index) => {
     const arrayTemp = [...productList];
@@ -302,6 +315,7 @@ export function TableDetailsAdmin() {
   const itemTemplate = (order) => {
 
     const onCheckDeliveredOrder = async (status) => {
+      order.quantity --;
       await checkDeliveredOrder(order.id, status);
       onRefreshOrders();
     }
@@ -326,7 +340,7 @@ export function TableDetailsAdmin() {
             <div className="flex flex-column align-items-center justify-content-center">
               <span className="font-semibold">
                 Cantidad:
-                <Badge value="4" size="large" style={{marginLeft: '1rem'}} />
+                <Badge value={order.quantity} size="large" style={{marginLeft: '1rem'}} />
               </span>
             </div>
 
