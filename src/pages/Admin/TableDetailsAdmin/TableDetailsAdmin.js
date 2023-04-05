@@ -164,12 +164,14 @@ export function TableDetailsAdmin() {
     setProductDialog(true);
     setProductList([]);
     setproductsData([]);
+    document.body.classList.add('body-scroll-lock');
   };
 
   const hideDialog = () => {
     setSubmitted(false);
     setProductDialog(false);
     setValidationErrors({});
+    document.body.classList.remove('body-scroll-lock');
 
     const arrayTemp = [...productList];
     for (const product of arrayTemp) {
@@ -308,7 +310,7 @@ export function TableDetailsAdmin() {
           <label htmlFor="categoria" className="font-bold">
             Producto a pedir
           </label>
-          <Dropdown value={null} onChange={(e) => onDropdownChange(e.value)} options={productsDropdown} optionLabel="text" placeholder="Selecciona una producto"
+          <Dropdown value={null} onChange={(e) => onDropdownChange(e.value)} options={productsDropdown} filter optionLabel="text" placeholder="Selecciona una producto"
             style={{ marginBottom: "0.5rem" }} className={classNames({ "p-invalid": submitted && (validationErrors.product) })} />
           {submitted && validationErrors.product && (<small className="p-error">{validationErrors.product}</small>)}
 
