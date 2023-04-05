@@ -22,7 +22,7 @@ export function TableDetailsAdmin() {
 
   const toast = useRef(null);
   const tableURL = useParams();
-  const { orders, getOrdersByTable, checkDeliveredOrder, addOrderToTable } = useOrder();
+  const { orders, getOrdersByTable, checkDeliveredOrder, addOrderToTable, deleteOrder } = useOrder();
   const { tables, getTableById } = useTable();
   const { products, getProducts, getProductById } = useProduct();
 
@@ -207,20 +207,20 @@ export function TableDetailsAdmin() {
       setProductDialog(false);
       setSubmitted(false);
       setValidationErrors({});
+      document.body.classList.remove('body-scroll-lock');
     }
   }
 
   const deleteSelectedOrder = async () => {
-    console.log(orderDelete);
-    /*try {
-      await deleteUser(user.id);
-      onRefresh();
+    try {
+      await deleteOrder(orderDelete);
+      onRefreshOrders();
     } catch (error) {
       console.log(error);
-    }*/
+    }
 
     setDeleteOrderDialog(false);
-    toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Usuario borrado correctamente', life: 3000 });
+    toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Pedido cancelado correctamente', life: 3000 });
   };
 
   const onDropdownChange = (value) => {
@@ -335,7 +335,7 @@ export function TableDetailsAdmin() {
   return (
     <div className="card">
       <Toast ref={toast} />
-      <DataView value={ordersBooking} itemTemplate={itemTemplate} header={header()} sortField={sortField} sortOrder={sortOrder} />
+      <DataView value={ordersBooking} itemTemplate={itemTemplate} header={header()} sortField={sortField} sortOrder={sortOrder} emptyMessage='No hay pedidos en la mesa' />
       <Dialog visible={productDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={'Añadir pedidos'} modal className="p-fluid" footer={orderDialogFooter} onHide={hideDialog}>
         <div className="field">
           <label htmlFor="categoria" className="font-bold">

@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useAuth } from './';
-import { getOrdersByTableApi, checkDeliveredOrderApi, addOrderToTableApi } from '../api/order';
+import { getOrdersByTableApi, checkDeliveredOrderApi, addOrderToTableApi, deleteOrderApi } from '../api/order';
 
 export function useOrder() {
 
@@ -32,10 +32,19 @@ export function useOrder() {
         }
     };
 
+    const deleteOrder = async (id) => {
+        try {
+            await deleteOrderApi(id, auth.token);
+        } catch (error) {
+            throw error;
+        }
+    };
+
     return {
         orders,
         getOrdersByTable,
         checkDeliveredOrder,
         addOrderToTable,
+        deleteOrder,
     };
 }
