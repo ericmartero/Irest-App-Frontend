@@ -81,7 +81,7 @@ export function TablesAdmin() {
     setSubmitted(true);
 
     if (isValid) {
-      //EDIT
+
       if (table.id) {
 
         const editTable = {
@@ -97,7 +97,6 @@ export function TablesAdmin() {
           console.log(error);
         }
 
-        //SAVE
       } else {
 
         const newTable = {
@@ -118,6 +117,7 @@ export function TablesAdmin() {
       setValidationErrors({});
       setTableDialog(false);
       setTable(emptyTable);
+      document.body.classList.remove('body-scroll-lock');
     }
   };
 

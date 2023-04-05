@@ -121,6 +121,7 @@ export function CategoriesAdmin() {
       setValidationErrors({});
       setCategoryDialog(false);
       setCategory(emptyCategory);
+      document.body.classList.remove('body-scroll-lock');
     }
   };
 

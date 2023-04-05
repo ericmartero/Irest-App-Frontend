@@ -145,6 +145,7 @@ export function UsersAdmin() {
       setValidationErrors({});
       setUserDialog(false);
       setUser(emptyUser);
+      document.body.classList.remove('body-scroll-lock');
     }
   };
 

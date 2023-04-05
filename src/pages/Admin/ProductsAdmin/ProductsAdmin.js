@@ -106,7 +106,6 @@ export function ProductsAdmin() {
 
     if (isValid) {
 
-      //EDITAR
       if (product.id) {
 
         const editProduct = {
@@ -125,7 +124,6 @@ export function ProductsAdmin() {
           console.log(error);
         }
 
-        //ENVIAR
       } else {
 
         const newProduct = {
@@ -150,6 +148,7 @@ export function ProductsAdmin() {
       setValidationErrors({});
       setProductDialog(false);
       setProduct(emptyProduct);
+      document.body.classList.remove('body-scroll-lock');
     }
   };
 
