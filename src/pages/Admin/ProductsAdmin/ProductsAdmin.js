@@ -78,6 +78,7 @@ export function ProductsAdmin() {
     setSubmitted(false);
     setProductDialog(true);
     setActionName('Añadir Producto');
+    document.body.classList.add('body-scroll-lock');
   };
 
   const hideDialog = () => {
@@ -85,6 +86,7 @@ export function ProductsAdmin() {
     setProductDialog(false);
     setValidationErrors({});
     setUploadedImage(false);
+    document.body.classList.remove('body-scroll-lock');
   };
 
   const hideDeleteProductDialog = () => {

@@ -57,12 +57,14 @@ export function TablesAdmin() {
     setSubmitted(false);
     setTableDialog(true);
     setActionName('Añadir Mesa');
+    document.body.classList.add('body-scroll-lock');
   };
 
   const hideDialog = () => {
     setSubmitted(false);
     setTableDialog(false);
     setValidationErrors({});
+    document.body.classList.remove('body-scroll-lock');
   };
 
   const hideDeleteTableDialog = () => {

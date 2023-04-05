@@ -59,6 +59,7 @@ export function CategoriesAdmin() {
     setSubmitted(false);
     setCategoryDialog(true);
     setActionName('Añadir Categoría');
+    document.body.classList.add('body-scroll-lock');
   };
 
   const hideDialog = () => {
@@ -66,6 +67,7 @@ export function CategoriesAdmin() {
     setCategoryDialog(false);
     setValidationErrors({});
     setUploadedImage(false);
+    document.body.classList.remove('body-scroll-lock');
   };
 
   const hideDeleteCategoryDialog = () => {
