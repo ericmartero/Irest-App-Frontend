@@ -69,12 +69,14 @@ export function UsersAdmin() {
     setSubmitted(false);
     setUserDialog(true);
     setActionName('Añadir Usuario');
+    document.body.classList.add('body-scroll-lock');
   };
 
   const hideDialog = () => {
     setSubmitted(false);
     setUserDialog(false);
     setValidationErrors({});
+    document.body.classList.remove('body-scroll-lock');
   };
 
   const hideDeleteUserDialog = () => {
@@ -451,7 +453,6 @@ export function UsersAdmin() {
                     placeholder="Selecciona los roles"
                     itemTemplate={itemTemplate}
                     selectedItemTemplate={selectedItemTemplate}
-                    appendTo="self"
                   />
                 </div>
 
