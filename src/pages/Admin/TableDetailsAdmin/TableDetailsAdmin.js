@@ -311,7 +311,7 @@ export function TableDetailsAdmin() {
         <div className="flex flex-column xl:flex-row p-4 gap-4" style={order.status === 'PENDING' ? { backgroundColor: 'var(--yellow-100)' } : { backgroundColor: 'var(--green-100)' }}>
           <img className="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block mx-auto border-round" src={order.product.image} alt={order.product.title} />
           <div className="flex flex-column sm:flex-row justify-content-between align-items-center flex-1 gap-4">
-            <div className="flex flex-column align-items-center sm:align-items-start gap-3">
+            <div className="product-info flex flex-column align-items-center sm:align-items-start gap-3">
               <div className="text-2xl font-bold text-900">{order.product.title}</div>
               <span className="font-semibold">
                 {moment(order.createdAt).format('HH:mm')} - {moment(order.createdAt).startOf('seconds').fromNow()}
@@ -322,6 +322,14 @@ export function TableDetailsAdmin() {
                 </div>
               </div>
             </div>
+
+            <div className="flex flex-column align-items-center justify-content-center">
+              <span className="font-semibold">
+                Cantidad:
+                <Badge value="4" size="large" style={{marginLeft: '1rem'}} />
+              </span>
+            </div>
+
             <div className="flex sm:flex-column align-items-center sm:align-items-end gap-3">
               {order.status === ORDER_STATUS.PENDING ? <Button label="Entregar pedido" icon="pi pi-check" onClick={() => onCheckDeliveredOrder(ORDER_STATUS.DELIVERED)} /> : <Button label="Revertir pedido" icon="pi pi-arrow-circle-right" onClick={() => onCheckDeliveredOrder(ORDER_STATUS.PENDING)} style={{ width: '100%' }} />}
               <Button label="Cancelar pedido" icon="pi pi-times" severity='danger' onClick={() => confirmDeleteOrder(order)} />
