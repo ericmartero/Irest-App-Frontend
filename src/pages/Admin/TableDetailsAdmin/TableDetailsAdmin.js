@@ -37,6 +37,7 @@ export function TableDetailsAdmin() {
   const [submitted, setSubmitted] = useState(false);
   const [productDialog, setProductDialog] = useState(false);
   const [deleteOrderDialog, setDeleteOrderDialog] = useState(false);
+  const [orderDelete, setOrderDelete] = useState(null);
 
   const [validationErrors, setValidationErrors] = useState({});
   const [productsDropdown, setProductsDropdown] = useState([])
@@ -210,6 +211,7 @@ export function TableDetailsAdmin() {
   }
 
   const deleteSelectedOrder = async () => {
+    console.log(orderDelete);
     /*try {
       await deleteUser(user.id);
       onRefresh();
@@ -255,7 +257,7 @@ export function TableDetailsAdmin() {
     }));
   };
 
-  const userDialogFooter = (
+  const orderDialogFooter = (
     <React.Fragment>
       <Button label="Cancelar" icon="pi pi-times" className="bttnFoot" outlined onClick={hideDialog} />
       <Button label="Guardar" icon="pi pi-check" onClick={saveOrders} disabled={!submitted || Object.keys(validationErrors).length === 0 ? false : true} />
@@ -276,6 +278,11 @@ export function TableDetailsAdmin() {
       <Button label="Si" icon="pi pi-check" severity="danger" onClick={deleteSelectedOrder} />
     </React.Fragment>
   );
+
+  const confirmDeleteOrder = (order) => {
+    setDeleteOrderDialog(true);
+    setOrderDelete(order.id);
+  };
 
   const rightToolbarTemplate = () => {
     return (
@@ -317,7 +324,7 @@ export function TableDetailsAdmin() {
             </div>
             <div className="flex sm:flex-column align-items-center sm:align-items-end gap-3">
               {order.status === ORDER_STATUS.PENDING ? <Button label="Entregar pedido" icon="pi pi-check" onClick={() => onCheckDeliveredOrder(ORDER_STATUS.DELIVERED)} /> : <Button label="Revertir pedido" icon="pi pi-arrow-circle-right" onClick={() => onCheckDeliveredOrder(ORDER_STATUS.PENDING)} style={{ width: '100%' }} />}
-              <Button label="Cancelar pedido" icon="pi pi-times" severity='danger' onClick={() => setDeleteOrderDialog(true)} />
+              <Button label="Cancelar pedido" icon="pi pi-times" severity='danger' onClick={() => confirmDeleteOrder(order)} />
             </div>
           </div>
         </div>
@@ -329,7 +336,7 @@ export function TableDetailsAdmin() {
     <div className="card">
       <Toast ref={toast} />
       <DataView value={ordersBooking} itemTemplate={itemTemplate} header={header()} sortField={sortField} sortOrder={sortOrder} />
-      <Dialog visible={productDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={'Añadir pedidos'} modal className="p-fluid" footer={userDialogFooter} onHide={hideDialog}>
+      <Dialog visible={productDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={'Añadir pedidos'} modal className="p-fluid" footer={orderDialogFooter} onHide={hideDialog}>
         <div className="field">
           <label htmlFor="categoria" className="font-bold">
             Producto a pedir
@@ -362,7 +369,7 @@ export function TableDetailsAdmin() {
 
         </div>
       </Dialog>
-      
+
       <Dialog visible={deleteOrderDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteOrderDialogFooter} onHide={hideDeleteOrderDialog}>
         <div className="confirmation-content">
           <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
