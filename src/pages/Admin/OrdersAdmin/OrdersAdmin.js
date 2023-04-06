@@ -6,6 +6,7 @@ import { useTable } from '../../../hooks';
 import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
 import { Badge } from 'primereact/badge';
+import { ProgressSpinner } from 'primereact/progressspinner';
 import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
 import { Tag } from 'primereact/tag';
 import './OrdersAdmin.scss';
@@ -14,7 +15,7 @@ export function OrdersAdmin() {
 
   const toast = useRef(null);
   const history = useHistory();
-  const { tables, getTables } = useTable();
+  const { loading, tables, getTables } = useTable();
   const [refreshTables, setRefreshTables] = useState(false);
   const [tablesCrud, setTablesCrud] = useState([]);
   const [layout, setLayout] = useState('grid');
@@ -145,7 +146,12 @@ export function OrdersAdmin() {
   return (
     <div className="card">
       <Toast ref={toast} />
-      <DataView value={tablesCrud} itemTemplate={itemTemplate} layout={layout} header={header()} />
+      {loading ?
+        <div className="align-container">
+          <ProgressSpinner /> 
+        </div>
+        :
+      <DataView value={tablesCrud} itemTemplate={itemTemplate} layout={layout} header={header()} emptyMessage='No se ha encontrado ninguna mesa' />}
     </div>
   )
 }
