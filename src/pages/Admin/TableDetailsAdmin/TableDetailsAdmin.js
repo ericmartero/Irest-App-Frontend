@@ -8,6 +8,7 @@ import { Button } from 'primereact/button';
 import { DataView } from 'primereact/dataview';
 import { Toolbar } from 'primereact/toolbar';
 import { Dropdown } from 'primereact/dropdown';
+import { ProgressSpinner } from 'primereact/progressspinner';
 import { Divider } from 'primereact/divider';
 import { Badge } from 'primereact/badge';
 import { Toast } from 'primereact/toast';
@@ -22,7 +23,7 @@ export function TableDetailsAdmin() {
 
   const toast = useRef(null);
   const tableURL = useParams();
-  const { orders, getOrdersByTable, checkDeliveredOrder, addOrderToTable, deleteOrder } = useOrder();
+  const { orders, loading, getOrdersByTable, checkDeliveredOrder, addOrderToTable, deleteOrder } = useOrder();
   const { tables, getTableById } = useTable();
   const { products, getProducts, getProductById } = useProduct();
 
@@ -315,7 +316,7 @@ export function TableDetailsAdmin() {
   const itemTemplate = (order) => {
 
     const onCheckDeliveredOrder = async (status) => {
-      order.quantity --;
+      order.quantity--;
       await checkDeliveredOrder(order.id, status);
       onRefreshOrders();
     }
@@ -340,7 +341,7 @@ export function TableDetailsAdmin() {
             <div className="flex flex-column align-items-center justify-content-center">
               <span className="font-semibold">
                 Cantidad:
-                <Badge value={order.quantity} size="large" style={{marginLeft: '1rem'}} />
+                <Badge value={order.quantity} size="large" style={{ marginLeft: '1rem' }} />
               </span>
             </div>
 
@@ -357,47 +358,55 @@ export function TableDetailsAdmin() {
   return (
     <div className="card">
       <Toast ref={toast} />
-      <DataView value={ordersBooking} itemTemplate={itemTemplate} header={header()} sortField={sortField} sortOrder={sortOrder} emptyMessage='No hay pedidos en la mesa' />
-      <Dialog visible={productDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={'Añadir pedidos'} modal className="p-fluid" footer={orderDialogFooter} onHide={hideDialog}>
-        <div className="field">
-          <label htmlFor="categoria" className="font-bold">
-            Producto a pedir
-          </label>
-          <Dropdown value={null} onChange={(e) => onDropdownChange(e.value)} options={productsDropdown} filter optionLabel="text" placeholder="Selecciona una producto"
-            style={{ marginBottom: "0.5rem" }} className={classNames({ "p-invalid": submitted && (validationErrors.product) })} />
-          {submitted && validationErrors.product && (<small className="p-error">{validationErrors.product}</small>)}
+      {loading ?
+        <div className="align-container">
+          <ProgressSpinner />
+        </div>
+        :
+        <>
+          <DataView value={ordersBooking} itemTemplate={itemTemplate} header={header()} sortField={sortField} sortOrder={sortOrder} emptyMessage='No hay pedidos en la mesa' />
+          <Dialog visible={productDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={'Añadir pedidos'} modal className="p-fluid" footer={orderDialogFooter} onHide={hideDialog}>
+            <div className="field">
+              <label htmlFor="categoria" className="font-bold">
+                Producto a pedir
+              </label>
+              <Dropdown value={null} onChange={(e) => onDropdownChange(e.value)} options={productsDropdown} filter optionLabel="text" placeholder="Selecciona una producto"
+                style={{ marginBottom: "0.5rem" }} className={classNames({ "p-invalid": submitted && (validationErrors.product) })} />
+              {submitted && validationErrors.product && (<small className="p-error">{validationErrors.product}</small>)}
 
-          {map(productsData, (product, index) => (
-            <div key={index}>
-              <div className='product-add-order'>
-                <div className='product-add-info'>
-                  <img className="w-9 sm:w-13rem xl:w-7rem block xl:block mx-auto border-round" src={product.image} alt={product.title} />
-                  <div style={{ marginLeft: '1.5rem' }}>
-                    <span className="font-bold">{product.title}</span>
-                    <div style={{ marginTop: '0.5rem' }}>
-                      <span style={{ marginRight: '0.5rem' }}>Cantidad: </span>
-                      <Badge value={product.quantity} />
+              {map(productsData, (product, index) => (
+                <div key={index}>
+                  <div className='product-add-order'>
+                    <div className='product-add-info'>
+                      <img className="w-9 sm:w-13rem xl:w-7rem block xl:block mx-auto border-round" src={product.image} alt={product.title} />
+                      <div style={{ marginLeft: '1.5rem' }}>
+                        <span className="font-bold">{product.title}</span>
+                        <div style={{ marginTop: '0.5rem' }}>
+                          <span style={{ marginRight: '0.5rem' }}>Cantidad: </span>
+                          <Badge value={product.quantity} />
+                        </div>
+                      </div>
+                    </div>
+                    <div style={{ display: "flex" }}>
+                      <Button icon="pi pi-minus" severity="danger" style={{ marginRight: "10px" }} onClick={() => removeProductList(index, product)} />
+                      <Button icon="pi pi-plus" severity="success" onClick={() => addProductListButton(index)} />
                     </div>
                   </div>
+                  <Divider />
                 </div>
-                <div style={{ display: "flex" }}>
-                  <Button icon="pi pi-minus" severity="danger" style={{ marginRight: "10px" }} onClick={() => removeProductList(index, product)} />
-                  <Button icon="pi pi-plus" severity="success" onClick={() => addProductListButton(index)} />
-                </div>
-              </div>
-              <Divider />
+              ))}
+
             </div>
-          ))}
+          </Dialog>
 
-        </div>
-      </Dialog>
-
-      <Dialog visible={deleteOrderDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteOrderDialogFooter} onHide={hideDeleteOrderDialog}>
-        <div className="confirmation-content">
-          <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-          <span>Seguro que quieres cancelar el pedido?</span>
-        </div>
-      </Dialog>
+          <Dialog visible={deleteOrderDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteOrderDialogFooter} onHide={hideDeleteOrderDialog}>
+            <div className="confirmation-content">
+              <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+              <span>Seguro que quieres cancelar el pedido?</span>
+            </div>
+          </Dialog>
+        </>
+      }
     </div>
   )
 

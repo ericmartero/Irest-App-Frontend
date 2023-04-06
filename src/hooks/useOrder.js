@@ -6,12 +6,16 @@ export function useOrder() {
 
     const { auth } = useAuth();
     const [orders, setOrders] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     const getOrdersByTable = useCallback( async (id, status) => {
         try {
+            setLoading(true);
             const response = await getOrdersByTableApi(id, auth.token, status);
+            setLoading(false);
             setOrders(response);
         } catch (error) {
+            setLoading(false);
             throw error;
         }
     }, [auth?.token]);
@@ -42,6 +46,7 @@ export function useOrder() {
 
     return {
         orders,
+        loading,
         getOrdersByTable,
         checkDeliveredOrder,
         addOrderToTable,
