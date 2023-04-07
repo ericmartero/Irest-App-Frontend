@@ -37,6 +37,7 @@ export function TableDetailsAdmin() {
 
   const [submitted, setSubmitted] = useState(false);
   const [productDialog, setProductDialog] = useState(false);
+  const [confirmPaymentDialog, setConfirmPaymentDialog] = useState(false);
   const [deleteOrderDialog, setDeleteOrderDialog] = useState(false);
   const [orderDelete, setOrderDelete] = useState(null);
 
@@ -195,8 +196,13 @@ export function TableDetailsAdmin() {
     }
     setProductList(arrayTemp);
   };
+
   const hideDeleteOrderDialog = () => {
     setDeleteOrderDialog(false);
+  };
+
+  const hideConfirmPaymentDialog = () => {
+    setConfirmPaymentDialog(false);
   };
 
   const saveOrders = async () => {
@@ -235,6 +241,11 @@ export function TableDetailsAdmin() {
 
     setDeleteOrderDialog(false);
     toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Pedido cancelado correctamente', life: 3000 });
+  };
+
+  const createPayment = () => {
+    console.log('aaa');
+    setConfirmPaymentDialog(false);
   };
 
   const onDropdownChange = (value) => {
@@ -293,6 +304,13 @@ export function TableDetailsAdmin() {
     </React.Fragment>
   );
 
+  const confirmPaymentDialogFooter = (
+    <React.Fragment>
+      <Button label="No" icon="pi pi-times" outlined onClick={hideConfirmPaymentDialog} />
+      <Button label="Si" icon="pi pi-check" severity="danger" onClick={createPayment} />
+    </React.Fragment>
+  );
+
   const confirmDeleteOrder = (order) => {
     setDeleteOrderDialog(true);
     setOrderDelete(order.id);
@@ -302,7 +320,8 @@ export function TableDetailsAdmin() {
     return (
       <div className="flex flex-wrap gap-2">
         <Dropdown options={sortOptions} value={sortKey} optionLabel="label" placeholder="Ordenar por estado" onChange={onSortChange} />
-        <Button label="Añadir pedido" icon="pi pi-plus" severity="success" className='ml-5' onClick={openNew} />
+        <Button label="Añadir pedido" severity="success" className='ml-5' onClick={openNew} />
+        <Button label="Generar Cuenta" severity="danger" className='ml-2' onClick={() => setConfirmPaymentDialog(true)} />
       </div>
     );
   };
@@ -403,6 +422,13 @@ export function TableDetailsAdmin() {
             <div className="confirmation-content">
               <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
               <span>Seguro que quieres cancelar el pedido?</span>
+            </div>
+          </Dialog>
+
+          <Dialog visible={confirmPaymentDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={confirmPaymentDialogFooter} onHide={hideDeleteOrderDialog}>
+            <div className="confirmation-content">
+              <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+              <span>Estas seguro de generar la cuenta de esta mesa?</span>
             </div>
           </Dialog>
         </>
