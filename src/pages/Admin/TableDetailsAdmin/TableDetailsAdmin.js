@@ -24,7 +24,7 @@ export function TableDetailsAdmin() {
 
   const toast = useRef(null);
   const tableURL = useParams();
-  const { orders, loading, getOrdersByTable, checkDeliveredOrder, addOrderToTable, deleteOrder } = useOrder();
+  const { orders, loading, getOrdersByTable, checkDeliveredOrder, addOrderToTable, deleteOrder, addPaymentToOrder } = useOrder();
   const { tables, getTableById } = useTable();
   const { products, getProducts, getProductById } = useProduct();
   const { createPayment } = usePayment();
@@ -262,7 +262,14 @@ export function TableDetailsAdmin() {
     }
 
     const payment = await createPayment(paymentData);
-    console.log(payment);
+
+    for await (const order of orders) {
+      await addPaymentToOrder(order.id, payment.id);
+    }
+
+    onRefreshOrders();
+    toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Se ha creado la cuenta correctamente', life: 3000 });
+
     setConfirmTypePaymentDialog(false);
     setPaymentType(PAYMENT_TYPE.CARD);
   };
