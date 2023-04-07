@@ -9,6 +9,7 @@ import { DataView } from 'primereact/dataview';
 import { Toolbar } from 'primereact/toolbar';
 import { Dropdown } from 'primereact/dropdown';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { RadioButton } from "primereact/radiobutton";
 import { Divider } from 'primereact/divider';
 import { Badge } from 'primereact/badge';
 import { Toast } from 'primereact/toast';
@@ -37,7 +38,7 @@ export function TableDetailsAdmin() {
 
   const [submitted, setSubmitted] = useState(false);
   const [productDialog, setProductDialog] = useState(false);
-  const [confirmPaymentDialog, setConfirmPaymentDialog] = useState(false);
+  const [confirmTypePaymentDialog, setConfirmTypePaymentDialog] = useState(false);
   const [deleteOrderDialog, setDeleteOrderDialog] = useState(false);
   const [orderDelete, setOrderDelete] = useState(null);
 
@@ -46,6 +47,8 @@ export function TableDetailsAdmin() {
 
   const [productList, setProductList] = useState([]);
   const [productsData, setproductsData] = useState([]);
+
+  const [paymentType, setPaymentType] = useState('');
 
   const sortOptions = [
     { label: 'Entregados', value: 'status' },
@@ -201,8 +204,8 @@ export function TableDetailsAdmin() {
     setDeleteOrderDialog(false);
   };
 
-  const hideConfirmPaymentDialog = () => {
-    setConfirmPaymentDialog(false);
+  const hideConfirmTypePaymentDialog = () => {
+    setConfirmTypePaymentDialog(false);
   };
 
   const saveOrders = async () => {
@@ -257,7 +260,7 @@ export function TableDetailsAdmin() {
       statusPayment: PAYMENT_STATUS.PENDING
     }
     console.log(paymentData);
-    setConfirmPaymentDialog(false);
+    setConfirmTypePaymentDialog(false);
   };
 
   const onDropdownChange = (value) => {
@@ -316,10 +319,10 @@ export function TableDetailsAdmin() {
     </React.Fragment>
   );
 
-  const confirmPaymentDialogFooter = (
+  const confirmTypePaymentDialogFooter = (
     <React.Fragment>
-      <Button label="No" icon="pi pi-times" outlined onClick={hideConfirmPaymentDialog} />
-      <Button label="Si" icon="pi pi-check" severity="danger" onClick={createPayment} />
+      <Button label="Cancelar" icon="pi pi-times" outlined onClick={hideConfirmTypePaymentDialog} />
+      <Button label="Generar Cuenta" icon="pi pi-check" severity="danger" onClick={createPayment} />
     </React.Fragment>
   );
 
@@ -333,7 +336,7 @@ export function TableDetailsAdmin() {
       <div className="flex flex-wrap gap-2">
         <Dropdown options={sortOptions} value={sortKey} optionLabel="label" placeholder="Ordenar por estado" onChange={onSortChange} />
         <Button label="Añadir pedido" severity="success" className='ml-5' onClick={openNew} />
-        <Button label="Generar Cuenta" severity="danger" className='ml-2' onClick={() => setConfirmPaymentDialog(true)} />
+        <Button label="Generar Cuenta" severity="danger" className='ml-2' onClick={() => setConfirmTypePaymentDialog(true)} />
       </div>
     );
   };
@@ -437,10 +440,22 @@ export function TableDetailsAdmin() {
             </div>
           </Dialog>
 
-          <Dialog visible={confirmPaymentDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={confirmPaymentDialogFooter} onHide={hideDeleteOrderDialog}>
-            <div className="confirmation-content">
-              <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-              <span>Estas seguro de generar la cuenta de esta mesa?</span>
+          <Dialog visible={confirmTypePaymentDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Cuenta" modal footer={confirmTypePaymentDialogFooter} onHide={hideConfirmTypePaymentDialog}>
+            <div className="confirmation-typePayment">
+              <span className="font-semibold">Tipo de pago:</span>
+              <div className="card flex justify-content-center">
+                <div className="flex flex-wrap gap-3">
+                  <div className="flex align-items-center">
+                    <RadioButton inputId="card" name="payment" value="CARD" onChange={(e) => setPaymentType(e.value)} checked={paymentType === PAYMENT_TYPE.CARD} />
+                    <label htmlFor="card" className="ml-2">Targeta</label>
+                  </div>
+                  <div className="flex align-items-center">
+                    <RadioButton inputId="cash" name="payment" value="CASH" onChange={(e) => setPaymentType(e.value)} checked={paymentType === PAYMENT_TYPE.CASH} />
+                    <label htmlFor="card" className="ml-2">Efectivo</label>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </Dialog>
         </>
