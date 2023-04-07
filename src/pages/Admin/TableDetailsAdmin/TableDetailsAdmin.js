@@ -109,7 +109,7 @@ export function TableDetailsAdmin() {
       if (existingOrder) {
         existingOrder.quantity += 1;
       } else {
-        acc.push({ id: order.id, product: order.product, status: order.status, tableBooking: order.tableBooking, quantity: 1 });
+        acc.push({ id: order.id, product: order.product, status: order.status, tableBooking: order.tableBooking, quantity: 1, createdAt: order.createdAt });
       }
       return acc;
     }, []);
