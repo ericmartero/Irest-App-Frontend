@@ -256,8 +256,8 @@ export function TableDetailsAdmin() {
     const paymentData = {
       table: table.tableBooking.id,
       totalPayment: Number(totalPayment.toFixed(2)),
-      paymentType: PAYMENT_TYPE.CARD,
-      statusPayment: PAYMENT_STATUS.PENDING
+      statusPayment: PAYMENT_STATUS.PENDING,
+      paymentType
     }
     console.log(paymentData);
     setConfirmTypePaymentDialog(false);
