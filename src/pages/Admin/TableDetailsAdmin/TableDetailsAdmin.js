@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useOrder, useTable, useProduct } from '../../../hooks';
-import { ORDER_STATUS } from '../../../utils/constants';
+import { ORDER_STATUS, PAYMENT_STATUS, PAYMENT_TYPE } from '../../../utils/constants';
 import { useParams } from 'react-router-dom';
 import { classNames } from 'primereact/utils';
 import { Dialog } from 'primereact/dialog';
@@ -13,7 +13,7 @@ import { Divider } from 'primereact/divider';
 import { Badge } from 'primereact/badge';
 import { Toast } from 'primereact/toast';
 import { Tag } from 'primereact/tag';
-import { map } from 'lodash';
+import { map, forEach } from 'lodash';
 import moment from 'moment';
 import 'moment/locale/es';
 import './TableDetailsAdmin.scss';
@@ -244,7 +244,19 @@ export function TableDetailsAdmin() {
   };
 
   const createPayment = () => {
-    console.log('aaa');
+
+    let totalPayment = 0;
+    forEach(orders, (order) => {
+      totalPayment += order.product.price;
+    })
+
+    const paymentData = {
+      table: table.tableBooking.id,
+      totalPayment: Number(totalPayment.toFixed(2)),
+      paymentType: PAYMENT_TYPE.CARD,
+      statusPayment: PAYMENT_STATUS.PENDING
+    }
+    console.log(paymentData);
     setConfirmPaymentDialog(false);
   };
 
