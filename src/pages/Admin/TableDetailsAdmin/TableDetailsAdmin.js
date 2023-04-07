@@ -14,7 +14,7 @@ import { Divider } from 'primereact/divider';
 import { Badge } from 'primereact/badge';
 import { Toast } from 'primereact/toast';
 import { Tag } from 'primereact/tag';
-import { map, forEach } from 'lodash';
+import { map, forEach, size } from 'lodash';
 import moment from 'moment';
 import 'moment/locale/es';
 import './TableDetailsAdmin.scss';
@@ -27,7 +27,7 @@ export function TableDetailsAdmin() {
   const { orders, loading, getOrdersByTable, checkDeliveredOrder, addOrderToTable, deleteOrder, addPaymentToOrder } = useOrder();
   const { tables, getTableById } = useTable();
   const { products, getProducts, getProductById } = useProduct();
-  const { createPayment } = usePayment();
+  const { createPayment, getPaymentByTable } = usePayment();
 
   const [table, setTable] = useState(null);
   const [ordersBooking, setOrdersBooking] = useState([]);
@@ -50,6 +50,7 @@ export function TableDetailsAdmin() {
   const [productsData, setproductsData] = useState([]);
 
   const [paymentType, setPaymentType] = useState(PAYMENT_TYPE.CARD);
+  const [paymentData, setPaymentData] = useState(null);
 
   const sortOptions = [
     { label: 'Entregados', value: 'status' },
@@ -60,7 +61,7 @@ export function TableDetailsAdmin() {
 
   useEffect(() => {
     getTableById(tableURL.id);
-  }, [tableURL.id, getTableById])
+  }, [tableURL.id, getTableById]);
 
   useEffect(() => {
     if (tables) {
@@ -84,11 +85,11 @@ export function TableDetailsAdmin() {
 
   useEffect(() => {
     getProducts();
-  }, [getProducts])
+  }, [getProducts]);
 
   useEffect(() => {
     setProductsDropdown(formatDropdownData(products));
-  }, [products])
+  }, [products]);
 
   useEffect(() => {
     const addProductList = async () => {
@@ -106,7 +107,17 @@ export function TableDetailsAdmin() {
     };
 
     addProductList();
-  }, [productList, getProductById])
+  }, [productList, getProductById]);
+
+  useEffect(() => {
+    if (table) {
+      (async () => {
+        const response = await getPaymentByTable(table.tableBooking.id);
+        if (size(response)) setPaymentData(response[0]);
+      })();
+    }
+  }, [table, refreshOrders, getPaymentByTable]);
+  
 
   const groupOrdersStatus = (data) => {
     return data.reduce((acc, order) => {
@@ -346,8 +357,11 @@ export function TableDetailsAdmin() {
     return (
       <div className="flex flex-wrap gap-2">
         <Dropdown options={sortOptions} value={sortKey} optionLabel="label" placeholder="Ordenar por estado" onChange={onSortChange} />
-        <Button label="Añadir pedido" severity="success" className='ml-5' onClick={openNew} />
-        <Button label="Generar Cuenta" severity="secondary" className='ml-2' onClick={() => setConfirmTypePaymentDialog(true)} />
+        {!paymentData ? <Button label="Añadir pedido" severity="success" className='ml-5' onClick={openNew} /> 
+          :  <Button label="Ver Cuenta" severity="secondary" className='ml-5' onClick={openNew} />}
+        {!paymentData ? <Button label="Generar Cuenta" severity="secondary" className='ml-2' onClick={() => setConfirmTypePaymentDialog(true)} />
+          : null
+        }
       </div>
     );
   };

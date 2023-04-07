@@ -1,3 +1,4 @@
+import { PAYMENT_STATUS } from "../utils/constants";
 const HOST_API = process.env.REACT_APP_HOST_API;
 
 export const createPaymentApi = async(dtoCreatePayment, token) => {
@@ -25,7 +26,7 @@ export const createPaymentApi = async(dtoCreatePayment, token) => {
 export const getPaymentByTableApi = async(idTableBooking, token) => {
     try {
         const tableFilter = `table=${idTableBooking}`;
-        const statusFilter = `statusPayment=PENDING`;
+        const statusFilter = `statusPayment=${PAYMENT_STATUS.PENDING}`;
 
         const url = `${HOST_API}/api/payments/?${tableFilter}&${statusFilter}`;
         const params = {
