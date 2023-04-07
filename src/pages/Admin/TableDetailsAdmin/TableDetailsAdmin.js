@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useOrder, useTable, useProduct } from '../../../hooks';
-import { ORDER_STATUS, PAYMENT_STATUS, PAYMENT_TYPE } from '../../../utils/constants';
+import { useOrder, useTable, useProduct, usePayment } from '../../../hooks';
+import { ORDER_STATUS, PAYMENT_TYPE } from '../../../utils/constants';
 import { useParams } from 'react-router-dom';
 import { classNames } from 'primereact/utils';
 import { Dialog } from 'primereact/dialog';
@@ -27,6 +27,7 @@ export function TableDetailsAdmin() {
   const { orders, loading, getOrdersByTable, checkDeliveredOrder, addOrderToTable, deleteOrder } = useOrder();
   const { tables, getTableById } = useTable();
   const { products, getProducts, getProductById } = useProduct();
+  const { createPayment } = usePayment();
 
   const [table, setTable] = useState(null);
   const [ordersBooking, setOrdersBooking] = useState([]);
@@ -48,7 +49,7 @@ export function TableDetailsAdmin() {
   const [productList, setProductList] = useState([]);
   const [productsData, setproductsData] = useState([]);
 
-  const [paymentType, setPaymentType] = useState('');
+  const [paymentType, setPaymentType] = useState(PAYMENT_TYPE.CARD);
 
   const sortOptions = [
     { label: 'Entregados', value: 'status' },
@@ -206,6 +207,7 @@ export function TableDetailsAdmin() {
 
   const hideConfirmTypePaymentDialog = () => {
     setConfirmTypePaymentDialog(false);
+    setPaymentType(PAYMENT_TYPE.CARD);
   };
 
   const saveOrders = async () => {
@@ -246,7 +248,7 @@ export function TableDetailsAdmin() {
     toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Pedido cancelado correctamente', life: 3000 });
   };
 
-  const createPayment = () => {
+  const onPayment = async () => {
 
     let totalPayment = 0;
     forEach(orders, (order) => {
@@ -256,11 +258,13 @@ export function TableDetailsAdmin() {
     const paymentData = {
       table: table.tableBooking.id,
       totalPayment: Number(totalPayment.toFixed(2)),
-      statusPayment: PAYMENT_STATUS.PENDING,
       paymentType
     }
-    console.log(paymentData);
+
+    const payment = await createPayment(paymentData);
+    console.log(payment);
     setConfirmTypePaymentDialog(false);
+    setPaymentType(PAYMENT_TYPE.CARD);
   };
 
   const onDropdownChange = (value) => {
@@ -322,7 +326,7 @@ export function TableDetailsAdmin() {
   const confirmTypePaymentDialogFooter = (
     <React.Fragment>
       <Button label="Cancelar" icon="pi pi-times" outlined onClick={hideConfirmTypePaymentDialog} />
-      <Button label="Generar Cuenta" icon="pi pi-check" severity="danger" onClick={createPayment} />
+      <Button label="Generar Cuenta" icon="pi pi-check" severity="primary" onClick={onPayment} />
     </React.Fragment>
   );
 
@@ -336,7 +340,7 @@ export function TableDetailsAdmin() {
       <div className="flex flex-wrap gap-2">
         <Dropdown options={sortOptions} value={sortKey} optionLabel="label" placeholder="Ordenar por estado" onChange={onSortChange} />
         <Button label="Añadir pedido" severity="success" className='ml-5' onClick={openNew} />
-        <Button label="Generar Cuenta" severity="danger" className='ml-2' onClick={() => setConfirmTypePaymentDialog(true)} />
+        <Button label="Generar Cuenta" severity="secondary" className='ml-2' onClick={() => setConfirmTypePaymentDialog(true)} />
       </div>
     );
   };
