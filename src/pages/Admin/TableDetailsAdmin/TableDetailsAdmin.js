@@ -8,6 +8,8 @@ import { Button } from 'primereact/button';
 import { DataView } from 'primereact/dataview';
 import { Toolbar } from 'primereact/toolbar';
 import { Dropdown } from 'primereact/dropdown';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { RadioButton } from "primereact/radiobutton";
 import { Divider } from 'primereact/divider';
@@ -51,6 +53,7 @@ export function TableDetailsAdmin() {
 
   const [paymentType, setPaymentType] = useState(PAYMENT_TYPE.CARD);
   const [paymentData, setPaymentData] = useState(null);
+  const [showBillDialog, setShowBillDialog] = useState(false);
 
   const sortOptions = [
     { label: 'Entregados', value: 'status' },
@@ -88,7 +91,10 @@ export function TableDetailsAdmin() {
   }, [getProducts]);
 
   useEffect(() => {
-    setProductsDropdown(formatDropdownData(products));
+    if (products) {
+      const filteredProducts = products.filter(product => product.active);
+      setProductsDropdown(formatDropdownData(filteredProducts));
+    }
   }, [products]);
 
   useEffect(() => {
@@ -113,11 +119,10 @@ export function TableDetailsAdmin() {
     if (table) {
       (async () => {
         const response = await getPaymentByTable(table.tableBooking.id);
-        if (size(response)) setPaymentData(response[0]);
+        if (size(response) > 0) setPaymentData(response[0]);
       })();
     }
   }, [table, refreshOrders, getPaymentByTable]);
-  
 
   const groupOrdersStatus = (data) => {
     return data.reduce((acc, order) => {
@@ -219,6 +224,10 @@ export function TableDetailsAdmin() {
   const hideConfirmTypePaymentDialog = () => {
     setConfirmTypePaymentDialog(false);
     setPaymentType(PAYMENT_TYPE.CARD);
+  };
+
+  const hideBillDialog = () => {
+    setShowBillDialog(false);
   };
 
   const saveOrders = async () => {
@@ -348,6 +357,12 @@ export function TableDetailsAdmin() {
     </React.Fragment>
   );
 
+  const showBillDialogFooter = (
+    <React.Fragment>
+      <Button label="Finalizar cuenta y cerrar mesa" onClick={deleteSelectedOrder} />
+    </React.Fragment>
+  );
+
   const confirmDeleteOrder = (order) => {
     setDeleteOrderDialog(true);
     setOrderDelete(order.id);
@@ -357,8 +372,8 @@ export function TableDetailsAdmin() {
     return (
       <div className="flex flex-wrap gap-2">
         <Dropdown options={sortOptions} value={sortKey} optionLabel="label" placeholder="Ordenar por estado" onChange={onSortChange} />
-        {!paymentData ? <Button label="Añadir pedido" severity="success" className='ml-5' onClick={openNew} /> 
-          :  <Button label="Ver Cuenta" severity="secondary" className='ml-5' onClick={openNew} />}
+        {!paymentData ? <Button label="Añadir pedido" severity="success" className='ml-5' onClick={openNew} />
+          : <Button label="Ver Cuenta" severity="secondary" className='ml-5' onClick={() => setShowBillDialog(true)} />}
         {!paymentData ? <Button label="Generar Cuenta" severity="secondary" className='ml-2' onClick={() => setConfirmTypePaymentDialog(true)} />
           : null
         }
@@ -481,6 +496,14 @@ export function TableDetailsAdmin() {
                 </div>
               </div>
 
+            </div>
+          </Dialog>
+
+          <Dialog visible={showBillDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={`Cuenta Mesa ${table.number}`} modal onHide={hideBillDialog}>
+            <div className="card">
+            </div>
+            <div className='footerBill'>
+              <Button label="Finalizar cuenta y cerrar mesa" onClick={deleteSelectedOrder} />
             </div>
           </Dialog>
         </>
