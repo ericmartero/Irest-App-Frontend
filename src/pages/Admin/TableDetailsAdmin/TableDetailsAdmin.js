@@ -363,6 +363,15 @@ export function TableDetailsAdmin() {
     </React.Fragment>
   );
 
+  const formatCurrency = (value) => {
+    return value?.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' });
+  };
+
+  const priceBodyTemplate = (rowData) => {
+    return formatCurrency(rowData.product.price * rowData.quantity);
+  };
+
+
   const confirmDeleteOrder = (order) => {
     setDeleteOrderDialog(true);
     setOrderDelete(order.id);
@@ -500,8 +509,34 @@ export function TableDetailsAdmin() {
           </Dialog>
 
           <Dialog visible={showBillDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={`Cuenta Mesa ${table.number}`} modal onHide={hideBillDialog}>
-            <div className="card">
+            <div className='product-add-order'>
+              <div className='product-add-info'>
+                <span className="font-bold">{`MESA ${table.number}`}</span>
+              </div>
+              <div>
+                <span><strong>FECHA:</strong> {moment(paymentData?.createdAt).format('DD/MM/YYYY HH:mm:ss')}</span>
+              </div>
             </div>
+            <div className='product-add-order' style={{ marginTop: '1.5rem' }}>
+              <DataTable value={groupOrdersStatus(orders)} style={{ width: '100%' }}>
+                <Column field="quantity" header="UNIDADES"></Column>
+                <Column field="product.title" header="PRODUCTO" style={{ minWidth: '12rem' }}></Column>
+                <Column field="product.price" header="IMPORTE" body={priceBodyTemplate}></Column>
+              </DataTable>
+            </div>
+
+            <div className='product-add-order'>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <span className="font-bold" style={{ marginRight: '1rem' }}>MÉTODO DE PAGO:</span>
+                <i className={classNames({ 
+                    "pi pi-credit-card": paymentData?.paymentType === PAYMENT_TYPE.CARD, 
+                    "pi pi-wallet": paymentData?.paymentType === PAYMENT_TYPE.CASH })} style={{ fontSize: '1.5rem' }}></i>
+              </div>
+              <div>
+                <span className="font-bold" style={{ marginRight: '1rem' }}>TOTAL: {paymentData?.totalPayment.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
+              </div>
+            </div>
+
             <div className='footerBill'>
               <Button label="Finalizar cuenta y cerrar mesa" onClick={deleteSelectedOrder} />
             </div>
