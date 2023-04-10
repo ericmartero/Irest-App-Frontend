@@ -429,8 +429,13 @@ export function TableDetailsAdmin() {
             </div>
 
             <div className="flex sm:flex-column align-items-center sm:align-items-end gap-3">
-              {order.status === ORDER_STATUS.PENDING ? <Button label="Entregar pedido" icon="pi pi-check" onClick={() => onCheckDeliveredOrder(ORDER_STATUS.DELIVERED)} /> : <Button label="Revertir pedido" icon="pi pi-arrow-circle-right" onClick={() => onCheckDeliveredOrder(ORDER_STATUS.PENDING)} style={{ width: '100%' }} />}
-              <Button label="Cancelar pedido" icon="pi pi-times" severity='danger' onClick={() => confirmDeleteOrder(order)} />
+              {!paymentData ?
+                <>
+                  {order.status === ORDER_STATUS.PENDING ? <Button label="Entregar pedido" icon="pi pi-check" onClick={() => onCheckDeliveredOrder(ORDER_STATUS.DELIVERED)} /> : <Button label="Revertir pedido" icon="pi pi-arrow-circle-right" onClick={() => onCheckDeliveredOrder(ORDER_STATUS.PENDING)} style={{ width: '100%' }} />}
+                  <Button label="Cancelar pedido" icon="pi pi-times" severity='danger' onClick={() => confirmDeleteOrder(order)} />
+                </>
+                : null
+              }
             </div>
           </div>
         </div>
@@ -528,9 +533,10 @@ export function TableDetailsAdmin() {
             <div className='product-add-order'>
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <span className="font-bold" style={{ marginRight: '1rem' }}>MÉTODO DE PAGO:</span>
-                <i className={classNames({ 
-                    "pi pi-credit-card": paymentData?.paymentType === PAYMENT_TYPE.CARD, 
-                    "pi pi-wallet": paymentData?.paymentType === PAYMENT_TYPE.CASH })} style={{ fontSize: '1.5rem' }}></i>
+                <i className={classNames({
+                  "pi pi-credit-card": paymentData?.paymentType === PAYMENT_TYPE.CARD,
+                  "pi pi-wallet": paymentData?.paymentType === PAYMENT_TYPE.CASH
+                })} style={{ fontSize: '1.5rem' }}></i>
               </div>
               <div>
                 <span className="font-bold" style={{ marginRight: '1rem' }}>TOTAL: {paymentData?.totalPayment.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
