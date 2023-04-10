@@ -70,7 +70,11 @@ export function OrdersAdmin() {
               <div className="flex align-items-center gap-3">
                 {table.tableBooking === null ? null :
                   <span className="flex align-items-center gap-2">
-                    <i>Pedidos pendientes: <Badge value={ordersPending > 0 ? ordersPending : 0} severity="warning"></Badge></i>
+                    {size(table.tableBooking.payments) > 0 ?
+                      <Tag value={'CUENTA'}></Tag>
+                      :
+                      <i>Pedidos pendientes: <Badge value={ordersPending > 0 ? ordersPending : 0} severity="warning"></Badge></i>
+                    }
                   </span>
                 }
                 <Tag value={table.tableBooking === null ? 'VACÍA' : 'OCUPADA'} severity={getSeverity(table)}></Tag>
@@ -105,9 +109,15 @@ export function OrdersAdmin() {
           <div className="flex flex-wrap align-items-center justify-content-between gap-2">
             <div className="flex align-items-center gap-2">
               {table.tableBooking === null ? null :
-                <i className="pi pi-shopping-cart mr-4 p-text-secondary p-overlay-badge" style={{ fontSize: '2rem' }}>
-                  <Badge value={ordersPending > 0 ? ordersPending : 0} severity="warning"></Badge>
-                </i>
+                <>
+                  {size(table.tableBooking.payments) > 0 ?
+                    <Tag value={'CUENTA'}></Tag>
+                    :
+                    <i className="pi pi-shopping-cart mr-4 p-text-secondary p-overlay-badge" style={{ fontSize: '2rem' }}>
+                      <Badge value={ordersPending > 0 ? ordersPending : 0} severity="warning"></Badge>
+                    </i>
+                  }
+                </>
               }
             </div>
             <Tag value={table.tableBooking === null ? 'VACÍA' : 'OCUPADA'} severity={getSeverity(table)}></Tag>
@@ -148,10 +158,10 @@ export function OrdersAdmin() {
       <Toast ref={toast} />
       {loading ?
         <div className="align-container">
-          <ProgressSpinner /> 
+          <ProgressSpinner />
         </div>
         :
-      <DataView value={tablesCrud} itemTemplate={itemTemplate} layout={layout} header={header()} emptyMessage='No se ha encontrado ninguna mesa' />}
+        <DataView value={tablesCrud} itemTemplate={itemTemplate} layout={layout} header={header()} emptyMessage='No se ha encontrado ninguna mesa' />}
     </div>
   )
 }
