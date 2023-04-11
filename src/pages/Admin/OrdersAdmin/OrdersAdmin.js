@@ -14,6 +14,7 @@ import './OrdersAdmin.scss';
 export function OrdersAdmin() {
 
   const toast = useRef(null);
+  const intervalRef = useRef();
   const history = useHistory();
   const { loading, tables, getTables } = useTable();
   const [refreshTables, setRefreshTables] = useState(false);
@@ -25,12 +26,14 @@ export function OrdersAdmin() {
   useEffect(() => {
     const autoRefreshTables = () => {
       onRefresh();
-      setTimeout(() => {
-        autoRefreshTables();
-      }, 5000)
     }
-    autoRefreshTables();
-  }, [])
+
+    intervalRef.current = setInterval(autoRefreshTables, 8000);
+
+    return () => {
+      clearInterval(intervalRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     getTables();
@@ -80,7 +83,7 @@ export function OrdersAdmin() {
                 {table.tableBooking === null ? null :
                   <span className="flex align-items-center gap-2">
                     {size(table.tableBooking.payments) > 0 ?
-                      <Tag value={'CUENTA'}></Tag>
+                      <i>Cuenta: <Badge value={'€'} style={{background: '#A855F7'}}></Badge></i>
                       :
                       <i>Pedidos pendientes: <Badge value={ordersPending > 0 ? ordersPending : 0} severity="warning"></Badge></i>
                     }
@@ -120,7 +123,9 @@ export function OrdersAdmin() {
               {table.tableBooking === null ? null :
                 <>
                   {size(table.tableBooking.payments) > 0 ?
-                    <Tag value={'CUENTA'}></Tag>
+                    <i className="pi pi-shopping-cart mr-4 p-text-secondary p-overlay-badge" style={{ fontSize: '2rem' }}>
+                      <Badge value={'€'} style={{background: '#A855F7'}}></Badge>
+                    </i>
                     :
                     <i className="pi pi-shopping-cart mr-4 p-text-secondary p-overlay-badge" style={{ fontSize: '2rem' }}>
                       <Badge value={ordersPending > 0 ? ordersPending : 0} severity="warning"></Badge>
