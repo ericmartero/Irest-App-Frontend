@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useOrder, useTable, useProduct, usePayment } from '../../../hooks';
 import { ORDER_STATUS, PAYMENT_TYPE } from '../../../utils/constants';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { classNames } from 'primereact/utils';
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
@@ -25,8 +25,9 @@ export function TableDetailsAdmin() {
 
   const toast = useRef(null);
   const tableURL = useParams();
-  const { orders, loading, getOrdersByTable, checkDeliveredOrder, addOrderToTable, deleteOrder, addPaymentToOrder } = useOrder();
-  const { tables, getTableById } = useTable();
+  const history = useHistory();
+  const { orders, loading, getOrdersByTable, checkDeliveredOrder, addOrderToTable, deleteOrder, addPaymentToOrder, closeOrder } = useOrder();
+  const { tables, getTableById, updateTable } = useTable();
   const { products, getProducts, getProductById } = useProduct();
   const { createPayment, getPaymentByTable, closePayment } = usePayment();
 
@@ -299,10 +300,17 @@ export function TableDetailsAdmin() {
   const finishPayment = async () => {
     try {
       await closePayment(paymentData.id);
+
+      for await (const order of orders) {
+        await closeOrder(order.id);
+      }
+      
+      await updateTable(table.id, { tableBooking: null });
+      history.push("/admin");
     } catch (error) {
       console.log(error);
     }
-
+    onRefreshOrders();
     setFinishPaymentDialog(false);
     toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Pago finalizado correctamente', life: 3000 });
   };
