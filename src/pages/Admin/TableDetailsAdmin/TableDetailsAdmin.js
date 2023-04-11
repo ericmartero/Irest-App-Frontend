@@ -21,7 +21,6 @@ import moment from 'moment';
 import 'moment/locale/es';
 import './TableDetailsAdmin.scss';
 
-
 export function TableDetailsAdmin() {
 
   const toast = useRef(null);
@@ -29,7 +28,7 @@ export function TableDetailsAdmin() {
   const { orders, loading, getOrdersByTable, checkDeliveredOrder, addOrderToTable, deleteOrder, addPaymentToOrder } = useOrder();
   const { tables, getTableById } = useTable();
   const { products, getProducts, getProductById } = useProduct();
-  const { createPayment, getPaymentByTable } = usePayment();
+  const { createPayment, getPaymentByTable, closePayment } = usePayment();
 
   const [table, setTable] = useState(null);
   const [ordersBooking, setOrdersBooking] = useState([]);
@@ -57,6 +56,7 @@ export function TableDetailsAdmin() {
 
   const [onPaymentChange, setOnPaymentChange] = useState(false);
   const [enablePayment, setEnablePayment] = useState(false);
+  const [finishPaymentDialog, setFinishPaymentDialog] = useState(false);
 
   const sortOptions = [
     { label: 'Entregados', value: 'status' },
@@ -238,9 +238,19 @@ export function TableDetailsAdmin() {
     setDeleteOrderDialog(false);
   };
 
+  const hideFinishPaymentDialog = () => {
+    setFinishPaymentDialog(false);
+    setShowBillDialog(true);
+  };
+
   const hideConfirmTypePaymentDialog = () => {
     setConfirmTypePaymentDialog(false);
     setPaymentType(PAYMENT_TYPE.CARD);
+  };
+
+  const openDialogFinishPayment = () => {
+    setFinishPaymentDialog(true);
+    setShowBillDialog(false);
   };
 
   const hideBillDialog = () => {
@@ -284,6 +294,17 @@ export function TableDetailsAdmin() {
 
     setDeleteOrderDialog(false);
     toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Pedido cancelado correctamente', life: 3000 });
+  };
+
+  const finishPayment = async () => {
+    try {
+      await closePayment(paymentData.id);
+    } catch (error) {
+      console.log(error);
+    }
+
+    setFinishPaymentDialog(false);
+    toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Pago finalizado correctamente', life: 3000 });
   };
 
   const onPayment = async () => {
@@ -375,9 +396,17 @@ export function TableDetailsAdmin() {
 
   const showBillDialogFooter = (
     <div className='footerBill'>
-      <Button label="Finalizar cuenta y cerrar mesa" onClick={deleteSelectedOrder} className="bttnFoot" />
+      <Button label="Finalizar cuenta y cerrar mesa" onClick={openDialogFinishPayment} className="bttnFoot" />
     </div>
   );
+
+  const finishPaymentDialogFooter = (
+    <React.Fragment>
+      <Button label="No" icon="pi pi-times" outlined onClick={hideFinishPaymentDialog} />
+      <Button label="Si" icon="pi pi-check" severity="danger" onClick={finishPayment} />
+    </React.Fragment>
+  );
+
 
   const formatCurrency = (value) => {
     return value?.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' });
@@ -558,6 +587,13 @@ export function TableDetailsAdmin() {
               <div>
                 <span className="font-bold" style={{ marginRight: '1rem' }}>TOTAL: {paymentData?.totalPayment.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
               </div>
+            </div>
+          </Dialog>
+
+          <Dialog visible={finishPaymentDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Finalizar mesa" modal footer={finishPaymentDialogFooter} onHide={hideFinishPaymentDialog}>
+            <div className="confirmation-content">
+              <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+              <span>Seguro que quieres finalizar la cuenta y cerrar la mesa?</span>
             </div>
           </Dialog>
         </>
