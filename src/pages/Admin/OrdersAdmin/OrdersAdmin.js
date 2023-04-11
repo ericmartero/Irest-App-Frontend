@@ -39,6 +39,15 @@ export function OrdersAdmin() {
   useEffect(() => {
     if (tables) {
       const filteredTables = tables.filter(table => table.active);
+      filteredTables.sort((a, b) => {
+        if (a.tableBooking != null && b.tableBooking == null) {
+          return -1;
+        } else if (a.tableBooking == null && b.tableBooking != null) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
       setTablesCrud(filteredTables);
     }
   }, [tables]);
