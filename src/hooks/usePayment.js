@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { createPaymentApi, getPaymentByTableApi } from "../api/payment";
+import { createPaymentApi, getPaymentByTableApi, closePaymentApi } from "../api/payment";
 import { useAuth } from './';
 
 export function usePayment() {
@@ -22,8 +22,17 @@ export function usePayment() {
         }
     }, [auth?.token]);
 
+    const closePayment = async (idPayment) => {
+        try {
+            await closePaymentApi(idPayment, auth.token);
+        } catch (error) {
+            throw error;
+        }
+    };
+
     return {
         createPayment,
         getPaymentByTable,
+        closePayment,
     };
 }
