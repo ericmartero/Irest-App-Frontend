@@ -269,29 +269,35 @@ export function TableDetailsAdmin() {
   };
 
   const onPayment = async () => {
-
-    let totalPayment = 0;
-    forEach(orders, (order) => {
-      totalPayment += order.product.price;
-    })
-
-    const paymentData = {
-      table: table.tableBooking.id,
-      totalPayment: Number(totalPayment.toFixed(2)),
-      paymentType
+    const pendingOrders = orders.filter((order) => order.status === ORDER_STATUS.PENDING);
+    if (size(pendingOrders) > 0) {
+      toast.current.show({ severity: 'error', summary: 'Operacion Fallida', detail: 'No se puede generar la cuenta cuando quedan pedidos pendientes.', life: 3000 });
     }
 
-    const payment = await createPayment(paymentData);
-
-    for await (const order of orders) {
-      await addPaymentToOrder(order.id, payment.id);
+    else {
+      let totalPayment = 0;
+      forEach(orders, (order) => {
+        totalPayment += order.product.price;
+      })
+  
+      const paymentData = {
+        table: table.tableBooking.id,
+        totalPayment: Number(totalPayment.toFixed(2)),
+        paymentType
+      }
+  
+      const payment = await createPayment(paymentData);
+  
+      for await (const order of orders) {
+        await addPaymentToOrder(order.id, payment.id);
+      }
+  
+      onRefreshOrders();
+      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Se ha creado la cuenta correctamente', life: 3000 });
+      setPaymentType(PAYMENT_TYPE.CARD);
     }
-
-    onRefreshOrders();
-    toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Se ha creado la cuenta correctamente', life: 3000 });
 
     setConfirmTypePaymentDialog(false);
-    setPaymentType(PAYMENT_TYPE.CARD);
   };
 
   const onDropdownChange = (value) => {
