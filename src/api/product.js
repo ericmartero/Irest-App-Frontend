@@ -2,10 +2,15 @@ import { updateImage } from "../helpers/updateImage";
 
 const HOST_API = process.env.REACT_APP_HOST_API;
 
-export const getProductsApi = async() => {
+export const getProductsApi = async(token) => {
     try {
         const url = `${HOST_API}/api/products`;
-        const resp = await fetch(url);
+        const params = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+        const resp = await fetch(url, params);
         const result = await resp.json();
 
         return result;
@@ -110,10 +115,16 @@ export const deleteProductApi = async(id, token) => {
     }
 }
 
-export const getProductByIdApi = async(id) => {
+export const getProductByIdApi = async(id, token) => {
     try {
         const url = `${HOST_API}/api/products/${id}`;
-        const resp = await fetch(url);
+        const params = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+
+        const resp = await fetch(url, params);
         const result = await resp.json();
 
         return result;

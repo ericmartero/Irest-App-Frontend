@@ -12,14 +12,14 @@ export function useCategory() {
     const getCategories = useCallback( async () => {
         try {
             setLoading(true);
-            const response = await getCategoriesApi();
+            const response = await getCategoriesApi(auth.token);
             setLoading(false);
             setCategories(response);
         } catch (error) {
             setLoading(false);
             throw error;
         }
-    }, []);
+    }, [auth?.token]);
 
     const addCategory = async (data) => {
         try {

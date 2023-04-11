@@ -2,10 +2,16 @@ import { updateImage } from "../helpers/updateImage";
 
 const HOST_API = process.env.REACT_APP_HOST_API;
 
-export const getCategoriesApi = async() => {
+export const getCategoriesApi = async(token) => {
     try {
         const url = `${HOST_API}/api/categories`;
-        const resp = await fetch(url);
+        const params = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+
+        const resp = await fetch(url, params);
         const result = await resp.json();
 
         return result;
@@ -107,10 +113,15 @@ export const deleteCategoryApi = async(id, token) => {
     }
 }
 
-export const getCategoryByIdApi = async(id) => {
+export const getCategoryByIdApi = async(id, token) => {
     try {
         const url = `${HOST_API}/api/categories/${id}`;
-        const resp = await fetch(url);
+        const params = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+        const resp = await fetch(url, params);
         const result = await resp.json();
 
         return result;

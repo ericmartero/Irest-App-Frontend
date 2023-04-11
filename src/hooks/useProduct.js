@@ -12,14 +12,14 @@ export function useProduct() {
     const getProducts = useCallback( async () => {
         try {
             setLoading(true);
-            const response = await getProductsApi();
+            const response = await getProductsApi(auth.token);
             setLoading(false);
             setProducts(response);
         } catch (error) {
             setLoading(false);
             throw error;
         }
-    }, []);
+    }, [auth?.token]);
 
     const addProduct = async (data) => {
         try {
