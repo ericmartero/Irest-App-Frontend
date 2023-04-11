@@ -271,7 +271,7 @@ export function TableDetailsAdmin() {
   const onPayment = async () => {
     const pendingOrders = orders.filter((order) => order.status === ORDER_STATUS.PENDING);
     if (size(pendingOrders) > 0) {
-      toast.current.show({ severity: 'error', summary: 'Operacion Fallida', detail: 'No se puede generar la cuenta cuando quedan pedidos pendientes.', life: 3000 });
+      toast.current.show({ severity: 'error', summary: 'Operacion Fallida', detail: 'No se puede generar la cuenta cuando quedan pedidos en estado pendiente.', life: 3000 });
     }
 
     else {
@@ -364,9 +364,9 @@ export function TableDetailsAdmin() {
   );
 
   const showBillDialogFooter = (
-    <React.Fragment>
-      <Button label="Finalizar cuenta y cerrar mesa" onClick={deleteSelectedOrder} />
-    </React.Fragment>
+    <div className='footerBill'>
+      <Button label="Finalizar cuenta y cerrar mesa" onClick={deleteSelectedOrder} className="bttnFoot"/>
+    </div>
   );
 
   const formatCurrency = (value) => {
@@ -519,7 +519,7 @@ export function TableDetailsAdmin() {
             </div>
           </Dialog>
 
-          <Dialog visible={showBillDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={`Cuenta Mesa ${table.number}`} modal onHide={hideBillDialog}>
+          <Dialog visible={showBillDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={`Cuenta Mesa ${table.number}`} modal footer={showBillDialogFooter} onHide={hideBillDialog}>
             <div className='product-add-order'>
               <div className='product-add-info'>
                 <span className="font-bold">{`MESA ${table.number}`}</span>
@@ -547,10 +547,6 @@ export function TableDetailsAdmin() {
               <div>
                 <span className="font-bold" style={{ marginRight: '1rem' }}>TOTAL: {paymentData?.totalPayment.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
               </div>
-            </div>
-
-            <div className='footerBill'>
-              <Button label="Finalizar cuenta y cerrar mesa" onClick={deleteSelectedOrder} />
             </div>
           </Dialog>
         </>

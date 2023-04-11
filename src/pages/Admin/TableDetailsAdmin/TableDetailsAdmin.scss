@@ -31,11 +31,10 @@
 }
 
 .footerBill {
-    border-top: 0 none;
-    background: #ffffff;
-    color: #495057;
-    padding: 1.5rem 1rem 0rem 1rem;
-    text-align: center;
-    border-bottom-right-radius: 6px;
-    border-bottom-left-radius: 6px;
+    display: flex;
+    justify-content: center;
+}
+
+.bttnFoot {
+    margin-top: 1.2rem !important;
 }
