@@ -89,6 +89,7 @@ export function AdminLayout(props) {
 
     let menu = [
         {
+            label: auth?.me.user.establishment.name,
             items: [
                 { label: 'Pedidos', icon: 'pi pi-fw pi-home', to: '/admin' },
                 ...(auth?.me.user.roles.includes('admin') || auth?.me.user.roles.includes('boss') ?
