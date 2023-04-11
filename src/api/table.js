@@ -83,9 +83,9 @@ export const deleteTableApi = async(id, token) => {
     }
 }
 
-export const getTableApi = async(idOrNumberTable, token) => {
+export const getTableApi = async(id, token) => {
     try {
-        const url = `${HOST_API}/api/tables/${idOrNumberTable}`;
+        const url = `${HOST_API}/api/tables/${id}`;
         const params = {
             headers: {
                 Authorization: `Bearer ${token}`
