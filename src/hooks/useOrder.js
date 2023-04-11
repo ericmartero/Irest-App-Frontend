@@ -1,6 +1,13 @@
 import { useState, useCallback } from 'react';
 import { useAuth } from './';
-import { getOrdersByTableApi, checkDeliveredOrderApi, addOrderToTableApi, deleteOrderApi, addPaymentToOrderApi } from '../api/order';
+import { 
+    getOrdersByTableApi, 
+    checkDeliveredOrderApi, 
+    addOrderToTableApi, 
+    deleteOrderApi, 
+    addPaymentToOrderApi, 
+    closeOrderApi 
+} from '../api/order';
 
 export function useOrder() {
 
@@ -52,6 +59,14 @@ export function useOrder() {
         }
     };
 
+    const closeOrder = async (idOrder) => {
+        try {
+            await closeOrderApi(idOrder, auth.token);
+        } catch (error) {
+            throw error;
+        }
+    };
+
     return {
         orders,
         loading,
@@ -60,5 +75,6 @@ export function useOrder() {
         addOrderToTable,
         deleteOrder,
         addPaymentToOrder,
+        closeOrder,
     };
 }
