@@ -55,12 +55,16 @@ export function TableDetailsAdmin() {
   const [paymentData, setPaymentData] = useState(null);
   const [showBillDialog, setShowBillDialog] = useState(false);
 
+  const [onPaymentChange, setOnPaymentChange] = useState(false);
+  const [enablePayment, setEnablePayment] = useState(false);
+
   const sortOptions = [
     { label: 'Entregados', value: 'status' },
     { label: 'Pendientes', value: '!status' }
   ];
 
   const onRefreshOrders = () => setRefreshOrders((prev) => !prev);
+  const onRefreshPayment = () => setOnPaymentChange((prev) => !prev);
 
   useEffect(() => {
     getTableById(tableURL.id);
@@ -123,6 +127,19 @@ export function TableDetailsAdmin() {
       })();
     }
   }, [table, refreshOrders, getPaymentByTable]);
+
+  useEffect(() => {
+    if (orders) {
+      const pendingOrders = orders.filter((order) => order.status === ORDER_STATUS.PENDING);
+      if (size(pendingOrders) > 0 || size(orders) === 0) {
+        setEnablePayment(true);
+      }
+
+      else {
+        setEnablePayment(false);
+      }
+    }
+  }, [onPaymentChange, orders])
 
   const groupOrdersStatus = (data) => {
     return data.reduce((acc, order) => {
@@ -260,6 +277,7 @@ export function TableDetailsAdmin() {
     try {
       await deleteOrder(orderDelete);
       onRefreshOrders();
+      onRefreshPayment();
     } catch (error) {
       console.log(error);
     }
@@ -269,34 +287,26 @@ export function TableDetailsAdmin() {
   };
 
   const onPayment = async () => {
-    const pendingOrders = orders.filter((order) => order.status === ORDER_STATUS.PENDING);
-    if (size(pendingOrders) > 0) {
-      toast.current.show({ severity: 'error', summary: 'Operacion Fallida', detail: 'No se puede generar la cuenta cuando quedan pedidos en estado pendiente.', life: 3000 });
+    let totalPayment = 0;
+    forEach(orders, (order) => {
+      totalPayment += order.product.price;
+    })
+
+    const paymentData = {
+      table: table.tableBooking.id,
+      totalPayment: Number(totalPayment.toFixed(2)),
+      paymentType
     }
 
-    else {
-      let totalPayment = 0;
-      forEach(orders, (order) => {
-        totalPayment += order.product.price;
-      })
-  
-      const paymentData = {
-        table: table.tableBooking.id,
-        totalPayment: Number(totalPayment.toFixed(2)),
-        paymentType
-      }
-  
-      const payment = await createPayment(paymentData);
-  
-      for await (const order of orders) {
-        await addPaymentToOrder(order.id, payment.id);
-      }
-  
-      onRefreshOrders();
-      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Se ha creado la cuenta correctamente', life: 3000 });
-      setPaymentType(PAYMENT_TYPE.CARD);
+    const payment = await createPayment(paymentData);
+
+    for await (const order of orders) {
+      await addPaymentToOrder(order.id, payment.id);
     }
 
+    onRefreshOrders();
+    toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Se ha creado la cuenta correctamente', life: 3000 });
+    setPaymentType(PAYMENT_TYPE.CARD);
     setConfirmTypePaymentDialog(false);
   };
 
@@ -365,7 +375,7 @@ export function TableDetailsAdmin() {
 
   const showBillDialogFooter = (
     <div className='footerBill'>
-      <Button label="Finalizar cuenta y cerrar mesa" onClick={deleteSelectedOrder} className="bttnFoot"/>
+      <Button label="Finalizar cuenta y cerrar mesa" onClick={deleteSelectedOrder} className="bttnFoot" />
     </div>
   );
 
@@ -389,7 +399,7 @@ export function TableDetailsAdmin() {
         <Dropdown options={sortOptions} value={sortKey} optionLabel="label" placeholder="Ordenar por estado" onChange={onSortChange} />
         {!paymentData ? <Button label="Añadir pedido" severity="success" className='ml-5' onClick={openNew} />
           : <Button label="Ver Cuenta" severity="secondary" className='ml-5' onClick={() => setShowBillDialog(true)} />}
-        {!paymentData ? <Button label="Generar Cuenta" severity="secondary" className='ml-2' onClick={() => setConfirmTypePaymentDialog(true)} />
+        {!paymentData ? <Button label="Generar Cuenta" severity="secondary" className='ml-2' disabled={enablePayment} onClick={() => setConfirmTypePaymentDialog(true)} />
           : null
         }
       </div>
@@ -408,6 +418,7 @@ export function TableDetailsAdmin() {
       order.quantity--;
       await checkDeliveredOrder(order.id, status);
       onRefreshOrders();
+      onRefreshPayment();
     }
 
     return (
