@@ -55,7 +55,7 @@ export const closePaymentApi = async(idPayment, token) => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                statusPayment: 'PAID'
+                statusPayment: PAYMENT_STATUS.PAID
             })
         }
 
@@ -68,7 +68,7 @@ export const closePaymentApi = async(idPayment, token) => {
 
 export const getPaymentApi = async(token) => {
     try {
-        const paymentFilter = `statusPayment=PAID`;
+        const paymentFilter = `statusPayment=${PAYMENT_STATUS.PAID}`;
         
         const url = `${HOST_API}/api/payments/?${paymentFilter}`;
         const params = {
