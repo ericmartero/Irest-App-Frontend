@@ -27,7 +27,7 @@ export function UsersAdmin() {
     roles: [],
   };
 
-  const rolesList = ['admin', 'employee', 'boss'];
+  const rolesList = ['admin', 'waiter', 'chef'];
 
   const toast = useRef(null);
   const dt = useRef(null);
@@ -107,7 +107,7 @@ export function UsersAdmin() {
           ...(lastUserEdit.firstName !== user.firstName && { firstName: user.firstName }),
           ...(user.password !== '' && { password: user.password }),
           ...(user.lastName !== '' ? { lastName: user.lastName } : { lastName: null }),
-          ...(selectedRoles.length !== 0 ? { roles: lowerCaseSelectedRoles } : { roles: ['employee'] }),
+          ...(selectedRoles.length !== 0 ? { roles: lowerCaseSelectedRoles } : { roles: ['waiter'] }),
           ...(lastUserEdit.isActive !== user.isActive && { isActive: user.isActive }),
         };
 
@@ -129,7 +129,7 @@ export function UsersAdmin() {
           password: user.password,
           isActive: user.isActive,
           ...(user.lastName && { lastName: user.lastName }),
-          ...(user.roles ? { roles: lowerCaseSelectedRoles } : { roles: ['employee'] })
+          ...(user.roles ? { roles: lowerCaseSelectedRoles } : { roles: ['waiter'] })
         };
 
         try {
@@ -401,12 +401,12 @@ export function UsersAdmin() {
                         let tagClass = '';
                         switch (role) {
                           case 'admin':
-                            tagClass = 'warning';
-                            break;
-                          case 'boss':
                             tagClass = 'danger';
                             break;
-                          case 'employee':
+                          case 'waiter':
+                            tagClass = 'warning';
+                            break;
+                          case 'chef':
                             tagClass = 'success';
                             break;
                           default:
