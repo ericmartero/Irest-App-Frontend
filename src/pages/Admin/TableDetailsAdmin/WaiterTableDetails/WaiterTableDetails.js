@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useOrder, useTable, useProduct, usePayment } from '../../../hooks';
-import { ORDER_STATUS, PAYMENT_TYPE } from '../../../utils/constants';
+import { useOrder, useTable, useProduct, usePayment } from '../../../../hooks';
+import { ORDER_STATUS, PAYMENT_TYPE } from '../../../../utils/constants';
 import { useParams, useHistory } from 'react-router-dom';
 import { classNames } from 'primereact/utils';
 import { Dialog } from 'primereact/dialog';
@@ -19,9 +19,9 @@ import { Tag } from 'primereact/tag';
 import { map, forEach, size } from 'lodash';
 import moment from 'moment';
 import 'moment/locale/es';
-import './TableDetailsAdmin.scss';
+import './WaiterTableDetails.scss';
 
-export function TableDetailsAdmin() {
+export function WaiterTableDetails() {
 
   const toast = useRef(null);
   const tableURL = useParams();
