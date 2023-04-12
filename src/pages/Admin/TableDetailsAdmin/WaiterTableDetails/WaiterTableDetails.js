@@ -19,7 +19,7 @@ import { Tag } from 'primereact/tag';
 import { map, forEach, size } from 'lodash';
 import moment from 'moment';
 import 'moment/locale/es';
-import './WaiterTableDetails.scss';
+import '../TableDetailsAdmin.scss';
 
 export function WaiterTableDetails() {
 
