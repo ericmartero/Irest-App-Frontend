@@ -401,12 +401,15 @@ export function UsersAdmin() {
                         let tagClass = '';
                         switch (role) {
                           case 'admin':
+                            role = 'Admin';
                             tagClass = 'danger';
                             break;
                           case 'waiter':
+                            role = 'Camarero';
                             tagClass = 'warning';
                             break;
                           case 'chef':
+                            role = 'Cocinero';
                             tagClass = 'success';
                             break;
                           default:
