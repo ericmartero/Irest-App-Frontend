@@ -92,16 +92,16 @@ export function AdminLayout(props) {
             label: auth?.me.user.establishment.name,
             items: [
                 { label: 'Pedidos', icon: 'pi pi-fw pi-home', to: '/admin' },
-                ...(auth?.me.user.roles.includes('admin') || auth?.me.user.roles.includes('boss') ?
+                ...(auth?.me.user.roles.includes('admin') ?
                     [{ label: 'Usuarios', icon: 'pi pi-fw pi-id-card', to: '/admin/users' }] : []
                 ),
-                ...(auth?.me.user.roles.includes('admin') || auth?.me.user.roles.includes('boss') ?
+                ...(auth?.me.user.roles.includes('admin') ?
                     [{ label: 'Categorias', icon: 'pi pi-fw pi-tag', to: '/admin/categories' }] : []
                 ),
-                ...(auth?.me.user.roles.includes('admin') || auth?.me.user.roles.includes('boss') ?
+                ...(auth?.me.user.roles.includes('admin') ?
                     [{ label: 'Productos', icon: 'pi pi-fw pi-shopping-cart', to: '/admin/products' }] : []
                 ),
-                ...(auth?.me.user.roles.includes('admin') || auth?.me.user.roles.includes('boss') ?
+                ...(auth?.me.user.roles.includes('admin') || auth?.me.user.roles.includes('waiter') ?
                     [{ label: 'Mesas', icon: 'pi pi-fw pi-table', to: '/admin/tables' }] : []
                 ),
             ]
