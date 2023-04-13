@@ -17,6 +17,7 @@ import '../TableDetailsAdmin.scss';
 export function ChefTableDetails() {
 
   const toast = useRef(null);
+  const intervalRef = useRef();
   const { orders, loading, getOrdersByTable, checkDeliveredOrder, deleteOrder } = useOrder();
   const [ordersBooking, setOrdersBooking] = useState([]);
   const [refreshOrders, setRefreshOrders] = useState(false);
@@ -44,6 +45,18 @@ export function ChefTableDetails() {
       setOrdersBooking(groupOrdersStatus(pendingOrders).concat(groupOrdersStatus(preparedOrders)));
     }
   }, [orders]);
+
+  useEffect(() => {
+    const autoRefreshTables = () => {
+      onRefreshOrders();
+    }
+
+    intervalRef.current = setInterval(autoRefreshTables, 10000);
+
+    return () => {
+      clearInterval(intervalRef.current);
+    };
+  }, []);
 
   const groupOrdersStatus = (data) => {
     return data.reduce((acc, order) => {

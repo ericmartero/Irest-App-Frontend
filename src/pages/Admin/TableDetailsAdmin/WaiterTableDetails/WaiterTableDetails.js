@@ -24,6 +24,7 @@ import '../TableDetailsAdmin.scss';
 export function WaiterTableDetails() {
 
   const toast = useRef(null);
+  const intervalRef = useRef();
   const tableURL = useParams();
   const history = useHistory();
   const { orders, loading, getOrdersByTable, checkDeliveredOrder, addOrderToTable, deleteOrder, addPaymentToOrder, closeOrder } = useOrder();
@@ -142,6 +143,18 @@ export function WaiterTableDetails() {
       }
     }
   }, [onPaymentChange, orders])
+
+  useEffect(() => {
+    const autoRefreshTables = () => {
+      onRefreshOrders();
+    }
+
+    intervalRef.current = setInterval(autoRefreshTables, 10000);
+
+    return () => {
+      clearInterval(intervalRef.current);
+    };
+  }, []);
 
   const groupOrdersStatus = (data) => {
     return data.reduce((acc, order) => {
@@ -477,6 +490,7 @@ export function WaiterTableDetails() {
               <div className="flex align-items-center gap-3">
                 <div>
                   <Tag value={
+                    order.product.category.chefVisible && order.status === ORDER_STATUS.PENDING ? 'PENDIENTE DE COCINA' :
                     order.status === ORDER_STATUS.PENDING ? 'PENDIENTE'
                       : order.status === ORDER_STATUS.DELIVERED ? 'ENTREGADO'
                         : 'PREPARADO'}
@@ -496,7 +510,7 @@ export function WaiterTableDetails() {
               {!paymentData ?
                 <>
                   {
-                    order.product.category.chefVisible || order.status === ORDER_STATUS.PENDING ? <span>PENDIENTE DE COCINA</span>
+                    order.product.category.chefVisible && order.status === ORDER_STATUS.PENDING ? < Button label="Cancelar pedido" icon="pi pi-times" severity='danger' onClick={() => confirmDeleteOrder(order)} />
                       :
                       <>
                         {
