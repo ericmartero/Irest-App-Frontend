@@ -10,6 +10,7 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Image } from 'primereact/image';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { InputSwitch } from "primereact/inputswitch";
 import { useDropzone } from 'react-dropzone';
 import '../../../scss/AlignComponent.scss';
 import './CategoriesAdmin.scss';
@@ -18,6 +19,7 @@ export function CategoriesAdmin() {
 
   let emptyCategory = {
     title: '',
+    chefVisible: false,
     imageFile: '',
     image: '',
   };
@@ -89,6 +91,7 @@ export function CategoriesAdmin() {
 
         const editCategory = {
           ...(lastCategoryEdit.title !== category.title && { title: category.title }),
+          ...(lastCategoryEdit.chefVisible !== category.chefVisible && { chefVisible: category.chefVisible }),
           ...(lastCategoryEdit.imageFile !== category.imageFile && { image: category.imageFile }),
         };
 
@@ -104,6 +107,7 @@ export function CategoriesAdmin() {
 
         const newCategory = {
           title: category.title,
+          chefVisible: category.chefVisible,
           image: category.imageFile,
         };
 
@@ -183,20 +187,22 @@ export function CategoriesAdmin() {
   };
 
   const onInputChange = (e, name) => {
-    const val = e.target.value || '';
+    const val = e.target.value;
 
     let errors = { ...validationErrors };
 
-    const filteredCategory = categories.filter(category => category.title.toLowerCase() === val.toLowerCase());
+    if (name === 'title') {
+      const filteredCategory = categories.filter(category => category.title.toLowerCase() === val.toLowerCase());
 
-    if (val.length < 2) {
-      errors.title = "El nombre de la categoría tiene que tener mínimo 2 letras";
-    } else {
-      delete errors.title;
-    }
-
-    if (val !== lastCategoryEdit.title && filteredCategory.length > 0) {
-      errors.title = "El nombre de la categoría ya esta utilizada";
+      if (val.length < 2) {
+        errors.title = "El nombre de la categoría tiene que tener mínimo 2 letras";
+      } else {
+        delete errors.title;
+      }
+  
+      if (val !== lastCategoryEdit.title && filteredCategory.length > 0) {
+        errors.title = "El nombre de la categoría ya esta utilizada";
+      }
     }
 
     setCategory(prevCategory => ({ ...prevCategory, [name]: val }));
@@ -338,6 +344,18 @@ export function CategoriesAdmin() {
                 ? (<small className="p-error">El nombre de la categoría es requerida</small>)
                 : submitted && validationErrors.title && (<small className="p-error">{validationErrors.title}</small>)
               }
+            </div>
+            <div className="field" style={{ height: "2.5rem", display: "flex", alignItems: "center" }}>
+              <div className="p-field-checkbox" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <InputSwitch
+                  id='chefVisible'
+                  checked={category.chefVisible}
+                  onChange={(e) => onInputChange(e, 'chefVisible')}
+                />
+                <label htmlFor="active" className="font-bold" style={{ marginLeft: "1rem", alignSelf: "center" }}>
+                  Chef Visible
+                </label>
+              </div>
             </div>
             <div className="field">
               <label htmlFor="image" className="font-bold" style={{ marginBottom: '0.8rem' }}>
