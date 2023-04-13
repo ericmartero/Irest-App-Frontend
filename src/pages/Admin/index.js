@@ -5,3 +5,4 @@ export * from './CategoriesAdmin';
 export * from './ProductsAdmin';
 export * from './TablesAdmin';
 export * from './TableDetailsAdmin';
+export * from './HomePageAdmin';
