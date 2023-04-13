@@ -1,26 +1,35 @@
 import { ORDER_STATUS } from '../utils/constants';
 const HOST_API = process.env.REACT_APP_HOST_API;
 
-export const getOrdersByTableApi = async(idTableBooking, token, status = '') => {
+export const getOrdersByTableApi = async (idTableBooking, token, chefVisible, status = '') => {
     try {
         const tableFilter = `table=${idTableBooking}`;
         const statusFilter = `status=${status}`;
+        const chefVisibleFilter = `chefVisible=${chefVisible}`
         const closeFilter = `close=false`;
 
         let url = '';
 
-        if (status === '') {
-            url = `${HOST_API}/api/orders/?${tableFilter}&${closeFilter}`;
-        } else {
-            url = `${HOST_API}/api/orders/?${tableFilter}&${statusFilter}&${closeFilter}`;
+        if (idTableBooking === null) {
+            url = `${HOST_API}/api/orders/?${chefVisibleFilter}`;
         }
-        
+
+        else {
+            if (status === '') {
+                url = `${HOST_API}/api/orders/?${tableFilter}&${closeFilter}`;
+            }
+
+            else {
+                url = `${HOST_API}/api/orders/?${tableFilter}&${statusFilter}&${closeFilter}`;
+            }
+        }
+
         const params = {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         }
-        
+
         const resp = await fetch(url, params);
         const result = await resp.json();
 
@@ -31,7 +40,7 @@ export const getOrdersByTableApi = async(idTableBooking, token, status = '') => 
     }
 }
 
-export const checkDeliveredOrderApi = async(idOrder, status, token) => {
+export const checkDeliveredOrderApi = async (idOrder, status, token) => {
     try {
         const url = `${HOST_API}/api/orders/${idOrder}`;
         const params = {
@@ -55,7 +64,7 @@ export const checkDeliveredOrderApi = async(idOrder, status, token) => {
     }
 }
 
-export const addOrderToTableApi = async(idTableBooking, idProduct, token) => {
+export const addOrderToTableApi = async (idTableBooking, idProduct, token) => {
     try {
         const url = `${HOST_API}/api/orders`;
         const params = {
@@ -70,7 +79,7 @@ export const addOrderToTableApi = async(idTableBooking, idProduct, token) => {
                 product: idProduct
             })
         }
-        
+
         const resp = await fetch(url, params);
         await resp.json();
 
@@ -79,7 +88,7 @@ export const addOrderToTableApi = async(idTableBooking, idProduct, token) => {
     }
 }
 
-export const deleteOrderApi = async(idOrder, token) => {
+export const deleteOrderApi = async (idOrder, token) => {
     try {
         const url = `${HOST_API}/api/orders/${idOrder}`;
         const params = {
@@ -93,13 +102,13 @@ export const deleteOrderApi = async(idOrder, token) => {
         const result = await resp.json();
 
         return result;
-        
+
     } catch (error) {
         throw error;
     }
 }
 
-export const addPaymentToOrderApi = async(idOrder, idPayment, token) => {
+export const addPaymentToOrderApi = async (idOrder, idPayment, token) => {
     try {
         const url = `${HOST_API}/api/orders/${idOrder}`;
         const params = {
@@ -112,7 +121,7 @@ export const addPaymentToOrderApi = async(idOrder, idPayment, token) => {
                 payment: idPayment
             })
         }
-        
+
         const resp = await fetch(url, params);
         await resp.json();
 
@@ -121,7 +130,7 @@ export const addPaymentToOrderApi = async(idOrder, idPayment, token) => {
     }
 }
 
-export const closeOrderApi = async(idOrder, token) => {
+export const closeOrderApi = async (idOrder, token) => {
     try {
         const url = `${HOST_API}/api/orders/${idOrder}`;
         const params = {
@@ -134,7 +143,7 @@ export const closeOrderApi = async(idOrder, token) => {
                 close: true
             })
         }
-        
+
         const resp = await fetch(url, params);
         await resp.json();
 
@@ -143,7 +152,7 @@ export const closeOrderApi = async(idOrder, token) => {
     }
 }
 
-export const getOrdersByPaymentApi = async(idPayment, token) => {
+export const getOrdersByPaymentApi = async (idPayment, token) => {
     try {
         const paymentFilter = `payment=${idPayment}`;
 
@@ -153,7 +162,7 @@ export const getOrdersByPaymentApi = async(idPayment, token) => {
                 Authorization: `Bearer ${token}`
             }
         }
-        
+
         const resp = await fetch(url, params);
         const result = await resp.json();
 
