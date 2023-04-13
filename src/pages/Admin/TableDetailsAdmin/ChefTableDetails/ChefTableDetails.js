@@ -1,18 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useOrder, useProduct } from '../../../../hooks';
+import { useOrder } from '../../../../hooks';
 import { ORDER_STATUS } from '../../../../utils/constants';
-import { classNames } from 'primereact/utils';
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
 import { DataView } from 'primereact/dataview';
 import { Toolbar } from 'primereact/toolbar';
 import { Dropdown } from 'primereact/dropdown';
 import { ProgressSpinner } from 'primereact/progressspinner';
-import { Divider } from 'primereact/divider';
 import { Badge } from 'primereact/badge';
 import { Toast } from 'primereact/toast';
 import { Tag } from 'primereact/tag';
-import { map } from 'lodash';
 import moment from 'moment';
 import 'moment/locale/es';
 import '../TableDetailsAdmin.scss';
@@ -21,25 +18,13 @@ export function ChefTableDetails() {
 
   const toast = useRef(null);
   const { orders, loading, getOrdersByTable, checkDeliveredOrder, deleteOrder } = useOrder();
-  const { products, getProducts, getProductById } = useProduct();
-
   const [ordersBooking, setOrdersBooking] = useState([]);
   const [refreshOrders, setRefreshOrders] = useState(false);
-
   const [sortKey, setSortKey] = useState('');
   const [sortOrder, setSortOrder] = useState(0);
   const [sortField, setSortField] = useState('');
-
-  const [submitted, setSubmitted] = useState(false);
-  const [productDialog, setProductDialog] = useState(false);
   const [deleteOrderDialog, setDeleteOrderDialog] = useState(false);
   const [orderDelete, setOrderDelete] = useState(null);
-
-  const [validationErrors, setValidationErrors] = useState({});
-  const [productsDropdown, setProductsDropdown] = useState([])
-
-  const [productList, setProductList] = useState([]);
-  const [productsData, setproductsData] = useState([]);
 
   const sortOptions = [
     { label: 'Entregados', value: 'status' },
@@ -55,39 +40,10 @@ export function ChefTableDetails() {
   useEffect(() => {
     if (orders) {
       const pendingOrders = orders.filter((order) => order.status === ORDER_STATUS.PENDING);
-      const deliveredOrders = orders.filter((order) => order.status === ORDER_STATUS.DELIVERED);
-      setOrdersBooking(groupOrdersStatus(pendingOrders).concat(groupOrdersStatus(deliveredOrders)));
+      //const deliveredOrders = orders.filter((order) => order.status === ORDER_STATUS.DELIVERED);
+      setOrdersBooking(groupOrdersStatus(pendingOrders));
     }
   }, [orders]);
-
-  useEffect(() => {
-    getProducts();
-  }, [getProducts]);
-
-  useEffect(() => {
-    if (products) {
-      const filteredProducts = products.filter(product => product.active);
-      setProductsDropdown(formatDropdownData(filteredProducts));
-    }
-  }, [products]);
-
-  useEffect(() => {
-    const addProductList = async () => {
-      try {
-        const arrayTemp = [];
-        for await (const product of productList) {
-          const response = await getProductById(product.key);
-          arrayTemp.push({ ...response, quantity: product.quantity });
-        }
-
-        setproductsData(arrayTemp);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    addProductList();
-  }, [productList, getProductById]);
 
   const groupOrdersStatus = (data) => {
     return data.reduce((acc, order) => {
@@ -99,28 +55,6 @@ export function ChefTableDetails() {
       }
       return acc;
     }, []);
-  };
-
-  const removeProductList = (index) => {
-    const arrayTemp = [...productList];
-    const product = arrayTemp[index];
-
-    if (product.quantity === 1) {
-      arrayTemp.splice(index, 1);
-    } else {
-      product.quantity -= 1;
-    }
-
-    setProductList(arrayTemp);
-  };
-
-  const addProductListButton = (index) => {
-    const arrayTemp = [...productList];
-    const product = arrayTemp[index];
-
-    product.quantity += 1;
-
-    setProductList(arrayTemp);
   };
 
   const getSeverity = (order) => {
@@ -150,19 +84,6 @@ export function ChefTableDetails() {
     }
   };
 
-  const hideDialog = () => {
-    setSubmitted(false);
-    setProductDialog(false);
-    setValidationErrors({});
-    document.body.classList.remove('body-scroll-lock');
-
-    const arrayTemp = [...productList];
-    for (const product of arrayTemp) {
-      product.quantity = 1;
-    }
-    setProductList(arrayTemp);
-  };
-
   const hideDeleteOrderDialog = () => {
     setDeleteOrderDialog(false);
   };
@@ -178,47 +99,6 @@ export function ChefTableDetails() {
     setDeleteOrderDialog(false);
     toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Pedido cancelado correctamente', life: 3000 });
   };
-
-  const onDropdownChange = (value) => {
-
-    const arrayTemp = [...productList];
-
-    const index = productList.findIndex(product => product.key === value.key);
-    if (index === -1) {
-      arrayTemp.push(value);
-    }
-
-    else {
-      arrayTemp[index].quantity += 1;
-    }
-
-    setProductList(arrayTemp);
-
-    let errors = { ...validationErrors };
-
-    if (value.length === 0) {
-      errors.product = "No se ha seleccionado ningún producto";
-    } else {
-      delete errors.product;
-    }
-
-    setValidationErrors(errors);
-  };
-
-  const formatDropdownData = (data) => {
-    return map(data, (item) => ({
-      key: item.id,
-      text: item.title,
-      quantity: 1
-    }));
-  };
-
-  const orderDialogFooter = (
-    <React.Fragment>
-      <Button label="Cancelar" icon="pi pi-times" className="bttnFoot" outlined onClick={hideDialog} />
-      <Button label="Guardar" icon="pi pi-check" onClick={''} disabled={!submitted || Object.keys(validationErrors).length === 0 ? false : true} />
-    </React.Fragment>
-  );
 
   const leftToolbarTemplate = () => {
     return (
@@ -306,39 +186,6 @@ export function ChefTableDetails() {
         :
         <>
           <DataView value={ordersBooking} itemTemplate={itemTemplate} header={header()} sortField={sortField} sortOrder={sortOrder} emptyMessage='No hay pedidos en la mesa' />
-          <Dialog visible={productDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={'Añadir pedidos'} modal className="p-fluid" footer={orderDialogFooter} onHide={hideDialog}>
-            <div className="field">
-              <label htmlFor="categoria" className="font-bold">
-                Producto a pedir
-              </label>
-              <Dropdown value={null} onChange={(e) => onDropdownChange(e.value)} options={productsDropdown} filter optionLabel="text" placeholder="Selecciona una producto"
-                style={{ marginBottom: "0.5rem" }} className={classNames({ "p-invalid": submitted && (validationErrors.product) })} />
-              {submitted && validationErrors.product && (<small className="p-error">{validationErrors.product}</small>)}
-
-              {map(productsData, (product, index) => (
-                <div key={index}>
-                  <div className='product-add-order'>
-                    <div className='product-add-info'>
-                      <img className="w-9 sm:w-13rem xl:w-7rem block xl:block mx-auto border-round" src={product.image} alt={product.title} />
-                      <div style={{ marginLeft: '1.5rem' }}>
-                        <span className="font-bold">{product.title}</span>
-                        <div style={{ marginTop: '0.5rem' }}>
-                          <span style={{ marginRight: '0.5rem' }}>Cantidad: </span>
-                          <Badge value={product.quantity} />
-                        </div>
-                      </div>
-                    </div>
-                    <div style={{ display: "flex" }}>
-                      <Button icon="pi pi-minus" severity="danger" style={{ marginRight: "10px" }} onClick={() => removeProductList(index, product)} />
-                      <Button icon="pi pi-plus" severity="success" onClick={() => addProductListButton(index)} />
-                    </div>
-                  </div>
-                  <Divider />
-                </div>
-              ))}
-
-            </div>
-          </Dialog>
 
           <Dialog visible={deleteOrderDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteOrderDialogFooter} onHide={hideDeleteOrderDialog}>
             <div className="confirmation-content">
