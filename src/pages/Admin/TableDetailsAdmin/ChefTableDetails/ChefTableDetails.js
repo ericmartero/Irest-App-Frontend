@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useOrder, useProduct } from '../../../../hooks';
-import { ORDER_STATUS, PAYMENT_TYPE } from '../../../../utils/constants';
+import { ORDER_STATUS } from '../../../../utils/constants';
 import { classNames } from 'primereact/utils';
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
@@ -8,7 +8,6 @@ import { DataView } from 'primereact/dataview';
 import { Toolbar } from 'primereact/toolbar';
 import { Dropdown } from 'primereact/dropdown';
 import { ProgressSpinner } from 'primereact/progressspinner';
-import { RadioButton } from "primereact/radiobutton";
 import { Divider } from 'primereact/divider';
 import { Badge } from 'primereact/badge';
 import { Toast } from 'primereact/toast';
@@ -33,7 +32,6 @@ export function ChefTableDetails() {
 
   const [submitted, setSubmitted] = useState(false);
   const [productDialog, setProductDialog] = useState(false);
-  const [confirmTypePaymentDialog, setConfirmTypePaymentDialog] = useState(false);
   const [deleteOrderDialog, setDeleteOrderDialog] = useState(false);
   const [orderDelete, setOrderDelete] = useState(null);
 
@@ -42,8 +40,6 @@ export function ChefTableDetails() {
 
   const [productList, setProductList] = useState([]);
   const [productsData, setproductsData] = useState([]);
-
-  const [paymentType, setPaymentType] = useState(PAYMENT_TYPE.CARD);
 
   const sortOptions = [
     { label: 'Entregados', value: 'status' },
@@ -171,11 +167,6 @@ export function ChefTableDetails() {
     setDeleteOrderDialog(false);
   };
 
-  const hideConfirmTypePaymentDialog = () => {
-    setConfirmTypePaymentDialog(false);
-    setPaymentType(PAYMENT_TYPE.CARD);
-  };
-
   const deleteSelectedOrder = async () => {
     try {
       await deleteOrder(orderDelete);
@@ -241,13 +232,6 @@ export function ChefTableDetails() {
     <React.Fragment>
       <Button label="No" icon="pi pi-times" outlined onClick={hideDeleteOrderDialog} />
       <Button label="Si" icon="pi pi-check" severity="danger" onClick={deleteSelectedOrder} />
-    </React.Fragment>
-  );
-
-  const confirmTypePaymentDialogFooter = (
-    <React.Fragment>
-      <Button label="Cancelar" icon="pi pi-times" outlined onClick={hideConfirmTypePaymentDialog} />
-      <Button label="Generar Cuenta" icon="pi pi-check" severity="primary" onClick={''} />
     </React.Fragment>
   );
 
@@ -360,25 +344,6 @@ export function ChefTableDetails() {
             <div className="confirmation-content">
               <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
               <span>Seguro que quieres cancelar el pedido?</span>
-            </div>
-          </Dialog>
-
-          <Dialog visible={confirmTypePaymentDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Cuenta" modal footer={confirmTypePaymentDialogFooter} onHide={hideConfirmTypePaymentDialog}>
-            <div className="confirmation-typePayment">
-              <span className="font-semibold">Tipo de pago:</span>
-              <div className="card flex justify-content-center">
-                <div className="flex flex-wrap gap-3">
-                  <div className="flex align-items-center">
-                    <RadioButton inputId="card" name="payment" value="CARD" onChange={(e) => setPaymentType(e.value)} checked={paymentType === PAYMENT_TYPE.CARD} />
-                    <label htmlFor="card" className="ml-2">Targeta</label>
-                  </div>
-                  <div className="flex align-items-center">
-                    <RadioButton inputId="cash" name="payment" value="CASH" onChange={(e) => setPaymentType(e.value)} checked={paymentType === PAYMENT_TYPE.CASH} />
-                    <label htmlFor="card" className="ml-2">Efectivo</label>
-                  </div>
-                </div>
-              </div>
-
             </div>
           </Dialog>
         </>
