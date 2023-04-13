@@ -22,7 +22,7 @@ export const getCategoriesApi = async(token) => {
 }
 
 export const addCategoryApi = async(dtoAddCategory, token) => {
-    const { image, title } = dtoAddCategory;
+    const { image, chefVisible, title } = dtoAddCategory;
 
     try {
         // Cloudinary API
@@ -38,6 +38,7 @@ export const addCategoryApi = async(dtoAddCategory, token) => {
             },
             body: JSON.stringify({
                 title,
+                chefVisible,
                 image: urlImage
             })
         }
@@ -53,7 +54,7 @@ export const addCategoryApi = async(dtoAddCategory, token) => {
 }
 
 export const updateCategoryApi = async(id, dtoUpdateCategory, token) => {
-    const { image, title } = dtoUpdateCategory;
+    const { image, chefVisible, title } = dtoUpdateCategory;
 
     try {
         let urlImage;
@@ -64,11 +65,13 @@ export const updateCategoryApi = async(id, dtoUpdateCategory, token) => {
             urlImage = await updateImage(image);
             bodyCategory = {
                 title,
+                chefVisible,
                 image: urlImage
             }
         } else {
             bodyCategory = {
                 title,
+                chefVisible,
             }
         }
 
