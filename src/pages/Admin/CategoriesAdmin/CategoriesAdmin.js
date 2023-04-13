@@ -261,6 +261,10 @@ export function CategoriesAdmin() {
     return <img src={rowData.image} alt={rowData.image} className="shadow-2 border-round" style={{ width: '100px' }} />;
   };
 
+  const activeBodyTemplate = (rowData) => {
+    return <i className={classNames('pi', (rowData.chefVisible ? 'text-green-500 pi-check-circle' : 'text-red-500 pi-times-circle'))}></i>;
+  };
+
   const actionBodyTemplate = (rowData) => {
     return (
       <React.Fragment>
@@ -317,6 +321,7 @@ export function CategoriesAdmin() {
               <Column selectionMode="multiple" exportable={false}></Column>
               <Column field="title" header="Categoría" sortable style={{ minWidth: '22rem' }}></Column>
               <Column field="image" header="Imagen" body={imageBodyTemplate} style={{ minWidth: '16rem' }}></Column>
+              <Column field="chefVisible" header="ChefVisible" sortable dataType="boolean" body={activeBodyTemplate} style={{ minWidth: '8rem' }}></Column>
               <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
             </DataTable>
           </div>
