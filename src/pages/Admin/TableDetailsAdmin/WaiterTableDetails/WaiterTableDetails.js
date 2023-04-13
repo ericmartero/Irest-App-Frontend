@@ -87,7 +87,8 @@ export function WaiterTableDetails() {
     if (orders) {
       const pendingOrders = orders.filter((order) => order.status === ORDER_STATUS.PENDING);
       const deliveredOrders = orders.filter((order) => order.status === ORDER_STATUS.DELIVERED);
-      setOrdersBooking(groupOrdersStatus(pendingOrders).concat(groupOrdersStatus(deliveredOrders)));
+      const preparedOrders = orders.filter((order) => order.status === ORDER_STATUS.PREPARED);
+      setOrdersBooking(groupOrdersStatus(pendingOrders).concat(groupOrdersStatus(deliveredOrders)).concat(groupOrdersStatus(preparedOrders)));
     }
   }, [orders]);
 
@@ -460,7 +461,12 @@ export function WaiterTableDetails() {
 
     return (
       <div className="col-12">
-        <div className="flex flex-column xl:flex-row p-4 gap-4" style={order.status === 'PENDING' ? { backgroundColor: 'var(--yellow-100)' } : { backgroundColor: 'var(--green-100)' }}>
+        <div className="flex flex-column xl:flex-row p-4 gap-4" 
+          style={
+            order.status === ORDER_STATUS.PENDING ? { backgroundColor: 'var(--yellow-100)' } 
+            : order.status === ORDER_STATUS.DELIVERED ? { backgroundColor: 'var(--green-100)' }
+            : { backgroundColor: 'var(--primary-100)' }
+          }>
           <img className="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block mx-auto border-round" src={order.product.image} alt={order.product.title} />
           <div className="flex flex-column sm:flex-row justify-content-between align-items-center flex-1 gap-4">
             <div className="product-info flex flex-column align-items-center sm:align-items-start gap-3">
@@ -470,7 +476,11 @@ export function WaiterTableDetails() {
               </span>
               <div className="flex align-items-center gap-3">
                 <div>
-                  <Tag value={order.status === ORDER_STATUS.PENDING ? 'PENDIENTE' : 'ENTREGADO'} severity={getSeverity(order)}></Tag>
+                  <Tag value={
+                      order.status === ORDER_STATUS.PENDING ? 'PENDIENTE' 
+                      : order.status === ORDER_STATUS.DELIVERED ? 'ENTREGADO'
+                      :'PREPARADO'} 
+                      severity={getSeverity(order)}></Tag>
                 </div>
               </div>
             </div>
@@ -485,7 +495,9 @@ export function WaiterTableDetails() {
             <div className="flex sm:flex-column align-items-center sm:align-items-end gap-3">
               {!paymentData ?
                 <>
-                  {order.status === ORDER_STATUS.PENDING ? <Button label="Entregar pedido" icon="pi pi-check" onClick={() => onCheckDeliveredOrder(ORDER_STATUS.DELIVERED)} /> : <Button label="Revertir pedido" icon="pi pi-arrow-circle-right" onClick={() => onCheckDeliveredOrder(ORDER_STATUS.PENDING)} style={{ width: '100%' }} />}
+                  {order.status === ORDER_STATUS.PENDING || order.status === ORDER_STATUS.PREPARED
+                    ? <Button label="Entregar pedido" icon="pi pi-check" onClick={() => onCheckDeliveredOrder(ORDER_STATUS.DELIVERED)} /> 
+                    : <Button label="Revertir pedido" icon="pi pi-arrow-circle-right" onClick={() => onCheckDeliveredOrder(ORDER_STATUS.PENDING)} style={{ width: '100%' }} />}
                   <Button label="Cancelar pedido" icon="pi pi-times" severity='danger' onClick={() => confirmDeleteOrder(order)} />
                 </>
                 : null
