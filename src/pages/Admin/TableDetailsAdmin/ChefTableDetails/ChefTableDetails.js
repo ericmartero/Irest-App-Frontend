@@ -150,7 +150,14 @@ export function ChefTableDetails() {
       order.quantity--;
       await checkDeliveredOrder(order.id, status);
       onRefreshOrders();
-      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Pedido entregado correctamente', life: 3000 });
+      if (status === ORDER_STATUS.PREPARED) {
+        toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Pedido entregado correctamente', life: 3000 });
+      }
+
+      else {
+        toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'El pedido ha vuelto al estado pendiente correctamente', life: 3000 });
+      }
+      
     }
 
     return (
