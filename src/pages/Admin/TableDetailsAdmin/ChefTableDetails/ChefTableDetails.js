@@ -41,7 +41,7 @@ export function ChefTableDetails() {
   useEffect(() => {
     if (orders) {
       const pendingOrders = orders.filter((order) => order.status === ORDER_STATUS.PENDING);
-      const preparedOrders = orders.filter((order) => order.status === ORDER_STATUS.PREPARED);
+      const preparedOrders = orders.filter((order) => order.status === ORDER_STATUS.PREPARED).reverse();
       setOrdersBooking(groupOrdersStatus(pendingOrders).concat(groupOrdersStatus(preparedOrders)));
     }
   }, [orders]);
