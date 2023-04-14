@@ -11,7 +11,7 @@ export function useUser() {
     const [error, setError] = useState(null);
     const { auth } = useAuth();
 
-    const getMe = async (token) => {
+    const getMe = useCallback( async (token) =>  {
         try {
             const response = await getMeApi(token);
             return response;
@@ -19,7 +19,7 @@ export function useUser() {
         } catch (error) {
             throw error;
         }
-    };
+    }, []);
 
     const getUsers = useCallback( async () => {
         try {
