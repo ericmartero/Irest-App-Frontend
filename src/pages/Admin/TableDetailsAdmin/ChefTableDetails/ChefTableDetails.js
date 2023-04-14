@@ -113,7 +113,7 @@ export function ChefTableDetails() {
   const leftToolbarTemplate = () => {
     return (
       <div className="flex flex-wrap gap-2">
-        <h3 className="m-0">PANEL DE PEDIDOS MESAS</h3>
+        <h3 className="m-0">PANEL DE PEDIDOS COCINA</h3>
       </div>
     );
   };
