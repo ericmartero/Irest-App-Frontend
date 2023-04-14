@@ -144,7 +144,7 @@ export function WaiterTableDetails() {
     }
   }, [onPaymentChange, orders])
 
-  useEffect(() => {
+  /*useEffect(() => {
     const autoRefreshTables = () => {
       onRefreshOrders();
     }
@@ -154,7 +154,7 @@ export function WaiterTableDetails() {
     return () => {
       clearInterval(intervalRef.current);
     };
-  }, []);
+  }, []);*/
 
   const groupOrdersStatus = (data) => {
     return data.reduce((acc, order) => {
@@ -491,9 +491,9 @@ export function WaiterTableDetails() {
                 <div>
                   <Tag value={
                     order.product.category.chefVisible && order.status === ORDER_STATUS.PENDING ? 'PENDIENTE DE COCINA' :
-                    order.status === ORDER_STATUS.PENDING ? 'PENDIENTE'
-                      : order.status === ORDER_STATUS.DELIVERED ? 'ENTREGADO'
-                        : 'PREPARADO'}
+                      order.status === ORDER_STATUS.PENDING ? 'PENDIENTE'
+                        : order.status === ORDER_STATUS.DELIVERED ? 'ENTREGADO'
+                          : 'PREPARADO'}
                     severity={getSeverity(order)}></Tag>
                 </div>
               </div>
@@ -510,15 +510,23 @@ export function WaiterTableDetails() {
               {!paymentData ?
                 <>
                   {
-                    order.product.category.chefVisible && order.status === ORDER_STATUS.PENDING ? < Button label="Cancelar pedido" icon="pi pi-times" severity='danger' onClick={() => confirmDeleteOrder(order)} />
+                    order.product.category.chefVisible && order.status === ORDER_STATUS.PENDING ? < Button icon="pi pi-times" severity='danger' onClick={() => confirmDeleteOrder(order)} />
                       :
                       <>
                         {
-                          order.status === ORDER_STATUS.PENDING || order.status === ORDER_STATUS.PREPARED
-                            ? <Button label="Entregar pedido" icon="pi pi-check" onClick={() => onCheckDeliveredOrder(ORDER_STATUS.DELIVERED)} />
-                            : <Button label="Revertir pedido" icon="pi pi-arrow-circle-right" onClick={() => onCheckDeliveredOrder(ORDER_STATUS.PENDING)} style={{ width: '100%' }} />
+                          order.status === ORDER_STATUS.PENDING ?
+                            <Button label="Entregar pedido" icon="pi pi-check" onClick={() => onCheckDeliveredOrder(ORDER_STATUS.DELIVERED)} /> :
+                            order.status === ORDER_STATUS.PREPARED ?
+                              <>
+                                <Button label='Entregar pedido' icon="pi pi-check" onClick={() => onCheckDeliveredOrder(ORDER_STATUS.DELIVERED)} />
+                                <Button label='Revertir pedido' icon="pi pi-arrow-circle-right" onClick={() => onCheckDeliveredOrder(ORDER_STATUS.PENDING)} />
+                              </>
+                              :
+                              <>
+                                <Button label="Revertir pedido" icon="pi pi-arrow-circle-right" onClick={() => onCheckDeliveredOrder(ORDER_STATUS.PENDING)} style={{ width: '100%' }} />
+                              </>
                         }
-                        < Button label="Cancelar pedido" icon="pi pi-times" severity='danger' onClick={() => confirmDeleteOrder(order)} />
+                        <Button icon="pi pi-times" severity='danger' onClick={() => confirmDeleteOrder(order)} style={{ width: '100%' }} />
                       </>
                   }
                 </>
