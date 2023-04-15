@@ -1,5 +1,5 @@
 import { AdminLayout } from '../layouts';
-import { HomePageAdmin, UsersAdmin, CategoriesAdmin, ProductsAdmin, TablesAdmin } from '../pages/Admin';
+import { HomePageAdmin, UsersAdmin, CategoriesAdmin, ProductsAdmin, TablesAdmin, PaymentsHistoryAdmin } from '../pages/Admin';
 import { WaiterTableDetails } from '../pages/Admin/TableDetailsAdmin';
 
 const routesAdmin = [
@@ -37,6 +37,12 @@ const routesAdmin = [
         path: '/admin/table/:id',
         layout: AdminLayout,
         component: WaiterTableDetails,
+        exact: true
+    },
+    {
+        path: '/admin/payments-history',
+        layout: AdminLayout,
+        component: PaymentsHistoryAdmin,
         exact: true
     }
 ];

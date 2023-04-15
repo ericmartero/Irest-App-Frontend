@@ -104,6 +104,9 @@ export function AdminLayout(props) {
                 ...(auth?.me.user.roles.includes('admin') || auth?.me.user.roles.includes('waiter') ?
                     [{ label: 'Mesas', icon: 'pi pi-fw pi-table', to: '/admin/tables' }] : []
                 ),
+                ...(auth?.me.user.roles.includes('admin') ?
+                    [{ label: 'Historial de pagos', icon: 'pi pi-fw pi-history', to: '/admin/payments-history' }] : []
+                ),
             ]
         }
     ];
