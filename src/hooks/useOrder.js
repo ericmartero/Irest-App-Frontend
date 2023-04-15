@@ -6,7 +6,8 @@ import {
     addOrderToTableApi, 
     deleteOrderApi, 
     addPaymentToOrderApi, 
-    closeOrderApi 
+    closeOrderApi,
+    getOrdersByPaymentApi 
 } from '../api/order';
 
 export function useOrder() {
@@ -67,6 +68,14 @@ export function useOrder() {
         }
     };
 
+    const getOrdersByPayment = async (idPayment) => {
+        try {
+            await getOrdersByPaymentApi(idPayment, auth.token);
+        } catch (error) {
+            throw error;
+        }
+    };
+
     return {
         orders,
         loading,
@@ -76,5 +85,6 @@ export function useOrder() {
         deleteOrder,
         addPaymentToOrder,
         closeOrder,
+        getOrdersByPayment
     };
 }
