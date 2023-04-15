@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { PAYMENT_TYPE } from '../../../utils/constants';
 import { usePayment } from '../../../hooks';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
+import moment from 'moment';
+import 'moment/locale/es';
 
 export function PaymentsHistoryAdmin() {
 
@@ -44,10 +47,32 @@ export function PaymentsHistoryAdmin() {
         setExpandedRows(null);
     }
 
+    const formatCurrency = (value) => {
+        return value.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' });
+    };
+
+    const priceBodyTemplate = (rowData) => {
+        return formatCurrency(rowData.totalPayment);
+    };
+
+    const paidMethodBodyTemplate = (rowData) => {
+        if (rowData.paymentType === PAYMENT_TYPE.CARD) {
+            return <i className={"pi pi-credit-card"} style={{ fontSize: '1.5rem' }}></i>;
+        }
+
+        else {
+            return <i className={"pi pi-wallet"} style={{ fontSize: '1.5rem' }}></i>;
+        }
+    };
+
+    const dateBodyTemplate = (rowData) => {
+        return moment(rowData.createdAt).format('DD/MM/YYYY HH:mm:ss');
+    };
+
     const header = (
         <div className="table-header-container">
-            <Button icon="pi pi-plus" label="Expand All" onClick={expandAll} className="mr-2 mb-2" />
-            <Button icon="pi pi-minus" label="Collapse All" onClick={collapseAll} className="mb-2" />
+            <Button icon="pi pi-plus" label="Expandir todo" onClick={expandAll} className="mr-2 mb-2" />
+            <Button icon="pi pi-minus" label="Contraer Todo" onClick={collapseAll} className="mb-2" />
         </div>
     );
 
@@ -56,11 +81,11 @@ export function PaymentsHistoryAdmin() {
             <DataTable value={paymentsHistory} expandedRows={expandedRows} onRowToggle={(e) => setExpandedRows(e.data)} responsiveLayout="scroll"
                 rowExpansionTemplate={rowExpansionTemplate} dataKey="id" header={header}>
                 <Column expander style={{ width: '3em' }} />
-                <Column field="id" header="ID" />
-                <Column field="tableBooking.table.number" header="Mesa" />
-                <Column field="totalPayment" header="Total" sortable />
-                <Column field="category" header="Método de pago" sortable />
-                <Column field="createdAt" header="Fecha" sortable />
+                <Column field="id" header="ID Pago" />
+                <Column field="tableBooking.table.number" header="Mesa" sortable />
+                <Column field="paymentType" header="Método de pago" body={paidMethodBodyTemplate} sortable />
+                <Column field="totalPayment" header="Total" body={priceBodyTemplate} sortable />
+                <Column field="createdAt" header="Fecha" body={dateBodyTemplate} sortable />
             </DataTable>
         </div>
     )
