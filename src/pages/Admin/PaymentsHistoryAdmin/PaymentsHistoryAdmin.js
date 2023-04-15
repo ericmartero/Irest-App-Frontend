@@ -4,6 +4,7 @@ import { usePayment } from '../../../hooks';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
+import { ProgressSpinner } from 'primereact/progressspinner';
 import moment from 'moment';
 import 'moment/locale/es';
 
@@ -78,15 +79,21 @@ export function PaymentsHistoryAdmin() {
 
     return (
         <div className="card">
-            <DataTable value={paymentsHistory} expandedRows={expandedRows} onRowToggle={(e) => setExpandedRows(e.data)} responsiveLayout="scroll"
-                rowExpansionTemplate={rowExpansionTemplate} dataKey="id" header={header}>
-                <Column expander style={{ width: '3em' }} />
-                <Column field="id" header="ID Pago" />
-                <Column field="tableBooking.table.number" header="Mesa" sortable />
-                <Column field="paymentType" header="Método de pago" body={paidMethodBodyTemplate} sortable />
-                <Column field="totalPayment" header="Total" body={priceBodyTemplate} sortable />
-                <Column field="createdAt" header="Fecha" body={dateBodyTemplate} sortable />
-            </DataTable>
+            {loading ?
+                <div className="align-container">
+                    <ProgressSpinner />
+                </div>
+                :
+                <DataTable value={paymentsHistory} expandedRows={expandedRows} onRowToggle={(e) => setExpandedRows(e.data)} responsiveLayout="scroll"
+                    rowExpansionTemplate={rowExpansionTemplate} dataKey="id" header={header}>
+                    <Column expander style={{ width: '3em' }} />
+                    <Column field="id" header="ID Pago" />
+                    <Column field="tableBooking.table.number" header="Mesa" sortable />
+                    <Column field="paymentType" header="Método de pago" body={paidMethodBodyTemplate} sortable />
+                    <Column field="totalPayment" header="Total" body={priceBodyTemplate} sortable />
+                    <Column field="createdAt" header="Fecha" body={dateBodyTemplate} sortable />
+                </DataTable>
+            }
         </div>
     )
 }
