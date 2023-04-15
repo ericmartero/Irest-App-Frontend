@@ -510,7 +510,7 @@ export function WaiterTableDetails() {
               {!paymentData ?
                 <>
                   {
-                    order.product.category.chefVisible && order.status === ORDER_STATUS.PENDING ? < Button icon="pi pi-times" severity='danger' onClick={() => confirmDeleteOrder(order)} />
+                    order.product.category.chefVisible && order.status === ORDER_STATUS.PENDING ? < Button label="Cancelar pedido" icon="pi pi-times" severity='danger' onClick={() => confirmDeleteOrder(order)} />
                       :
                       <>
                         {
@@ -526,7 +526,7 @@ export function WaiterTableDetails() {
                                 <Button label="Revertir pedido" icon="pi pi-arrow-circle-right" onClick={() => onCheckDeliveredOrder(ORDER_STATUS.PENDING)} style={{ width: '100%' }} />
                               </>
                         }
-                        <Button icon="pi pi-times" severity='danger' onClick={() => confirmDeleteOrder(order)} style={{ width: '100%' }} />
+                        <Button label="Cancelar pedido" icon="pi pi-times" severity='danger' onClick={() => confirmDeleteOrder(order)} style={{ width: '100%' }} />
                       </>
                   }
                 </>
