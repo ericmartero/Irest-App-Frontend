@@ -1,10 +1,12 @@
-import { useCallback } from "react";
-import { createPaymentApi, getPaymentByTableApi, closePaymentApi } from "../api/payment";
+import { useCallback, useState } from "react";
+import { createPaymentApi, getPaymentByTableApi, closePaymentApi, getPaymentsApi } from "../api/payment";
 import { useAuth } from './';
 
 export function usePayment() {
 
     const { auth } = useAuth();
+    const [loading, setLoading] = useState(true);
+    const [payments, setPayments] = useState(null);
 
     const createPayment = async (paymentData) => {
         try {
@@ -30,9 +32,24 @@ export function usePayment() {
         }
     };
 
+    const getPayments = async () => {
+        try {
+            setLoading(true);
+            const response = await getPaymentsApi(auth.token);
+            setLoading(false);
+            setPayments(response);
+        } catch (error) {
+            setLoading(false);
+            throw error;
+        }
+    };
+
     return {
+        payments,
+        loading,
         createPayment,
         getPaymentByTable,
         closePayment,
+        getPayments
     };
 }
