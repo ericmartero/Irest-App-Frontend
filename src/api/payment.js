@@ -66,7 +66,7 @@ export const closePaymentApi = async(idPayment, token) => {
     }
 }
 
-export const getPaymentApi = async(token) => {
+export const getPaymentsApi = async(token) => {
     try {
         const paymentFilter = `statusPayment=${PAYMENT_STATUS.PAID}`;
         
