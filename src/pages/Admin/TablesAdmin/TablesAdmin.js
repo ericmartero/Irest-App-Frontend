@@ -23,6 +23,7 @@ export function TablesAdmin() {
 
   const toast = useRef(null);
   const dt = useRef(null);
+  const qrRef = useRef(null);
   const { tables, loading, loadingCrud, getTables, addTable, updateTable, deleteTable } = useTable();
 
   const [tablesCrud, setTablesCrud] = useState(null);
@@ -167,6 +168,14 @@ export function TablesAdmin() {
     dt.current.exportCSV();
   };
 
+  const handlePrint = () => {
+    const content = qrRef.current;
+    const print = window.open("", "newwin");
+    print.document.write(content.innerHTML);
+    print.print();
+    print.close();
+  };
+
   const confirmDeleteSelected = () => {
     setDeleteTablesDialog(true);
   };
@@ -285,7 +294,7 @@ export function TablesAdmin() {
 
   const showTableQRDialogFooter = (
     <div className='footerBill'>
-      <Button label="Imprimir QR" className="bttnFoot" />
+      <Button label="Imprimir QR" className="bttnFoot" onClick={handlePrint} />
     </div>
   );
 
@@ -355,8 +364,8 @@ export function TablesAdmin() {
             </div>
           </Dialog>
 
-          <Dialog visible={showTableQRDialog} style={{ width: '32rem' }} header={`QR Mesa ${tableNumberDialog}`} modal footer={showTableQRDialogFooter} onHide={hideShowTableQRDialog}>
-            <div style={{display: 'flex', justifyContent: 'center'}}>
+          <Dialog visible={showTableQRDialog} style={{ width: '32rem' }} header={`Código QR Mesa ${tableNumberDialog}`} modal footer={showTableQRDialogFooter} onHide={hideShowTableQRDialog}>
+            <div style={{display: 'flex', justifyContent: 'center'}} ref={qrRef} >
               <QRCode value={tableIdDialog}/>
             </div>
           </Dialog>
