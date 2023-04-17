@@ -57,7 +57,7 @@ export function PaymentsHistoryAdmin() {
                     <DataTable value={data.ordersProduct} responsiveLayout="scroll" showGridlines style={{backgroundColor: 'blue-200'}}>
                         <Column field="quantity" header="Unidades" sortable></Column>
                         <Column field="title" header="Producto" sortable></Column>
-                        <Column field="price" header="Importe" sortable></Column>
+                        <Column field="price" header="Importe" sortable body={priceBodyTemplate}></Column>
                     </DataTable>
                 </div>
             </div>
@@ -79,9 +79,13 @@ export function PaymentsHistoryAdmin() {
         return value.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' });
     };
 
-    const priceBodyTemplate = (rowData) => {
+    const priceTotalBodyTemplate = (rowData) => {
         return formatCurrency(rowData.totalPayment);
     };
+
+    const priceBodyTemplate = (rowData) => {
+        return formatCurrency(rowData.price * rowData.quantity);
+      };
 
     const paidMethodBodyTemplate = (rowData) => {
         if (rowData.paymentType === PAYMENT_TYPE.CARD) {
@@ -117,7 +121,7 @@ export function PaymentsHistoryAdmin() {
                     <Column field="id" header="ID Pago" />
                     <Column field="tableBooking.table.number" header="Mesa" sortable />
                     <Column field="paymentType" header="Método de pago" body={paidMethodBodyTemplate} sortable />
-                    <Column field="totalPayment" header="Total" body={priceBodyTemplate} sortable />
+                    <Column field="totalPayment" header="Total" body={priceTotalBodyTemplate} sortable />
                     <Column field="createdAt" header="Fecha" body={dateBodyTemplate} sortable />
                 </DataTable>
             }
