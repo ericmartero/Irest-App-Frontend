@@ -21,18 +21,27 @@ export function PaymentsHistoryAdmin() {
 
     useEffect(() => {
         if (payments) {
-            const updatePaymentsHistory = async () => {
-                const updatedPaymentsHistory = await Promise.all(
-                    payments.map(async (payment) => {
-                        const orders = await getOrdersByPayment(payment.id);
-                        return { ...payment, ordersProduct: orders };
-                    })
-                );
-                setPaymentsHistory(updatedPaymentsHistory);
-            };
-            updatePaymentsHistory();
+          const updatePaymentsHistory = async () => {
+            const updatedPaymentsHistory = await Promise.all(
+              payments.map(async (payment) => {
+                const orders = await getOrdersByPayment(payment.id);
+      
+                // Almacenar los pedidos en una lista
+                const orderProductList = [];
+                orders.forEach(order => {
+                    orderProductList.push(order.product);
+                });
+                console.log(orderProductList);
+      
+                // Agregar la lista de pedidos a la información del pago
+                return { ...payment, ordersProduct: orderProductList };
+              })
+            );
+            setPaymentsHistory(updatedPaymentsHistory);
+          };
+          updatePaymentsHistory();
         }
-    }, [payments, getOrdersByPayment]);
+      }, [payments, getOrdersByPayment]);
 
     const rowExpansionTemplate = (data) => {
         return (
