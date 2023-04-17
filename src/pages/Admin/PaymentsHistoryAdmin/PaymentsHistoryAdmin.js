@@ -33,7 +33,7 @@ export function PaymentsHistoryAdmin() {
             updatePaymentsHistory();
         }
     }, [payments, getOrdersByPayment]);
-    console.log(paymentsHistory)
+
     const rowExpansionTemplate = (data) => {
         return (
             <div className="orders-subtable">
