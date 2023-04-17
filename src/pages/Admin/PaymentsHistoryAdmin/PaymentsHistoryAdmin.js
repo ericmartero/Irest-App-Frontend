@@ -54,7 +54,7 @@ export function PaymentsHistoryAdmin() {
             <div className="orders-subtable">
                 <div style={{ marginLeft: '4rem', marginRight: '4rem', marginBottom: '3rem' }}>
                     <h4>Pedidos del pago: {data.id}</h4>
-                    <DataTable value={data.ordersProduct} responsiveLayout="scroll" showGridlines style={{backgroundColor: 'blue-200'}}>
+                    <DataTable value={data.ordersProduct} responsiveLayout="scroll" showGridlines style={{ backgroundColor: 'blue-200' }}>
                         <Column field="quantity" header="Unidades" sortable></Column>
                         <Column field="title" header="Producto" sortable></Column>
                         <Column field="price" header="Importe" sortable body={priceBodyTemplate}></Column>
@@ -85,7 +85,7 @@ export function PaymentsHistoryAdmin() {
 
     const priceBodyTemplate = (rowData) => {
         return formatCurrency(rowData.price * rowData.quantity);
-      };
+    };
 
     const paidMethodBodyTemplate = (rowData) => {
         if (rowData.paymentType === PAYMENT_TYPE.CARD) {
@@ -102,9 +102,12 @@ export function PaymentsHistoryAdmin() {
     };
 
     const header = (
-        <div className="table-header-container">
-            <Button icon="pi pi-plus" label="Expandir todo" onClick={expandAll} className="mr-2 mb-2" />
-            <Button icon="pi pi-minus" label="Contraer Todo" onClick={collapseAll} className="mb-2" />
+        <div className="flex flex-wrap gap-2 align-items-center justify-content-between">
+            <h3 className="m-0">PANEL DE HISTORIAL DE PAGOS</h3>
+            <span className="p-input-icon-left">
+                <Button icon="pi pi-plus" label="Expandir todo" onClick={expandAll} className="mr-2 mb-2" />
+                <Button icon="pi pi-minus" label="Contraer Todo" onClick={collapseAll} className="mb-2" />
+            </span>
         </div>
     );
 
