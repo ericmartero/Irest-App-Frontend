@@ -21,37 +21,45 @@ export function PaymentsHistoryAdmin() {
 
     useEffect(() => {
         if (payments) {
-          const updatePaymentsHistory = async () => {
-            const updatedPaymentsHistory = await Promise.all(
-              payments.map(async (payment) => {
-                const orders = await getOrdersByPayment(payment.id);
-      
-                // Almacenar los pedidos en una lista
-                const orderProductList = [];
-                orders.forEach(order => {
-                    orderProductList.push(order.product);
-                });
-                console.log(orderProductList);
-      
-                // Agregar la lista de pedidos a la información del pago
-                return { ...payment, ordersProduct: orderProductList };
-              })
-            );
-            setPaymentsHistory(updatedPaymentsHistory);
-          };
-          updatePaymentsHistory();
+            const updatePaymentsHistory = async () => {
+                const updatedPaymentsHistory = await Promise.all(
+                    payments.map(async (payment) => {
+                        const orders = await getOrdersByPayment(payment.id);
+
+                        const productsObject = {};
+                        orders.forEach(order => {
+
+                            if (order.product.id in productsObject) {
+                                productsObject[order.product.id].quantity += 1;
+                            } else {
+                                productsObject[order.product.id] = {
+                                    ...order.product,
+                                    quantity: 1
+                                };
+                            }
+                        });
+                        const productsList = Object.values(productsObject);
+
+                        return { ...payment, ordersProduct: productsList };
+                    })
+                );
+                setPaymentsHistory(updatedPaymentsHistory);
+            };
+            updatePaymentsHistory();
         }
-      }, [payments, getOrdersByPayment]);
+    }, [payments, getOrdersByPayment]);
 
     const rowExpansionTemplate = (data) => {
         return (
             <div className="orders-subtable">
-                <h4>Pedidos</h4>
-                <DataTable value={data.ordersProduct} responsiveLayout="scroll">
-                    <Column field="product.title" header="Producto" sortable></Column>
-                    <Column field="product.price" header="Precio" sortable></Column>
-                    <Column field="product.image" header="Imagen" sortable></Column>
-                </DataTable>
+                <div style={{ marginLeft: '4rem', marginRight: '4rem', marginBottom: '3rem' }}>
+                    <h4>Pedidos del pago: {data.id}</h4>
+                    <DataTable value={data.ordersProduct} responsiveLayout="scroll" showGridlines style={{backgroundColor: 'blue-200'}}>
+                        <Column field="quantity" header="Unidades" sortable></Column>
+                        <Column field="title" header="Producto" sortable></Column>
+                        <Column field="price" header="Importe" sortable></Column>
+                    </DataTable>
+                </div>
             </div>
         );
     }
