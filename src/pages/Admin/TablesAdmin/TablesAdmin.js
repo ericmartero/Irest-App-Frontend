@@ -39,6 +39,9 @@ export function TablesAdmin() {
   const [refreshTable, setRefreshTable] = useState(false);
   const [lastTableEdit, setlastTableEdit] = useState({});
 
+  const [showTableQRDialog, setShowTableQRDialog] = useState(false);
+  const [tableNumberDialog, setTableNumberDialog] = useState(null);
+
   useEffect(() => {
     getTables();
   }, [refreshTable, getTables])
@@ -73,6 +76,10 @@ export function TablesAdmin() {
 
   const hideDeleteTablesDialog = () => {
     setDeleteTablesDialog(false);
+  };
+
+  const hideShowTableQRDialog = () => {
+    setShowTableQRDialog(false);
   };
 
   const saveTable = async () => {
@@ -146,6 +153,11 @@ export function TablesAdmin() {
     setDeleteTableDialog(false);
     setTable(emptyTable);
     toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Mesa borrada correctamente', life: 3000 });
+  };
+
+  const showQRTable = (table) => {
+    setShowTableQRDialog(true);
+    setTableNumberDialog(table.number);
   };
 
   const exportCSV = () => {
@@ -233,7 +245,7 @@ export function TablesAdmin() {
   const actionBodyTemplate = (rowData) => {
     return (
       <React.Fragment>
-        <Button icon="pi pi-qrcode" rounded outlined severity='warning' className="mr-2" onClick={''} />
+        <Button icon="pi pi-qrcode" rounded outlined severity='warning' className="mr-2" onClick={() => showQRTable(rowData)} />
         <Button icon="pi pi-pencil" rounded outlined className="mr-2" onClick={() => editTable(rowData)} />
         <Button icon="pi pi-trash" rounded outlined severity="danger" onClick={() => confirmDeleteTable(rowData)} />
       </React.Fragment>
@@ -266,6 +278,12 @@ export function TablesAdmin() {
       <Button label="No" icon="pi pi-times" outlined onClick={hideDeleteTablesDialog} />
       <Button label="Si" icon="pi pi-check" severity="danger" onClick={deleteSelectedTables} />
     </React.Fragment>
+  );
+
+  const showTableQRDialogFooter = (
+    <div className='footerBill'>
+      <Button label="Imprimir QR" className="bttnFoot" />
+    </div>
   );
 
   return (
@@ -331,6 +349,12 @@ export function TablesAdmin() {
             <div className="confirmation-content">
               <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
               {table && <span>Seguro que quieres eliminar las mesas seleccionadas?</span>}
+            </div>
+          </Dialog>
+
+          <Dialog visible={showTableQRDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={`QR Mesa ${tableNumberDialog}`} modal footer={showTableQRDialogFooter} onHide={hideShowTableQRDialog}>
+            <div className="confirmation-content">
+              <span>QR</span>
             </div>
           </Dialog>
         </div>
