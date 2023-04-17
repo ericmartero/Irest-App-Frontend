@@ -7,6 +7,7 @@ export function useProduct() {
     const [products, setProducts] = useState(null);
     const [loading, setLoading] = useState(true);
     const [loadingCrud, setLoadingCrud] = useState(false);
+    const [error, setError] = useState(null);
     const { auth } = useAuth();
 
     const getProducts = useCallback( async () => {
@@ -14,7 +15,13 @@ export function useProduct() {
             setLoading(true);
             const response = await getProductsApi(auth.token);
             setLoading(false);
-            setProducts(response);
+
+            if (response.error) {
+                setError(response.error);
+            } else {
+                setProducts(response);
+            }
+            
         } catch (error) {
             setLoading(false);
             throw error;
@@ -67,6 +74,7 @@ export function useProduct() {
         products,
         loading,
         loadingCrud,
+        error,
         getProducts,
         addProduct,
         updateProduct,
