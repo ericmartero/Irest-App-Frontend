@@ -68,13 +68,13 @@ export function useOrder() {
         }
     };
 
-    const getOrdersByPayment = async (idPayment) => {
+    const getOrdersByPayment = useCallback( async (idPayment) => {
         try {
-            await getOrdersByPaymentApi(idPayment, auth.token);
+            return await getOrdersByPaymentApi(idPayment, auth.token);
         } catch (error) {
             throw error;
         }
-    };
+    }, [auth?.token]);
 
     return {
         orders,

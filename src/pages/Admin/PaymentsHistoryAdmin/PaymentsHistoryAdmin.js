@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { PAYMENT_TYPE } from '../../../utils/constants';
-import { usePayment } from '../../../hooks';
+import { usePayment, useOrder } from '../../../hooks';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
@@ -11,6 +11,7 @@ import 'moment/locale/es';
 export function PaymentsHistoryAdmin() {
 
     const { loading, payments, getPayments } = usePayment();
+    const { getOrdersByPayment } = useOrder();
     const [paymentsHistory, setPaymentsHistory] = useState(null);
     const [expandedRows, setExpandedRows] = useState(null);
 
@@ -20,9 +21,18 @@ export function PaymentsHistoryAdmin() {
 
     useEffect(() => {
         if (payments) {
-            setPaymentsHistory(payments);
+            const updatePaymentsHistory = async () => {
+                const updatedPaymentsHistory = await Promise.all(
+                    payments.map(async (payment) => {
+                        const orders = await getOrdersByPayment(payment.id);
+                        return { ...payment, ordersProduct: orders };
+                    })
+                );
+                setPaymentsHistory(updatedPaymentsHistory);
+            };
+            updatePaymentsHistory();
         }
-    }, [payments]);
+    }, [payments, getOrdersByPayment]);
 
     const rowExpansionTemplate = (data) => {
         return (
