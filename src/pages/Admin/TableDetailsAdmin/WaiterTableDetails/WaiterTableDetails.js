@@ -144,7 +144,7 @@ export function WaiterTableDetails() {
     }
   }, [onPaymentChange, orders])
 
-  /*useEffect(() => {
+  useEffect(() => {
     const autoRefreshTables = () => {
       onRefreshOrders();
     }
@@ -154,7 +154,7 @@ export function WaiterTableDetails() {
     return () => {
       clearInterval(intervalRef.current);
     };
-  }, []);*/
+  }, []);
 
   const groupOrdersStatus = (data) => {
     return data.reduce((acc, order) => {
