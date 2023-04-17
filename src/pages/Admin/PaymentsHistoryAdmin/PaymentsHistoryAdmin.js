@@ -33,15 +33,15 @@ export function PaymentsHistoryAdmin() {
             updatePaymentsHistory();
         }
     }, [payments, getOrdersByPayment]);
-
+    console.log(paymentsHistory)
     const rowExpansionTemplate = (data) => {
         return (
             <div className="orders-subtable">
                 <h4>Pedidos</h4>
-                <DataTable value={data.orders} responsiveLayout="scroll">
-                    <Column field="id" header="Id" sortable></Column>
-                    <Column field="customer" header="Customer" sortable></Column>
-                    <Column field="date" header="Date" sortable></Column>
+                <DataTable value={data.ordersProduct} responsiveLayout="scroll">
+                    <Column field="product.title" header="Producto" sortable></Column>
+                    <Column field="product.price" header="Precio" sortable></Column>
+                    <Column field="product.image" header="Imagen" sortable></Column>
                 </DataTable>
             </div>
         );
