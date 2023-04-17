@@ -32,7 +32,7 @@ export function usePayment() {
         }
     };
 
-    const getPayments = async () => {
+    const getPayments = useCallback( async () => {
         try {
             setLoading(true);
             const response = await getPaymentsApi(auth.token);
@@ -42,7 +42,7 @@ export function usePayment() {
             setLoading(false);
             throw error;
         }
-    };
+    }, [auth?.token]);
 
     return {
         payments,

@@ -16,7 +16,7 @@ export function PaymentsHistoryAdmin() {
 
     useEffect(() => {
         getPayments();
-    }, [])
+    }, [getPayments])
 
     useEffect(() => {
         if (payments) {
