@@ -11,6 +11,7 @@ import { InputSwitch } from "primereact/inputswitch";
 import { InputNumber } from 'primereact/inputnumber';
 import { InputText } from 'primereact/inputtext';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import QRCode from 'react-qr-code';
 import '../../../scss/AlignComponent.scss';
 
 export function TablesAdmin() {
@@ -41,6 +42,7 @@ export function TablesAdmin() {
 
   const [showTableQRDialog, setShowTableQRDialog] = useState(false);
   const [tableNumberDialog, setTableNumberDialog] = useState(null);
+  const [tableIdDialog, setTableIdDialog] = useState(null);
 
   useEffect(() => {
     getTables();
@@ -158,6 +160,7 @@ export function TablesAdmin() {
   const showQRTable = (table) => {
     setShowTableQRDialog(true);
     setTableNumberDialog(table.number);
+    setTableIdDialog(table.id);
   };
 
   const exportCSV = () => {
@@ -352,9 +355,9 @@ export function TablesAdmin() {
             </div>
           </Dialog>
 
-          <Dialog visible={showTableQRDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={`QR Mesa ${tableNumberDialog}`} modal footer={showTableQRDialogFooter} onHide={hideShowTableQRDialog}>
-            <div className="confirmation-content">
-              <span>QR</span>
+          <Dialog visible={showTableQRDialog} style={{ width: '32rem' }} header={`QR Mesa ${tableNumberDialog}`} modal footer={showTableQRDialogFooter} onHide={hideShowTableQRDialog}>
+            <div style={{display: 'flex', justifyContent: 'center'}}>
+              <QRCode value={tableIdDialog}/>
             </div>
           </Dialog>
         </div>
