@@ -233,6 +233,7 @@ export function TablesAdmin() {
   const actionBodyTemplate = (rowData) => {
     return (
       <React.Fragment>
+        <Button icon="pi pi-qrcode" rounded outlined severity='warning' className="mr-2" onClick={''} />
         <Button icon="pi pi-pencil" rounded outlined className="mr-2" onClick={() => editTable(rowData)} />
         <Button icon="pi pi-trash" rounded outlined severity="danger" onClick={() => confirmDeleteTable(rowData)} />
       </React.Fragment>
