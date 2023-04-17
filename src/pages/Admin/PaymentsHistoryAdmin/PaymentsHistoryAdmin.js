@@ -95,7 +95,7 @@ export function PaymentsHistoryAdmin() {
                 </div>
                 :
                 <DataTable value={paymentsHistory} expandedRows={expandedRows} onRowToggle={(e) => setExpandedRows(e.data)} responsiveLayout="scroll"
-                    rowExpansionTemplate={rowExpansionTemplate} dataKey="id" header={header}>
+                    rowExpansionTemplate={rowExpansionTemplate} dataKey="id" header={header} emptyMessage="No se han encontrado pagos">
                     <Column expander style={{ width: '3em' }} />
                     <Column field="id" header="ID Pago" />
                     <Column field="tableBooking.table.number" header="Mesa" sortable />
