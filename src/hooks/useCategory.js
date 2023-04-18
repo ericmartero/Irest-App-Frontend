@@ -7,6 +7,7 @@ export function useCategory() {
     const [categories, setCategories] = useState(null);
     const [loading, setLoading] = useState(true);
     const [loadingCrud, setLoadingCrud] = useState(false);
+    const [error, setError] = useState(null);
     const { auth } = useAuth();
 
     const getCategories = useCallback( async () => {
@@ -14,7 +15,13 @@ export function useCategory() {
             setLoading(true);
             const response = await getCategoriesApi(auth.token);
             setLoading(false);
-            setCategories(response);
+
+            if (response.error) {
+                setError(response.error);
+            } else {
+                setCategories(response);
+            }
+            
         } catch (error) {
             setLoading(false);
             throw error;
@@ -58,6 +65,7 @@ export function useCategory() {
         categories,
         loading,
         loadingCrud,
+        error,
         getCategories,
         addCategory,
         updateCategory,
