@@ -7,6 +7,7 @@ export function usePayment() {
     const { auth } = useAuth();
     const [loading, setLoading] = useState(true);
     const [payments, setPayments] = useState(null);
+    const [error, setError] = useState(null);
 
     const createPayment = async (paymentData) => {
         try {
@@ -37,7 +38,13 @@ export function usePayment() {
             setLoading(true);
             const response = await getPaymentsApi(auth.token);
             setLoading(false);
-            setPayments(response);
+
+            if (response.error) {
+                setError(response.error);
+            } else {
+                setPayments(response);
+            }
+            
         } catch (error) {
             setLoading(false);
             throw error;
@@ -47,6 +54,7 @@ export function usePayment() {
     return {
         payments,
         loading,
+        error,
         createPayment,
         getPaymentByTable,
         closePayment,
