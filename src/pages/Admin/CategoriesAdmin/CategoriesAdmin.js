@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useCategory } from '../../../hooks';
+import { useCategory, useAuth } from '../../../hooks';
 import { classNames } from 'primereact/utils';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -26,6 +26,7 @@ export function CategoriesAdmin() {
 
   const toast = useRef(null);
   const dt = useRef(null);
+  const { auth } = useAuth();
   const { categories, loading, loadingCrud, getCategories, addCategory, updateCategory, deleteCategory } = useCategory();
 
   const [categoriesTable, setCategoriesTable] = useState(null);
@@ -199,7 +200,7 @@ export function CategoriesAdmin() {
       } else {
         delete errors.title;
       }
-  
+
       if (val !== lastCategoryEdit.title && filteredCategory.length > 0) {
         errors.title = "El nombre de la categoría ya esta utilizada";
       }
@@ -318,7 +319,10 @@ export function CategoriesAdmin() {
         :
         <div>
           <div className="card" >
-            <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
+
+            {auth?.me.user.roles.includes('admin') &&
+              <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
+            }
 
             <DataTable ref={dt} value={categoriesTable} selection={selectedCategories} onSelectionChange={(e) => setSelectedCategories(e.value)}
               dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]} emptyMessage='No se han encontrado categorías'
@@ -328,7 +332,9 @@ export function CategoriesAdmin() {
               <Column field="title" header="Categoría" sortable style={{ minWidth: '22rem' }}></Column>
               <Column field="image" header="Imagen" body={imageBodyTemplate} style={{ minWidth: '16rem' }}></Column>
               <Column field="chefVisible" header="ChefVisible" sortable dataType="boolean" body={activeBodyTemplate} style={{ minWidth: '8rem' }}></Column>
-              <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
+              {auth?.me.user.roles.includes('admin') &&
+                <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
+              }
             </DataTable>
           </div>
 
