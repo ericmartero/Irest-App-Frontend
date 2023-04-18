@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { AccessDenied } from '../../AccessDenied';
 import { PAYMENT_TYPE } from '../../../utils/constants';
 import { usePayment, useOrder } from '../../../hooks';
 import { DataTable } from 'primereact/datatable';
@@ -10,7 +11,7 @@ import 'moment/locale/es';
 
 export function PaymentsHistoryAdmin() {
 
-    const { loading, payments, getPayments } = usePayment();
+    const { loading, error, payments, getPayments } = usePayment();
     const { getOrdersByPayment } = useOrder();
     const [paymentsHistory, setPaymentsHistory] = useState(null);
     const [expandedRows, setExpandedRows] = useState(null);
@@ -113,21 +114,27 @@ export function PaymentsHistoryAdmin() {
 
     return (
         <div className="card">
-            {loading ?
-                <div className="align-container">
-                    <ProgressSpinner />
-                </div>
-                :
-                <DataTable value={paymentsHistory} expandedRows={expandedRows} onRowToggle={(e) => setExpandedRows(e.data)} responsiveLayout="scroll"
-                    rowExpansionTemplate={rowExpansionTemplate} dataKey="id" header={header} emptyMessage="No se han encontrado pagos">
-                    <Column expander style={{ width: '3em' }} />
-                    <Column field="id" header="ID Pago" />
-                    <Column field="tableBooking.table.number" header="Mesa" sortable />
-                    <Column field="paymentType" header="Método de pago" body={paidMethodBodyTemplate} sortable />
-                    <Column field="totalPayment" header="Total" body={priceTotalBodyTemplate} sortable />
-                    <Column field="createdAt" header="Fecha" body={dateBodyTemplate} sortable />
-                </DataTable>
-            }
+            <>
+                {error ? <AccessDenied /> :
+                    <>
+                        {loading ?
+                            <div className="align-container">
+                                <ProgressSpinner />
+                            </div>
+                            :
+                            <DataTable value={paymentsHistory} expandedRows={expandedRows} onRowToggle={(e) => setExpandedRows(e.data)} responsiveLayout="scroll"
+                                rowExpansionTemplate={rowExpansionTemplate} dataKey="id" header={header} emptyMessage="No se han encontrado pagos">
+                                <Column expander style={{ width: '3em' }} />
+                                <Column field="id" header="ID Pago" />
+                                <Column field="tableBooking.table.number" header="Mesa" sortable />
+                                <Column field="paymentType" header="Método de pago" body={paidMethodBodyTemplate} sortable />
+                                <Column field="totalPayment" header="Total" body={priceTotalBodyTemplate} sortable />
+                                <Column field="createdAt" header="Fecha" body={dateBodyTemplate} sortable />
+                            </DataTable>
+                        }
+                    </>
+                }
+            </>
         </div>
     )
 }
