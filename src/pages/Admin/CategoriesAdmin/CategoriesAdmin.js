@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useCategory, useAuth } from '../../../hooks';
+import { AccessDenied } from '../../AccessDenied';
 import { classNames } from 'primereact/utils';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
@@ -27,7 +28,7 @@ export function CategoriesAdmin() {
   const toast = useRef(null);
   const dt = useRef(null);
   const { auth } = useAuth();
-  const { categories, loading, loadingCrud, getCategories, addCategory, updateCategory, deleteCategory } = useCategory();
+  const { categories, loading, loadingCrud, error, getCategories, addCategory, updateCategory, deleteCategory } = useCategory();
 
   const [categoriesTable, setCategoriesTable] = useState(null);
   const [categoryDialog, setCategoryDialog] = useState(false);
@@ -311,90 +312,96 @@ export function CategoriesAdmin() {
 
   return (
     <>
-      <Toast ref={toast} />
-      {loading ?
-        <div className="align-container">
-          <ProgressSpinner />
-        </div>
-        :
-        <div>
-          <div className="card" >
-
-            {auth?.me.user.roles.includes('admin') &&
-              <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
-            }
-
-            <DataTable ref={dt} value={categoriesTable} selection={selectedCategories} onSelectionChange={(e) => setSelectedCategories(e.value)}
-              dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]} emptyMessage='No se han encontrado categorías'
-              paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-              currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} categorías" globalFilter={globalFilter} header={header}>
-              <Column selectionMode="multiple" exportable={false}></Column>
-              <Column field="title" header="Categoría" sortable style={{ minWidth: '22rem' }}></Column>
-              <Column field="image" header="Imagen" body={imageBodyTemplate} style={{ minWidth: '16rem' }}></Column>
-              <Column field="chefVisible" header="ChefVisible" sortable dataType="boolean" body={activeBodyTemplate} style={{ minWidth: '8rem' }}></Column>
-              {auth?.me.user.roles.includes('admin') &&
-                <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
-              }
-            </DataTable>
-          </div>
-
-          <Dialog visible={categoryDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={actionName} modal className="p-fluid" footer={categoryDialogFooter} onHide={hideDialog}>
-            {loadingCrud && <ProgressSpinner style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', zIndex: 1 }} />}
-            <div className="field">
-              <label htmlFor="title" className="font-bold">
-                Categoría
-              </label>
-              <InputText id="title" value={category.title} onChange={(e) => onInputChange(e, 'title')} required autoFocus
-                className={classNames({ "p-invalid": submitted && (!category.title || validationErrors.title) })} />
-              {submitted && !category.title
-                ? (<small className="p-error">El nombre de la categoría es requerida</small>)
-                : submitted && validationErrors.title && (<small className="p-error">{validationErrors.title}</small>)
-              }
+      {error ? <AccessDenied /> :
+        <>
+          <Toast ref={toast} />
+          {loading ?
+            <div className="align-container">
+              <ProgressSpinner />
             </div>
-            <div className="field" style={{ height: "2.5rem", display: "flex", alignItems: "center" }}>
-              <div className="p-field-checkbox" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <InputSwitch
-                  id='chefVisible'
-                  checked={category.chefVisible}
-                  onChange={(e) => onInputChange(e, 'chefVisible')}
-                />
-                <label htmlFor="active" className="font-bold" style={{ marginLeft: "1rem", alignSelf: "center" }}>
-                  Chef Visible
-                </label>
-              </div>
-            </div>
-            <div className="field">
-              <label htmlFor="image" className="font-bold" style={{ marginBottom: '0.8rem' }}>
-                Imagen
-              </label>
-              <Button label={isEditCategory || uploadedImage ? "Cambiar Imagen" : "Subir Imagen"} {...getRootProps()} />
-              <input {...getInputProps()} />
-              {submitted && validationErrors.image && !uploadedImage && (<small className="p-error">{validationErrors.image}</small>)}
-              <div className="imageContent">
-                <Image src={category.image} alt="Image" width="100%" />
+            :
+            <div>
+              <div className="card" >
+
+                {auth?.me.user.roles.includes('admin') &&
+                  <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
+                }
+
+                <DataTable ref={dt} value={categoriesTable} selection={selectedCategories} onSelectionChange={(e) => setSelectedCategories(e.value)}
+                  dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]} emptyMessage='No se han encontrado categorías'
+                  paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                  currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} categorías" globalFilter={globalFilter} header={header}>
+                  {auth?.me.user.roles.includes('admin') &&
+                    <Column selectionMode="multiple" exportable={false}></Column>
+                  }
+                  <Column field="title" header="Categoría" sortable style={{ minWidth: '22rem' }}></Column>
+                  <Column field="image" header="Imagen" body={imageBodyTemplate} style={{ minWidth: '16rem' }}></Column>
+                  <Column field="chefVisible" header="ChefVisible" sortable dataType="boolean" body={activeBodyTemplate} style={{ minWidth: '8rem' }}></Column>
+                  {auth?.me.user.roles.includes('admin') &&
+                    <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
+                  }
+                </DataTable>
               </div>
 
-            </div>
-          </Dialog>
+              <Dialog visible={categoryDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={actionName} modal className="p-fluid" footer={categoryDialogFooter} onHide={hideDialog}>
+                {loadingCrud && <ProgressSpinner style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', zIndex: 1 }} />}
+                <div className="field">
+                  <label htmlFor="title" className="font-bold">
+                    Categoría
+                  </label>
+                  <InputText id="title" value={category.title} onChange={(e) => onInputChange(e, 'title')} required autoFocus
+                    className={classNames({ "p-invalid": submitted && (!category.title || validationErrors.title) })} />
+                  {submitted && !category.title
+                    ? (<small className="p-error">El nombre de la categoría es requerida</small>)
+                    : submitted && validationErrors.title && (<small className="p-error">{validationErrors.title}</small>)
+                  }
+                </div>
+                <div className="field" style={{ height: "2.5rem", display: "flex", alignItems: "center" }}>
+                  <div className="p-field-checkbox" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <InputSwitch
+                      id='chefVisible'
+                      checked={category.chefVisible}
+                      onChange={(e) => onInputChange(e, 'chefVisible')}
+                    />
+                    <label htmlFor="active" className="font-bold" style={{ marginLeft: "1rem", alignSelf: "center" }}>
+                      Chef Visible
+                    </label>
+                  </div>
+                </div>
+                <div className="field">
+                  <label htmlFor="image" className="font-bold" style={{ marginBottom: '0.8rem' }}>
+                    Imagen
+                  </label>
+                  <Button label={isEditCategory || uploadedImage ? "Cambiar Imagen" : "Subir Imagen"} {...getRootProps()} />
+                  <input {...getInputProps()} />
+                  {submitted && validationErrors.image && !uploadedImage && (<small className="p-error">{validationErrors.image}</small>)}
+                  <div className="imageContent">
+                    <Image src={category.image} alt="Image" width="100%" />
+                  </div>
 
-          <Dialog visible={deleteCategoryDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteCategoryDialogFooter} onHide={hideDeleteCategoryDialog}>
-            <div className="confirmation-content">
-              <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-              {category && (
-                <span>
-                  Seguro que quieres eliminar la categoría <b>{category.title}</b>?
-                </span>
-              )}
-            </div>
-          </Dialog>
+                </div>
+              </Dialog>
 
-          <Dialog visible={deleteCategoriesDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteCategoriesDialogFooter} onHide={hideDeleteCategoriesDialog}>
-            <div className="confirmation-content">
-              <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-              {category && <span>Seguro que quieres eliminar las categorías seleccionadas?</span>}
+              <Dialog visible={deleteCategoryDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteCategoryDialogFooter} onHide={hideDeleteCategoryDialog}>
+                <div className="confirmation-content">
+                  <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                  {category && (
+                    <span>
+                      Seguro que quieres eliminar la categoría <b>{category.title}</b>?
+                    </span>
+                  )}
+                </div>
+              </Dialog>
+
+              <Dialog visible={deleteCategoriesDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteCategoriesDialogFooter} onHide={hideDeleteCategoriesDialog}>
+                <div className="confirmation-content">
+                  <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                  {category && <span>Seguro que quieres eliminar las categorías seleccionadas?</span>}
+                </div>
+              </Dialog>
             </div>
-          </Dialog>
-        </div>
+          }
+        </>
       }
     </>
   );
