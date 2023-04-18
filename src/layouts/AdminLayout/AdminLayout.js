@@ -95,7 +95,7 @@ export function AdminLayout(props) {
                 ...(auth?.me.user.roles.includes('admin') ?
                     [{ label: 'Usuarios', icon: 'pi pi-fw pi-id-card', to: '/admin/users' }] : []
                 ),
-                ...(auth?.me.user.roles.includes('admin') ?
+                ...(auth?.me.user.roles.includes('admin') || auth?.me.user.roles.includes('waiter') ?
                     [{ label: 'Categorias', icon: 'pi pi-fw pi-tag', to: '/admin/categories' }] : []
                 ),
                 ...(auth?.me.user.roles.includes('admin') || auth?.me.user.roles.includes('waiter') ?
