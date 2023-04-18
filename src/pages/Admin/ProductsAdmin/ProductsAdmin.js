@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useProduct, useCategory } from '../../../hooks';
+import { useProduct, useCategory, useAuth } from '../../../hooks';
 import { AccessDenied } from '../../AccessDenied';
 import { classNames } from 'primereact/utils';
 import { DataTable } from 'primereact/datatable';
@@ -34,6 +34,7 @@ export function ProductsAdmin() {
   const dt = useRef(null);
   const { products, loading, loadingCrud, error, getProducts, addProduct, updateProduct, deleteProduct } = useProduct();
   const { categories, getCategories } = useCategory();
+  const { auth } = useAuth();
 
   const [productsTable, setProductsTable] = useState(null);
   const [productDialog, setProductDialog] = useState(false);
@@ -386,19 +387,25 @@ export function ProductsAdmin() {
             :
             <div>
               <div className="card" >
-                <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
+                {auth?.me.user.roles.includes('admin') &&
+                  <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
+                }
 
                 <DataTable ref={dt} value={productsTable} selection={selectedProducts} onSelectionChange={(e) => setSelectedProducts(e.value)}
                   dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]} emptyMessage='No se han encontrado productos'
                   paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                   currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} productos" globalFilter={globalFilter} header={header}>
-                  <Column selectionMode="multiple" exportable={false}></Column>
+                  {auth?.me.user.roles.includes('admin') &&
+                    <Column selectionMode="multiple" exportable={false}></Column>
+                  }
                   <Column field="title" header="Producto" sortable style={{ minWidth: '14rem' }}></Column>
                   <Column field="image" header="Imagen" body={imageBodyTemplate} style={{ minWidth: '12rem' }}></Column>
                   <Column field="price" header="Precio" body={priceBodyTemplate} sortable style={{ minWidth: '8rem' }}></Column>
                   <Column field="category.title" header="Categoría" sortable style={{ minWidth: '12rem' }}></Column>
                   <Column field="active" header="Activo" sortable dataType="boolean" body={activeBodyTemplate} style={{ minWidth: '8rem' }}></Column>
-                  <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
+                  {auth?.me.user.roles.includes('admin') &&
+                    <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
+                  }
                 </DataTable>
               </div>
 
