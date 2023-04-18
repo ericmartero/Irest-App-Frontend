@@ -147,16 +147,24 @@ export function TablesAdmin() {
   };
 
   const deleteSelectedTable = async () => {
-    try {
-      await deleteTable(table.id);
-      onRefresh();
-    } catch (error) {
-      console.log(error);
+
+    if (table.tableBooking) {
+      toast.current.show({ severity: 'error', summary: 'Operacion Fallida', detail: 'No se puede borrar una mesa ocupada actualmente.', life: 3000 });
+    }
+
+    else {
+      try {
+        await deleteTable(table.id);
+        onRefresh();
+      } catch (error) {
+        console.log(error);
+      }
+
+      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Mesa borrada correctamente.', life: 3000 });
     }
 
     setDeleteTableDialog(false);
     setTable(emptyTable);
-    toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Mesa borrada correctamente', life: 3000 });
   };
 
   const showQRTable = (table) => {
