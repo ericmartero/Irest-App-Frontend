@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
+import classNames from 'classnames';
 import { NavLink } from 'react-router-dom';
 import { CSSTransition } from 'react-transition-group';
-import classNames from 'classnames';
 import { Ripple } from "primereact/ripple";
 import { Badge } from 'primereact/badge';
 import './SideMenu.scss';
@@ -12,13 +12,11 @@ const AppSubmenu = (props) => {
 
     const onMenuItemClick = (event, item, index) => {
 
-        //avoid processing disabled items
         if (item.disabled) {
             event.preventDefault();
             return true;
         }
 
-        //execute command
         if (item.command) {
             item.command({ originalEvent: event, item: item });
         }
@@ -43,7 +41,6 @@ const AppSubmenu = (props) => {
         }
     }
 
-    //CARGA EN SI LOS ENLACES EN EL SIDEBAR CON EL LOGO
     const renderLinkContent = (item) => {
         let submenuIcon = item.items && <i className="pi pi-fw pi-angle-down menuitem-toggle-icon"></i>;
         let badge = item.badge && <Badge value={item.badge} />
