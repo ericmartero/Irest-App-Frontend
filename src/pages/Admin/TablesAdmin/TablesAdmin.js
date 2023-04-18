@@ -371,7 +371,7 @@ export function TablesAdmin() {
           </Dialog>
 
           <Dialog visible={showTableQRDialog} style={{ width: '32rem' }} header={`Código QR Mesa ${tableNumberDialog}`} modal footer={showTableQRDialogFooter} onHide={hideShowTableQRDialog}>
-            <div style={{display: 'flex', justifyContent: 'center'}} ref={qrRef} >
+            <div style={{display: 'flex', justifyContent: 'center', marginTop: '1rem'}} ref={qrRef} >
               {tableIdDialog && <QRCode value={tableIdDialog}/>}
             </div>
           </Dialog>
