@@ -53,7 +53,20 @@ export function TablesAdmin() {
 
   useEffect(() => {
     if (tables) {
-      setTablesCrud(tables);
+      const tablesUpdate = [];
+
+      tables.forEach(table => {
+
+        if (table.tableBooking) {
+          tablesUpdate.push({ ...table, busy: true });
+        }
+
+        else {
+          tablesUpdate.push({ ...table, busy: false });
+        }
+      });
+
+      setTablesCrud(tablesUpdate);
     }
   }, [tables]);
 
@@ -272,7 +285,7 @@ export function TablesAdmin() {
   };
 
   const statusBodyTemplate = (table) => {
-    return <Tag value={table.tableBooking ? 'OCUPADA' : 'VACÍA'} severity={table.tableBooking ? 'danger' : 'success'}></Tag>;
+    return <Tag value={table.busy ? 'OCUPADA' : 'VACÍA'} severity={table.busy ? 'danger' : 'success'}></Tag>;
   };
 
   const leftToolbarTemplate = () => {
@@ -356,7 +369,7 @@ export function TablesAdmin() {
                   currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} mesas" globalFilter={globalFilter} header={header}>
                   <Column selectionMode="multiple" exportable={false}></Column>
                   <Column field="number" header="Número de mesa" sortable style={{ minWidth: '8rem' }} ></Column>
-                  <Column field="tableBooking.id" header="Estado" sortable body={statusBodyTemplate} style={{ minWidth: '10rem' }}></Column>
+                  <Column field="busy" header="Estado" sortable dataType="boolean" body={statusBodyTemplate} style={{ minWidth: '10rem' }}></Column>
                   <Column field="active" header="Activa" sortable dataType="boolean" body={activeBodyTemplate}></Column>
                   <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
                 </DataTable>
