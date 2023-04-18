@@ -10,6 +10,7 @@ import { Dialog } from 'primereact/dialog';
 import { InputSwitch } from "primereact/inputswitch";
 import { InputNumber } from 'primereact/inputnumber';
 import { InputText } from 'primereact/inputtext';
+import { Tag } from 'primereact/tag';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import QRCode from 'react-qr-code';
 import '../../../scss/AlignComponent.scss';
@@ -237,6 +238,10 @@ export function TablesAdmin() {
     return Object.keys(errors).length === 0;
   };
 
+  const statusBodyTemplate = (table) => {
+    return <Tag value={table.tableBooking ? 'OCUPADA' : 'VACÍA'} severity={table.tableBooking ? 'danger' : 'success'}></Tag>;
+  };
+
   const leftToolbarTemplate = () => {
     return (
       <div className="flex flex-wrap gap-2">
@@ -315,8 +320,9 @@ export function TablesAdmin() {
               paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
               currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} mesas" globalFilter={globalFilter} header={header}>
               <Column selectionMode="multiple" exportable={false}></Column>
-              <Column field="number" header="Número de mesa" sortable style={{ minWidth: '22rem' }}></Column>
-              <Column field="active" header="Activa" sortable dataType="boolean" body={activeBodyTemplate} style={{ minWidth: '8rem' }}></Column>
+              <Column field="number" header="Número de mesa" sortable style={{ minWidth: '8rem' }} ></Column>
+              <Column field="tableBooking.id" header="Estado" sortable body={statusBodyTemplate} style={{ minWidth: '10rem' }}></Column>
+              <Column field="active" header="Activa" sortable dataType="boolean" body={activeBodyTemplate}></Column>
               <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
             </DataTable>
           </div>
@@ -366,7 +372,7 @@ export function TablesAdmin() {
 
           <Dialog visible={showTableQRDialog} style={{ width: '32rem' }} header={`Código QR Mesa ${tableNumberDialog}`} modal footer={showTableQRDialogFooter} onHide={hideShowTableQRDialog}>
             <div style={{display: 'flex', justifyContent: 'center'}} ref={qrRef} >
-              <QRCode value={tableIdDialog}/>
+              {tableIdDialog && <QRCode value={tableIdDialog}/>}
             </div>
           </Dialog>
         </div>
