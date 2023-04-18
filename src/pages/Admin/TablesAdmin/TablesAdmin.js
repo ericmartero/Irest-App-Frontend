@@ -95,17 +95,23 @@ export function TablesAdmin() {
 
       if (table.id) {
 
-        const editTable = {
-          ...(lastTableEdit.number !== table.number && { number: table.number }),
-          ...(lastTableEdit.active !== table.active && { active: table.active }),
-        };
+        if (table.tableBooking) {
+          toast.current.show({ severity: 'error', summary: 'Operacion Fallida', detail: 'No se puede actualizar una mesa ocupada actualmente.', life: 3000 });
+        }
 
-        try {
-          await updateTable(table.id, editTable);
-          onRefresh();
-          toast.current.show({ severity: 'success', summary: 'Operación Exitosa', detail: `Mesa número ${table.number} actualizada correctamente`, life: 3000 });
-        } catch (error) {
-          console.log(error);
+        else {
+          const editTable = {
+            ...(lastTableEdit.number !== table.number && { number: table.number }),
+            ...(lastTableEdit.active !== table.active && { active: table.active }),
+          };
+
+          try {
+            await updateTable(table.id, editTable);
+            onRefresh();
+            toast.current.show({ severity: 'success', summary: 'Operación Exitosa', detail: `Mesa número ${table.number} actualizada correctamente`, life: 3000 });
+          } catch (error) {
+            console.log(error);
+          }
         }
 
       } else {
@@ -190,25 +196,43 @@ export function TablesAdmin() {
   };
 
   const deleteSelectedTables = async () => {
+
     try {
-      await Promise.all(selectedTables.map(async (table) => {
-        await deleteTable(table.id);
-      }));
-      onRefresh();
+      let hasTableWithBooking = false;
+      selectedTables.forEach(table => {
+        if (table.tableBooking) {
+          hasTableWithBooking = true;
+        }
+      });
+
+      if (hasTableWithBooking && selectedTables.length === 1) {
+        toast.current.show({ severity: 'error', summary: 'Operacion Fallida', detail: 'No se puede borrar una mesa ocupada actualmente.', life: 3000 });
+      }
+
+      else if (hasTableWithBooking && selectedTables.length > 1) {
+        toast.current.show({ severity: 'error', summary: 'Operacion Fallida', detail: 'No se pueden borrar las mesas seleccionadas porque una o más están ocupadas actualmente.', life: 3000 });
+      }
+
+      else {
+        await Promise.all(selectedTables.map(async (table) => {
+          await deleteTable(table.id);
+        }));
+        onRefresh();
+
+        if (selectedTables.length === 1) {
+          toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Mesa borrada correctamente', life: 3000 });
+        }
+    
+        else {
+          toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Mesas borradas correctamente', life: 3000 });
+        }
+      }
     } catch (error) {
       console.log(error);
     }
 
     setDeleteTablesDialog(false);
     setSelectedTables(null);
-
-    if (selectedTables.length === 1) {
-      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Mesa borrada correctamente', life: 3000 });
-    }
-
-    else {
-      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Mesas borradas correctamente', life: 3000 });
-    }
   };
 
   const onInputChange = (e, name) => {
@@ -374,13 +398,16 @@ export function TablesAdmin() {
           <Dialog visible={deleteTablesDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteTablesDialogFooter} onHide={hideDeleteTablesDialog}>
             <div className="confirmation-content">
               <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-              {table && <span>Seguro que quieres eliminar las mesas seleccionadas?</span>}
+              {table && selectedTables?.length === 1
+                ? <span>Seguro que quieres eliminar la mesa seleccionada?</span>
+                : <span>Seguro que quieres eliminar las mesas seleccionadas?</span>
+              }
             </div>
           </Dialog>
 
           <Dialog visible={showTableQRDialog} style={{ width: '32rem' }} header={`Código QR Mesa ${tableNumberDialog}`} modal footer={showTableQRDialogFooter} onHide={hideShowTableQRDialog}>
-            <div style={{display: 'flex', justifyContent: 'center', marginTop: '1rem'}} ref={qrRef} >
-              {tableIdDialog && <QRCode value={tableIdDialog}/>}
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }} ref={qrRef} >
+              {tableIdDialog && <QRCode value={tableIdDialog} />}
             </div>
           </Dialog>
         </div>
