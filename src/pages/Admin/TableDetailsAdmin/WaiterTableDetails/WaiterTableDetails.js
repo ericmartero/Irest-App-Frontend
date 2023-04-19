@@ -60,6 +60,8 @@ export function WaiterTableDetails() {
   const [enablePayment, setEnablePayment] = useState(false);
   const [finishPaymentDialog, setFinishPaymentDialog] = useState(false);
 
+  const [autoRefreshEnabled, setAutoRefreshEnabled] = useState(true);
+
   const sortOptions = [
     { label: 'Entregados', value: 'status' },
     { label: 'Pendientes', value: '!status' }
@@ -149,12 +151,14 @@ export function WaiterTableDetails() {
       onRefreshOrders();
     }
 
-    intervalRef.current = setInterval(autoRefreshTables, 10000);
+    if (autoRefreshEnabled) {
+      intervalRef.current = setInterval(autoRefreshTables, 10000);
+    }
 
     return () => {
       clearInterval(intervalRef.current);
     };
-  }, []);
+  }, [autoRefreshEnabled]);
 
   const groupOrdersStatus = (data) => {
     return data.reduce((acc, order) => {
@@ -237,6 +241,7 @@ export function WaiterTableDetails() {
     setProductDialog(true);
     setProductList([]);
     setproductsData([]);
+    setAutoRefreshEnabled(false);
     document.body.classList.add('body-scroll-lock');
   };
 
@@ -244,6 +249,7 @@ export function WaiterTableDetails() {
     setSubmitted(false);
     setProductDialog(false);
     setValidationErrors({});
+    setAutoRefreshEnabled(true);
     document.body.classList.remove('body-scroll-lock');
 
     const arrayTemp = [...productList];
@@ -255,6 +261,7 @@ export function WaiterTableDetails() {
 
   const hideDeleteOrderDialog = () => {
     setDeleteOrderDialog(false);
+    setAutoRefreshEnabled(true);
   };
 
   const hideFinishPaymentDialog = () => {
@@ -298,6 +305,7 @@ export function WaiterTableDetails() {
       setProductDialog(false);
       setSubmitted(false);
       setValidationErrors({});
+      setAutoRefreshEnabled(true);
       document.body.classList.remove('body-scroll-lock');
     }
   }
@@ -313,6 +321,7 @@ export function WaiterTableDetails() {
     }
 
     setDeleteOrderDialog(false);
+    setAutoRefreshEnabled(true);
   };
 
   const finishPayment = async () => {
@@ -356,6 +365,7 @@ export function WaiterTableDetails() {
     toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Se ha creado la cuenta correctamente', life: 3000 });
     setPaymentType(PAYMENT_TYPE.CARD);
     setConfirmTypePaymentDialog(false);
+    setAutoRefreshEnabled(true);
   };
 
   const onDropdownChange = (value) => {
@@ -447,6 +457,7 @@ export function WaiterTableDetails() {
   const confirmDeleteOrder = (order) => {
     setDeleteOrderDialog(true);
     setOrderDelete(order.id);
+    setAutoRefreshEnabled(false);
   };
 
   const rightToolbarTemplate = () => {
