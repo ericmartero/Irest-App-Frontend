@@ -106,7 +106,7 @@ export function CategoriesAdmin() {
           onRefresh();
           toast.current.show({ severity: 'success', summary: 'Operación Exitosa', detail: `Categoría ${category.title} actualizada correctamente`, life: 3000 });
         } catch (error) {
-          console.log(error);
+          showError(error);
         }
 
       } else {
@@ -122,7 +122,7 @@ export function CategoriesAdmin() {
           onRefresh();
           toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: `Categoría ${category.title} creada correctamente`, life: 3000 });
         } catch (error) {
-          console.log(error);
+          showError(error);
         }
       }
 
