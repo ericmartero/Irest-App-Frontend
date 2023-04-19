@@ -183,9 +183,6 @@ export function CategoriesAdmin() {
       toast.current.show({ severity: 'error', summary: 'Operacion Fallida', detail: 'No se ha podido borrar la categoria o las categorias seleccionadas debido a que tiene productos asignados.', life: 3000 });
     }
 
-    setDeleteCategoriesDialog(false);
-    setSelectedCategories(null);
-
     if (!deleteFailed) {
       if (selectedCategories.length === 1) {
         toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Categoría borrada correctamente', life: 3000 });
@@ -193,6 +190,9 @@ export function CategoriesAdmin() {
         toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Categorías borradas correctamente', life: 3000 });
       }
     }
+
+    setDeleteCategoriesDialog(false);
+    setSelectedCategories(null);
   };
 
   const onInputChange = (e, name) => {
