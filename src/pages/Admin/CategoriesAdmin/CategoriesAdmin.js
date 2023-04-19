@@ -171,24 +171,27 @@ export function CategoriesAdmin() {
   };
 
   const deleteSelectedCategories = async () => {
+    let deleteFailed = false;
+
     try {
       await Promise.all(selectedCategories.map(async (category) => {
         await deleteCategory(category.id);
       }));
       onRefresh();
     } catch (error) {
-      console.log(error);
+      deleteFailed = true;
+      toast.current.show({ severity: 'error', summary: 'Operacion Fallida', detail: 'No se ha podido borrar la categoria o las categorias seleccionadas debido a que tiene productos asignados.', life: 3000 });
     }
 
     setDeleteCategoriesDialog(false);
     setSelectedCategories(null);
 
-    if (selectedCategories.length === 1) {
-      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Categoría borrada correctamente', life: 3000 });
-    }
-
-    else {
-      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Categorías borradas correctamente', life: 3000 });
+    if (!deleteFailed) {
+      if (selectedCategories.length === 1) {
+        toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Categoría borrada correctamente', life: 3000 });
+      } else {
+        toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Categorías borradas correctamente', life: 3000 });
+      }
     }
   };
 
@@ -400,7 +403,10 @@ export function CategoriesAdmin() {
               <Dialog visible={deleteCategoriesDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteCategoriesDialogFooter} onHide={hideDeleteCategoriesDialog}>
                 <div className="confirmation-content">
                   <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                  {category && <span>Seguro que quieres eliminar las categorías seleccionadas?</span>}
+                  {category && selectedCategories?.length === 1 
+                    ? <span>Seguro que quieres eliminar las categoría seleccionada?</span>
+                    : <span>Seguro que quieres eliminar las categorías seleccionadas?</span>
+                  }
                 </div>
               </Dialog>
             </div>
