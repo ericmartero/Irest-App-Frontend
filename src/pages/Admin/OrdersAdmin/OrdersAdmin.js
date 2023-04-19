@@ -6,6 +6,7 @@ import { useTable } from '../../../hooks';
 import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
 import { Badge } from 'primereact/badge';
+import { Tooltip } from 'primereact/tooltip';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
 import { Tag } from 'primereact/tag';
@@ -83,7 +84,7 @@ export function OrdersAdmin() {
                 {table.tableBooking === null ? null :
                   <span className="flex align-items-center gap-2">
                     {size(table.tableBooking.payments) > 0 ?
-                      <i>Cuenta: <Badge value={'€'} style={{background: '#A855F7'}}></Badge></i>
+                      <i>Cuenta: <Badge value={'€'} style={{ background: '#A855F7' }}></Badge></i>
                       :
                       <i>Pedidos pendientes: <Badge value={ordersPending > 0 ? ordersPending : 0} severity="warning"></Badge></i>
                     }
@@ -124,7 +125,7 @@ export function OrdersAdmin() {
                 <>
                   {size(table.tableBooking.payments) > 0 ?
                     <i className="pi pi-shopping-cart mr-4 p-text-secondary p-overlay-badge" style={{ fontSize: '2rem' }}>
-                      <Badge value={'€'} style={{background: '#A855F7'}}></Badge>
+                      <Badge value={'€'} style={{ background: '#A855F7' }}></Badge>
                     </i>
                     :
                     <i className="pi pi-shopping-cart mr-4 p-text-secondary p-overlay-badge" style={{ fontSize: '2rem' }}>
@@ -140,6 +141,21 @@ export function OrdersAdmin() {
             <img className="w-9 shadow-2 border-round" src="https://res.cloudinary.com/djwjh0wpw/image/upload/v1679927284/mesa_h2bdwt.jpg" alt={table.number} />
             <div className="text-2xl font-bold">Mesa {table.number}</div>
           </div>
+
+          {table.tableBooking &&
+            <div className="flex flex-column align-items-center gap-3">
+              <Tooltip target=".custom-target-icon" />
+
+              <i className="custom-target-icon pi pi-key p-text-secondary p-overlay-badge"
+                data-pr-tooltip={table.tableBooking.key}
+                data-pr-position="right"
+                data-pr-at="right+5 top"
+                data-pr-my="left center-2"
+                style={{ fontSize: '2rem', cursor: 'pointer' }}>
+              </i>
+            </div>
+          }
+
         </div>
       </div>
     );
