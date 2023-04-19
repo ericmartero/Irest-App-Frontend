@@ -419,7 +419,7 @@ export function UsersAdmin() {
                           <Tag
                             key={role}
                             value={role}
-                            className={classNames('p-mr-2 my-tag', { 'my-tag-bottom': rowData.roles.length === 3 })}
+                            className={classNames('p-mr-2 my-tag', { 'my-tag-bottom': rowData.roles.length === 2 })}
                             severity={tagClass}
                           />
                         );
