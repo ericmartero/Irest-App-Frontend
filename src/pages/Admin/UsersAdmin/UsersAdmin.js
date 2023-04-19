@@ -168,13 +168,13 @@ export function UsersAdmin() {
     try {
       await deleteUser(user.id);
       onRefresh();
+      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Usuario borrado correctamente', life: 3000 });
     } catch (error) {
-      console.log(error);
+      showError(error);
     }
 
     setDeleteUserDialog(false);
     setUser(emptyUser);
-    toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Usuario borrado correctamente', life: 3000 });
   };
 
   const exportCSV = () => {
@@ -190,21 +190,23 @@ export function UsersAdmin() {
       await Promise.all(selectedUsers.map(async (user) => {
         await deleteUser(user.id);
       }));
+      
       onRefresh();
+
+      if (selectedUsers.length === 1) {
+        toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Usuario borrado correctamente', life: 3000 });
+      }
+  
+      else {
+        toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Usuarios borrados correctamente', life: 3000 });
+      }
+
     } catch (error) {
-      console.log(error);
+      showError(error);
     }
 
     setDeleteUsersDialog(false);
     setSelectedUsers(null);
-
-    if (selectedUsers.length === 1) {
-      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Usuario borrado correctamente', life: 3000 });
-    }
-
-    else {
-      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Usuarios borrados correctamente', life: 3000 });
-    }
   };
 
   const onInputChange = (e, name) => {
