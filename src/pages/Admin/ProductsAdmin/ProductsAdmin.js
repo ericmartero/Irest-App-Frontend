@@ -127,7 +127,7 @@ export function ProductsAdmin() {
           onRefresh();
           toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: `Producto ${product.title} actualizado correctamente`, life: 3000 });
         } catch (error) {
-          console.log(error);
+          showError(error);
         }
 
       } else {
@@ -145,7 +145,7 @@ export function ProductsAdmin() {
           onRefresh();
           toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: `Producto ${product.title} creado correctamente`, life: 3000 });
         } catch (error) {
-          console.log(error);
+          showError(error);
         }
       }
 
