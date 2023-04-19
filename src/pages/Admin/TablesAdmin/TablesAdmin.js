@@ -100,6 +100,10 @@ export function TablesAdmin() {
     setShowTableQRDialog(false);
   };
 
+  const showError = (error) => {
+    toast.current.show({ severity: 'error', summary: 'Operacion Fallida', detail: error.message, life: 3000 });
+  }
+
   const saveTable = async () => {
 
     const isValid = validateFields();
@@ -124,7 +128,7 @@ export function TablesAdmin() {
             onRefresh();
             toast.current.show({ severity: 'success', summary: 'Operación Exitosa', detail: `Mesa número ${table.number} actualizada correctamente`, life: 3000 });
           } catch (error) {
-            console.log(error);
+            showError(error);
           }
         }
 
@@ -140,7 +144,7 @@ export function TablesAdmin() {
           onRefresh();
           toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: `Mesa número ${table.number} creada correctamente`, life: 3000 });
         } catch (error) {
-          console.log(error);
+          showError(error);
         }
       }
 
@@ -176,11 +180,10 @@ export function TablesAdmin() {
       try {
         await deleteTable(table.id);
         onRefresh();
+        toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Mesa borrada correctamente.', life: 3000 });
       } catch (error) {
-        console.log(error);
+        showError(error);
       }
-
-      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Mesa borrada correctamente.', life: 3000 });
     }
 
     setDeleteTableDialog(false);
@@ -242,7 +245,7 @@ export function TablesAdmin() {
         }
       }
     } catch (error) {
-      console.log(error);
+      showError(error);
     }
 
     setDeleteTablesDialog(false);
