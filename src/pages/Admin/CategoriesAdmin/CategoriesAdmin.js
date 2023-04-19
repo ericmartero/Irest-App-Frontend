@@ -404,7 +404,7 @@ export function CategoriesAdmin() {
                 <div className="confirmation-content">
                   <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                   {category && selectedCategories?.length === 1 
-                    ? <span>Seguro que quieres eliminar las categoría seleccionada?</span>
+                    ? <span>Seguro que quieres eliminar la categoría seleccionada?</span>
                     : <span>Seguro que quieres eliminar las categorías seleccionadas?</span>
                   }
                 </div>
