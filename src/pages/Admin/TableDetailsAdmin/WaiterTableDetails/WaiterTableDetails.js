@@ -115,7 +115,7 @@ export function WaiterTableDetails() {
 
         setproductsData(arrayTemp);
       } catch (error) {
-        console.log(error);
+        showError(error);
       }
     };
 
@@ -228,6 +228,10 @@ export function WaiterTableDetails() {
     }
   };
 
+  const showError = (error) => {
+    toast.current.show({ severity: 'error', summary: 'Operación Fallida', detail: error.message, life: 3000 });
+  }
+
   const openNew = () => {
     setSubmitted(false);
     setProductDialog(true);
@@ -303,12 +307,12 @@ export function WaiterTableDetails() {
       await deleteOrder(orderDelete);
       onRefreshOrders();
       onRefreshPayment();
+      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Pedido cancelado correctamente', life: 3000 });
     } catch (error) {
-      console.log(error);
+      showError(error);
     }
 
     setDeleteOrderDialog(false);
-    toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Pedido cancelado correctamente', life: 3000 });
   };
 
   const finishPayment = async () => {
@@ -320,13 +324,14 @@ export function WaiterTableDetails() {
       }
 
       await updateTable(table.id, { tableBooking: null });
+      
+      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Pago finalizado correctamente', life: 3000 });
       history.push("/admin");
     } catch (error) {
-      console.log(error);
+      showError(error);
     }
     onRefreshOrders();
     setFinishPaymentDialog(false);
-    toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Pago finalizado correctamente', life: 3000 });
   };
 
   const onPayment = async () => {
