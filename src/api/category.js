@@ -107,6 +107,11 @@ export const deleteCategoryApi = async(id, token) => {
         }
 
         const resp = await fetch(url, params);
+
+        if (resp.status === 409) {
+            throw new Error("No se puede borrar la categoría seleccionada debido a que tiene productos asignados.");
+        }  
+        
         const result = await resp.json();
 
         return result;

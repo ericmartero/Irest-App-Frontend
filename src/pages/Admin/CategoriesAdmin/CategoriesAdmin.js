@@ -82,6 +82,10 @@ export function CategoriesAdmin() {
     setDeleteCategoriesDialog(false);
   };
 
+  const showError = (error) => {
+    toast.current.show({ severity: 'error', summary: 'Operacion Fallida', detail: error.message, life: 3000 });
+  }
+
   const saveCategory = async () => {
 
     const isValid = validateFields();
@@ -149,13 +153,13 @@ export function CategoriesAdmin() {
     try {
       await deleteCategory(category.id);
       onRefresh();
+      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Categoría borrada correctamente', life: 3000 });
     } catch (error) {
-      console.log(error);
+      showError(error);
     }
 
     setDeleteCategoryDialog(false);
     setCategory(emptyCategory);
-    toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Categoría borrada correctamente', life: 3000 });
   };
 
   const exportCSV = () => {
