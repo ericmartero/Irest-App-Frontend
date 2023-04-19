@@ -106,6 +106,11 @@ export const deleteProductApi = async(id, token) => {
         }
 
         const resp = await fetch(url, params);
+
+        if (resp.status === 409) {
+            throw new Error("No se puede borrar el producto seleccionado debido a que este producto está siendo utilizado en los pedidos.");
+        }  
+
         const result = await resp.json();
 
         return result;
