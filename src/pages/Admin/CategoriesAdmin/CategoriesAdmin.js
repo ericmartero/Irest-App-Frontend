@@ -300,7 +300,7 @@ export function CategoriesAdmin() {
   );
   const categoryDialogFooter = (
     <React.Fragment>
-      <Button label="Cancelar" icon="pi pi-times" outlined onClick={hideDialog} />
+      <Button label="Cancelar" icon="pi pi-times" outlined onClick={hideDialog} className="bttnFoot" />
       <Button label="Guardar" icon="pi pi-check" onClick={saveCategory} disabled={!submitted || Object.keys(validationErrors).length === 0 ? false : true} />
     </React.Fragment>
   );
