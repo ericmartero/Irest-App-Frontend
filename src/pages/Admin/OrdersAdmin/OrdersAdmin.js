@@ -65,6 +65,10 @@ export function OrdersAdmin() {
     return 'danger';
   };
 
+  const prueba = () => {
+    console.log('prueba');
+  }
+
   const listItem = (table) => {
 
     const ordersPending = size(table.tableBooking?.orders.filter(order => order.status === ORDER_STATUS.PENDING));
@@ -142,19 +146,21 @@ export function OrdersAdmin() {
             <div className="text-2xl font-bold">Mesa {table.number}</div>
           </div>
 
-          {table.tableBooking &&
-            <div className="flex flex-column align-items-center gap-3">
-              <Tooltip target=".custom-target-icon" />
-
-              <i className="custom-target-icon pi pi-key p-text-secondary p-overlay-badge"
-                data-pr-tooltip={table.tableBooking.key}
-                data-pr-position="right"
-                data-pr-at="right+5 top"
-                data-pr-my="left center-2"
-                style={{ fontSize: '2rem', cursor: 'pointer' }}>
-              </i>
-            </div>
-          }
+          <div className="flex flex-column align-items-center gap-3">
+            {table.tableBooking &&
+              <div className="flex align-items-center gap-2">
+                <Button label="Regenerar" icon="pi pi-refresh" onClick={prueba} rounded />
+                <Tooltip target=".custom-target-icon" />
+                <i className="custom-target-icon pi pi-key p-text-secondary p-overlay-badge"
+                  data-pr-tooltip={table.tableBooking.key}
+                  data-pr-position="right"
+                  data-pr-at="right+5 top"
+                  data-pr-my="left center-2"
+                  style={{ fontSize: '2rem', cursor: 'pointer' }}>
+                </i>
+              </div>
+            }
+          </div>
 
         </div>
       </div>
