@@ -2,6 +2,8 @@
     margin-right: 0.5rem;
 }
 
-.my-tag-bottom {
-    margin-bottom: 0.5rem;
+@media screen and (max-width: 1504px) {
+    .my-tag-bottom {
+        margin-bottom: 0.5rem;
+    }
 }
