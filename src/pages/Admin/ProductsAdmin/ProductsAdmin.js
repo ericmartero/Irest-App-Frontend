@@ -99,6 +99,10 @@ export function ProductsAdmin() {
     setDeleteProductsDialog(false);
   };
 
+  const showError = (error) => {
+    toast.current.show({ severity: 'error', summary: 'Operacion Fallida', detail: error.message, life: 3000 });
+  }
+
   const saveProduct = async () => {
 
     const isValid = validateFields();
@@ -173,13 +177,13 @@ export function ProductsAdmin() {
     try {
       await deleteProduct(product.id);
       onRefresh();
+      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Producto borrado correctamente', life: 3000 });
     } catch (error) {
-      console.log(error);
+      showError(error);
     }
 
     setDeleteProductDialog(false);
     setProduct(emptyProduct);
-    toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Producto borrado correctamente', life: 3000 });
   };
 
   const exportCSV = () => {
