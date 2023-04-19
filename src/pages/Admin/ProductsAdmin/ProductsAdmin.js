@@ -195,25 +195,28 @@ export function ProductsAdmin() {
   };
 
   const deleteSelectedProducts = async () => {
+    let deleteFailed = false;
+
     try {
       await Promise.all(selectedProducts.map(async (product) => {
         await deleteProduct(product.id);
       }));
       onRefresh();
     } catch (error) {
-      console.log(error);
+      deleteFailed = true;
+      toast.current.show({ severity: 'error', summary: 'Operacion Fallida', detail: 'No se ha podido borrar el producto o los productos seleccionados debido a que está siendo utilizado en los pedidos.', life: 3000 });
+    }
+
+    if (!deleteFailed) {
+      if (selectedProducts.length === 1) {
+        toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Producto borrado correctamente', life: 3000 });
+      } else {
+        toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Productos borrados correctamente', life: 3000 });
+      }
     }
 
     setDeleteProductsDialog(false);
     setSelectedProducts(null);
-
-    if (selectedProducts.length === 1) {
-      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Producto borrado correctamente', life: 3000 });
-    }
-
-    else {
-      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Productos borrados correctamente', life: 3000 });
-    }
   };
 
   const formatCurrency = (value) => {
