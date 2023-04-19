@@ -524,7 +524,10 @@ export function UsersAdmin() {
               <Dialog visible={deleteUsersDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteUsersDialogFooter} onHide={hideDeleteUsersDialog}>
                 <div className="confirmation-content">
                   <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                  {user && <span>Seguro que quieres eliminar los usuarios seleccionados?</span>}
+                  {user && selectedUsers?.length === 1  
+                    ? <span>Seguro que quieres eliminar el usuario seleccionado?</span>
+                    : <span>Seguro que quieres eliminar los usuarios seleccionados?</span>
+                  }
                 </div>
               </Dialog>
             </div>
