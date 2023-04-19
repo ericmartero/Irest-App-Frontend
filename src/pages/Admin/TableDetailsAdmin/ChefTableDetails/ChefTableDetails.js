@@ -94,6 +94,10 @@ export function ChefTableDetails() {
     }
   };
 
+  const showError = (error) => {
+    toast.current.show({ severity: 'error', summary: 'Operación Fallida', detail: error.message, life: 3000 });
+  };
+
   const hideDeleteOrderDialog = () => {
     setDeleteOrderDialog(false);
   };
@@ -102,12 +106,12 @@ export function ChefTableDetails() {
     try {
       await deleteOrder(orderDelete);
       onRefreshOrders();
+      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Pedido cancelado correctamente', life: 3000 });
     } catch (error) {
-      console.log(error);
+      showError(error);
     }
 
     setDeleteOrderDialog(false);
-    toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Pedido cancelado correctamente', life: 3000 });
   };
 
   const leftToolbarTemplate = () => {
