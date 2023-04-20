@@ -26,7 +26,6 @@ export function OrdersAdmin() {
   const [resetkeyDialog, setResetKeyDialog] = useState(false);
   const [tableKeyReset, setTableKeyReset] = useState(null);
   const [autoRefreshEnabled, setAutoRefreshEnabled] = useState(true);
-  const [showPassword, setShowPassword] = useState(false);
 
   const onRefresh = () => setRefreshTables((state) => !state);
 
@@ -189,24 +188,15 @@ export function OrdersAdmin() {
           <div className="flex flex-column align-items-center gap-3">
             {table.tableBooking &&
               <div className="flex align-items-center gap-2">
-                {!showPassword ?
-                  <>
-                    <Button label="Regenerar" icon="pi pi-refresh" onClick={(event) => { event.stopPropagation(); onResetKey(table); }} rounded />
-                    <i className="pi pi-eye p-text-secondary p-overlay-badge"
-                      style={{ fontSize: '2rem', cursor: 'pointer' }} onClick={(event) => { event.stopPropagation(); setShowPassword(true) }}>
-                    </i>
-                  </>
-
-                  :
-                  <>
-                    <Button label={table.tableBooking.key} icon="pi pi-key" rounded outlined />
-                    <i className="pi pi-eye-slash p-text-secondary p-overlay-badge"
-                      style={{ fontSize: '2rem', cursor: 'pointer' }} onClick={(event) => { event.stopPropagation(); setShowPassword(false) }}>
-                    </i>
-                  </>
-
-                }
-
+                <Button label="Regenerar" icon="pi pi-refresh" onClick={(event) => { event.stopPropagation(); onResetKey(table); }} rounded />
+                <Tooltip target=".custom-target-icon" />
+                <i className="custom-target-icon pi pi-key p-text-secondary p-overlay-badge"
+                  data-pr-tooltip={table.tableBooking.key}
+                  data-pr-position="right"
+                  data-pr-at="right+5 top"
+                  data-pr-my="left center-2"
+                  style={{ fontSize: '2rem', cursor: 'pointer' }}>
+                </i>
               </div>
             }
           </div>
@@ -262,4 +252,3 @@ export function OrdersAdmin() {
     </div>
   )
 }
-
