@@ -6,6 +6,7 @@ import { useTable } from '../../../hooks';
 import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
 import { Badge } from 'primereact/badge';
+import { Dialog } from 'primereact/dialog';
 import { Tooltip } from 'primereact/tooltip';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
@@ -21,6 +22,7 @@ export function OrdersAdmin() {
   const [refreshTables, setRefreshTables] = useState(false);
   const [tablesCrud, setTablesCrud] = useState([]);
   const [layout, setLayout] = useState('grid');
+  const [resetkeyDialog, setResetKeyDialog] = useState(false);
 
   const onRefresh = () => setRefreshTables((state) => !state);
 
@@ -56,6 +58,10 @@ export function OrdersAdmin() {
     }
   }, [tables]);
 
+  const hideResetKeyDialog = () => {
+    setResetKeyDialog(false);
+  };
+
   const getSeverity = (table) => {
 
     if (table.tableBooking === null) {
@@ -65,8 +71,16 @@ export function OrdersAdmin() {
     return 'danger';
   };
 
-  const prueba = () => {
-    console.log('prueba');
+  const resetKeyDialogFooter = (
+    <React.Fragment>
+      <Button label="No" icon="pi pi-times" outlined onClick={hideResetKeyDialog} />
+      <Button label="Si" icon="pi pi-check" onClick={''} />
+    </React.Fragment>
+  );
+
+  const onResetKey = (table) => {
+    setResetKeyDialog(true);
+    console.log(table);
   }
 
   const listItem = (table) => {
@@ -149,7 +163,7 @@ export function OrdersAdmin() {
           <div className="flex flex-column align-items-center gap-3">
             {table.tableBooking &&
               <div className="flex align-items-center gap-2">
-                <Button label="Regenerar" icon="pi pi-refresh" onClick={prueba} rounded />
+                <Button label="Regenerar" icon="pi pi-refresh" onClick={(event) => { event.stopPropagation(); onResetKey(table); }} rounded />
                 <Tooltip target=".custom-target-icon" />
                 <i className="custom-target-icon pi pi-key p-text-secondary p-overlay-badge"
                   data-pr-tooltip={table.tableBooking.key}
@@ -197,7 +211,17 @@ export function OrdersAdmin() {
           <ProgressSpinner />
         </div>
         :
-        <DataView value={tablesCrud} itemTemplate={itemTemplate} layout={layout} header={header()} emptyMessage='No se ha encontrado ninguna mesa' />}
+        <>
+          <DataView value={tablesCrud} itemTemplate={itemTemplate} layout={layout} header={header()} emptyMessage='No se ha encontrado ninguna mesa' />
+          
+          <Dialog visible={resetkeyDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={resetKeyDialogFooter} onHide={hideResetKeyDialog}>
+            <div className="confirmation-content">
+              <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                <span>Seguro que quieres regenerar la contraseña de la mesa?</span>
+            </div>
+          </Dialog>
+        </>
+      }
     </div>
   )
 }
