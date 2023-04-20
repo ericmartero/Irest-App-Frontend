@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { ORDER_STATUS } from '../../../utils/constants';
 import { useHistory } from 'react-router-dom';
 import { size } from 'lodash';
-import { useTable } from '../../../hooks';
+import { useTable, useTableBooking } from '../../../hooks';
 import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
 import { Badge } from 'primereact/badge';
@@ -19,10 +19,12 @@ export function OrdersAdmin() {
   const intervalRef = useRef();
   const history = useHistory();
   const { loading, tables, getTables } = useTable();
+  const { resetKey } = useTableBooking();
   const [refreshTables, setRefreshTables] = useState(false);
   const [tablesCrud, setTablesCrud] = useState([]);
   const [layout, setLayout] = useState('grid');
   const [resetkeyDialog, setResetKeyDialog] = useState(false);
+  const [tableKeyReset, setTableKeyReset] = useState(null);
   const [autoRefreshEnabled, setAutoRefreshEnabled] = useState(true);
 
   const onRefresh = () => setRefreshTables((state) => !state);
@@ -61,6 +63,10 @@ export function OrdersAdmin() {
     }
   }, [tables]);
 
+  const showError = (error) => {
+    toast.current.show({ severity: 'error', summary: 'Operacion Fallida', detail: error.message, life: 3000 });
+  }
+
   const hideResetKeyDialog = () => {
     setResetKeyDialog(false);
     setAutoRefreshEnabled(true);
@@ -75,18 +81,32 @@ export function OrdersAdmin() {
     return 'danger';
   };
 
-  const resetKeyDialogFooter = (
-    <React.Fragment>
-      <Button label="No" icon="pi pi-times" outlined onClick={hideResetKeyDialog} />
-      <Button label="Si" icon="pi pi-check" onClick={''} />
-    </React.Fragment>
-  );
-
   const onResetKey = (table) => {
     setResetKeyDialog(true);
     setAutoRefreshEnabled(false);
-    console.log(table);
+    setTableKeyReset(table);
   }
+
+  const resetKeyTable = async () => {
+
+    try {
+      await resetKey(tableKeyReset.tableBooking.id);
+      onRefresh();
+      toast.current.show({ severity: 'success', summary: 'Operación Exitosa', detail: `Se ha restablecido la contraseña de la mesa número ${tableKeyReset.number} correctamente`, life: 3000 });
+    } catch (error) {
+      showError(error);
+    }
+
+    setResetKeyDialog(false);
+    setAutoRefreshEnabled(true);
+  }
+
+  const resetKeyDialogFooter = (
+    <React.Fragment>
+      <Button label="No" icon="pi pi-times" outlined onClick={hideResetKeyDialog} />
+      <Button label="Si" icon="pi pi-check" onClick={resetKeyTable} />
+    </React.Fragment>
+  );
 
   const listItem = (table) => {
 
@@ -218,11 +238,13 @@ export function OrdersAdmin() {
         :
         <>
           <DataView value={tablesCrud} itemTemplate={itemTemplate} layout={layout} header={header()} emptyMessage='No se ha encontrado ninguna mesa' />
-          
+
           <Dialog visible={resetkeyDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={resetKeyDialogFooter} onHide={hideResetKeyDialog}>
             <div className="confirmation-content">
               <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                <span>Seguro que quieres regenerar la contraseña de la mesa?</span>
+              {tableKeyReset &&
+                <span>Seguro que quieres regenerar la contraseña de la mesa <b>{tableKeyReset.number}</b>?</span>
+              }
             </div>
           </Dialog>
         </>
