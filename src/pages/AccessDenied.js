@@ -5,7 +5,8 @@ export function AccessDenied() {
     return (
         <div className="align-container">
             <div style={{ borderRadius: '56px', padding: '0.3rem', background: 'linear-gradient(180deg, rgba(247, 149, 48, 0.4) 10%, rgba(247, 149, 48, 0) 30%)' }}>
-                <div className="w-full surface-card py-8 px-5 sm:px-8 flex flex-column align-items-center" style={{ borderRadius: '53px' }}>
+                <div className="w-full surface-card py-8 px-5 sm:px-8 flex flex-column align-items-center" 
+                    style={{ borderRadius: '53px', paddingTop: '3rem', paddingBottom: '2rem', paddingLeft: '3rem', paddingRight: '3rem' }}>
                     <div className="flex justify-content-center align-items-center bg-pink-500 border-circle" style={{ height: '3.2rem', width: '3.2rem' }}>
                         <i className="pi pi-fw pi-exclamation-circle text-2xl text-white"></i>
                     </div>
