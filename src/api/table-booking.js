@@ -42,7 +42,7 @@ export const joinTable = async(dtoJoinTable) => {
     }
 }
 
-export const resetKey = async(tableBookingId, token) => {
+export const resetKeyApi = async(tableBookingId, token) => {
     try {
         const url = `${HOST_API}/api/table-bookings/reset-key`;
         const params = {
