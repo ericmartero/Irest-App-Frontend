@@ -41,3 +41,27 @@ export const joinTable = async(dtoJoinTable) => {
         throw error;
     }
 }
+
+export const resetKey = async(tableBookingId, token) => {
+    try {
+        const url = `${HOST_API}/api/table-bookings/reset-key`;
+        const params = {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                table: tableBookingId
+            })
+        }
+
+        const resp = await fetch(url, params);
+        const result = await resp.json();
+
+        return result;
+        
+    } catch (error) {
+        throw error;
+    }
+}
