@@ -1,0 +1,17 @@
+.align-main-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.first-container {
+    border-radius: 56px;
+    padding: 0.3rem;
+    background: linear-gradient(180deg, rgba(247, 149, 48, 0.4) 10%, rgba(247, 149, 48, 0) 30%);
+}
+
+.second-container {
+    border-radius: 53px;
+    padding: 3rem 3rem 2rem !important;
+}
+

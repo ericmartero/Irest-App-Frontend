@@ -1,12 +1,11 @@
 import React from 'react';
-import '../../scss/AlignComponent.scss';
+import './AccessDenied.scss';
 
 export function AccessDenied() {
     return (
-        <div className="align-container">
-            <div style={{ borderRadius: '56px', padding: '0.3rem', background: 'linear-gradient(180deg, rgba(247, 149, 48, 0.4) 10%, rgba(247, 149, 48, 0) 30%)' }}>
-                <div className="w-full surface-card py-8 px-5 sm:px-8 flex flex-column align-items-center" 
-                    style={{ borderRadius: '53px', padding: '3rem 3rem 2rem !important' }}>
+        <div className="align-main-container">
+            <div className="first-container">
+                <div className="w-full surface-card flex flex-column align-items-center second-container">
                     <div className="flex justify-content-center align-items-center bg-pink-500 border-circle" style={{ height: '3.2rem', width: '3.2rem' }}>
                         <i className="pi pi-fw pi-exclamation-circle text-2xl text-white"></i>
                     </div>
