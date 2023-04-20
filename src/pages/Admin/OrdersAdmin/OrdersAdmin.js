@@ -23,6 +23,7 @@ export function OrdersAdmin() {
   const [tablesCrud, setTablesCrud] = useState([]);
   const [layout, setLayout] = useState('grid');
   const [resetkeyDialog, setResetKeyDialog] = useState(false);
+  const [autoRefreshEnabled, setAutoRefreshEnabled] = useState(true);
 
   const onRefresh = () => setRefreshTables((state) => !state);
 
@@ -31,12 +32,14 @@ export function OrdersAdmin() {
       onRefresh();
     }
 
-    intervalRef.current = setInterval(autoRefreshTables, 8000);
+    if (autoRefreshEnabled) {
+      intervalRef.current = setInterval(autoRefreshTables, 10000);
+    }
 
     return () => {
       clearInterval(intervalRef.current);
     };
-  }, []);
+  }, [autoRefreshEnabled]);
 
   useEffect(() => {
     getTables();
@@ -60,6 +63,7 @@ export function OrdersAdmin() {
 
   const hideResetKeyDialog = () => {
     setResetKeyDialog(false);
+    setAutoRefreshEnabled(true);
   };
 
   const getSeverity = (table) => {
@@ -80,6 +84,7 @@ export function OrdersAdmin() {
 
   const onResetKey = (table) => {
     setResetKeyDialog(true);
+    setAutoRefreshEnabled(false);
     console.log(table);
   }
 
