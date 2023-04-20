@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useTable } from '../../../hooks';
-import { AccessDenied } from '../../AccessDenied';
+import { AccessDenied } from '../../AccessdDenied';
 import { classNames } from 'primereact/utils';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';

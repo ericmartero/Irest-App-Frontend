@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { AccessDenied } from '../../AccessDenied';
+import { AccessDenied } from '../../AccessdDenied';
 import { PAYMENT_TYPE } from '../../../utils/constants';
 import { usePayment, useOrder } from '../../../hooks';
 import { DataTable } from 'primereact/datatable';

@@ -12,7 +12,7 @@ import { InputText } from 'primereact/inputtext';
 import { Tag } from 'primereact/tag';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { useUser, useAuth } from '../../../hooks';
-import { AccessDenied } from '../../AccessDenied';
+import { AccessDenied } from '../../AccessdDenied';
 import '../../../scss/AlignComponent.scss';
 import './UsersAdmin.scss';
 
