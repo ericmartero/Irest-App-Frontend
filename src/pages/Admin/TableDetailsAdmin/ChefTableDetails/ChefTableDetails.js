@@ -43,7 +43,7 @@ export function ChefTableDetails() {
     }
   }, [orders]);
 
-  /*useEffect(() => {
+  useEffect(() => {
     const autoRefreshTables = () => {
       onRefreshOrders();
     }
@@ -53,7 +53,7 @@ export function ChefTableDetails() {
     return () => {
       clearInterval(intervalRef.current);
     };
-  }, []);*/
+  }, []);
 
   const groupOrdersStatus = (data) => {
     return data.reduce((acc, order) => {
