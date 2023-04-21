@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useOrder } from '../../../../hooks';
 import { ORDER_STATUS } from '../../../../utils/constants';
-import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
 import { DataView } from 'primereact/dataview';
 import { Toolbar } from 'primereact/toolbar';
@@ -18,14 +17,12 @@ export function ChefTableDetails() {
 
   const toast = useRef(null);
   const intervalRef = useRef();
-  const { orders, loading, getOrdersByTable, checkDeliveredOrder, deleteOrder } = useOrder();
+  const { orders, loading, getOrdersByTable, checkDeliveredOrder } = useOrder();
   const [ordersBooking, setOrdersBooking] = useState([]);
   const [refreshOrders, setRefreshOrders] = useState(false);
   const [sortKey, setSortKey] = useState('');
   const [sortOrder, setSortOrder] = useState(0);
   const [sortField, setSortField] = useState('');
-  const [deleteOrderDialog, setDeleteOrderDialog] = useState(false);
-  const [orderDelete, setOrderDelete] = useState(null);
 
   const sortOptions = [
     { label: 'Entregados', value: 'status' },
@@ -35,7 +32,7 @@ export function ChefTableDetails() {
   const onRefreshOrders = () => setRefreshOrders((prev) => !prev);
 
   useEffect(() => {
-    getOrdersByTable(null,true);
+    getOrdersByTable(null, true);
   }, [refreshOrders, getOrdersByTable]);
 
   useEffect(() => {
@@ -98,40 +95,12 @@ export function ChefTableDetails() {
     toast.current.show({ severity: 'error', summary: 'Operación Fallida', detail: error.message, life: 3000 });
   };
 
-  const hideDeleteOrderDialog = () => {
-    setDeleteOrderDialog(false);
-  };
-
-  const deleteSelectedOrder = async () => {
-    try {
-      await deleteOrder(orderDelete);
-      onRefreshOrders();
-      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Pedido cancelado correctamente', life: 3000 });
-    } catch (error) {
-      showError(error);
-    }
-
-    setDeleteOrderDialog(false);
-  };
-
   const leftToolbarTemplate = () => {
     return (
       <div className="flex flex-wrap gap-2">
         <h3 className="m-0">PANEL DE PEDIDOS COCINA</h3>
       </div>
     );
-  };
-
-  const deleteOrderDialogFooter = (
-    <React.Fragment>
-      <Button label="No" icon="pi pi-times" outlined onClick={hideDeleteOrderDialog} />
-      <Button label="Si" icon="pi pi-check" severity="danger" onClick={deleteSelectedOrder} />
-    </React.Fragment>
-  );
-
-  const confirmDeleteOrder = (order) => {
-    setDeleteOrderDialog(true);
-    setOrderDelete(order.id);
   };
 
   const rightToolbarTemplate = () => {
@@ -151,17 +120,20 @@ export function ChefTableDetails() {
   const itemTemplate = (order) => {
 
     const onCheckDeliveredOrder = async (status) => {
-      order.quantity--;
-      await checkDeliveredOrder(order.id, status);
-      onRefreshOrders();
-      if (status === ORDER_STATUS.PREPARED) {
-        toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Pedido entregado correctamente', life: 3000 });
-      }
+      try {
+        order.quantity--;
+        await checkDeliveredOrder(order.id, status);
+        onRefreshOrders();
+        if (status === ORDER_STATUS.PREPARED) {
+          toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Pedido entregado correctamente', life: 3000 });
+        }
 
-      else {
-        toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'El pedido ha vuelto al estado pendiente correctamente', life: 3000 });
+        else {
+          toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'El pedido ha vuelto al estado pendiente correctamente', life: 3000 });
+        }
+      } catch (error) {
+        showError(error);
       }
-      
     }
 
     return (
@@ -190,7 +162,6 @@ export function ChefTableDetails() {
 
             <div className="flex sm:flex-column align-items-center sm:align-items-end gap-3">
               {order.status === ORDER_STATUS.PENDING ? <Button label="Preparar pedido" icon="pi pi-check" onClick={() => onCheckDeliveredOrder(ORDER_STATUS.PREPARED)} /> : <Button label="Revertir pedido" icon="pi pi-arrow-circle-right" onClick={() => onCheckDeliveredOrder(ORDER_STATUS.PENDING)} style={{ width: '100%' }} />}
-              <Button label="Cancelar pedido" icon="pi pi-times" severity='danger' onClick={() => confirmDeleteOrder(order)} />
             </div>
           </div>
         </div>
@@ -206,16 +177,7 @@ export function ChefTableDetails() {
           <ProgressSpinner />
         </div>
         :
-        <>
-          <DataView value={ordersBooking} itemTemplate={itemTemplate} header={header()} sortField={sortField} sortOrder={sortOrder} emptyMessage='No hay pedidos en la mesa' />
-
-          <Dialog visible={deleteOrderDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteOrderDialogFooter} onHide={hideDeleteOrderDialog}>
-            <div className="confirmation-content">
-              <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-              <span>Seguro que quieres cancelar el pedido?</span>
-            </div>
-          </Dialog>
-        </>
+        <DataView value={ordersBooking} itemTemplate={itemTemplate} header={header()} sortField={sortField} sortOrder={sortOrder} emptyMessage='No hay pedidos en la mesa' />
       }
     </div>
   )
