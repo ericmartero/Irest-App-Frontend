@@ -137,7 +137,7 @@ export function OrdersAdmin() {
                 <div className="flex flex-column align-items-center gap-3" style={{marginBottom: '2rem'}}>
                   {table.tableBooking &&
                     <div className="flex align-items-center gap-2">
-                      <Button label="Regenerar Contraseña" icon="pi pi-refresh" onClick={(event) => { event.stopPropagation(); onResetKey(table); }} rounded />
+                      <Button label="Regenerar contraseña" icon="pi pi-refresh" onClick={(event) => { event.stopPropagation(); onResetKey(table); }} rounded />
                     </div>
                   }
                 </div>
@@ -195,7 +195,7 @@ export function OrdersAdmin() {
           <div className="flex flex-column align-items-center gap-3">
             {table.tableBooking &&
               <div className="flex align-items-center gap-2">
-                <Button label="Regenerar Contraseña" icon="pi pi-refresh" onClick={(event) => { event.stopPropagation(); onResetKey(table); }} rounded />
+                <Button label="Regenerar contraseña" icon="pi pi-refresh" onClick={(event) => { event.stopPropagation(); onResetKey(table); }} rounded />
               </div>
             }
           </div>
