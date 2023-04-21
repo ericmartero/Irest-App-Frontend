@@ -134,6 +134,13 @@ export function OrdersAdmin() {
                   </span>
                 }
                 <Tag value={table.tableBooking === null ? 'VACÍA' : 'OCUPADA'} severity={getSeverity(table)}></Tag>
+                <div className="flex flex-column align-items-center gap-3" style={{marginBottom: '2rem'}}>
+                  {table.tableBooking &&
+                    <div className="flex align-items-center gap-2">
+                      <Button label="Regenerar Contraseña" icon="pi pi-refresh" onClick={(event) => { event.stopPropagation(); onResetKey(table); }} rounded />
+                    </div>
+                  }
+                </div>
               </div>
             </div>
             <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -188,15 +195,7 @@ export function OrdersAdmin() {
           <div className="flex flex-column align-items-center gap-3">
             {table.tableBooking &&
               <div className="flex align-items-center gap-2">
-                <Button label="Regenerar" icon="pi pi-refresh" onClick={(event) => { event.stopPropagation(); onResetKey(table); }} rounded />
-                <Tooltip target=".custom-target-icon" />
-                <i className="custom-target-icon pi pi-key p-text-secondary p-overlay-badge"
-                  data-pr-tooltip={table.tableBooking.key}
-                  data-pr-position="right"
-                  data-pr-at="right+5 top"
-                  data-pr-my="left center-2"
-                  style={{ fontSize: '2rem', cursor: 'pointer' }}>
-                </i>
+                <Button label="Regenerar Contraseña" icon="pi pi-refresh" onClick={(event) => { event.stopPropagation(); onResetKey(table); }} rounded />
               </div>
             }
           </div>
