@@ -7,7 +7,6 @@ import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
 import { Badge } from 'primereact/badge';
 import { Dialog } from 'primereact/dialog';
-import { Tooltip } from 'primereact/tooltip';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
 import { Tag } from 'primereact/tag';
@@ -20,6 +19,7 @@ export function OrdersAdmin() {
   const history = useHistory();
   const { loading, tables, getTables } = useTable();
   const { resetKey } = useTableBooking();
+
   const [refreshTables, setRefreshTables] = useState(false);
   const [tablesCrud, setTablesCrud] = useState([]);
   const [layout, setLayout] = useState('grid');
@@ -67,6 +67,15 @@ export function OrdersAdmin() {
     toast.current.show({ severity: 'error', summary: 'Operacion Fallida', detail: error.message, life: 3000 });
   }
 
+  const handleCopyKeyToClipboard = (text) => {
+    const textToCopy = text;
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      toast.current.show({ severity: 'success', summary: 'Operación Exitosa', detail: `Se ha copiado la contraseña nueva de la mesa número ${tableKeyReset.number} en el portapapeles`, life: 3000 });
+    }, (error) => {
+      showError(error);
+    });
+  };
+
   const hideResetKeyDialog = () => {
     setResetKeyDialog(false);
     setAutoRefreshEnabled(true);
@@ -90,9 +99,8 @@ export function OrdersAdmin() {
   const resetKeyTable = async () => {
 
     try {
-      await resetKey(tableKeyReset.tableBooking.id);
-      onRefresh();
-      toast.current.show({ severity: 'success', summary: 'Operación Exitosa', detail: `Se ha restablecido la contraseña de la mesa número ${tableKeyReset.number} correctamente`, life: 3000 });
+      const response = await resetKey(tableKeyReset.tableBooking.id);
+      handleCopyKeyToClipboard(response.key);
     } catch (error) {
       showError(error);
     }
@@ -139,10 +147,10 @@ export function OrdersAdmin() {
             <div className="flex flex-column align-items-center gap-3">
               {table.tableBooking &&
                 <div className="flex align-items-center gap-2">
-                  <Button icon="pi pi-refresh"
-                    onClick={(event) => { event.stopPropagation(); onResetKey(table); }}
-                    tooltip='Regenerar clave'
-                    rounded />
+                    <Button icon="pi pi-refresh"
+                      onClick={(event) => { event.stopPropagation(); onResetKey(table); }}
+                      tooltip='Regenerar clave'
+                      rounded />
                 </div>
               }
             </div>
