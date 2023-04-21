@@ -535,7 +535,7 @@ export function WaiterTableDetails() {
                             order.status === ORDER_STATUS.PREPARED ?
                               <>
                                 <Button label='Entregar pedido' icon="pi pi-check" onClick={() => onCheckDeliveredOrder(ORDER_STATUS.DELIVERED)} />
-                                <Button label='Revertir pedido' icon="pi pi-arrow-circle-right" onClick={() => onCheckDeliveredOrder(ORDER_STATUS.PENDING)} />
+                                <Button label='Revertir pedido' icon="pi pi-arrow-circle-right" onClick={() => onCheckDeliveredOrder(ORDER_STATUS.PENDING)} style={{ width: '100%' }} />
                               </>
                               :
                               <>
