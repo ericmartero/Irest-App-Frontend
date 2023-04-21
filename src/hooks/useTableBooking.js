@@ -7,7 +7,7 @@ export function useTableBooking() {
 
     const resetKey = async (id) => {
         try {
-            await resetKeyApi(id, auth.token);
+           return await resetKeyApi(id, auth.token);
         } catch (error) {
             throw error;
         }
