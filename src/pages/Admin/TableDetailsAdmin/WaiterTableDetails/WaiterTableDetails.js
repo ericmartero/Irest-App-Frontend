@@ -496,7 +496,7 @@ export function WaiterTableDetails() {
               : order.status === ORDER_STATUS.DELIVERED ? { backgroundColor: 'var(--green-100)' }
                 : { backgroundColor: 'var(--primary-100)' }
           }>
-          <img className="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block mx-auto border-round" src={order.product.image} alt={order.product.title} />
+          <img className="w-9 sm:w-16rem xl:w-11rem shadow-2 block xl:block mx-auto border-round image-fill" src={order.product.image} alt={order.product.title} />
           <div className="flex flex-column sm:flex-row justify-content-between align-items-center flex-1 gap-4">
             <div className="product-info flex flex-column align-items-center sm:align-items-start gap-3">
               <div className="text-2xl font-bold text-900">{order.product.title}</div>
