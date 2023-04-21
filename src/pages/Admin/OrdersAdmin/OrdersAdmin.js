@@ -134,17 +134,17 @@ export function OrdersAdmin() {
                   </span>
                 }
                 <Tag value={table.tableBooking === null ? 'VACÍA' : 'OCUPADA'} severity={getSeverity(table)}></Tag>
-                <div className="flex flex-column align-items-center gap-3" style={{ marginBottom: '2rem' }}>
-                  {table.tableBooking &&
-                    <div className="flex align-items-center gap-2">
-                      <Button icon="pi pi-refresh"
-                        onClick={(event) => { event.stopPropagation(); onResetKey(table); }}
-                        tooltip='Regenerar contraseña'
-                        rounded />
-                    </div>
-                  }
-                </div>
               </div>
+            </div>
+            <div className="flex flex-column align-items-center gap-3">
+              {table.tableBooking &&
+                <div className="flex align-items-center gap-2">
+                  <Button icon="pi pi-refresh"
+                    onClick={(event) => { event.stopPropagation(); onResetKey(table); }}
+                    tooltip='Regenerar contraseña'
+                    rounded />
+                </div>
+              }
             </div>
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <Button icon="pi pi-shopping-cart" label="Ver Pedidos" onClick={renderDetails} disabled={table.tableBooking === null} />
