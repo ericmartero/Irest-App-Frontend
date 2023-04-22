@@ -87,11 +87,16 @@ export function AdminLayout(props) {
         return window.innerWidth >= 992;
     }
 
+    const menuLabel = auth?.me.user.roles.includes('superuser') ? 'SUPERUSUARIO' : auth?.me.user.establishment.name;
+
     let menu = [
         {
-            label: auth?.me.user.establishment.name,
+            label: menuLabel,
             items: [
-                { label: 'Pedidos', icon: 'pi pi-fw pi-home', to: '/admin' },
+                ...(auth?.me.user.roles.includes('superuser')
+                    ? [{ label: 'Establecimientos', icon: 'pi pi-fw pi-home', to: '/admin' }]
+                    : [{ label: 'Pedidos', icon: 'pi pi-fw pi-home', to: '/admin' }]
+                ),
                 ...(auth?.me.user.roles.includes('admin') ?
                     [{ label: 'Usuarios', icon: 'pi pi-fw pi-id-card', to: '/admin/users' }] : []
                 ),
