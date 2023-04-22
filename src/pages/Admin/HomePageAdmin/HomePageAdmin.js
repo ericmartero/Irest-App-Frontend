@@ -1,6 +1,7 @@
 import React from 'react';
 import { OrdersAdmin } from '../OrdersAdmin';
 import { ChefTableDetails } from '../TableDetailsAdmin';
+import { EstablishmentsAdmin } from '../EstablishmentsAdmin';
 import { useAuth } from '../../../hooks';
 
 export function HomePageAdmin() {
@@ -16,6 +17,12 @@ export function HomePageAdmin() {
     else if (auth?.me.user.roles.includes('chef')) {
         return (
             <ChefTableDetails/>
+        )
+    }
+
+    else if (auth?.me.user.roles.includes('superuser')) {
+        return (
+            <EstablishmentsAdmin/>
         )
     }
 
