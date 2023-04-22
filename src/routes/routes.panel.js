@@ -2,7 +2,7 @@ import { AdminLayout } from '../layouts';
 import { HomePageAdmin, UsersAdmin, CategoriesAdmin, ProductsAdmin, TablesAdmin, PaymentsHistoryAdmin } from '../pages/Admin';
 import { WaiterTableDetails } from '../pages/Admin/TableDetailsAdmin';
 
-const routesAdmin = [
+const routesPanel = [
     {
         path: '/admin',
         layout: AdminLayout,
@@ -47,4 +47,4 @@ const routesAdmin = [
     }
 ];
 
-export default routesAdmin;
+export default routesPanel;

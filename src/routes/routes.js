@@ -1,10 +1,10 @@
-import routesAdmin from './routes.admin';
+import routesPanel from './routes.panel';
 import routesClient from './routes.client';
 import { Error404 } from '../pages';
 import { Error404Layout } from '../layouts';
 
 const routes = [
-    ...routesAdmin,
+    ...routesPanel,
     ...routesClient,
     {
         layout: Error404Layout,

@@ -6,7 +6,7 @@ import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../hooks';
 import { LoginAdmin } from '../../pages/Admin';
 import { TopMenu, SideMenu } from '../../components/Admin';
-import './AdminLayout.scss';
+import './DashboardLayout.scss';
 
 export function AdminLayout(props) {
 
