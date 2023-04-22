@@ -74,7 +74,7 @@ export function LoginAdmin() {
                 <i className="pi pi-user"></i>
               </span>
               <InputText id="email" type="text" placeholder="Introduce tu correo electrónico" className={submitted && formik.errors.email ? "w-full p-invalid" : "w-full"}
-                value={formik.values.email} onChange={formik.handleChange} />
+                value={formik.values.email} onChange={formik.handleChange} autoComplete='email' />
             </div>
             {submitted && formik.errors.email && formik.values.email === '' ? (
               <small className="p-error mb-2">Correo electrónico requerido</small>
@@ -90,7 +90,7 @@ export function LoginAdmin() {
                 <i className="pi pi-lock"></i>
               </span>
             <InputText id="password" type="password" placeholder="Introduce tu contraseña" className={submitted && formik.errors.password ? "w-full p-invalid" : "w-full"}
-              value={formik.values.password} onChange={formik.handleChange} />
+              value={formik.values.password} onChange={formik.handleChange} autoComplete='current-password'/>
             </div>
             {submitted && formik.errors.password && <small className="p-error">Contraseña requerida</small>}
 
