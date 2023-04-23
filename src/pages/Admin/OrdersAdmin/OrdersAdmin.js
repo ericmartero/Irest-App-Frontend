@@ -18,13 +18,14 @@ export function OrdersAdmin() {
   const intervalRef = useRef();
   const history = useHistory();
   const { loading, tables, getTables } = useTable();
-  const { resetKey } = useTableBooking();
+  const { resetKey, reserveTable } = useTableBooking();
 
   const [refreshTables, setRefreshTables] = useState(false);
   const [tablesCrud, setTablesCrud] = useState([]);
   const [layout, setLayout] = useState('grid');
   const [resetkeyDialog, setResetKeyDialog] = useState(false);
-  const [tableKeyReset, setTableKeyReset] = useState(null);
+  const [reserveTableDialog, setReserveTableDialog] = useState(false);
+  const [tableSelected, setTableSelected] = useState(null);
   const [autoRefreshEnabled, setAutoRefreshEnabled] = useState(true);
 
   const onRefresh = () => setRefreshTables((state) => !state);
@@ -70,7 +71,7 @@ export function OrdersAdmin() {
   const handleCopyKeyToClipboard = (text) => {
     const textToCopy = text;
     navigator.clipboard.writeText(textToCopy).then(() => {
-      toast.current.show({ severity: 'success', summary: 'Operación Exitosa', detail: `Se ha copiado la contraseña nueva de la mesa número ${tableKeyReset.number} en el portapapeles`, life: 3000 });
+      toast.current.show({ severity: 'success', summary: 'Operación Exitosa', detail: `Se ha copiado la contraseña nueva de la mesa número ${tableSelected.number} en el portapapeles`, life: 3000 });
     }, (error) => {
       showError(error);
     });
@@ -78,6 +79,11 @@ export function OrdersAdmin() {
 
   const hideResetKeyDialog = () => {
     setResetKeyDialog(false);
+    setAutoRefreshEnabled(true);
+  };
+
+  const hideReserveTableDialog = () => {
+    setReserveTableDialog(false);
     setAutoRefreshEnabled(true);
   };
 
@@ -93,13 +99,19 @@ export function OrdersAdmin() {
   const onResetKey = (table) => {
     setResetKeyDialog(true);
     setAutoRefreshEnabled(false);
-    setTableKeyReset(table);
+    setTableSelected(table);
+  }
+
+  const onReserveTable = (table) => {
+    setReserveTableDialog(true);
+    setAutoRefreshEnabled(false);
+    setTableSelected(table);
   }
 
   const resetKeyTable = async () => {
 
     try {
-      const response = await resetKey(tableKeyReset.tableBooking.id);
+      const response = await resetKey(tableSelected.tableBooking.id);
       handleCopyKeyToClipboard(response.key);
     } catch (error) {
       showError(error);
@@ -109,10 +121,32 @@ export function OrdersAdmin() {
     setAutoRefreshEnabled(true);
   }
 
+  const reserveEmptyTable = async () => {
+
+    try {
+      const response = await reserveTable(tableSelected.id);
+      toast.current.show({ severity: 'success', summary: 'Operación Exitosa', detail: `Se ha reservado la mesa número ${tableSelected.number} correctamente`, life: 3000 });
+      handleCopyKeyToClipboard(response.key);
+      onRefresh();
+    } catch (error) {
+      showError(error);
+    }
+
+    setReserveTableDialog(false);
+    setAutoRefreshEnabled(true);
+  }
+
   const resetKeyDialogFooter = (
     <React.Fragment>
       <Button label="No" icon="pi pi-times" outlined onClick={hideResetKeyDialog} />
       <Button label="Si" icon="pi pi-check" onClick={resetKeyTable} />
+    </React.Fragment>
+  );
+
+  const reserveTableDialogFooter = (
+    <React.Fragment>
+      <Button label="No" icon="pi pi-times" outlined onClick={hideReserveTableDialog} />
+      <Button label="Si" icon="pi pi-check" onClick={reserveEmptyTable} />
     </React.Fragment>
   );
 
@@ -145,12 +179,19 @@ export function OrdersAdmin() {
               </div>
             </div>
             <div className="flex flex-column align-items-center gap-3">
-              {table.tableBooking &&
+              {table.tableBooking ?
                 <div className="flex align-items-center gap-2">
-                    <Button icon="pi pi-refresh"
-                      onClick={(event) => { event.stopPropagation(); onResetKey(table); }}
-                      tooltip='Regenerar clave'
-                      rounded />
+                  <Button icon="pi pi-refresh"
+                    onClick={(event) => { event.stopPropagation(); onResetKey(table); }}
+                    tooltip='Regenerar clave'
+                    rounded />
+                </div>
+                :
+                <div className="flex align-items-center gap-2">
+                  <Button icon="pi pi-user-plus"
+                    label='Reservar mesa'
+                    onClick={(event) => { event.stopPropagation(); onReserveTable(table); }}
+                    rounded />
                 </div>
               }
             </div>
@@ -204,11 +245,18 @@ export function OrdersAdmin() {
           </div>
 
           <div className="flex flex-column align-items-center gap-3">
-            {table.tableBooking &&
+            {table.tableBooking ?
               <div className="flex align-items-center gap-2">
                 <Button icon="pi pi-refresh"
                   onClick={(event) => { event.stopPropagation(); onResetKey(table); }}
                   tooltip='Regenerar clave'
+                  rounded />
+              </div>
+              :
+              <div className="flex align-items-center gap-2">
+                <Button icon="pi pi-user-plus"
+                  label='Reservar mesa'
+                  onClick={(event) => { event.stopPropagation(); onReserveTable(table); }}
                   rounded />
               </div>
             }
@@ -255,8 +303,17 @@ export function OrdersAdmin() {
           <Dialog visible={resetkeyDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={resetKeyDialogFooter} onHide={hideResetKeyDialog}>
             <div className="confirmation-content">
               <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-              {tableKeyReset &&
-                <span>Seguro que quieres regenerar la contraseña de la mesa <b>{tableKeyReset.number}</b>?</span>
+              {tableSelected &&
+                <span>Seguro que quieres regenerar la contraseña de la mesa <b>{tableSelected.number}</b>?</span>
+              }
+            </div>
+          </Dialog>
+
+          <Dialog visible={reserveTableDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={reserveTableDialogFooter} onHide={hideReserveTableDialog}>
+            <div className="confirmation-content">
+              <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+              {tableSelected &&
+                <span>Seguro que quieres reservar la mesa <b>{tableSelected.number}</b>?</span>
               }
             </div>
           </Dialog>
