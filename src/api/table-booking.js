@@ -1,6 +1,6 @@
 const HOST_API = process.env.REACT_APP_HOST_API;
 
-export const reserveTableApi = async(dtoReserveTable) => {
+export const reserveTableApi = async(tableId) => {
     try {
         const url = `${HOST_API}/api/table-bookings/reserve`;
         const params = {
@@ -8,7 +8,9 @@ export const reserveTableApi = async(dtoReserveTable) => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(dtoReserveTable)
+            body: JSON.stringify({
+                table: tableId
+            })
         }
 
         const resp = await fetch(url, params);
