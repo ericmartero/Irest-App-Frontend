@@ -15,7 +15,7 @@ export function useTableBooking() {
 
     const reserveTable = async (id) => {
         try {
-           return await reserveTableApi(id, auth.token);
+           return await reserveTableApi(id);
         } catch (error) {
             throw error;
         }
