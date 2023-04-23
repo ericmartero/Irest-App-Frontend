@@ -6,3 +6,4 @@ export * from './useTable';
 export * from './useOrder';
 export * from './usePayment';
 export * from './useTableBooking';
+export * from './useEstablishment';
