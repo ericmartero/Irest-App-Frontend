@@ -1,6 +1,6 @@
 const HOST_API = process.env.REACT_APP_HOST_API;
 
-export const reserveTable = async(dtoReserveTable) => {
+export const reserveTableApi = async(dtoReserveTable) => {
     try {
         const url = `${HOST_API}/api/table-bookings/reserve`;
         const params = {
@@ -21,7 +21,7 @@ export const reserveTable = async(dtoReserveTable) => {
     }
 }
 
-export const joinTable = async(dtoJoinTable) => {
+export const joinTableApi = async(dtoJoinTable) => {
     try {
         const url = `${HOST_API}/api/table-bookings/join`;
         const params = {
