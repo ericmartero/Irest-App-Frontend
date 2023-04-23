@@ -327,18 +327,21 @@ export function TablesAdmin() {
       </span>
     </div>
   );
+
   const tableDialogFooter = (
     <React.Fragment>
       <Button label="Cancelar" icon="pi pi-times" outlined onClick={hideDialog} />
       <Button label="Guardar" icon="pi pi-check" onClick={saveTable} disabled={!submitted || Object.keys(validationErrors).length === 0 ? false : true} />
     </React.Fragment>
   );
+
   const deleteTableDialogFooter = (
     <React.Fragment>
       <Button label="No" icon="pi pi-times" outlined onClick={hideDeleteTableDialog} />
       <Button label="Si" icon="pi pi-check" severity="danger" onClick={deleteSelectedTable} />
     </React.Fragment>
   );
+  
   const deleteTablesDialogFooter = (
     <React.Fragment>
       <Button label="No" icon="pi pi-times" outlined onClick={hideDeleteTablesDialog} />
