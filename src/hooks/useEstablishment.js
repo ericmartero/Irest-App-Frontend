@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { getEstablishmentsApi, addEstablishmentApi, updateEstablishmentApi } from '../api/establishment';
+import { getEstablishmentsApi, addEstablishmentApi, updateEstablishmentApi, deleteEstablishmentApi } from '../api/establishment';
 import { useAuth } from './';
 
 export function useEstablishment() {
@@ -43,6 +43,17 @@ export function useEstablishment() {
         }
     };
 
+    const deleteEstablishment = async (id) => {
+        try {
+            setLoadingCrud(true);
+            await deleteEstablishmentApi(id, auth.token);
+            setLoadingCrud(false);
+        } catch (error) {
+            setLoadingCrud(false);
+            throw error;
+        }
+    };
+
     return {
         loading,
         loadingCrud,
@@ -50,5 +61,6 @@ export function useEstablishment() {
         getEstablishments,
         addEstablishment,
         updateEstablishment,
+        deleteEstablishment,
     }
 }

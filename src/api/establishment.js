@@ -62,3 +62,28 @@ export const updateEstablishmentApi = async(id, dtoUpdateEstablishment, token) =
         throw error;
     }
 }
+
+export const deleteEstablishmentApi = async(id, token) => {
+    try {
+        const url = `${HOST_API}/api/establishments/${id}`;
+        const params = {
+            method: 'DELETE',
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+
+        const resp = await fetch(url, params);
+
+        if (resp.status === 409) {
+            throw new Error("No se puede borrar el establecimiento seleccionado debido a que tiene elementos asignados.");
+        }
+
+        const result = await resp.json();
+
+        return result;
+
+    } catch (error) {
+        throw error;
+    }
+}
