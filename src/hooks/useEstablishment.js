@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { getEstablishmentsApi, addEstablishmentApi } from '../api/establishment';
+import { getEstablishmentsApi, addEstablishmentApi, updateEstablishmentApi } from '../api/establishment';
 import { useAuth } from './';
 
 export function useEstablishment() {
@@ -32,11 +32,23 @@ export function useEstablishment() {
         }
     };
 
+    const updateEstablishment = async (id, data) => {
+        try {
+            setLoadingCrud(true);
+            await updateEstablishmentApi(id, data, auth.token);
+            setLoadingCrud(false);
+        } catch (error) {
+            setLoadingCrud(false);
+            throw error;
+        }
+    };
+
     return {
         loading,
         loadingCrud,
         establishments,
         getEstablishments,
         addEstablishment,
+        updateEstablishment,
     }
 }

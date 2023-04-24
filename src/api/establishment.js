@@ -40,3 +40,25 @@ export const addEstablishmentApi = async(dtoAddEstablishment, token) => {
         throw error;
     }
 }
+
+export const updateEstablishmentApi = async(id, dtoUpdateEstablishment, token) => {
+    try {
+        const url = `${HOST_API}/api/establishments/${id}`;
+        const params = {
+            method: 'PATCH',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dtoUpdateEstablishment)
+        }
+
+        const resp = await fetch(url, params);
+        const result = await resp.json();
+
+        return result;
+
+    } catch (error) {
+        throw error;
+    }
+}

@@ -21,7 +21,7 @@ export function EstablishmentsAdmin() {
 
   const toast = useRef(null);
   const dt = useRef(null);
-  const { loading, loadingCrud, establishments, getEstablishments, addEstablishment } = useEstablishment();
+  const { loading, loadingCrud, establishments, getEstablishments, addEstablishment, updateEstablishment } = useEstablishment();
 
   const [establishmentsCrud, setEstablishmentsCrud] = useState(null);
   const [globalFilter, setGlobalFilter] = useState(null);
@@ -55,6 +55,15 @@ export function EstablishmentsAdmin() {
     setActionName('Añadir Establecimiento');
   };
 
+  const editEstablishment = (establishmentEdit) => {
+    setlastEstablishmentEdit(establishmentEdit);
+    setSubmitted(false);
+    setIsEditEstablishment(true);
+    setEstablishment({ ...establishmentEdit });
+    setEstablishmentDialog(true);
+    setActionName('Editar Establecimiento');
+  };
+
   const saveEstablishment = async () => {
 
     const isValid = validateFields();
@@ -70,13 +79,14 @@ export function EstablishmentsAdmin() {
         };
 
         try {
-          //await updateTable(establishment.id, editEstablishment);
-          //onRefresh();
+          await updateEstablishment(establishment.id, editEstablishment);
+          onRefresh();
+          console.log(editEstablishment);
+          console.log(establishment.id);
           toast.current.show({ severity: 'success', summary: 'Operación Exitosa', detail: `Establecimiento ${establishment.name} actualizado correctamente`, life: 3000 });
         } catch (error) {
           showError(error);
         }
-
 
       } else {
 
@@ -193,7 +203,7 @@ export function EstablishmentsAdmin() {
   const actionBodyTemplate = (rowData) => {
     return (
       <React.Fragment>
-        <Button icon="pi pi-pencil" rounded outlined className="mr-2" />
+        <Button icon="pi pi-pencil" rounded outlined className="mr-2" onClick={() => editEstablishment(rowData)} />
         <Button icon="pi pi-trash" rounded outlined severity="danger" />
       </React.Fragment>
     );
