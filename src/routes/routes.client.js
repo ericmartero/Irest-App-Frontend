@@ -1,11 +1,11 @@
-import { ClientLayout } from '../layouts';
-import { Home } from '../pages/Client';
+import { MainLayout, ClientLayout } from '../layouts';
+import { HomeClient } from '../pages/Client';
 
 const routesClient = [
     {
-        path: '/',
-        layout: ClientLayout,
-        component: Home,
+        path: '/:id',
+        layout: MainLayout,
+        component: HomeClient,
         exact: true
     },
 ];
