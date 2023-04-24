@@ -16,6 +16,14 @@ export const loginApi = async(dtoLogin) => {
         if (resp.status === 403) {
             throw new Error("El usuario con el que intenta acceder no está activo, comuníquese con el administrador");
         }  
+
+        if (resp.status === 409) {
+            throw new Error("El establecimiento en el que intenta acceder esta inactivo");
+        }  
+
+        if (resp.status === 500) {
+            throw new Error("Ha habido un problema con el servidor, inténtelo más tarde");
+        }  
         
         if (resp.status !== 201) {
             throw new Error("Usuario o contraseña incorrectos");
