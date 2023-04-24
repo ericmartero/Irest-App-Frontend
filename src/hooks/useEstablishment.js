@@ -1,10 +1,11 @@
 import { useState, useCallback } from "react";
-import { getEstablishmentsApi } from '../api/establishment';
+import { getEstablishmentsApi, addEstablishmentApi } from '../api/establishment';
 import { useAuth } from './';
 
 export function useEstablishment() {
 
     const [establishments, setEstablishments] = useState(null);
+    const [loadingCrud, setLoadingCrud] = useState(false);
     const [loading, setLoading] = useState(true);
     const { auth } = useAuth();
 
@@ -20,9 +21,22 @@ export function useEstablishment() {
         }
     }, [auth?.token]);
 
+    const addEstablishment = async (data) => {
+        try {
+            setLoadingCrud(true);
+            await addEstablishmentApi(data, auth.token);
+            setLoadingCrud(false);
+        } catch (error) {
+            setLoadingCrud(false);
+            throw error;
+        }
+    };
+
     return {
         loading,
+        loadingCrud,
         establishments,
         getEstablishments,
+        addEstablishment,
     }
 }
