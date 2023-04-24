@@ -21,7 +21,7 @@ export function EstablishmentsAdmin() {
 
   const toast = useRef(null);
   const dt = useRef(null);
-  const { loading, establishments, getEstablishments } = useEstablishment();
+  const { loading, loadingCrud, establishments, getEstablishments, addEstablishment } = useEstablishment();
 
   const [establishmentsCrud, setEstablishmentsCrud] = useState(null);
   const [globalFilter, setGlobalFilter] = useState(null);
@@ -86,9 +86,8 @@ export function EstablishmentsAdmin() {
         };
 
         try {
-          //await addTable(newEstablishment);
-          //onRefresh();
-          console.log(newEstablishment);
+          await addEstablishment(newEstablishment);
+          onRefresh();
           toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: `Establecimiento ${establishment.name} creado correctamente`, life: 3000 });
         } catch (error) {
           showError(error);
@@ -224,6 +223,7 @@ export function EstablishmentsAdmin() {
           </div>
 
           <Dialog visible={establishmentDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={actionName} modal className="p-fluid" footer={establishmentDialogFooter} onHide={hideDialog}>
+            {loadingCrud && <ProgressSpinner style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', zIndex: 1 }} />}
             <div className="field">
               <label htmlFor="name" className="font-bold">
                 Nombre del establecimiento
