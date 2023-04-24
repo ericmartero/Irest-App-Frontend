@@ -4,7 +4,6 @@ import { classNames } from 'primereact/utils';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Toast } from 'primereact/toast';
-import { Toolbar } from 'primereact/toolbar';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { InputSwitch } from "primereact/inputswitch";
@@ -81,8 +80,6 @@ export function EstablishmentsAdmin() {
         try {
           await updateEstablishment(establishment.id, editEstablishment);
           onRefresh();
-          console.log(editEstablishment);
-          console.log(establishment.id);
           toast.current.show({ severity: 'success', summary: 'Operación Exitosa', detail: `Establecimiento ${establishment.name} actualizado correctamente`, life: 3000 });
         } catch (error) {
           showError(error);
@@ -179,22 +176,11 @@ export function EstablishmentsAdmin() {
       <span className="p-input-icon-left">
         <i className="pi pi-search" />
         <InputText type="search" onInput={(e) => setGlobalFilter(e.target.value)} placeholder="Buscar..." />
+        <Button label="Nuevo" icon="pi pi-plus" severity="success" style={{ marginLeft: '1rem' }} onClick={openNew} />
+        <Button label="Exportar" icon="pi pi-upload" className="p-button-help" style={{ marginLeft: '1rem' }} onClick={exportCSV} />
       </span>
     </div>
   );
-
-  const leftToolbarTemplate = () => {
-    return (
-      <div className="flex flex-wrap gap-2">
-        <Button label="Nuevo" icon="pi pi-plus" severity="success" onClick={openNew} />
-        <Button label="Borrar" icon="pi pi-trash" severity="danger" />
-      </div>
-    );
-  };
-
-  const rightToolbarTemplate = () => {
-    return <Button label="Exportar" icon="pi pi-upload" className="p-button-help" onClick={exportCSV} />;
-  };
 
   const activeBodyTemplate = (rowData) => {
     return <i className={classNames('pi', (rowData.active ? 'text-green-500 pi-check-circle' : 'text-red-500 pi-times-circle'))}></i>;
@@ -204,7 +190,6 @@ export function EstablishmentsAdmin() {
     return (
       <React.Fragment>
         <Button icon="pi pi-pencil" rounded outlined className="mr-2" onClick={() => editEstablishment(rowData)} />
-        <Button icon="pi pi-trash" rounded outlined severity="danger" />
       </React.Fragment>
     );
   };
@@ -219,15 +204,12 @@ export function EstablishmentsAdmin() {
         :
         <div>
           <div className="card" >
-            <Toolbar className="mb-4" left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
-
             <DataTable ref={dt} value={establishmentsCrud} selection={selectedEstablishments} onSelectionChange={(e) => setSelectedEstablishments(e.value)}
               dataKey="id" paginator rows={10} rowsPerPageOptions={[5, 10, 25]} emptyMessage='No se han encontrado establecimientos'
               paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
               currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} establecimientos" globalFilter={globalFilter} header={header}>
-              <Column selectionMode="multiple" exportable={false}></Column>
-              <Column field="name" header="Establecimiento" sortable style={{ minWidth: '18rem' }} ></Column>
-              <Column field="active" header="Activo" sortable dataType="boolean" body={activeBodyTemplate}></Column>
+              <Column field="name" header="Establecimiento" sortable style={{ minWidth: '24rem' }} ></Column>
+              <Column field="active" header="Activo" sortable dataType="boolean" body={activeBodyTemplate} style={{ minWidth: '10rem' }}></Column>
               <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
             </DataTable>
           </div>
