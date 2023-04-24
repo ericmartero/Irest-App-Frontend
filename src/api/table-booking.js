@@ -23,7 +23,7 @@ export const reserveTableApi = async(tableId) => {
     }
 }
 
-export const joinTableApi = async(dtoJoinTable) => {
+export const joinTableApi = async(tableId, keyBooking) => {
     try {
         const url = `${HOST_API}/api/table-bookings/join`;
         const params = {
@@ -31,7 +31,10 @@ export const joinTableApi = async(dtoJoinTable) => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(dtoJoinTable)
+            body: JSON.stringify({
+                table: tableId,
+                key: keyBooking
+            })
         }
 
         const resp = await fetch(url, params);

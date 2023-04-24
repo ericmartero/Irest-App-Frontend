@@ -1,4 +1,4 @@
-import { resetKeyApi, reserveTableApi } from "../api/table-booking";
+import { resetKeyApi, reserveTableApi, joinTableApi } from "../api/table-booking";
 import { useAuth } from "./useAuth";
 
 export function useTableBooking() {
@@ -21,8 +21,17 @@ export function useTableBooking() {
         }
     };
 
+    const joinTable = async (id, key) => {
+        try {
+           return await joinTableApi(id, key);
+        } catch (error) {
+            throw error;
+        }
+    };
+
     return {
         resetKey,
         reserveTable,
+        joinTable,
     }
 }
