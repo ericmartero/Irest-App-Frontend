@@ -7,10 +7,17 @@ import { Toast } from 'primereact/toast';
 import { Toolbar } from 'primereact/toolbar';
 import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
+import { InputSwitch } from "primereact/inputswitch";
+import { Dialog } from 'primereact/dialog';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import '../../../scss/AlignComponent.scss';
 
 export function EstablishmentsAdmin() {
+
+  let emptyEstablishment = {
+    name: '',
+    active: true,
+  };
 
   const toast = useRef(null);
   const dt = useRef(null);
@@ -18,11 +25,19 @@ export function EstablishmentsAdmin() {
 
   const [establishmentsCrud, setEstablishmentsCrud] = useState(null);
   const [globalFilter, setGlobalFilter] = useState(null);
+  const [actionName, setActionName] = useState('');
+  const [refreshTable, setRefreshTable] = useState(false);
   const [selectedEstablishments, setSelectedEstablishments] = useState(null);
+  const [establishment, setEstablishment] = useState(emptyEstablishment);
+  const [lastEstablishmentEdit, setlastEstablishmentEdit] = useState({});
+  const [isEditEstablishment, setIsEditEstablishment] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [establishmentDialog, setEstablishmentDialog] = useState(false);
+  const [validationErrors, setValidationErrors] = useState({});
 
   useEffect(() => {
     getEstablishments();
-  }, [getEstablishments])
+  }, [getEstablishments, refreshTable])
 
   useEffect(() => {
     if (establishments) {
@@ -30,9 +45,124 @@ export function EstablishmentsAdmin() {
     }
   }, [establishments])
 
+  const onRefresh = () => setRefreshTable((state) => !state);
+
+  const openNew = () => {
+    setIsEditEstablishment(false);
+    setEstablishment(emptyEstablishment);
+    setSubmitted(false);
+    setEstablishmentDialog(true);
+    setActionName('Añadir Establecimiento');
+  };
+
+  const saveEstablishment = async () => {
+
+    const isValid = validateFields();
+    setSubmitted(true);
+
+    if (isValid) {
+
+      if (establishment.id) {
+
+        const editEstablishment = {
+          ...(lastEstablishmentEdit.name !== establishment.name && { name: establishment.name }),
+          ...(lastEstablishmentEdit.active !== establishment.active && { active: establishment.active }),
+        };
+
+        try {
+          //await updateTable(establishment.id, editEstablishment);
+          //onRefresh();
+          toast.current.show({ severity: 'success', summary: 'Operación Exitosa', detail: `Establecimiento ${establishment.name} actualizado correctamente`, life: 3000 });
+        } catch (error) {
+          showError(error);
+        }
+
+
+      } else {
+
+        const newEstablishment = {
+          name: establishment.name,
+          active: establishment.active,
+        };
+
+        try {
+          //await addTable(newEstablishment);
+          //onRefresh();
+          console.log(newEstablishment);
+          toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: `Establecimiento ${establishment.name} creado correctamente`, life: 3000 });
+        } catch (error) {
+          showError(error);
+        }
+      }
+
+      setSubmitted(false);
+      setValidationErrors({});
+      setEstablishmentDialog(false);
+      setEstablishment(emptyEstablishment);
+    }
+  };
+
+  const hideDialog = () => {
+    setSubmitted(false);
+    setEstablishmentDialog(false);
+    setValidationErrors({});
+  };
+
+  const validateFields = () => {
+    const errors = {};
+    const filteredEstablishment = establishments.filter(est => est.name.toLowerCase() === establishment.name.toLowerCase());
+
+    if (!establishment.name) {
+      errors.name = "El nombre del establecimiento es requerido";
+    } else if (establishment.name.length < 2) {
+      errors.name = "El nombre del establecimiento tiene que tener mínimo 2 letras";
+    } else if (!isEditEstablishment && filteredEstablishment.length > 0) {
+      errors.name = "El nombre del establecimiento ya esta utilizado";
+    } else if (isEditEstablishment && filteredEstablishment.length > 0 && lastEstablishmentEdit.name !== establishment.name) {
+      errors.name = "El nombre del establecimiento ya esta utilizado";
+    }
+
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const onInputChange = (e, name) => {
+    const val = e.target.value;
+
+    let errors = { ...validationErrors };
+
+    if (name === 'name') {
+      const filteredEstablishment = establishments.filter(establishment => establishment.name.toLowerCase() === val.toLowerCase());
+
+      if (val.length < 2) {
+        errors.name = "El nombre del establecimiento tiene que tener mínimo 2 letras";
+      } else {
+        delete errors.name;
+      }
+
+      if (val !== lastEstablishmentEdit.name && filteredEstablishment.length > 0) {
+        errors.name = "El nombre del establecimiento ya esta utilizado";
+      }
+    }
+
+    setEstablishment(prevEstablishment => ({ ...prevEstablishment, [name]: val }));
+    setValidationErrors(errors);
+  };
+
+  const showError = (error) => {
+    toast.current.show({ severity: 'error', summary: 'Operacion Fallida', detail: error.message, life: 3000 });
+  }
+
   const exportCSV = () => {
     dt.current.exportCSV();
   };
+
+  const establishmentDialogFooter = (
+    <React.Fragment>
+      <Button label="Cancelar" icon="pi pi-times" outlined onClick={hideDialog} />
+      <Button label="Guardar" icon="pi pi-check" onClick={saveEstablishment} disabled={!submitted || Object.keys(validationErrors).length === 0 ? false : true} />
+    </React.Fragment>
+  );
 
   const header = (
     <div className="flex flex-wrap gap-2 align-items-center justify-content-between">
@@ -47,7 +177,7 @@ export function EstablishmentsAdmin() {
   const leftToolbarTemplate = () => {
     return (
       <div className="flex flex-wrap gap-2">
-        <Button label="Nuevo" icon="pi pi-plus" severity="success" />
+        <Button label="Nuevo" icon="pi pi-plus" severity="success" onClick={openNew} />
         <Button label="Borrar" icon="pi pi-trash" severity="danger" />
       </div>
     );
@@ -87,11 +217,38 @@ export function EstablishmentsAdmin() {
               paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
               currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} establecimientos" globalFilter={globalFilter} header={header}>
               <Column selectionMode="multiple" exportable={false}></Column>
-              <Column field="name" header="Establecimiento" sortable style={{ minWidth: '8rem' }} ></Column>
+              <Column field="name" header="Establecimiento" sortable style={{ minWidth: '18rem' }} ></Column>
               <Column field="active" header="Activo" sortable dataType="boolean" body={activeBodyTemplate}></Column>
               <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
             </DataTable>
           </div>
+
+          <Dialog visible={establishmentDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={actionName} modal className="p-fluid" footer={establishmentDialogFooter} onHide={hideDialog}>
+            <div className="field">
+              <label htmlFor="name" className="font-bold">
+                Nombre del establecimiento
+              </label>
+              <InputText id="name" value={establishment.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus
+                className={classNames({ "p-invalid": submitted && (!establishment.name || validationErrors.name) })} />
+              {submitted && !establishment.name
+                ? (<small className="p-error">El nombre del establecimiento es requerido</small>)
+                : submitted && validationErrors.name && (<small className="p-error">{validationErrors.name}</small>)
+              }
+            </div>
+
+            <div className="field" style={{ height: "2.5rem", display: "flex", alignItems: "center" }}>
+              <div className="p-field-checkbox" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <InputSwitch
+                  id='active'
+                  checked={establishment.active}
+                  onChange={(e) => onInputChange(e, 'active')}
+                />
+                <label htmlFor="active" className="font-bold" style={{ marginLeft: "1rem", alignSelf: "center" }}>
+                  Activo
+                </label>
+              </div>
+            </div>
+          </Dialog>
         </div>
       }
     </>
