@@ -1,2 +1,2 @@
 export * from './HomeClient';
-export * from './JoinTableClient';
+export * from './AccessClientTables';
