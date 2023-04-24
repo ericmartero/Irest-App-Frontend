@@ -8,7 +8,7 @@ import { LoginAdmin } from '../../pages/Admin';
 import { TopMenu, SideMenu } from '../../components/Admin';
 import './DashboardLayout.scss';
 
-export function AdminLayout(props) {
+export function DashboardLayout(props) {
 
     const { children } = props;
     const { auth } = useAuth();
