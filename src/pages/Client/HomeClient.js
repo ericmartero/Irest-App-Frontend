@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { JoinTableClient, ReserveTableClient } from './AccessClientTables';
 import { useParams } from 'react-router-dom';
 import { useTable } from '../../hooks';
 
@@ -8,7 +9,7 @@ export function HomeClient() {
   const { tables, getTableById } = useTable();
 
   const [table, setTable] = useState(null);
-  
+
   useEffect(() => {
     getTableById(tableURL.id);
   }, [tableURL.id, getTableById]);
@@ -20,8 +21,11 @@ export function HomeClient() {
   }, [tables]);
 
   return (
-    <div>
-        <p>Home</p>
-    </div>
+    <>
+      {table?.tableBooking === null
+        ? <ReserveTableClient />
+        : <JoinTableClient />
+      }
+    </>
   )
 }
