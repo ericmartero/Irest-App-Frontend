@@ -24,7 +24,7 @@ export function HomeClient() {
     <>
       {table?.tableBooking === null
         ? <ReserveTableClient />
-        : <JoinTableClient />
+        : <JoinTableClient table={table?.number} />
       }
     </>
   )
