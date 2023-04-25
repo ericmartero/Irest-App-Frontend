@@ -72,9 +72,12 @@ export function useTable() {
 
     const getTableClient = useCallback( async (id) => {
         try {
+            setLoading(true);
             const response = await getTableClientApi(id);
+            setLoading(false);
             setTables(response);
         } catch (error) {
+            setLoading(false);
             throw error;
         }
     }, []);
