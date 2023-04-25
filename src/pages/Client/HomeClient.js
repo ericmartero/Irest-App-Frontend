@@ -6,13 +6,13 @@ import { useTable } from '../../hooks';
 export function HomeClient() {
 
   const tableURL = useParams();
-  const { tables, getTableById } = useTable();
+  const { tables, getTableClient } = useTable();
 
   const [table, setTable] = useState(null);
 
   useEffect(() => {
-    getTableById(tableURL.id);
-  }, [tableURL.id, getTableById]);
+    getTableClient(tableURL.id);
+  }, [tableURL.id, getTableClient]);
 
   useEffect(() => {
     if (tables) {
@@ -24,7 +24,7 @@ export function HomeClient() {
     <>
       {table?.tableBooking === null
         ? <ReserveTableClient />
-        : <JoinTableClient table={table?.number} />
+        : <JoinTableClient table={table} />
       }
     </>
   )
