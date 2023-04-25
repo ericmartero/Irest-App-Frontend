@@ -38,9 +38,12 @@ export const joinTableApi = async(tableId, keyBooking) => {
         }
 
         const resp = await fetch(url, params);
-        const result = await resp.json();
+        
+        if (resp.status === 401) {
+            throw new Error("La clave introducida es incorrecta");
+        }
 
-        return result;
+        return await resp.json();
 
     } catch (error) {
         throw error;
