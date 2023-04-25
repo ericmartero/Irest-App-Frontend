@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { JoinTableClient, ReserveTableClient } from './AccessClientTables';
 import { useParams } from 'react-router-dom';
 import { useTable } from '../../hooks';
+import { ProgressSpinner } from 'primereact/progressspinner';
+import '../../scss/AlignComponent.scss';
 
 export function HomeClient() {
 
   const tableURL = useParams();
-  const { tables, getTableClient } = useTable();
+  const { loading, tables, getTableClient } = useTable();
 
   const [table, setTable] = useState(null);
 
@@ -22,9 +24,17 @@ export function HomeClient() {
 
   return (
     <>
-      {table?.tableBooking === null
-        ? <ReserveTableClient table={table} />
-        : <JoinTableClient table={table} />
+      {loading ?
+        <div className="align-container-mobile">
+          <ProgressSpinner />
+        </div>
+        :
+        <>
+          {table?.tableBooking === null
+            ? <ReserveTableClient table={table} />
+            : <JoinTableClient table={table} />
+          }
+        </>
       }
     </>
   )
