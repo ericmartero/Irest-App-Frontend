@@ -101,3 +101,16 @@ export const getTableApi = async(id, token) => {
         throw error;
     }
 }
+
+export const getTableClientApi = async(id) => {
+    try {
+        const url = `${HOST_API}/api/tables/client/${id}`;
+        const resp = await fetch(url);
+        const result = await resp.json();
+
+        return result;
+
+    } catch (error) {
+        throw error;
+    }
+}
