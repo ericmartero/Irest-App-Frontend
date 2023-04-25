@@ -6,6 +6,7 @@ import { Button } from 'primereact/button';
 import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
 import * as Yup from 'yup';
+import '../AccessClientTables.scss';
 
 export function JoinTableClient(props) {
 
@@ -15,7 +16,7 @@ export function JoinTableClient(props) {
   const [submitted, setSubmitted] = useState(false);
 
   const showError = (error) => {
-    toastError.current.show({ severity: 'error', summary: 'Error al acceder a la mesa', detail: error.message, life: 3000 });
+    toastError.current.show({ severity: 'error', summary: 'Error al acceder a la mesa', detail: error.message, life: 1000000 });
   }
 
   const formik = useFormik({
@@ -28,16 +29,14 @@ export function JoinTableClient(props) {
     }),
 
     onSubmit: async (values) => {
-
       if (!formik.errors.key) {
         try {
-          await joinTable(props.table.id, formik.values.key);
+          await joinTable(props.table.id, values.key);
           history.push(`/client/${props.table.id}`);
         } catch (error) {
           showError(error);
         }
       }
-
     }
   });
 
@@ -49,11 +48,13 @@ export function JoinTableClient(props) {
 
   return (
     <>
-      <Toast ref={toastError} position="bottom-center" className="toast" />
-      <div className="flex align-items-center justify-content-center h-screen">
+      <Toast ref={toastError} position="top-center" />
+      <div className='image-container'>
+        <img src="https://res.cloudinary.com/djwjh0wpw/image/upload/v1682460299/ushuaia_ibiza_wxoois.jpg" alt="hyper" className='image-fill-container' />
+      </div>
+      <div className="flex align-items-center justify-content-center content-container">
         <div className="p-4 w-full lg:w-6 mx-auto">
           <div className="text-center mb-5">
-            <img src="https://res.cloudinary.com/djwjh0wpw/image/upload/v1678622048/irest-logo-white-copy_mlspdo.png" alt="hyper" height={100} className="mb-3" />
             <div className="text-900 text-3xl font-medium mb-3">Bienvenido a {props.table?.establishment.name}</div>
             <span className="text-600 font-medium line-height-3">Introduce la clave de acceso para acceder a la mesa</span>
           </div>
@@ -67,8 +68,8 @@ export function JoinTableClient(props) {
             </div>
             {submitted && formik.errors.key && <small className="p-error">Contraseña requerida</small>}
 
-            <Button type="submit" label={`Acceder a la mesa ${props.table?.number}`} className="w-full mt-3" 
-              disabled={submitted && formik.errors.key ? true : false}/>
+            <Button type="submit" label={`Acceder a la mesa ${props.table?.number}`} className="w-full mt-3"
+              disabled={submitted && formik.errors.key ? true : false} />
           </form>
         </div>
       </div>
