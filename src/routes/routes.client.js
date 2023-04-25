@@ -1,5 +1,5 @@
 import { MainLayout, ClientLayout } from '../layouts';
-import { HomeClient } from '../pages/Client';
+import { HomeClient, Categories } from '../pages/Client';
 
 const routesClient = [
     {
@@ -8,6 +8,12 @@ const routesClient = [
         component: HomeClient,
         exact: true
     },
+    {
+        path: '/client/:id',
+        layout: ClientLayout,
+        component: Categories,
+        exact: true
+    }
 ];
 
 export default routesClient;
