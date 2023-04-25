@@ -38,3 +38,9 @@
 .bttnFoot {
     margin-top: 1.2rem !important;
 }
+
+.image-fill {
+    object-fit: contain;
+    max-height: 100%;
+    margin: auto;
+}
