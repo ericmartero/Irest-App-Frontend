@@ -16,7 +16,7 @@ export function JoinTableClient(props) {
   const [submitted, setSubmitted] = useState(false);
 
   const showError = (error) => {
-    toastError.current.show({ severity: 'error', summary: 'Error al acceder a la mesa', detail: error.message, life: 1000000 });
+    toastError.current.show({ severity: 'error', summary: 'Error al acceder a la mesa', detail: error.message, life: 3000 });
   }
 
   const formik = useFormik({
