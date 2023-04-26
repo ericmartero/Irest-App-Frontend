@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { useTableBooking } from '../../../../hooks';
+import { useTableBooking, useAuth } from '../../../../hooks';
 import { useHistory } from "react-router-dom";
 import { useFormik } from 'formik';
 import { Button } from 'primereact/button';
@@ -10,6 +10,7 @@ import '../AccessClientTables.scss';
 
 export function JoinTableClient(props) {
 
+  const { join } = useAuth();
   const toastError = useRef(null);
   const history = useHistory();
   const { joinTable } = useTableBooking();
@@ -31,8 +32,10 @@ export function JoinTableClient(props) {
     onSubmit: async (values) => {
       if (!formik.errors.key) {
         try {
-          await joinTable(props.table.id, values.key);
-          history.push(`/client/${props.table.id}`);
+          const response = await joinTable(props.table.id, values.key);
+          const { tokenSession } = response;
+          join(tokenSession);
+          //history.push(`/client/${props.table.id}`);
         } catch (error) {
           showError(error);
         }

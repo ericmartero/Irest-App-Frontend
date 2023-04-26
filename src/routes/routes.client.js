@@ -4,7 +4,7 @@ import { HomeClient, Categories } from '../pages/Client';
 const routesClient = [
     {
         path: '/:id',
-        layout: MainLayout,
+        layout: ClientLayout,
         component: HomeClient,
         exact: true
     },
