@@ -4,7 +4,7 @@ import { useAuth } from '../../../hooks';
 import { Button } from 'primereact/button';
 import './TopMenu.scss';
 
-export function TopMenu() {
+export function TopMenu(props) {
 
   const { logoutClient } = useAuth();
 
@@ -18,7 +18,7 @@ export function TopMenu() {
 
       <div className="layout-topbar-center">
         <div className='layout-table'>
-          <b>MESA 3</b>
+          <b>MESA {props.table?.number}</b>
         </div>
       </div>
 
