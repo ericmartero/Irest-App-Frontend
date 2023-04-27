@@ -32,7 +32,11 @@ export function ClientLayout(props) {
     return (
         <div>
             <TopMenu table={table} />
-            { children }
+            <div className="layout-main-container layout-main-mobile">
+                <div className="layout-main">
+                    {children}
+                </div>
+            </div>
         </div>
     )
 }
