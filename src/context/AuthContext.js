@@ -88,7 +88,6 @@ export function AuthProvider(props) {
     const join = async (token) => {
         try {
             const me = await getMe(token);
-            console.log(me);
             setClientToken(token);
             setAuthClient({ token, me });
         } catch (error) {
