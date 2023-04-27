@@ -1,6 +1,7 @@
 import React from 'react';
 import { useAuth } from '../../hooks';
 import { HomeClient } from '../../pages/Client';
+import { TopMenu } from '../../components/Client';
 import './ClientLayout.scss';
 
 export function ClientLayout(props) {
@@ -14,8 +15,7 @@ export function ClientLayout(props) {
 
     return (
         <div>
-            <p>ClientLayout</p>
-
+            <TopMenu />
             { children }
         </div>
     )
