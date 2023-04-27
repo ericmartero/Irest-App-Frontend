@@ -1,8 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import PrimeReact from 'primereact/api';
 import classNames from 'classnames';
-import { Tooltip } from 'primereact/tooltip';
-import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../hooks';
 import { LoginAdmin } from '../../pages/Admin';
 import { TopMenu, SideMenu } from '../../components/Admin';
@@ -16,8 +14,6 @@ export function DashboardLayout(props) {
     const [staticMenuInactive, setStaticMenuInactive] = useState(false);
     const [mobileMenuActive, setMobileMenuActive] = useState(false);
     const [mobileTopbarMenuActive, setMobileTopbarMenuActive] = useState(false);
-    const copyTooltipRef = useRef();
-    const location = useLocation();
     const layoutMode = 'static';
     const layoutColorMode = 'light';
     const inputStyle = 'outlined';
@@ -34,10 +30,6 @@ export function DashboardLayout(props) {
             removeClass(document.body, "body-overflow-hidden");
         }
     }, [mobileMenuActive]);
-
-    useEffect(() => {
-        copyTooltipRef && copyTooltipRef.current && copyTooltipRef.current.updateTargetEvents();
-    }, [location]);
 
     const onWrapperClick = (event) => {
         if (!menuClick) {
@@ -142,8 +134,6 @@ export function DashboardLayout(props) {
 
     return (
         <div className={wrapperClass} onClick={onWrapperClick} >
-            <Tooltip ref={copyTooltipRef} target=".block-action-copy" position="bottom" content="Copied to clipboard" event="focus" />
-
             <TopMenu onToggleMenuClick={onToggleMenuClick} mobileTopbarMenuActive={mobileTopbarMenuActive}
                 onMobileTopbarMenuClick={onMobileTopbarMenuClick} onMobileSubTopbarMenuClick={onMobileSubTopbarMenuClick} />
             <div className="layout-sidebar">
