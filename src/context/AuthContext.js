@@ -12,6 +12,7 @@ export const AuthContext = createContext({
     authClient: undefined,
     join: () => null,
     reserve: () => null,
+    logoutClient: () => null,
 })
 
 export function AuthProvider(props) {
@@ -105,6 +106,14 @@ export function AuthProvider(props) {
         }
     };
 
+    const logoutClient = () => {
+        if (authClient) {
+            removeClientToken();
+            setAuthClient(null);
+            history.push("/");
+        }
+    };
+
     const valueContext = {
         auth,
         login,
@@ -112,6 +121,7 @@ export function AuthProvider(props) {
         authClient,
         join,
         reserve,
+        logoutClient,
     };
 
     if (auth === undefined) return null;
