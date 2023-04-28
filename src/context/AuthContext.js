@@ -32,7 +32,7 @@ export function AuthProvider(props) {
         (async () => {
 
             const token = getToken();
-            const clientToken = getClientToken();
+            const tokenClient = getClientToken();
 
             if (token) {
                 const me = await getMe(token);
@@ -49,15 +49,15 @@ export function AuthProvider(props) {
                 setAuth(null);
             }
 
-            if (clientToken) {
-                const me = await getMe(clientToken);
+            if (tokenClient) {
+                const me = await getMe(tokenClient);
 
                 if (me.statusCode === 401) {
                     setAuthClient(null);
                     return;
                 }
 
-                setAuthClient({ clientToken, me });
+                setAuthClient({ token: tokenClient, me });
             }
 
             else {
