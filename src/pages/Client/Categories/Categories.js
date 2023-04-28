@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useCategory } from '../../../hooks';
 import { DataView } from 'primereact/dataview';
+import { ProgressSpinner } from 'primereact/progressspinner';
+import '../../../scss/AlignComponent.scss';
 
 export function Categories() {
 
   const [categoriesTable, setCategoriesTable] = useState(null);
-  const { categories, loading, error, getCategories } = useCategory();
+  const { categories, loading, error, getCategoriesClient } = useCategory();
 
   useEffect(() => {
-    getCategories();
-  }, [getCategories])
+    getCategoriesClient();
+  }, [getCategoriesClient])
 
   useEffect(() => {
     if (categories) {
@@ -34,10 +36,18 @@ export function Categories() {
 
   return (
     <>
-      <div className="card">
-        <h1>Categories</h1>
-        <DataView value={categoriesTable} itemTemplate={itemTemplate} />
-      </div>
+      {loading ?
+        <div className="align-content-mobile">
+          <ProgressSpinner />
+        </div>
+        :
+        <>
+          <div className="card">
+            <h1>Categories</h1>
+            <DataView value={categoriesTable} itemTemplate={itemTemplate} emptyMessage='No se han encontrado categorias' />
+          </div>
+        </>
+      }
     </>
   )
 }
