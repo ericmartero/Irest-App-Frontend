@@ -64,7 +64,7 @@ export function useCategory() {
     const getCategoriesClient = useCallback( async () => {
         try {
             setLoading(true);
-            const response = await getCategoriesApi(authClient.clientToken);
+            const response = await getCategoriesApi(authClient.token);
             setLoading(false);
 
             if (response.error) {
@@ -77,7 +77,7 @@ export function useCategory() {
             setLoading(false);
             throw error;
         }
-    }, [authClient?.clientToken]);
+    }, [authClient?.token]);
 
     return {
         categories,
