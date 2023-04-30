@@ -9,25 +9,25 @@ export function ClientLayout(props) {
 
     const { children } = props;
 
-    const tableURL = useParams();
+    const paramsURL = useParams();
     const { authClient } = useAuth();
     const { tables, getTableClient } = useTable();
 
     const [table, setTable] = useState(null);
 
     useEffect(() => {
-        getTableClient(tableURL.id);
-      }, [tableURL.id, getTableClient]);
-    
-      useEffect(() => {
+        getTableClient(paramsURL.id);
+    }, [paramsURL.id, getTableClient]);
+
+    useEffect(() => {
         if (tables) {
-          setTable(tables);
+            setTable(tables);
         }
-      }, [tables]);
+    }, [tables]);
 
     if (!authClient) {
         return <HomeClient />;
-    } 
+    }
 
     return (
         <div>
