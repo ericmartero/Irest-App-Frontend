@@ -35,7 +35,7 @@ export function JoinTableClient(props) {
           const response = await joinTable(props.table.id, values.key);
           const { tokenSession } = response;
           join(tokenSession);
-          //history.push(`/client/${props.table.id}`);
+          history.push(`/client/id_table=${props.table.id}&key=${values.key}`);
         } catch (error) {
           showError(error);
         }
