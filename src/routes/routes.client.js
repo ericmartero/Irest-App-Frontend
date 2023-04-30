@@ -4,12 +4,12 @@ import { HomeClient, Categories } from '../pages/Client';
 const routesClient = [
     {
         path: '/:id',
-        layout: ClientLayout,
+        layout: MainLayout,
         component: HomeClient,
         exact: true
     },
     {
-        path: '/client/:id',
+        path: '/client/id_table=:id&key=:key',
         layout: ClientLayout,
         component: Categories,
         exact: true
