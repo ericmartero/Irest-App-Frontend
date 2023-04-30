@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { JoinTableClient, ReserveTableClient } from './AccessClientTables';
 import { Categories } from './Categories';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { useTable, useAuth } from '../../hooks';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import '../../scss/AlignComponent.scss';
@@ -9,6 +9,7 @@ import '../../scss/AlignComponent.scss';
 export function HomeClient() {
 
   const tableURL = useParams();
+  const history = useHistory();
   const { authClient } = useAuth();
   const { loading, tables, getTableClient } = useTable();
 
@@ -31,15 +32,12 @@ export function HomeClient() {
           <ProgressSpinner />
         </div>
         :
-        !authClient ?
         <>
           {table?.tableBooking === null
             ? <ReserveTableClient table={table} />
             : <JoinTableClient table={table} />
           }
         </>
-        :
-        <Categories/>
       }
     </>
   )
