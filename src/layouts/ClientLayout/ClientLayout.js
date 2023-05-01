@@ -16,8 +16,8 @@ export function ClientLayout(props) {
     const [table, setTable] = useState(null);
 
     useEffect(() => {
-        getTableClient(paramsURL.id);
-    }, [paramsURL.id, getTableClient]);
+        getTableClient(paramsURL.idTable);
+    }, [paramsURL.idTable, getTableClient]);
 
     useEffect(() => {
         if (tables) {
