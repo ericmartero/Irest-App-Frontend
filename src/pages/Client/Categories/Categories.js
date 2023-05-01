@@ -32,7 +32,7 @@ export function Categories() {
   };
 
   const goProductsCategory = (category) => {
-    history.push(`/client/${paramsURL.id}/${category.id}`);
+    history.push(`/client/${paramsURL.idTable}/${category.id}`);
   };
 
   const itemTemplate = (category) => {
