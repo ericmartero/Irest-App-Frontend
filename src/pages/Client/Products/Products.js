@@ -42,10 +42,10 @@ export function Products() {
                         </div>
                         <div>
                             {map(productsCateogry, (product) => (
-                                <div key={product.id} style={{ backgroundColor: "white", marginBottom: "1rem", padding: "1rem", display: "flex", justifyContent: "space-between", alignItems: 'center',  width: "100%" }}>
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                                <div key={product.id} className='product_container'>
+                                    <div className='content_product'>
                                         <img className="w-4 sm:w-8rem xl:w-8rem shadow-2 block xl:block border-round" src={product.image} alt={product.name} />
-                                        <div style={{ display: "flex", flexDirection: "column", marginLeft: "1rem" }}>
+                                        <div className='content_product_info'>
                                             <span className="font-bold text-900">{product.title}</span>
                                             <span>{product.price.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</span>
                                         </div>

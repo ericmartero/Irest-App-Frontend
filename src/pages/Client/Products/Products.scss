@@ -1,0 +1,21 @@
+.product_container {
+    background-color: white;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.content_product {
+    display: flex;
+    align-items: center;
+}
+
+.content_product_info {
+    display: flex;
+    flex-direction: column;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
