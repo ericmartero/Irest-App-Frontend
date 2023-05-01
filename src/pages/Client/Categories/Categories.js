@@ -43,7 +43,7 @@ export function Categories() {
         :
         <>
           <div className="card">
-            <h1>Categorias</h1>
+            <h1>Nuestra Carta</h1>
             <DataView value={categoriesTable} itemTemplate={itemTemplate} emptyMessage='No se han encontrado categorias' />
           </div>
         </>
