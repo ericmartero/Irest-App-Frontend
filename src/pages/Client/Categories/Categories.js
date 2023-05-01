@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useCategory } from '../../../hooks';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { Dialog } from 'primereact/dialog';
 import { DataView } from 'primereact/dataview';
 import { ProgressSpinner } from 'primereact/progressspinner';
@@ -12,8 +12,9 @@ import './Categories.scss';
 export function Categories() {
 
   const paramsURL = useParams();
+  const history = useHistory();
   const [categoriesTable, setCategoriesTable] = useState(null);
-  const { categories, loading, error, getCategoriesClient } = useCategory();
+  const { categories, loading, getCategoriesClient } = useCategory();
   const [showTableBookingQRDialog, setShowTableBookingQRDialog] = useState(false);
 
   useEffect(() => {
@@ -30,9 +31,13 @@ export function Categories() {
     setShowTableBookingQRDialog(false);
   };
 
+  const goProductsCategory = (category) => {
+    history.push(`/client/${paramsURL.id}/${category.id}`);
+  };
+
   const itemTemplate = (category) => {
     return (
-      <div className="col-12">
+      <div className="col-12" onClick={() => goProductsCategory(category)}>
         <div className="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4">
           <img className="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block mx-auto border-round" src={category.image} alt={category.name} />
           <div className="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
