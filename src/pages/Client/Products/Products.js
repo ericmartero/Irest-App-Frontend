@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useCategory } from '../../hooks';
+import { useCategory } from '../../../hooks';
 import { useParams, useHistory } from 'react-router-dom';
-import { DataView } from 'primereact/dataview';
 import { Button } from 'primereact/button';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { map } from "lodash";
-import '../../scss/AlignComponent.scss';
+import '../../../scss/AlignComponent.scss';
+import './Products.scss';
 
 export function Products() {
 
