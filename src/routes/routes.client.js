@@ -1,5 +1,5 @@
 import { MainLayout, ClientLayout } from '../layouts';
-import { HomeClient, Categories, InviteClientTable } from '../pages/Client';
+import { HomeClient, Categories, Products, InviteClientTable } from '../pages/Client';
 
 const routesClient = [
     {
@@ -9,15 +9,21 @@ const routesClient = [
         exact: true
     },
         {
-        path: '/client-invite/id_table=:id&key=:key',
+        path: '/client-invite/id_table=:idTable&key=:key',
         layout: MainLayout,
         component: InviteClientTable,
         exact: true
     },
     {
-        path: '/client/id_table=:id&key=:key',
+        path: '/client/id_table=:idTable&key=:key',
         layout: ClientLayout,
         component: Categories,
+        exact: true
+    },
+    {
+        path: '/client/:idTable/:idCategory',
+        layout: ClientLayout,
+        component: Products,
         exact: true
     }
 ];
