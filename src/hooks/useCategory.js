@@ -81,9 +81,12 @@ export function useCategory() {
 
     const getCategoryById = useCallback(async (id) =>{
         try {
-            const product = await getCategoryByIdApi(id, authClient.token);
-            return product;
+            setLoading(true);
+            const category = await getCategoryByIdApi(id, authClient.token);
+            setLoading(false);
+            return category;
         } catch (error) {
+            setLoading(false);
             throw error;    
         }
     }, [authClient?.token])
