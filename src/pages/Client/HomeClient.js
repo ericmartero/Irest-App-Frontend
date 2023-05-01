@@ -1,23 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { JoinTableClient, ReserveTableClient } from './AccessClientTables';
-import { Categories } from './Categories';
-import { useParams, useHistory } from 'react-router-dom';
-import { useTable, useAuth } from '../../hooks';
+import { useParams } from 'react-router-dom';
+import { useTable } from '../../hooks';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import '../../scss/AlignComponent.scss';
 
 export function HomeClient() {
 
   const tableURL = useParams();
-  const history = useHistory();
-  const { authClient } = useAuth();
   const { loading, tables, getTableClient } = useTable();
 
   const [table, setTable] = useState(null);
 
   useEffect(() => {
-    getTableClient(tableURL.id);
-  }, [tableURL.id, getTableClient]);
+    getTableClient(tableURL.idTable);
+  }, [tableURL.idTable, getTableClient]);
 
   useEffect(() => {
     if (tables) {
