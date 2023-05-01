@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useCategory } from '../../../hooks';
 import { DataView } from 'primereact/dataview';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { Button } from 'primereact/button';
 import '../../../scss/AlignComponent.scss';
 
 export function Categories() {
@@ -43,7 +44,10 @@ export function Categories() {
         :
         <>
           <div className="card">
-            <h1>Nuestra Carta</h1>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h2>Nuestra Carta</h2>
+              <Button icon="pi pi-qrcode" className="layout-button" />
+            </div>
             <DataView value={categoriesTable} itemTemplate={itemTemplate} emptyMessage='No se han encontrado categorias' />
           </div>
         </>
