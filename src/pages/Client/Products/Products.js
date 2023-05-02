@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useCategory } from '../../../hooks';
+import { addProductShoppingCart } from '../../../api/shoppingCart';
 import { useParams, useHistory } from 'react-router-dom';
 import { Button } from 'primereact/button';
 import { ProgressSpinner } from 'primereact/progressspinner';
@@ -27,6 +28,10 @@ export function Products() {
         history.push(`/client/id_table=${paramsURL.idTable}`);
     };
 
+    const addProductCart = (product) => {
+        addProductShoppingCart(product.id);
+    };
+
     return (
         <>
             {loading ?
@@ -50,7 +55,10 @@ export function Products() {
                                             <span>{product.price.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</span>
                                         </div>
                                     </div>
-                                    <Button icon="pi pi-plus" className="layout-button p-button-secondary mr-1" style={{ flexShrink: 0 }} />
+                                    <Button 
+                                        icon="pi pi-plus" className="layout-button p-button-secondary mr-1" 
+                                        style={{ flexShrink: 0 }} 
+                                        onClick={() => addProductCart(product)} />
                                 </div>
                             ))}
                         </div>
