@@ -1,5 +1,5 @@
 @media (max-width: 768px) {
-    .p-dialog-draggable .p-dialog-header {
+   .p-dialog-draggable .p-dialog-header {
         margin-right: 1rem;
         margin-left: 1rem;
     }
@@ -7,5 +7,13 @@
     .p-dialog .p-dialog-content:last-of-type {
         margin-right: 1rem;
         margin-left: 1rem;
+    }
+
+    .p-dialog {
+        box-shadow: none !important;
+    }
+
+    .p-dialog-mask {
+        width: 100.5% !important;
     }
 }
