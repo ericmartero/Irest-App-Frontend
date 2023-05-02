@@ -15,15 +15,15 @@ export function InviteClientTable() {
   useEffect(() => {
     (async () => {
       try {
-        const response = await joinTable(paramsURL.id, paramsURL.key);
+        const response = await joinTable(paramsURL.idTable, paramsURL.key);
         const { tokenSession } = response;
         join(tokenSession);
-        history.push(`/client/id_table=${paramsURL.id}&key=${paramsURL.key}`);
+        history.push(`/client/id_table=${paramsURL.idTable}&key=${paramsURL.key}`);
       } catch (error) {
         setError(true);
       }
     })()
-  }, [history, join, joinTable, paramsURL.id, paramsURL.key])
+  }, [history, join, joinTable, paramsURL.idTable, paramsURL.key])
 
   if (error) {
     return <h1>ERROR!!</h1>
