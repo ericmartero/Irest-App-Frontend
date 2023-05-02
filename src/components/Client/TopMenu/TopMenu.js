@@ -72,7 +72,11 @@ export function TopMenu(props) {
             <div className="align-container-dialog">
               <ProgressSpinner />
             </div>
-            : <h1>a</h1>
+            : size(products) === 0 ? (
+              <p>No tienes productos en el carrito</p>
+            ) : (
+              <p>Lista de productos en el carrito</p>
+            )
           }
         </div>
       </Dialog>
