@@ -37,7 +37,7 @@ export function Products() {
 
     return (
         <>
-            <Toast ref={toast} />
+            <Toast ref={toast} position="bottom-center" />
             {loading ?
                 <div className="align-content-mobile">
                     <ProgressSpinner />
