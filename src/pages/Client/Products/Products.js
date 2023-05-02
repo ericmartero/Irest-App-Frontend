@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useCategory } from '../../../hooks';
 import { addProductShoppingCart } from '../../../api/shoppingCart';
 import { useParams, useHistory } from 'react-router-dom';
+import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { map } from "lodash";
@@ -12,6 +13,7 @@ export function Products() {
 
     const paramsURL = useParams();
     const history = useHistory();
+    const toast = useRef(null);
     const { loading, getCategoryById } = useCategory();
     const [productsCateogry, setProductsCateogry] = useState([]);
     const [categoryName, setCategoryName] = useState(null);
@@ -30,10 +32,12 @@ export function Products() {
 
     const addProductCart = (product) => {
         addProductShoppingCart(product.id);
+        toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: `Se ha añadido el producto ${product.title} correctamente`, life: 1500 });
     };
 
     return (
         <>
+            <Toast ref={toast} />
             {loading ?
                 <div className="align-content-mobile">
                     <ProgressSpinner />
@@ -55,9 +59,9 @@ export function Products() {
                                             <span>{product.price.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</span>
                                         </div>
                                     </div>
-                                    <Button 
-                                        icon="pi pi-plus" className="layout-button p-button-secondary mr-1" 
-                                        style={{ flexShrink: 0 }} 
+                                    <Button
+                                        icon="pi pi-plus" className="layout-button p-button-secondary mr-1"
+                                        style={{ flexShrink: 0 }}
                                         onClick={() => addProductCart(product)} />
                                 </div>
                             ))}
