@@ -3,7 +3,7 @@ import { HomeClient, Categories, Products, InviteClientTable } from '../pages/Cl
 
 const routesClient = [
     {
-        path: '/:id',
+        path: '/:idTable',
         layout: MainLayout,
         component: HomeClient,
         exact: true
