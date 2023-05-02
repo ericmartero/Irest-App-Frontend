@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useCategory } from '../../../hooks';
+import { getBookingKey } from '../../../utils/constants';
 import { useParams, useHistory } from 'react-router-dom';
 import { Dialog } from 'primereact/dialog';
 import { DataView } from 'primereact/dataview';
@@ -67,7 +68,7 @@ export function Categories() {
 
             <Dialog visible={showTableBookingQRDialog} style={{ width: '32rem' }} header="Código QR de invitación" modal onHide={hideShowTableBookingQRDialog}>
               <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
-                {paramsURL && <QRCode value={`http://localhost:3000/client-invite/id_table=${paramsURL.id}&key=${paramsURL.key}`} />}
+                {paramsURL && <QRCode value={`http://localhost:3000/client-invite/id_table=${paramsURL.idTable}&key=${getBookingKey()}`} />}
               </div>
             </Dialog>
           </div>

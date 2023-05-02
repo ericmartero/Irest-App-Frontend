@@ -15,7 +15,7 @@ const routesClient = [
         exact: true
     },
     {
-        path: '/client/id_table=:idTable&key=:key',
+        path: '/client/id_table=:idTable',
         layout: ClientLayout,
         component: Categories,
         exact: true

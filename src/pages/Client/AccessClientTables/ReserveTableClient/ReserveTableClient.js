@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { useTableBooking, useAuth } from '../../../../hooks';
+import { setBookingKey } from '../../../../utils/constants';
 import { useHistory } from "react-router-dom";
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
@@ -19,9 +20,10 @@ export function ReserveTableClient(props) {
   const onReserveTable = async () => {
     try {
       const response = await reserveTable(props.table.id);
-      const { tokenSession } = response;
+      const { tokenSession, key } = response;
       reserve(tokenSession);
-      //history.push(`/client/${props.table.id}`);
+      setBookingKey(key);
+      history.push(`/client/id_table=${props.table.id}`);
     } catch (error) {
       showError(error);
     }

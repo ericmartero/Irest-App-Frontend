@@ -24,7 +24,7 @@ export function Products() {
     }, [paramsURL.idCategory, getCategoryById]);
 
     const goBack = () => {
-        history.push(`/client/${paramsURL.idTable}`);
+        history.push(`/client/id_table=${paramsURL.idTable}`);
     };
 
     return (
