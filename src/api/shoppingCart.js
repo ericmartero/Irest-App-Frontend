@@ -13,6 +13,9 @@ export function addProductShoppingCart(idProduct) {
 
 export function removeProductShoppingCart(idProduct) {
     const productsCart = getProductShoppingCart();
-    productsCart.splice(idProduct, 1);
+    const index = productsCart.indexOf(idProduct);
+    if (index > -1) {
+        productsCart.splice(index, 1);
+    }
     localStorage.setItem(PRODUCTS_SHOPPING_CART, JSON.stringify(productsCart));
 };
