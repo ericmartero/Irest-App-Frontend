@@ -4,7 +4,6 @@ import { ORDER_STATUS } from '../../../../utils/constants';
 import { Button } from 'primereact/button';
 import { DataView } from 'primereact/dataview';
 import { Toolbar } from 'primereact/toolbar';
-import { Dropdown } from 'primereact/dropdown';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { Badge } from 'primereact/badge';
 import { Toast } from 'primereact/toast';
@@ -20,14 +19,6 @@ export function ChefTableDetails() {
   const { orders, loading, getOrdersByTable, checkDeliveredOrder } = useOrder();
   const [ordersBooking, setOrdersBooking] = useState([]);
   const [refreshOrders, setRefreshOrders] = useState(false);
-  const [sortKey, setSortKey] = useState('');
-  const [sortOrder, setSortOrder] = useState(0);
-  const [sortField, setSortField] = useState('');
-
-  const sortOptions = [
-    { label: 'Entregados', value: 'status' },
-    { label: 'Pendientes', value: '!status' }
-  ];
 
   const onRefreshOrders = () => setRefreshOrders((prev) => !prev);
 
@@ -77,20 +68,6 @@ export function ChefTableDetails() {
     }
   };
 
-  const onSortChange = (event) => {
-    const value = event.value;
-
-    if (value.indexOf('!') === ORDER_STATUS.PENDING) {
-      setSortOrder(-1);
-      setSortField(value.substring(1, value.length));
-      setSortKey(value);
-    } else {
-      setSortOrder(1);
-      setSortField(value);
-      setSortKey(value);
-    }
-  };
-
   const showError = (error) => {
     toast.current.show({ severity: 'error', summary: 'Operación Fallida', detail: error.message, life: 3000 });
   };
@@ -103,17 +80,9 @@ export function ChefTableDetails() {
     );
   };
 
-  const rightToolbarTemplate = () => {
-    return (
-      <div className="flex flex-wrap gap-2">
-        <Dropdown options={sortOptions} value={sortKey} optionLabel="label" placeholder="Ordenar por estado" onChange={onSortChange} />
-      </div>
-    );
-  };
-
   const header = () => {
     return (
-      <Toolbar className='toolbarOrders' left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
+      <Toolbar className='toolbarOrders' left={leftToolbarTemplate}></Toolbar>
     );
   };
 
@@ -178,7 +147,7 @@ export function ChefTableDetails() {
           <ProgressSpinner />
         </div>
         :
-        <DataView value={ordersBooking} itemTemplate={itemTemplate} header={header()} sortField={sortField} sortOrder={sortOrder} emptyMessage='No hay pedidos en la mesa' />
+        <DataView value={ordersBooking} itemTemplate={itemTemplate} header={header()} emptyMessage='No hay pedidos en la mesa' />
       }
     </div>
   )
