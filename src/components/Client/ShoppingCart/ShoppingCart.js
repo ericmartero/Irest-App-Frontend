@@ -1,24 +1,32 @@
 import React from 'react';
+import { removeProductShoppingCart } from '../../../api/shoppingCart';
 import { Badge } from 'primereact/badge';
 import { map } from 'lodash';
 import './ShoppingCart.scss';
 
 export function ShoppingCart(props) {
 
-    const uniqueProducts = props.products.reduce((acc, product) => {
+    const { products, onRefresh } = props;
+
+    const uniqueProducts = products.reduce((acc, product) => {
         if (acc[product.id]) {
-            acc[product.id].quantity += 1; // aumentar la cantidad de productos
+            acc[product.id].quantity += 1;
         } else {
             acc[product.id] = { ...product, quantity: 1 };
         }
         return acc;
     }, {});
 
-    const products = Object.values(uniqueProducts);
+    const productsCartList = Object.values(uniqueProducts);
+
+    const removeProductCart = (productId) => {
+        removeProductShoppingCart(productId);
+        onRefresh();
+    };
 
     return (
         <div>
-            {map(products, (product) => (
+            {map(productsCartList, (product) => (
                 <div key={product.id} className='product_cart_container'>
                     <div className='content_cart_product'>
                         <img className="w-4 sm:w-8rem xl:w-8rem block xl:block border-round" src={product.image} alt={product.name} />
@@ -30,7 +38,7 @@ export function ShoppingCart(props) {
                             <Badge value={product.quantity}></Badge>
                         </div>
                     </div>
-                    <i className="pi pi-times"></i>
+                    <i className="pi pi-times" onClick={() => removeProductCart(product.id)}/>
                 </div>
             ))}
         </div>
