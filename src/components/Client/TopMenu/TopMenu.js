@@ -67,7 +67,8 @@ export function TopMenu(props) {
 
 
       </div>
-      <Dialog visible={showShoppingCartDialog} style={{ width: '90vw' }} modal header="Carrito" onHide={hideShoppingCartDialog}>
+      <Dialog visible={showShoppingCartDialog} style={{ width: '90vw' }} modal 
+        headerClassName='header_cart_color' header="Carrito" onHide={hideShoppingCartDialog}>
         <>
           {!products ?
             <div className="align-container-dialog">
