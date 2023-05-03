@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from 'primereact/button';
+import { Badge } from 'primereact/badge';
 import { map } from 'lodash';
 import './ShoppingCart.scss';
 
@@ -14,11 +14,11 @@ export function ShoppingCart(props) {
                             <span className="font-bold text-900">{product.title}</span>
                             <span>{product.price.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</span>
                         </div>
+                        <div className='content_cart_product_quantity'>
+                            <Badge value="2"></Badge>
+                        </div>
                     </div>
-                    <Button
-                        icon="pi pi-plus" className="layout-button p-button-secondary mr-1"
-                        style={{ flexShrink: 0 }}
-                    />
+                    <i className="pi pi-times"></i>
                 </div>
             ))}
         </div>
