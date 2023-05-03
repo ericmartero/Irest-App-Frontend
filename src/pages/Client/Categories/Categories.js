@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useCategory } from '../../../hooks';
-import { getBookingKey } from '../../../utils/constants';
+import { Header } from '../../../components/Client/Header/Header';
 import { useParams, useHistory } from 'react-router-dom';
-import { Dialog } from 'primereact/dialog';
 import { DataView } from 'primereact/dataview';
 import { ProgressSpinner } from 'primereact/progressspinner';
-import { Button } from 'primereact/button';
-import QRCode from 'react-qr-code';
 import '../../../scss/AlignComponent.scss';
 import './Categories.scss';
 
@@ -16,7 +13,6 @@ export function Categories() {
   const history = useHistory();
   const [categoriesTable, setCategoriesTable] = useState(null);
   const { categories, loading, getCategoriesClient } = useCategory();
-  const [showTableBookingQRDialog, setShowTableBookingQRDialog] = useState(false);
 
   useEffect(() => {
     getCategoriesClient();
@@ -27,10 +23,6 @@ export function Categories() {
       setCategoriesTable(categories);
     }
   }, [categories]);
-
-  const hideShowTableBookingQRDialog = () => {
-    setShowTableBookingQRDialog(false);
-  };
 
   const goProductsCategory = (category) => {
     history.push(`/client/${paramsURL.idTable}/${category.id}`);
@@ -60,19 +52,8 @@ export function Categories() {
         :
         <>
           <div className="card">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h2>Nuestra Carta</h2>
-              <Button icon="pi pi-qrcode" className="layout-button" onClick={() => setShowTableBookingQRDialog(true)} />
-            </div>
-            <DataView value={categoriesTable} itemTemplate={itemTemplate} emptyMessage='No se han encontrado categorias' />
-
-            <Dialog visible={showTableBookingQRDialog} style={{ width: '90vw' }} 
-              header="Código QR de invitación" modal onHide={hideShowTableBookingQRDialog}
-              headerClassName='header_dialog_color'>
-              <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
-                {paramsURL && <QRCode value={`http://localhost:3000/client-invite/id_table=${paramsURL.idTable}&key=${getBookingKey()}`} />}
-              </div>
-            </Dialog>
+            <Header name="Nuestra Carta" isMain={true} />
+            <DataView value={categoriesTable} itemTemplate={itemTemplate} emptyMessage='No se ha encontrado ninguna categoría en la carta' />
           </div>
         </>
       }

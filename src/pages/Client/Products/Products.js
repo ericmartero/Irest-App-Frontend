@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useCategory } from '../../../hooks';
 import { addProductShoppingCart } from '../../../api/shoppingCart';
+import { Header } from '../../../components/Client/Header/Header';
 import { useParams, useHistory } from 'react-router-dom';
 import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
@@ -45,10 +46,7 @@ export function Products() {
                 :
                 <>
                     <div className="card">
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <i className="pi pi-arrow-left" style={{ fontSize: '1rem', marginRight: '1rem' }} onClick={goBack}></i>
-                            <h2>{categoryName}</h2>
-                        </div>
+                        <Header name={categoryName} isMain={false} goBack={goBack} />
                         <div>
                             {map(productsCateogry, (product) => (
                                 <div key={product.id} className='product_container'>
