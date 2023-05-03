@@ -66,7 +66,7 @@ export function Categories() {
             </div>
             <DataView value={categoriesTable} itemTemplate={itemTemplate} emptyMessage='No se han encontrado categorias' />
 
-            <Dialog visible={showTableBookingQRDialog} style={{ width: '32rem' }} header="Código QR de invitación" modal onHide={hideShowTableBookingQRDialog}>
+            <Dialog visible={showTableBookingQRDialog} style={{ width: '90vw' }} header="Código QR de invitación" modal onHide={hideShowTableBookingQRDialog}>
               <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
                 {paramsURL && <QRCode value={`http://localhost:3000/client-invite/id_table=${paramsURL.idTable}&key=${getBookingKey()}`} />}
               </div>
