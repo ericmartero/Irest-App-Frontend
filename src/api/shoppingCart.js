@@ -10,3 +10,9 @@ export function addProductShoppingCart(idProduct) {
     productsCart.push(idProduct);
     localStorage.setItem(PRODUCTS_SHOPPING_CART, JSON.stringify(productsCart));
 };
+
+export function removeProductShoppingCart(idProduct) {
+    const productsCart = getProductShoppingCart();
+    productsCart.splice(idProduct, 1);
+    localStorage.setItem(PRODUCTS_SHOPPING_CART, JSON.stringify(productsCart));
+};
