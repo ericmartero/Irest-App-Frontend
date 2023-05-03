@@ -35,11 +35,7 @@ export function WaiterTableDetails() {
   const [table, setTable] = useState(null);
   const [ordersBooking, setOrdersBooking] = useState([]);
   const [refreshOrders, setRefreshOrders] = useState(false);
-
-  const [sortKey, setSortKey] = useState('');
-  const [sortOrder, setSortOrder] = useState(0);
-  const [sortField, setSortField] = useState('');
-
+  
   const [submitted, setSubmitted] = useState(false);
   const [productDialog, setProductDialog] = useState(false);
   const [confirmTypePaymentDialog, setConfirmTypePaymentDialog] = useState(false);
@@ -61,11 +57,6 @@ export function WaiterTableDetails() {
   const [finishPaymentDialog, setFinishPaymentDialog] = useState(false);
 
   const [autoRefreshEnabled, setAutoRefreshEnabled] = useState(true);
-
-  const sortOptions = [
-    { label: 'Entregados', value: 'status' },
-    { label: 'Pendientes', value: '!status' }
-  ];
 
   const onRefreshOrders = () => setRefreshOrders((prev) => !prev);
   const onRefreshPayment = () => setOnPaymentChange((prev) => !prev);
@@ -215,20 +206,6 @@ export function WaiterTableDetails() {
 
       default:
         return null;
-    }
-  };
-
-  const onSortChange = (event) => {
-    const value = event.value;
-
-    if (value.indexOf('!') === ORDER_STATUS.DELIVERED) {
-      setSortOrder(-1);
-      setSortField(value.substring(1, value.length));
-      setSortKey(value);
-    } else {
-      setSortOrder(1);
-      setSortField(value);
-      setSortKey(value);
     }
   };
 
@@ -463,7 +440,6 @@ export function WaiterTableDetails() {
   const rightToolbarTemplate = () => {
     return (
       <div className="flex flex-wrap gap-2">
-        <Dropdown options={sortOptions} value={sortKey} optionLabel="label" placeholder="Ordenar por estado" onChange={onSortChange} />
         {!paymentData ? <Button label="Añadir pedido" severity="success" className='ml-5' onClick={openNew} />
           : <Button label="Ver Cuenta" severity="secondary" className='ml-5' onClick={() => setShowBillDialog(true)} />}
         {!paymentData ? <Button label="Generar Cuenta" severity="secondary" className='ml-2' disabled={enablePayment} onClick={() => setConfirmTypePaymentDialog(true)} />
@@ -564,7 +540,7 @@ export function WaiterTableDetails() {
         </div>
         :
         <>
-          <DataView value={ordersBooking} itemTemplate={itemTemplate} header={header()} sortField={sortField} sortOrder={sortOrder} emptyMessage='No hay pedidos en la mesa' />
+          <DataView value={ordersBooking} itemTemplate={itemTemplate} header={header()} emptyMessage='No hay pedidos en la mesa' />
           <Dialog visible={productDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={'Añadir pedidos'} modal className="p-fluid" footer={orderDialogFooter} onHide={hideDialog}>
             <div className="field">
               <label htmlFor="categoria" className="font-bold">
