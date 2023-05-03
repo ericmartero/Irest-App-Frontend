@@ -67,7 +67,7 @@ export function TopMenu(props) {
 
 
       </div>
-      <Dialog visible={showShoppingCartDialog} style={{ width: '90vw' }} modal 
+      <Dialog visible={showShoppingCartDialog} style={{ width: '90vw' }} modal
         headerClassName='header_cart_color' header="Carrito" onHide={hideShoppingCartDialog}>
         <>
           {!products ?
@@ -75,7 +75,7 @@ export function TopMenu(props) {
               <ProgressSpinner />
             </div>
             : size(products) === 0 ? (
-              <p>No tienes productos en el carrito</p>
+              <p style={{textAlign: "center", marginTop: "2rem"}}>No tienes productos en el carrito</p>
             ) : (
               <ShoppingCart products={products} onRefresh={onRefresh} />
             )
