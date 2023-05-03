@@ -1,0 +1,21 @@
+.product_cart_container {
+    background-color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    border-radius: 12px;
+    min-height: 6rem;
+}
+
+.content_cart_product {
+    display: flex;
+    align-items: center;
+}
+
+.content_cart_product_info {
+    display: flex;
+    flex-direction: column;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
