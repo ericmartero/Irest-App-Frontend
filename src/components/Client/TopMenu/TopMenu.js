@@ -5,7 +5,7 @@ import { useAuth, useProduct } from '../../../hooks';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { ProgressSpinner } from 'primereact/progressspinner';
-import { size } from 'lodash';
+import { size, map } from 'lodash';
 import './TopMenu.scss';
 
 export function TopMenu(props) {
@@ -66,8 +66,8 @@ export function TopMenu(props) {
 
 
       </div>
-      <Dialog visible={showShoppingCartDialog} style={{ width: '32rem' }} header="Carrito" modal onHide={hideShoppingCartDialog}>
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
+      <Dialog visible={showShoppingCartDialog} style={{ width: '90vw' }} modal header="Carrito" onHide={hideShoppingCartDialog}>
+        <>
           {!products ?
             <div className="align-container-dialog">
               <ProgressSpinner />
@@ -75,10 +75,26 @@ export function TopMenu(props) {
             : size(products) === 0 ? (
               <p>No tienes productos en el carrito</p>
             ) : (
-              <p>Lista de productos en el carrito</p>
+              <div>
+                {map(products, (product) => (
+                  <div key={product.id} className='product_container'>
+                    <div className='content_product'>
+                      <img className="w-4 sm:w-8rem xl:w-8rem block xl:block border-round" src={product.image} alt={product.name} />
+                      <div className='content_product_info'>
+                        <span className="font-bold text-900">{product.title}</span>
+                        <span>{product.price.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</span>
+                      </div>
+                    </div>
+                    <Button
+                      icon="pi pi-plus" className="layout-button p-button-secondary mr-1"
+                      style={{ flexShrink: 0 }}
+                    />
+                  </div>
+                ))}
+              </div>
             )
           }
-        </div>
+        </>
       </Dialog>
     </>
   )
