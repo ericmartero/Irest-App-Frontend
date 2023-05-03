@@ -60,7 +60,6 @@ export function TopMenu(props) {
         </div>
 
         <div className="layout-topbar-right">
-          <Button icon="pi pi-shopping-cart" className="layout-button p-button-secondary mr-1" onClick={onShoppingCart} />
           <Button icon="pi pi pi-bars" className="layout-button p-button-secondary mr-1" />
           <Button icon="pi pi-sign-out" className="layout-button p-button-secondary" onClick={logoutClient} />
         </div>
