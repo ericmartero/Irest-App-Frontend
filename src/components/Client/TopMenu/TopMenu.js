@@ -77,7 +77,7 @@ export function TopMenu(props) {
             : size(products) === 0 ? (
               <p>No tienes productos en el carrito</p>
             ) : (
-              <ShoppingCart products={products} />
+              <ShoppingCart products={products} onRefresh={onRefresh} />
             )
           }
         </>
