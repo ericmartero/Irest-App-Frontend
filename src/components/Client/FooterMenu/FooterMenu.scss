@@ -1,0 +1,25 @@
+.fixed-button-container {
+    position: fixed;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 1rem;
+    z-index: 101;
+}
+
+.footer-container {
+    position: fixed;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    max-width: 500px;
+    z-index: 100;
+    background: #98a0ab;
+    border-radius: 24px;
+    padding: 0.5rem;
+    padding-right: 2.5rem;
+    padding-left: 2.5rem;
+}
