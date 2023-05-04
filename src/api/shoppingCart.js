@@ -19,3 +19,7 @@ export function removeProductShoppingCart(idProduct) {
     }
     localStorage.setItem(PRODUCTS_SHOPPING_CART, JSON.stringify(productsCart));
 };
+
+export function cleanProductShoppingCart() {
+    localStorage.removeItem(PRODUCTS_SHOPPING_CART);
+};
