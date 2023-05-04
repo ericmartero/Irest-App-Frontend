@@ -63,9 +63,12 @@ export function useProduct() {
 
     const getProductById = useCallback(async (id) =>{
         try {
+            setLoading(true);
             const product = await getProductByIdApi(id, auth.token);
+            setLoading(false);
             return product;
         } catch (error) {
+            setLoading(false);
             throw error;    
         }
     }, [auth?.token])
