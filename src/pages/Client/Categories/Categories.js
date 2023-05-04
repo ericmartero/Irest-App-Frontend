@@ -53,7 +53,9 @@ export function Categories() {
         <>
           <div className="card">
             <Header name="Nuestra Carta" isMain={true} paramsURL={paramsURL} />
-            <DataView value={categoriesTable} itemTemplate={itemTemplate} emptyMessage='No se ha encontrado ninguna categoría en la carta' />
+            <div className='categories-container'>
+              <DataView value={categoriesTable} itemTemplate={itemTemplate} emptyMessage='No se ha encontrado ninguna categoría en la carta' />
+            </div>
           </div>
         </>
       }
