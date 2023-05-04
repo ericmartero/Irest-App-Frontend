@@ -51,7 +51,7 @@ export function Products() {
                 :
                 <>
                     <div className="card">
-                        <Header name={categoryName} isMain={false} goBack={goBack} refreshCartNumber={refreshCartNumber} />
+                        <Header name={categoryName} isMain={false} goBack={goBack} refreshCartNumber={refreshCartNumber} paramsURL={paramsURL} />
                         <div>
                             {map(productsCateogry, (product) => (
                                 <div key={product.id} className='product_container'>
