@@ -10,7 +10,7 @@ import './Header.scss';
 
 export function Header(props) {
 
-    const { name, isMain, goBack } = props;
+    const { name, isMain, goBack, refreshCartNumber } = props;
 
     const { getProductById } = useProduct();
     const [showShoppingCartDialog, setShoppingCartDialog] = useState(false);
@@ -32,6 +32,10 @@ export function Header(props) {
         })();
     }, [refreshShoppingCart, getProductById]);
 
+    useEffect(() => {
+        onRefresh();
+    }, [refreshCartNumber])
+
     const onRefresh = () => setRefreshShoppingCart((state) => !state);
 
     const hideShoppingCartDialog = () => {
@@ -49,7 +53,7 @@ export function Header(props) {
                 <div className='header-main-container'>
                     <h2>{name}</h2>
                     <i className="pi pi-shopping-cart p-overlay-badge" style={{ fontSize: '1.8rem' }} onClick={onShoppingCart}>
-                        <Badge value="2"></Badge>
+                        <Badge value={size(products)}></Badge>
                     </i>
                 </div>
                 :
@@ -59,7 +63,7 @@ export function Header(props) {
                         <h2>{name}</h2>
                     </div>
                     <i className="pi pi-shopping-cart p-overlay-badge" style={{ fontSize: '1.8rem' }} onClick={onShoppingCart}>
-                        <Badge value="2"></Badge>
+                        <Badge value={size(products)}></Badge>
                     </i>
                 </div>
             }
