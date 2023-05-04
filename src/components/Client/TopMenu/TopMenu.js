@@ -20,7 +20,7 @@ export function TopMenu(props) {
 
       <div className="layout-topbar-center">
         <div className='layout-table'>
-          <b>MESA {table?.number}</b>
+          {table && <b>MESA {table.number}</b>}
         </div>
       </div>
 
