@@ -8,7 +8,7 @@ export function useProduct() {
     const [loading, setLoading] = useState(true);
     const [loadingCrud, setLoadingCrud] = useState(false);
     const [error, setError] = useState(null);
-    const { auth } = useAuth();
+    const { auth, authClient } = useAuth();
 
     const getProducts = useCallback( async () => {
         try {
@@ -70,6 +70,15 @@ export function useProduct() {
         }
     }, [auth?.token])
 
+    const getClientProductById = useCallback(async (id) =>{
+        try {
+            const product = await getProductByIdApi(id, authClient.token);
+            return product;
+        } catch (error) {
+            throw error;    
+        }
+    }, [authClient?.token])
+
     return {
         products,
         loading,
@@ -80,5 +89,6 @@ export function useProduct() {
         updateProduct,
         deleteProduct,
         getProductById,
+        getClientProductById,
     }
 }
