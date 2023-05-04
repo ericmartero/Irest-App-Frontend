@@ -3,6 +3,7 @@ import { getProductShoppingCart } from '../../../api/shoppingCart';
 import { ShoppingCart } from '../ShoppingCart';
 import { useProduct } from '../../../hooks';
 import { Badge } from 'primereact/badge';
+import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { size } from 'lodash';
@@ -47,6 +48,12 @@ export function Header(props) {
         onRefresh();
     };
 
+    const showShoppingCartDialogFooter = (
+        <div className='footerBill'>
+            <Button label="Realizar pedido (14,5€)" className="bttnFoot" />
+        </div>
+    );
+
     return (
         <>
             {!products ?
@@ -74,12 +81,15 @@ export function Header(props) {
                         </div>
                     }
 
-                    <Dialog visible={showShoppingCartDialog} style={{ width: '90vw' }} modal
-                        headerClassName='header_cart_color' header="Carrito" onHide={hideShoppingCartDialog}>
+                    <Dialog visible={showShoppingCartDialog} style={{ width: '90vw' }} modal footer={size(products) !== 0 && showShoppingCartDialogFooter}
+                        headerClassName='header_cart_color' header="Carrito" className='dialog-header-container' onHide={hideShoppingCartDialog}>
                         <>
                             {size(products) === 0
                                 ? <p style={{ textAlign: "center", marginTop: "2rem" }}>No tienes productos en el carrito</p>
-                                : <ShoppingCart products={products} onRefresh={onRefresh} />
+                                :
+                                <>
+                                    <ShoppingCart products={products} onRefresh={onRefresh} />
+                                </>
                             }
                         </>
                     </Dialog>
