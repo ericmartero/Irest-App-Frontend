@@ -6,7 +6,7 @@ import { Badge } from 'primereact/badge';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { ProgressSpinner } from 'primereact/progressspinner';
-import { size } from 'lodash';
+import { size, forEach } from 'lodash';
 import './Header.scss';
 
 export function Header(props) {
@@ -14,6 +14,7 @@ export function Header(props) {
     const { name, isMain, goBack, refreshCartNumber } = props;
 
     const { getProductById } = useProduct();
+    const [totalPriceCart, setTotalPriceCart] = useState(0);
     const [showShoppingCartDialog, setShoppingCartDialog] = useState(false);
     const [refreshShoppingCart, setRefreshShoppingCart] = useState(false);
     const [products, setProducts] = useState(null);
@@ -34,8 +35,18 @@ export function Header(props) {
     }, [refreshShoppingCart, getProductById]);
 
     useEffect(() => {
+        let totalPriceCart = 0;
+
+        forEach(products, (product) => {
+            totalPriceCart += product.price;
+        })
+
+        setTotalPriceCart(totalPriceCart.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' }));
+    }, [products]);
+
+    useEffect(() => {
         onRefresh();
-    }, [refreshCartNumber])
+    }, [refreshCartNumber]);
 
     const onRefresh = () => setRefreshShoppingCart((state) => !state);
 
@@ -50,7 +61,9 @@ export function Header(props) {
 
     const showShoppingCartDialogFooter = (
         <div className='footerBill'>
-            <Button label="Realizar pedido (14,5€)" className="bttnFoot" />
+            <Button 
+                label={`Realizar pedido (${totalPriceCart})`} 
+                className="bttnFoot" />
         </div>
     );
 
