@@ -12,7 +12,7 @@ export function Header(props) {
 
     const { name, isMain, goBack, refreshCartNumber } = props;
 
-    const { getProductById } = useProduct();
+    const { loading, getProductById } = useProduct();
     const [showShoppingCartDialog, setShoppingCartDialog] = useState(false);
     const [refreshShoppingCart, setRefreshShoppingCart] = useState(false);
     const [products, setProducts] = useState(null);
@@ -49,40 +49,48 @@ export function Header(props) {
 
     return (
         <>
-            {isMain ?
-                <div className='header-main-container'>
-                    <h2>{name}</h2>
-                    <i className="pi pi-shopping-cart p-overlay-badge" style={{ fontSize: '1.8rem' }} onClick={onShoppingCart}>
-                        <Badge value={size(products)}></Badge>
-                    </i>
+            {loading ?
+                <div className="align-content-mobile">
+                    <ProgressSpinner />
                 </div>
                 :
-                <div className='header-main-container'>
-                    <div className='header-container'>
-                        <i className="pi pi-arrow-left" style={{ fontSize: '1rem', marginRight: '1rem' }} onClick={goBack}></i>
-                        <h2>{name}</h2>
-                    </div>
-                    <i className="pi pi-shopping-cart p-overlay-badge" style={{ fontSize: '1.8rem' }} onClick={onShoppingCart}>
-                        <Badge value={size(products)}></Badge>
-                    </i>
-                </div>
-            }
-
-            <Dialog visible={showShoppingCartDialog} style={{ width: '90vw' }} modal
-                headerClassName='header_cart_color' header="Carrito" onHide={hideShoppingCartDialog}>
                 <>
-                    {!products ?
-                        <div className="align-container-dialog">
-                            <ProgressSpinner />
+                    {isMain ?
+                        <div className='header-main-container'>
+                            <h2>{name}</h2>
+                            <i className="pi pi-shopping-cart p-overlay-badge" style={{ fontSize: '1.8rem' }} onClick={onShoppingCart}>
+                                <Badge value={size(products)}></Badge>
+                            </i>
                         </div>
-                        : size(products) === 0 ? (
-                            <p style={{ textAlign: "center", marginTop: "2rem" }}>No tienes productos en el carrito</p>
-                        ) : (
-                            <ShoppingCart products={products} onRefresh={onRefresh} />
-                        )
+                        :
+                        <div className='header-main-container'>
+                            <div className='header-container'>
+                                <i className="pi pi-arrow-left" style={{ fontSize: '1rem', marginRight: '1rem' }} onClick={goBack}></i>
+                                <h2>{name}</h2>
+                            </div>
+                            <i className="pi pi-shopping-cart p-overlay-badge" style={{ fontSize: '1.8rem' }} onClick={onShoppingCart}>
+                                <Badge value={size(products)}></Badge>
+                            </i>
+                        </div>
                     }
+
+                    <Dialog visible={showShoppingCartDialog} style={{ width: '90vw' }} modal
+                        headerClassName='header_cart_color' header="Carrito" onHide={hideShoppingCartDialog}>
+                        <>
+                            {!products ?
+                                <div className="align-container-dialog">
+                                    <ProgressSpinner />
+                                </div>
+                                : size(products) === 0 ? (
+                                    <p style={{ textAlign: "center", marginTop: "2rem" }}>No tienes productos en el carrito</p>
+                                ) : (
+                                    <ShoppingCart products={products} onRefresh={onRefresh} />
+                                )
+                            }
+                        </>
+                    </Dialog>
                 </>
-            </Dialog>
+            }
         </>
     )
 }
