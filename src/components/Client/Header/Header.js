@@ -106,7 +106,7 @@ export function Header(props) {
 
     const showAddOrderDialogFooter = (
         <React.Fragment>
-            <Button label="No" icon="pi pi-times" outlined onClick={hideShowAddOrderDialog} style={{marginTop: "10px"}} />
+            <Button label="No" icon="pi pi-times" outlined onClick={hideShowAddOrderDialog} style={{ marginTop: "10px" }} />
             <Button label="Si" icon="pi pi-check" onClick={addOrder} />
         </React.Fragment>
     );
@@ -162,8 +162,8 @@ export function Header(props) {
                 </>
             </Dialog>
 
-            <Dialog visible={showAddOrderDialog} style={{ width: '90vw' }} header="Confirmar pedido" modal 
-            className='dialog-header-confirm-container' footer={showAddOrderDialogFooter} onHide={hideShowAddOrderDialog}>
+            <Dialog visible={showAddOrderDialog} style={{ width: '90vw' }} header="Confirmar pedido" modal
+                className='dialog-header-confirm-container' footer={showAddOrderDialogFooter} onHide={hideShowAddOrderDialog}>
                 <div className="confirmation-content">
                     <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                     <span>Seguro que quieres realizar el pedido?</span>
