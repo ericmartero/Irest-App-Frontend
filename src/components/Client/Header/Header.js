@@ -98,7 +98,7 @@ export function Header(props) {
                         headerClassName='header_cart_color' header="Carrito" className='dialog-header-container' onHide={hideShoppingCartDialog}>
                         <>
                             {size(products) === 0
-                                ? <p style={{ textAlign: "center", marginTop: "2rem" }}>No tienes productos en el carrito</p>
+                                ? <p style={{ textAlign: "center" }}>No tienes productos en el carrito</p>
                                 :
                                 <>
                                     <ShoppingCart products={products} onRefresh={onRefresh} />
