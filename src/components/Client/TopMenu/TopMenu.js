@@ -6,19 +6,21 @@ import './TopMenu.scss';
 
 export function TopMenu(props) {
 
+  const { table, idTable } = props;
+
   const { logoutClient } = useAuth();
 
   return (
     <div className="layout-topbar layout-mobile">
       <div className="layout-topbar-left">
-        <Link to="/admin" className="layout-topbar-logo">
+        <Link to={`/client/id_table=${idTable}`} className="layout-topbar-logo">
           <img src="https://res.cloudinary.com/djwjh0wpw/image/upload/v1679673058/icono-irest_gvyksj.png" alt="logo" className='layout-image' />
         </Link>
       </div>
 
       <div className="layout-topbar-center">
         <div className='layout-table'>
-          <b>MESA {props.table?.number}</b>
+          <b>MESA {table?.number}</b>
         </div>
       </div>
 
