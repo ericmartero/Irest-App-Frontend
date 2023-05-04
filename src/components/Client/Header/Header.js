@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { getProductShoppingCart } from '../../../api/shoppingCart';
+import React, { useState, useEffect, useRef } from 'react';
+import { useProduct, useOrder, useTable } from '../../../hooks';
+import { getProductShoppingCart, cleanProductShoppingCart } from '../../../api/shoppingCart';
 import { ShoppingCart } from '../ShoppingCart';
-import { useProduct } from '../../../hooks';
+import { Toast } from 'primereact/toast';
 import { Badge } from 'primereact/badge';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
@@ -10,13 +11,18 @@ import './Header.scss';
 
 export function Header(props) {
 
-    const { name, isMain, goBack, refreshCartNumber } = props;
+    const { name, isMain, goBack, refreshCartNumber, paramsURL } = props;
 
-    const { getProductById } = useProduct();
+    const toast = useRef(null);
+    const { getClientProductById } = useProduct();
+    const { addClientOrderToTable } = useOrder();
+    const { tables, getTableClient } = useTable();
+
     const [totalPriceCart, setTotalPriceCart] = useState(0);
     const [showShoppingCartDialog, setShoppingCartDialog] = useState(false);
     const [refreshShoppingCart, setRefreshShoppingCart] = useState(false);
     const [products, setProducts] = useState(null);
+    const [table, setTable] = useState(null);
 
     useEffect(() => {
         (async () => {
@@ -24,14 +30,14 @@ export function Header(props) {
 
             const productsArray = [];
             for await (const idProduct of productsCart) {
-                const response = await getProductById(idProduct);
+                const response = await getClientProductById(idProduct);
                 productsArray.push(response);
             }
 
             setProducts(productsArray);
 
         })();
-    }, [refreshShoppingCart, getProductById]);
+    }, [refreshShoppingCart, getClientProductById]);
 
     useEffect(() => {
         let totalPriceCart = 0;
@@ -44,10 +50,39 @@ export function Header(props) {
     }, [products]);
 
     useEffect(() => {
+        getTableClient(paramsURL.idTable);
+    }, [paramsURL.idTable, getTableClient]);
+
+    useEffect(() => {
+        if (tables) {
+            setTable(tables);
+        }
+    }, [tables])
+
+    useEffect(() => {
         onRefresh();
     }, [refreshCartNumber]);
 
     const onRefresh = () => setRefreshShoppingCart((state) => !state);
+
+    const showError = (error) => {
+        toast.current.show({ severity: 'error', summary: 'Operacion Fallida', detail: error.message, life: 1500 });
+    }
+
+    const addOrder = async () => {
+        try {
+            for await (const product of products) {
+                await addClientOrderToTable(table.tableBooking.id, product.id);
+            }
+            cleanProductShoppingCart();
+            onRefresh();
+            toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: `Se ha realizado el pedido correctamente`, life: 1500 });
+        } catch (error) {
+            showError(error);
+        }
+
+        setShoppingCartDialog(false);
+    };
 
     const hideShoppingCartDialog = () => {
         setShoppingCartDialog(false);
@@ -60,14 +95,13 @@ export function Header(props) {
 
     const showShoppingCartDialogFooter = (
         <div className='footerBill'>
-            <Button
-                label={`Realizar pedido (${totalPriceCart})`}
-                className="bttnFoot" />
+            <Button label={`Realizar pedido (${totalPriceCart})`} className="bttnFoot" onClick={addOrder} />
         </div>
     );
 
     return (
         <>
+            <Toast ref={toast} position="bottom-center" />
             {isMain ?
                 <div className='header-main-container'>
                     <h2>{name}</h2>
@@ -77,7 +111,7 @@ export function Header(props) {
                             <Badge value={size(products)}></Badge>
                         </i>
                         :
-                        <i className="pi pi-shopping-cart p-overlay-badge" style={{ fontSize: '1.8rem' }} onClick={onShoppingCart}/>
+                        <i className="pi pi-shopping-cart p-overlay-badge" style={{ fontSize: '1.8rem' }} onClick={onShoppingCart} />
                     }
                 </div>
                 :
@@ -92,7 +126,7 @@ export function Header(props) {
                             <Badge value={size(products)}></Badge>
                         </i>
                         :
-                        <i className="pi pi-shopping-cart p-overlay-badge" style={{ fontSize: '1.8rem' }} onClick={onShoppingCart}/>
+                        <i className="pi pi-shopping-cart p-overlay-badge" style={{ fontSize: '1.8rem' }} onClick={onShoppingCart} />
                     }
                 </div>
             }
