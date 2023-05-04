@@ -61,53 +61,51 @@ export function Header(props) {
 
     const showShoppingCartDialogFooter = (
         <div className='footerBill'>
-            <Button 
-                label={`Realizar pedido (${totalPriceCart})`} 
+            <Button
+                label={`Realizar pedido (${totalPriceCart})`}
                 className="bttnFoot" />
         </div>
     );
 
     return (
         <>
-            {!products ?
-                <div className="align-content-mobile">
-                    <ProgressSpinner />
+            {isMain ?
+                <div className='header-main-container'>
+                    <h2>{name}</h2>
+
+                    {products &&
+                        <i className="pi pi-shopping-cart p-overlay-badge" style={{ fontSize: '1.8rem' }} onClick={onShoppingCart}>
+                            <Badge value={size(products)}></Badge>
+                        </i>
+                    }
                 </div>
                 :
-                <>
-                    {isMain ?
-                        <div className='header-main-container'>
-                            <h2>{name}</h2>
-                            <i className="pi pi-shopping-cart p-overlay-badge" style={{ fontSize: '1.8rem' }} onClick={onShoppingCart}>
-                                <Badge value={size(products)}></Badge>
-                            </i>
-                        </div>
-                        :
-                        <div className='header-main-container'>
-                            <div className='header-container'>
-                                <i className="pi pi-arrow-left" style={{ fontSize: '1rem', marginRight: '1rem' }} onClick={goBack}></i>
-                                <h2>{name}</h2>
-                            </div>
-                            <i className="pi pi-shopping-cart p-overlay-badge" style={{ fontSize: '1.8rem' }} onClick={onShoppingCart}>
-                                <Badge value={size(products)}></Badge>
-                            </i>
-                        </div>
-                    }
+                <div className='header-main-container'>
+                    <div className='header-container'>
+                        <i className="pi pi-arrow-left" style={{ fontSize: '1rem', marginRight: '1rem' }} onClick={goBack}></i>
+                        <h2>{name}</h2>
+                    </div>
 
-                    <Dialog visible={showShoppingCartDialog} style={{ width: '90vw' }} modal footer={size(products) !== 0 && showShoppingCartDialogFooter}
-                        headerClassName='header_cart_color' header="Carrito" className='dialog-header-container' onHide={hideShoppingCartDialog}>
-                        <>
-                            {size(products) === 0
-                                ? <p style={{ textAlign: "center" }}>No tienes productos en el carrito</p>
-                                :
-                                <>
-                                    <ShoppingCart products={products} onRefresh={onRefresh} />
-                                </>
-                            }
-                        </>
-                    </Dialog>
-                </>
+                    {products &&
+                        <i className="pi pi-shopping-cart p-overlay-badge" style={{ fontSize: '1.8rem' }} onClick={onShoppingCart}>
+                            <Badge value={size(products)}></Badge>
+                        </i>
+                    }
+                </div>
             }
+
+            <Dialog visible={showShoppingCartDialog} style={{ width: '90vw' }} modal footer={size(products) !== 0 && showShoppingCartDialogFooter}
+                headerClassName='header_cart_color' header="Carrito" className='dialog-header-container' onHide={hideShoppingCartDialog}>
+                <>
+                    {size(products) === 0
+                        ? <p style={{ textAlign: "center" }}>No tienes productos en el carrito</p>
+                        :
+                        <>
+                            <ShoppingCart products={products} onRefresh={onRefresh} />
+                        </>
+                    }
+                </>
+            </Dialog>
         </>
     )
 }
