@@ -19,7 +19,7 @@ export function FooterMenu(props) {
         <>
             <div>
                 <div className='fixed-button-container'>
-                    <Button icon="pi pi-qrcode" rounded onClick={() => setShowTableBookingQRDialog(true)} />
+                    <Button icon="pi pi-qrcode" className='footer-qr-button' rounded onClick={() => setShowTableBookingQRDialog(true)} />
                 </div>
                 <div className="footer-container">
                     <i className="pi pi-home" style={{ fontSize: '1.8rem' }} />
