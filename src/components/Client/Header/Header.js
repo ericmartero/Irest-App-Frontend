@@ -5,7 +5,6 @@ import { useProduct } from '../../../hooks';
 import { Badge } from 'primereact/badge';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
-import { ProgressSpinner } from 'primereact/progressspinner';
 import { size, forEach } from 'lodash';
 import './Header.scss';
 
