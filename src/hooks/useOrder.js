@@ -12,7 +12,7 @@ import {
 
 export function useOrder() {
 
-    const { auth } = useAuth();
+    const { auth, authClient } = useAuth();
     const [orders, setOrders] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -39,6 +39,14 @@ export function useOrder() {
     const addOrderToTable = async (idTableBooking, idProduct) => {
         try {
             await addOrderToTableApi(idTableBooking, idProduct, auth.token);
+        } catch (error) {
+            throw error;
+        }
+    };
+
+    const addClientOrderToTable = async (idTableBooking, idProduct) => {
+        try {
+            await addOrderToTableApi(idTableBooking, idProduct, authClient.token);
         } catch (error) {
             throw error;
         }
@@ -82,6 +90,7 @@ export function useOrder() {
         getOrdersByTable,
         checkDeliveredOrder,
         addOrderToTable,
+        addClientOrderToTable,
         deleteOrder,
         addPaymentToOrder,
         closeOrder,
