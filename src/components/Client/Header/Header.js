@@ -12,7 +12,7 @@ export function Header(props) {
 
     const { name, isMain, goBack, refreshCartNumber } = props;
 
-    const { loading, getProductById } = useProduct();
+    const { getProductById } = useProduct();
     const [showShoppingCartDialog, setShoppingCartDialog] = useState(false);
     const [refreshShoppingCart, setRefreshShoppingCart] = useState(false);
     const [products, setProducts] = useState(null);
@@ -49,7 +49,7 @@ export function Header(props) {
 
     return (
         <>
-            {loading ?
+            {!products ?
                 <div className="align-content-mobile">
                     <ProgressSpinner />
                 </div>
@@ -77,15 +77,9 @@ export function Header(props) {
                     <Dialog visible={showShoppingCartDialog} style={{ width: '90vw' }} modal
                         headerClassName='header_cart_color' header="Carrito" onHide={hideShoppingCartDialog}>
                         <>
-                            {!products ?
-                                <div className="align-container-dialog">
-                                    <ProgressSpinner />
-                                </div>
-                                : size(products) === 0 ? (
-                                    <p style={{ textAlign: "center", marginTop: "2rem" }}>No tienes productos en el carrito</p>
-                                ) : (
-                                    <ShoppingCart products={products} onRefresh={onRefresh} />
-                                )
+                            {size(products) === 0
+                                ? <p style={{ textAlign: "center", marginTop: "2rem" }}>No tienes productos en el carrito</p>
+                                : <ShoppingCart products={products} onRefresh={onRefresh} />
                             }
                         </>
                     </Dialog>
