@@ -73,10 +73,12 @@ export function Header(props) {
                 <div className='header-main-container'>
                     <h2>{name}</h2>
 
-                    {products &&
+                    {products ?
                         <i className="pi pi-shopping-cart p-overlay-badge" style={{ fontSize: '1.8rem' }} onClick={onShoppingCart}>
                             <Badge value={size(products)}></Badge>
                         </i>
+                        :
+                        <i className="pi pi-shopping-cart p-overlay-badge" style={{ fontSize: '1.8rem' }} onClick={onShoppingCart}/>
                     }
                 </div>
                 :
@@ -86,10 +88,12 @@ export function Header(props) {
                         <h2>{name}</h2>
                     </div>
 
-                    {products &&
+                    {products ?
                         <i className="pi pi-shopping-cart p-overlay-badge" style={{ fontSize: '1.8rem' }} onClick={onShoppingCart}>
                             <Badge value={size(products)}></Badge>
                         </i>
+                        :
+                        <i className="pi pi-shopping-cart p-overlay-badge" style={{ fontSize: '1.8rem' }} onClick={onShoppingCart}/>
                     }
                 </div>
             }
