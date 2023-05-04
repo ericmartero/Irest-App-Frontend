@@ -1,7 +1,10 @@
 .header-main-container {
+    position: fixed;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 83%;
+    background-color: var(--surface-ground);
 }
 
 .header-container {
