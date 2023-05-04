@@ -31,7 +31,7 @@ export function ClientLayout(props) {
 
     return (
         <div>
-            <TopMenu table={table} />
+            <TopMenu table={table} idTable={paramsURL.idTable} />
 
             <div className="layout-main-container layout-main-mobile">
                 <div className="layout-main children-margin">
