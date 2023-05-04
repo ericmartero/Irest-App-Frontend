@@ -19,6 +19,8 @@ export function Products() {
     const [productsCateogry, setProductsCateogry] = useState([]);
     const [categoryName, setCategoryName] = useState(null);
 
+    const [refreshCartNumber, setRefreshCartNumber] = useState(false);
+
     useEffect(() => {
         (async () => {
             const response = await getCategoryById(paramsURL.idCategory);
@@ -27,12 +29,15 @@ export function Products() {
         })();
     }, [paramsURL.idCategory, getCategoryById]);
 
+    const onRefreshCartNumber = () => setRefreshCartNumber((state) => !state);
+
     const goBack = () => {
         history.push(`/client/id_table=${paramsURL.idTable}`);
     };
 
     const addProductCart = (product) => {
         addProductShoppingCart(product.id);
+        onRefreshCartNumber();
         toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: `Se ha añadido el producto ${product.title} correctamente`, life: 1500 });
     };
 
@@ -46,7 +51,7 @@ export function Products() {
                 :
                 <>
                     <div className="card">
-                        <Header name={categoryName} isMain={false} goBack={goBack} />
+                        <Header name={categoryName} isMain={false} goBack={goBack} refreshCartNumber={refreshCartNumber} />
                         <div>
                             {map(productsCateogry, (product) => (
                                 <div key={product.id} className='product_container'>
