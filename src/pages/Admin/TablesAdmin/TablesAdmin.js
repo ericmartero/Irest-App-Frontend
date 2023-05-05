@@ -16,6 +16,8 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import QRCode from 'react-qr-code';
 import '../../../scss/AlignComponent.scss';
 
+const HOST_API = process.env.REACT_APP_HOST_API;
+
 export function TablesAdmin() {
 
   let emptyTable = {
@@ -429,7 +431,7 @@ export function TablesAdmin() {
 
               <Dialog visible={showTableQRDialog} style={{ width: '32rem' }} header={`Código QR Mesa ${tableNumberDialog}`} modal footer={showTableQRDialogFooter} onHide={hideShowTableQRDialog}>
                 <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem' }} ref={qrRef} >
-                  {tableIdDialog && <QRCode value={`http://localhost:3000/${tableIdDialog}`} />}
+                  {tableIdDialog && <QRCode value={`${HOST_API}/${tableIdDialog}`} />}
                 </div>
               </Dialog>
             </div>

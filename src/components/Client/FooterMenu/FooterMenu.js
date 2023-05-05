@@ -5,6 +5,8 @@ import { Dialog } from 'primereact/dialog';
 import QRCode from 'react-qr-code';
 import './FooterMenu.scss';
 
+const HOST_API = process.env.REACT_APP_HOST_API;
+
 export function FooterMenu(props) {
 
     const { idTable } = props;
@@ -31,7 +33,7 @@ export function FooterMenu(props) {
                 header="Código QR de invitación" modal onHide={hideShowTableBookingQRDialog}
                 headerClassName='header_dialog_color'>
                 <div className='header-qrDialog-container'>
-                    {idTable && <QRCode value={`http://localhost:3000/client-invite/id_table=${idTable}&key=${getBookingKey()}`} />}
+                    {idTable && <QRCode value={`${HOST_API}/client-invite/id_table=${idTable}&key=${getBookingKey()}`} />}
                 </div>
             </Dialog>
         </>
