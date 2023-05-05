@@ -1,5 +1,6 @@
 import React from 'react';
 import { removeProductShoppingCart } from '../../../api/shoppingCart';
+import { Button } from 'primereact/button';
 import { Badge } from 'primereact/badge';
 import { map } from 'lodash';
 import './ShoppingCart.scss';
@@ -38,7 +39,10 @@ export function ShoppingCart(props) {
                             <Badge value={product.quantity}></Badge>
                         </div>
                     </div>
-                    <i className="pi pi-times" onClick={() => removeProductCart(product.id)}/>
+                    <Button
+                        icon="pi pi-minus" className="layout-button-cart p-button-secondary"
+                        style={{ flexShrink: 0 }}
+                        onClick={() => removeProductCart(product.id)} />
                 </div>
             ))}
         </div>
