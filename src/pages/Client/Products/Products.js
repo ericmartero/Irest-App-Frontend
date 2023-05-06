@@ -25,7 +25,9 @@ export function Products() {
         (async () => {
             const response = await getCategoryById(paramsURL.idCategory);
             setCategoryName(response.title);
-            setProductsCateogry(response.products);
+
+            const filteredProducts = response.products.filter(product => product.active);
+            setProductsCateogry(filteredProducts);
         })();
     }, [paramsURL.idCategory, getCategoryById]);
 
