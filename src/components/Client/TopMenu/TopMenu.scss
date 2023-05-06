@@ -17,3 +17,21 @@
     height: 2.5rem !important;
     width: 2.5rem !important;
 }
+
+.dialog-key-confirm-container {
+    .p-dialog-content {
+        padding: 1rem 2.5rem 1.5rem 1.5rem !important;
+    }
+}
+
+.showkey-container {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+.key-container {
+    border: 1px solid;
+    padding: 0.75rem 1.25rem;
+    border-radius: 6px;
+}
