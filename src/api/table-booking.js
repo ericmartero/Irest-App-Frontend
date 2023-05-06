@@ -14,9 +14,12 @@ export const reserveTableApi = async(tableId) => {
         }
 
         const resp = await fetch(url, params);
-        const result = await resp.json();
 
-        return result;
+        if (resp.status === 409) {
+            throw new Error("La mesa en la que intenta acceder esta desactivada");
+        }
+
+        return await resp.json();
 
     } catch (error) {
         throw error;
@@ -41,6 +44,10 @@ export const joinTableApi = async(tableId, keyBooking) => {
         
         if (resp.status === 401) {
             throw new Error("La clave introducida es incorrecta");
+        }
+
+        if (resp.status === 409) {
+            throw new Error("La mesa en la que intenta acceder esta desactivada");
         }
 
         return await resp.json();
