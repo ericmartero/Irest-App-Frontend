@@ -10,6 +10,7 @@ import { Dialog } from 'primereact/dialog';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
 import { Tag } from 'primereact/tag';
+import QRCode from 'react-qr-code';
 import './OrdersAdmin.scss';
 
 export function OrdersAdmin() {
@@ -27,6 +28,8 @@ export function OrdersAdmin() {
   const [reserveTableDialog, setReserveTableDialog] = useState(false);
   const [tableSelected, setTableSelected] = useState(null);
   const [autoRefreshEnabled, setAutoRefreshEnabled] = useState(true);
+  const [showTableBookingQRDialog, setShowTableBookingQRDialog] = useState(false);
+  const [newKey, setNewKey] = useState(null);
 
   const onRefresh = () => setRefreshTables((state) => !state);
 
@@ -68,15 +71,6 @@ export function OrdersAdmin() {
     toast.current.show({ severity: 'error', summary: 'Operacion Fallida', detail: error.message, life: 3000 });
   }
 
-  const handleCopyKeyToClipboard = (text) => {
-    const textToCopy = text;
-    navigator.clipboard.writeText(textToCopy).then(() => {
-      toast.current.show({ severity: 'success', summary: 'Operación Exitosa', detail: `Se ha copiado la contraseña nueva de la mesa número ${tableSelected.number} en el portapapeles`, life: 3000 });
-    }, (error) => {
-      showError(error);
-    });
-  };
-
   const hideResetKeyDialog = () => {
     setResetKeyDialog(false);
     setAutoRefreshEnabled(true);
@@ -112,28 +106,35 @@ export function OrdersAdmin() {
 
     try {
       const response = await resetKey(tableSelected.tableBooking.id);
-      handleCopyKeyToClipboard(response.key);
+      setNewKey(response.key);
+      toast.current.show({ severity: 'success', summary: 'Operación Exitosa', detail: `Se ha cambiado la clave de la mesa número ${tableSelected.number} correctamente`, life: 3000 });
     } catch (error) {
       showError(error);
     }
 
     setResetKeyDialog(false);
-    setAutoRefreshEnabled(true);
+    setShowTableBookingQRDialog(true);
   }
+
+  const hideShowTableBookingQRDialog = () => {
+    setShowTableBookingQRDialog(false);
+    setAutoRefreshEnabled(true);
+  };
+
 
   const reserveEmptyTable = async () => {
 
     try {
       const response = await reserveTable(tableSelected.id);
       toast.current.show({ severity: 'success', summary: 'Operación Exitosa', detail: `Se ha reservado la mesa número ${tableSelected.number} correctamente`, life: 3000 });
-      handleCopyKeyToClipboard(response.key);
+      setNewKey(response.key);
       onRefresh();
     } catch (error) {
       showError(error);
     }
 
     setReserveTableDialog(false);
-    setAutoRefreshEnabled(true);
+    setShowTableBookingQRDialog(true);
   }
 
   const resetKeyDialogFooter = (
@@ -315,6 +316,12 @@ export function OrdersAdmin() {
               {tableSelected &&
                 <span>Seguro que quieres reservar la mesa <b>{tableSelected.number}</b>?</span>
               }
+            </div>
+          </Dialog>
+
+          <Dialog visible={showTableBookingQRDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={`Código QR de invitación mesa ${tableSelected?.number}`} modal onHide={hideShowTableBookingQRDialog} >
+            <div className='header-qrDialog-container'>
+              {(newKey && tableSelected) && <QRCode value={`https://irest.netlify.app/client-invite/id_table=${tableSelected.id}&key=${newKey}`} />}
             </div>
           </Dialog>
         </>
