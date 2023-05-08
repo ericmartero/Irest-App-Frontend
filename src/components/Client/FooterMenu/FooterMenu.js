@@ -10,9 +10,15 @@ export function FooterMenu(props) {
     const { idTable } = props;
 
     const [showTableBookingQRDialog, setShowTableBookingQRDialog] = useState(false);
+    const [showPaymentDialog, setShowPaymentDialog] = useState(false);
 
     const hideShowTableBookingQRDialog = () => {
         setShowTableBookingQRDialog(false);
+    };
+
+    
+    const hideShowPaymentDialog = () => {
+        setShowPaymentDialog(false);
     };
 
     return (
@@ -23,7 +29,7 @@ export function FooterMenu(props) {
                 </div>
                 <div className="footer-container">
                     <i className="pi pi-home" style={{ fontSize: '1.8rem' }} />
-                    <i className="pi pi-credit-card" style={{ fontSize: '1.8rem' }} />
+                    <i className="pi pi-credit-card" style={{ fontSize: '1.8rem' }} onClick={() => setShowPaymentDialog(true)} />
                 </div>
             </div>
 
@@ -33,6 +39,10 @@ export function FooterMenu(props) {
                 <div className='header-qrDialog-container'>
                     {idTable && <QRCode value={`https://irest.netlify.app/client-invite/id_table=${idTable}&key=${getBookingKey()}`} />}
                 </div>
+            </Dialog>
+
+            <Dialog visible={showPaymentDialog} style={{ width: '90vw' }} header="Método de pago" modal onHide={hideShowPaymentDialog}>
+                <h1>PAGGAAAAR</h1>
             </Dialog>
         </>
     )
