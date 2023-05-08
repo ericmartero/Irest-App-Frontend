@@ -249,6 +249,7 @@ export function WaiterTableDetails() {
   const hideConfirmTypePaymentDialog = () => {
     setConfirmTypePaymentDialog(false);
     setPaymentType(PAYMENT_TYPE.CARD);
+    setAutoRefreshEnabled(true);
   };
 
   const openDialogFinishPayment = () => {
@@ -258,6 +259,7 @@ export function WaiterTableDetails() {
 
   const hideBillDialog = () => {
     setShowBillDialog(false);
+    setAutoRefreshEnabled(true);
   };
 
   const saveOrders = async () => {
@@ -342,7 +344,6 @@ export function WaiterTableDetails() {
     toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Se ha creado la cuenta correctamente', life: 3000 });
     setPaymentType(PAYMENT_TYPE.CARD);
     setConfirmTypePaymentDialog(false);
-    setAutoRefreshEnabled(true);
   };
 
   const onDropdownChange = (value) => {
@@ -437,12 +438,22 @@ export function WaiterTableDetails() {
     setAutoRefreshEnabled(false);
   };
 
+  const onConfirmPayment = () => {
+    setConfirmTypePaymentDialog(true);
+    setAutoRefreshEnabled(false);
+  };
+
+  const onShowBill = () => {
+    setShowBillDialog(true);
+    setAutoRefreshEnabled(false);
+  };
+
   const rightToolbarTemplate = () => {
     return (
       <div className="flex flex-wrap gap-2">
         {!paymentData ? <Button label="Añadir pedido" severity="success" className='ml-5' onClick={openNew} />
-          : <Button label="Ver Cuenta" severity="secondary" className='ml-5' onClick={() => setShowBillDialog(true)} />}
-        {!paymentData ? <Button label="Generar Cuenta" severity="secondary" className='ml-2' disabled={enablePayment} onClick={() => setConfirmTypePaymentDialog(true)} />
+          : <Button label="Ver Cuenta" severity="secondary" className='ml-5' onClick={onShowBill} />}
+        {!paymentData ? <Button label="Generar Cuenta" severity="secondary" className='ml-2' disabled={enablePayment} onClick={onConfirmPayment} />
           : null
         }
       </div>
