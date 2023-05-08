@@ -1,0 +1,28 @@
+.orders-container {
+    padding-top: 4.5rem;
+}
+
+.order_container {
+    background-color: white;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    border-radius: 12px;
+    min-height: 6rem;
+}
+
+.content_order {
+    display: flex;
+    align-items: center;
+}
+
+.content_order_info {
+    display: flex;
+    flex-direction: column;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    width: 4rem;
+}

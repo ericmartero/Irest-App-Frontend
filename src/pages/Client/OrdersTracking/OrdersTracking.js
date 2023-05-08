@@ -4,10 +4,12 @@ import { useParams, useHistory } from 'react-router-dom';
 import { useOrder, useTable } from '../../../hooks';
 import { Header } from '../../../components/Client';
 import { ProgressSpinner } from 'primereact/progressspinner';
-import { Button } from 'primereact/button';
 import { Tag } from 'primereact/tag';
 import { map } from "lodash";
+import moment from 'moment';
+import 'moment/locale/es';
 import '../../../scss/AlignComponent.scss';
+import './OrdersTracking.scss';
 
 export function OrdersTracking() {
 
@@ -72,14 +74,14 @@ export function OrdersTracking() {
                 :
                 <div className="card">
                     <Header name="Pedidos" isMain={false} goBack={goBack} paramsURL={paramsURL} />
-                    <div className='products-container'>
+                    <div className='orders-container'>
                         {map(ordersTable, (order) => (
-                            <div key={order.id} className='product_container'>
-                                <div className='content_product'>
+                            <div key={order.id} className='order_container'>
+                                <div className='content_order'>
                                     <img className="w-4 sm:w-8rem xl:w-8rem block xl:block border-round" src={order.product.image} alt={order.product.title} />
-                                    <div className='content_product_info'>
+                                    <div className='content_order_info'>
                                         <span className="font-bold text-900">{order.product.title}</span>
-                                        <span>{order.product.price}</span>
+                                        <span>{moment(order.createdAt).format('HH:mm')}</span>
                                     </div>
                                 </div>
                                 <Tag value={order.status === ORDER_STATUS.PENDING ? 'PENDIENTE'
