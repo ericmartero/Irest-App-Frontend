@@ -21,15 +21,15 @@ const routesClient = [
         exact: true
     },
     {
-        path: '/client/:idTable/:idCategory',
-        layout: ClientLayout,
-        component: Products,
-        exact: true
-    },
-    {
         path: '/client/:idTable/orders',
         layout: ClientLayout,
         component: OrdersTracking,
+        exact: true
+    },
+    {
+        path: '/client/:idTable/:idCategory',
+        layout: ClientLayout,
+        component: Products,
         exact: true
     }
 ];
