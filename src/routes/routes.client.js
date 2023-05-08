@@ -1,5 +1,5 @@
 import { MainLayout, ClientLayout } from '../layouts';
-import { HomeClient, Categories, Products, InviteClientTable } from '../pages/Client';
+import { HomeClient, Categories, Products, InviteClientTable, OrdersTracking } from '../pages/Client';
 
 const routesClient = [
     {
@@ -24,6 +24,12 @@ const routesClient = [
         path: '/client/:idTable/:idCategory',
         layout: ClientLayout,
         component: Products,
+        exact: true
+    },
+    {
+        path: '/client/:idTable/orders',
+        layout: ClientLayout,
+        component: OrdersTracking,
         exact: true
     }
 ];
