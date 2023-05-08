@@ -58,7 +58,7 @@ export function Products() {
                             {map(productsCateogry, (product) => (
                                 <div key={product.id} className='product_container'>
                                     <div className='content_product'>
-                                        <img className="w-4 sm:w-8rem xl:w-8rem block xl:block border-round" src={product.image} alt={product.name} />
+                                        <img className="w-4 sm:w-8rem xl:w-8rem block xl:block border-round" src={product.image} alt={product.title} />
                                         <div className='content_product_info'>
                                             <span className="font-bold text-900">{product.title}</span>
                                             <span>{product.price.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</span>
