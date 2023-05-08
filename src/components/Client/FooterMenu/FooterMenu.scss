@@ -32,3 +32,15 @@
     padding-right: 2.5rem;
     padding-left: 2.5rem;
 }
+
+.header-qrDialog-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.paymentDialog-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+}
