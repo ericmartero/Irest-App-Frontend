@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getBookingKey } from '../../../utils/constants';
-import { PAYMENT_TYPE } from '../../../utils/constants';
+import { PAYMENT_TYPE, PAYMENT_STATUS } from '../../../utils/constants';
 import { useOrder, useTable } from '../../../hooks';
 import { useParams } from 'react-router-dom';
 import { Button } from 'primereact/button';
@@ -62,7 +62,14 @@ export function FooterMenu(props) {
             totalPayment += order.product.price;
         });
 
-        console.log(totalPayment);
+        const paymentData = {
+            table: paramsURL.idTable,
+            totalPayment: totalPayment.toFixed(2),
+            paymentType,
+            statusPayment: PAYMENT_STATUS.PENDING
+        };
+
+
     };
 
     return (
