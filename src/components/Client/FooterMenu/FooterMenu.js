@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getBookingKey } from '../../../utils/constants';
 import { PAYMENT_TYPE } from '../../../utils/constants';
+import { useOrder, useTable } from '../../../hooks';
+import { useParams } from 'react-router-dom';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
+import { forEach } from 'lodash';
 import QRCode from 'react-qr-code';
 import './FooterMenu.scss';
 
@@ -10,8 +13,38 @@ export function FooterMenu(props) {
 
     const { idTable } = props;
 
+    const paramsURL = useParams();
+    const { tables, getTableClient } = useTable();
+    const { orders, getOrdersByTableClient } = useOrder();
+
     const [showTableBookingQRDialog, setShowTableBookingQRDialog] = useState(false);
     const [showPaymentDialog, setShowPaymentDialog] = useState(false);
+    const [table, setTable] = useState(null);
+    const [ordersTable, setOrdersTable] = useState(null);
+
+    useEffect(() => {
+        getTableClient(paramsURL.idTable);
+    }, [paramsURL.idTable, getTableClient]);
+
+    useEffect(() => {
+        if (tables) {
+            setTable(tables);
+        }
+    }, [tables]);
+
+    useEffect(() => {
+        (async () => {
+            if (table) {
+                getOrdersByTableClient(table.tableBooking?.id);
+            }
+        })();
+    }, [table, getOrdersByTableClient]);
+
+    useEffect(() => {
+        if (orders) {
+            setOrdersTable(orders);
+        }
+    }, [orders]);
 
     const hideShowTableBookingQRDialog = () => {
         setShowTableBookingQRDialog(false);
@@ -22,7 +55,14 @@ export function FooterMenu(props) {
     };
 
     const onCreatePayment = (paymentType) => {
-        console.log(paymentType);
+        setShowPaymentDialog(false);
+
+        let totalPayment = 0;
+        forEach(ordersTable, (order) => {
+            totalPayment += order.product.price;
+        });
+
+        console.log(totalPayment);
     };
 
     return (
