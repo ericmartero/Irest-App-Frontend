@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getBookingKey } from '../../../utils/constants';
-import { PAYMENT_TYPE, PAYMENT_STATUS } from '../../../utils/constants';
-import { useOrder, useTable } from '../../../hooks';
+import { PAYMENT_TYPE } from '../../../utils/constants';
+import { useOrder, useTable, usePayment } from '../../../hooks';
 import { useParams } from 'react-router-dom';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
@@ -14,8 +14,9 @@ export function FooterMenu(props) {
     const { idTable } = props;
 
     const paramsURL = useParams();
+    const { createClientPayment } = usePayment();
     const { tables, getTableClient } = useTable();
-    const { orders, getOrdersByTableClient } = useOrder();
+    const { orders, getOrdersByTableClient, addPaymentToOrder } = useOrder();
 
     const [showTableBookingQRDialog, setShowTableBookingQRDialog] = useState(false);
     const [showPaymentDialog, setShowPaymentDialog] = useState(false);
@@ -54,7 +55,7 @@ export function FooterMenu(props) {
         setShowPaymentDialog(false);
     };
 
-    const onCreatePayment = (paymentType) => {
+    const onCreatePayment = async (paymentType) => {
         setShowPaymentDialog(false);
 
         let totalPayment = 0;
@@ -63,13 +64,16 @@ export function FooterMenu(props) {
         });
 
         const paymentData = {
-            table: paramsURL.idTable,
-            totalPayment: totalPayment.toFixed(2),
+            table: table.tableBooking.id,
+            totalPayment: Number(totalPayment.toFixed(2)),
             paymentType,
-            statusPayment: PAYMENT_STATUS.PENDING
         };
 
+        const payment = await createClientPayment(paymentData);
 
+        for await (const order of ordersTable) {
+            await addPaymentToOrder(order.id, payment.id);
+        };
     };
 
     return (
