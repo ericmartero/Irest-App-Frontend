@@ -82,33 +82,31 @@ export function OrdersTracking() {
     };
 
     return (
-        <>
+        <div className="card">
             {loading ?
                 <div className="align-content-mobile">
                     <ProgressSpinner />
                 </div>
                 :
-                <div className="card">
-                    <Header name="Pedidos" isMain={false} goBack={goBack} paramsURL={paramsURL} />
-                    <div className='orders-container'>
-                        {map(ordersTable, (order) => (
-                            <div key={order.id} className='order_container'>
-                                <div className='content_order'>
-                                    <img className="w-4 sm:w-8rem xl:w-8rem block xl:block border-round" src={order.product.image} alt={order.product.title} />
-                                    <div className='content_order_info'>
-                                        <span className="font-bold text-900">{order.product.title}</span>
-                                        <span>{moment(order.createdAt).format('HH:mm')}</span>
-                                    </div>
-                                </div>
-                                <Tag value={order.status === ORDER_STATUS.PENDING ? 'PENDIENTE'
-                                    : order.status === ORDER_STATUS.DELIVERED ? 'ENTREGADO' : 'PREPARADO'}
-                                    severity={getSeverity(order)}
-                                ></Tag>
-                            </div>
-                        ))}
-                    </div>
-                </div>
+                <Header name="Pedidos" isMain={false} goBack={goBack} paramsURL={paramsURL} />
             }
-        </>
+            <div className='orders-container'>
+                {map(ordersTable, (order) => (
+                    <div key={order.id} className='order_container'>
+                        <div className='content_order'>
+                            <img className="w-4 sm:w-8rem xl:w-8rem block xl:block border-round" src={order.product.image} alt={order.product.title} />
+                            <div className='content_order_info'>
+                                <span className="font-bold text-900">{order.product.title}</span>
+                                <span>{moment(order.createdAt).format('HH:mm')}</span>
+                            </div>
+                        </div>
+                        <Tag value={order.status === ORDER_STATUS.PENDING ? 'PENDIENTE'
+                            : order.status === ORDER_STATUS.DELIVERED ? 'ENTREGADO' : 'PREPARADO'}
+                            severity={getSeverity(order)}
+                        ></Tag>
+                    </div>
+                ))}
+            </div>
+        </div>
     )
 }
