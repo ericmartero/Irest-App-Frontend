@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ORDER_STATUS } from '../../../utils/constants';
 import { useParams, useHistory } from 'react-router-dom';
 import { useOrder, useTable } from '../../../hooks';
@@ -13,6 +13,7 @@ import './OrdersTracking.scss';
 
 export function OrdersTracking() {
 
+    const intervalRef = useRef();
     const paramsURL = useParams();
     const history = useHistory();
     const { tables, getTableClient } = useTable();
@@ -20,6 +21,21 @@ export function OrdersTracking() {
 
     const [table, setTable] = useState(null);
     const [ordersTable, setOrdersTable] = useState(null);
+    const [refreshOrders, setRefreshOrders] = useState(false);
+
+    const onRefreshOrders = () => setRefreshOrders((prev) => !prev);
+
+    useEffect(() => {
+        const autoRefreshTables = () => {
+            onRefreshOrders();
+        }
+
+        intervalRef.current = setInterval(autoRefreshTables, 10000);
+
+        return () => {
+            clearInterval(intervalRef.current);
+        };
+    }, []);
 
     useEffect(() => {
         getTableClient(paramsURL.idTable);
@@ -29,21 +45,21 @@ export function OrdersTracking() {
         if (tables) {
             setTable(tables);
         }
-    }, [tables])
+    }, [tables]);
 
     useEffect(() => {
         (async () => {
-            getOrdersByTableClient(table.tableBooking.id);
+            if (table) {
+                getOrdersByTableClient(table.tableBooking?.id);
+            }
         })();
-    }, [table, getOrdersByTableClient]);
+    }, [table, getOrdersByTableClient, refreshOrders]);
 
     useEffect(() => {
         if (orders) {
             setOrdersTable(orders);
         }
-    }, [orders])
-
-    console.log(orders);
+    }, [orders]);
 
     const getSeverity = (order) => {
         switch (order.status) {
@@ -52,7 +68,7 @@ export function OrdersTracking() {
 
             case ORDER_STATUS.PENDING:
                 return 'warning';
-            
+
             case ORDER_STATUS.PREPARED:
                 return 'warning';
 
