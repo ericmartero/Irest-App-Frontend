@@ -4,7 +4,7 @@ import { useAuth } from './';
 
 export function usePayment() {
 
-    const { auth } = useAuth();
+    const { auth, authClient } = useAuth();
     const [loading, setLoading] = useState(true);
     const [payments, setPayments] = useState(null);
     const [error, setError] = useState(null);
@@ -12,6 +12,14 @@ export function usePayment() {
     const createPayment = async (paymentData) => {
         try {
             return await createPaymentApi(paymentData, auth.token);
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    const createClientPayment = async (paymentData) => {
+        try {
+            return await createPaymentApi(paymentData, authClient.token);
         } catch (error) {
             throw error;
         }
@@ -56,6 +64,7 @@ export function usePayment() {
         loading,
         error,
         createPayment,
+        createClientPayment,
         getPaymentByTable,
         closePayment,
         getPayments
