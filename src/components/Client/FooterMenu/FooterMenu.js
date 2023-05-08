@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { getBookingKey } from '../../../utils/constants';
+import { PAYMENT_TYPE } from '../../../utils/constants';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import QRCode from 'react-qr-code';
@@ -16,9 +17,12 @@ export function FooterMenu(props) {
         setShowTableBookingQRDialog(false);
     };
 
-
     const hideShowPaymentDialog = () => {
         setShowPaymentDialog(false);
+    };
+
+    const onCreatePayment = (paymentType) => {
+        console.log(paymentType);
     };
 
     return (
@@ -41,8 +45,8 @@ export function FooterMenu(props) {
 
             <Dialog visible={showPaymentDialog} style={{ width: '90vw' }} header="Método de pago" modal onHide={hideShowPaymentDialog}>
                 <div className='paymentDialog-container'>
-                    <Button icon="pi pi-credit-card" label='Tarjeta' />
-                    <Button icon="pi pi-wallet" label='Efectivo' />
+                    <Button icon="pi pi-credit-card" label='Tarjeta' onClick={() => onCreatePayment(PAYMENT_TYPE.CARD)} />
+                    <Button icon="pi pi-wallet" label='Efectivo' onClick={() => onCreatePayment(PAYMENT_TYPE.CASH)} />
                 </div>
             </Dialog>
         </>
