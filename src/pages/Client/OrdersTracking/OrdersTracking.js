@@ -5,7 +5,7 @@ import { useOrder, useTable } from '../../../hooks';
 import { Header } from '../../../components/Client';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { Tag } from 'primereact/tag';
-import { map } from "lodash";
+import { map, size } from "lodash";
 import moment from 'moment';
 import 'moment/locale/es';
 import '../../../scss/AlignComponent.scss';
@@ -90,23 +90,33 @@ export function OrdersTracking() {
                 :
                 <Header name="Pedidos" isMain={false} goBack={goBack} paramsURL={paramsURL} />
             }
-            <div className='orders-container'>
-                {map(ordersTable, (order) => (
-                    <div key={order.id} className='order_container'>
-                        <div className='content_order'>
-                            <img className="w-4 sm:w-8rem xl:w-8rem block xl:block border-round" src={order.product.image} alt={order.product.title} />
-                            <div className='content_order_info'>
-                                <span className="font-bold text-900">{order.product.title}</span>
-                                <span>{moment(order.createdAt).format('HH:mm')}</span>
-                            </div>
+            <>
+                {size(ordersTable) === 0 ?
+                    <div className='noOrders-container'>
+                        <div className='noOrder_container'>
+                            <p>No hay pedidos actualmente</p>
                         </div>
-                        <Tag value={order.status === ORDER_STATUS.PENDING ? 'PENDIENTE'
-                            : order.status === ORDER_STATUS.DELIVERED ? 'ENTREGADO' : 'PREPARADO'}
-                            severity={getSeverity(order)}
-                        ></Tag>
                     </div>
-                ))}
-            </div>
+                    :
+                    <div className='orders-container'>
+                        {map(ordersTable, (order) => (
+                            <div key={order.id} className='order_container'>
+                                <div className='content_order'>
+                                    <img className="w-4 sm:w-8rem xl:w-8rem block xl:block border-round" src={order.product.image} alt={order.product.title} />
+                                    <div className='content_order_info'>
+                                        <span className="font-bold text-900">{order.product.title}</span>
+                                        <span>{moment(order.createdAt).format('HH:mm')}</span>
+                                    </div>
+                                </div>
+                                <Tag value={order.status === ORDER_STATUS.PENDING ? 'PENDIENTE'
+                                    : order.status === ORDER_STATUS.DELIVERED ? 'ENTREGADO' : 'PREPARADO'}
+                                    severity={getSeverity(order)}
+                                ></Tag>
+                            </div>
+                        ))}
+                    </div>
+                }
+            </>
         </div>
     )
 }
