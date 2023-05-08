@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { getBookingKey } from '../../../utils/constants';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
@@ -9,8 +9,9 @@ import './TopMenu.scss';
 export function TopMenu(props) {
 
   const { table, idTable } = props;
-
+  
   const toast = useRef(null);
+  const history = useHistory();
   const [showKeyDialog, setShowKeyDialog] = useState(false);
 
   const showError = (error) => {
@@ -30,6 +31,10 @@ export function TopMenu(props) {
     setShowKeyDialog(false);
   };
 
+  const goOrdersTracking = () => {
+    history.push(`/client/${idTable}/orders`);
+  };
+
   return (
     <div className="layout-topbar layout-mobile">
       <div className="layout-topbar-left">
@@ -47,7 +52,7 @@ export function TopMenu(props) {
 
       <div className="layout-topbar-right">
         <Button icon="pi pi-key" className="layout-button p-button-secondary mr-1" onClick={() => setShowKeyDialog(true)} />
-        <Button icon="pi pi pi-bars" className="layout-button p-button-secondary" />
+        <Button icon="pi pi pi-bars" className="layout-button p-button-secondary" onClick={goOrdersTracking} />
       </div>
 
       <Dialog visible={showKeyDialog} style={{ width: '90vw' }} header="Clave de la mesa" modal className='dialog-key-confirm-container' onHide={hideShowKeyDialog}>
