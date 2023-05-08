@@ -28,6 +28,18 @@ export function useOrder() {
         }
     }, [auth?.token]);
 
+    const getOrdersByTableClient = useCallback( async (id, status) => {
+        try {
+            setLoading(true);
+            const response = await getOrdersByTableApi(id, authClient.token, status);
+            setLoading(false);
+            setOrders(response);
+        } catch (error) {
+            setLoading(false);
+            throw error;
+        }
+    }, [authClient?.token]);
+
     const checkDeliveredOrder = async (id, status) => {
         try {
             await checkDeliveredOrderApi(id, status, auth.token);
@@ -94,6 +106,7 @@ export function useOrder() {
         deleteOrder,
         addPaymentToOrder,
         closeOrder,
-        getOrdersByPayment
+        getOrdersByPayment,
+        getOrdersByTableClient,
     };
 }
