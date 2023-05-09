@@ -42,7 +42,7 @@ export function OrdersAdmin() {
     }
 
     if (autoRefreshEnabled) {
-      intervalRef.current = setInterval(autoRefreshTables, 10000);
+      intervalRef.current = setInterval(autoRefreshTables, 100000);
     }
 
     return () => {
@@ -239,6 +239,9 @@ export function OrdersAdmin() {
       }
     }
 
+    const redIconStyle = { fontSize: '2rem', color: "#F29E00" };
+    const grayIconStyle = { fontSize: '2rem', color: 'green' };
+
     return (
       <div className="col-12 sm:col-6 lg:col-12 xl:col-4 p-2" onClick={renderDetails}>
         <div className="p-4 border-1 surface-border surface-card border-round">
@@ -260,8 +263,8 @@ export function OrdersAdmin() {
             </div>
 
             {table.tableBooking?.alert &&
-              <div onClick={(event) => { event.stopPropagation(); quitWarningWaiter(); }}>
-                <i className={`pi pi-bell p-text-secondary p-overlay-badge ${showIcon ? 'visible' : 'hidden'}`} style={{ fontSize: '2rem' }}>
+              <div className='pl-4 pr-4' onClick={(event) => { event.stopPropagation(); quitWarningWaiter(); }}>
+                <i className="pi pi-bell p-text-secondary p-overlay-badge" style={showIcon ? redIconStyle : grayIconStyle}>
                   <Badge value={'!'} severity="danger"></Badge>
                 </i>
               </div>
