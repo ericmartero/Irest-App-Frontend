@@ -28,6 +28,7 @@ export function FooterMenu(props) {
     const [showConfirmPaymentDialog, setShowConfirmPaymentDialog] = useState(false);
     const [finishPaymentDialog, setFinishPaymentDialog] = useState(false);
     const [noOrderPaymentDialog, setNoOrderPaymentDialog] = useState(false);
+    const [warnWaiterDialog, setWarnWaiterDialog] = useState(false);
     const [showBillDialog, setShowBillDialog] = useState(false);
     const [table, setTable] = useState(null);
     const [ordersTable, setOrdersTable] = useState(null);
@@ -142,6 +143,10 @@ export function FooterMenu(props) {
         setNoOrderPaymentDialog(false);
     };
 
+    const hideWarnWaiterDialog = () => {
+        setWarnWaiterDialog(false);
+    };
+
     const openDialogFinishPayment = () => {
         setFinishPaymentDialog(true);
         setShowBillDialog(false);
@@ -193,7 +198,14 @@ export function FooterMenu(props) {
     const finishPaymentDialogFooter = (
         <React.Fragment>
             <Button label="No" icon="pi pi-times" outlined onClick={hideFinishPaymentDialog} />
-            <Button label="Si" icon="pi pi-check" severity="danger" onClick={finishPayment} />
+            <Button label="Si" icon="pi pi-check" onClick={finishPayment} />
+        </React.Fragment>
+    );
+
+    const finishwarnWaiterDialogFooter = (
+        <React.Fragment>
+            <Button label="No" icon="pi pi-times" outlined onClick={hideWarnWaiterDialog} />
+            <Button label="Si" icon="pi pi-check" onClick={""} />
         </React.Fragment>
     );
 
@@ -204,7 +216,7 @@ export function FooterMenu(props) {
                     <Button icon="pi pi-qrcode" className='footer-qr-button' rounded onClick={() => setShowTableBookingQRDialog(true)} />
                 </div>
                 <div className="footer-container">
-                    <i className="pi pi-home" style={{ fontSize: '1.8rem' }} />
+                    <i className="pi pi-home" style={{ fontSize: '1.8rem' }} onClick={() => setWarnWaiterDialog(true)} />
                     <i className="pi pi-credit-card" style={{ fontSize: '1.8rem' }} onClick={onShowPaymentDialog} />
                 </div>
             </div>
@@ -270,10 +282,18 @@ export function FooterMenu(props) {
             </Dialog>
 
             <Dialog visible={noOrderPaymentDialog} style={{ width: '90vw' }} header={`Cuenta Mesa ${table?.number}`} modal onHide={hideNoOrderPaymentDialog}
-                className='noOrders-payment-container'>
-                <div className="noOrders-payment-content">
+                className='footer-payment-container'>
+                <div className="footer-payment-content">
                     <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                     <span>No hay pedidos para poder realizar el pago</span>
+                </div>
+            </Dialog>
+
+            <Dialog visible={warnWaiterDialog} style={{ width: '90vw' }} modal header="Avisar al Camarero" onHide={hideWarnWaiterDialog} className='footer-warnWaiter-container'
+                footer={finishwarnWaiterDialogFooter}>
+                <div className="footer-payment-content">
+                    <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                    <span>¿Seguro que quieres llamar a un camarero?</span>
                 </div>
             </Dialog>
         </>

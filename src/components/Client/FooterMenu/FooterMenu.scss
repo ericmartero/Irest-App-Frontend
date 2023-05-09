@@ -67,13 +67,19 @@
     }
 }
 
-.noOrders-payment-content {
+.footer-payment-content {
     align-content: center;
     display: flex;
 }
 
-.noOrders-payment-container {
+.footer-payment-container {
     .p-dialog-content {
         padding: 0 1.5rem 2rem 1.5rem !important;
+    }
+}
+
+.footer-warnWaiter-container {
+    .p-dialog-content {
+        padding: 0.5rem 1.5rem 1.5rem 1.5rem !important;
     }
 }
