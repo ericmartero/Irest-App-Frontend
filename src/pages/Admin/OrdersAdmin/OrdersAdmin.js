@@ -19,7 +19,7 @@ export function OrdersAdmin() {
   const intervalRef = useRef();
   const history = useHistory();
   const { loading, tables, getTables } = useTable();
-  const { resetKey, reserveTable } = useTableBooking();
+  const { resetKey, reserveTable, changeAlert } = useTableBooking();
 
   const [refreshTables, setRefreshTables] = useState(false);
   const [tablesCrud, setTablesCrud] = useState([]);
@@ -229,6 +229,16 @@ export function OrdersAdmin() {
       }
     }
 
+    const quitWarningWaiter = async () => {
+      try {
+        await changeAlert(table.tableBooking?.id, false);
+        onRefresh();
+        toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: `Se ha quitado la llamada correctamente`, life: 3000 });
+      } catch (error) {
+        showError(error);
+      }
+    }
+
     return (
       <div className="col-12 sm:col-6 lg:col-12 xl:col-4 p-2" onClick={renderDetails}>
         <div className="p-4 border-1 surface-border surface-card border-round">
@@ -250,9 +260,11 @@ export function OrdersAdmin() {
             </div>
 
             {table.tableBooking?.alert &&
-              <i className={`pi pi-bell p-text-secondary p-overlay-badge ${showIcon ? 'visible' : 'hidden'}`} style={{ fontSize: '2rem' }}>
-                <Badge value={'!'} severity="danger"></Badge>
-              </i>
+              <div onClick={(event) => { event.stopPropagation(); quitWarningWaiter(); }}>
+                <i className={`pi pi-bell p-text-secondary p-overlay-badge ${showIcon ? 'visible' : 'hidden'}`} style={{ fontSize: '2rem' }}>
+                  <Badge value={'!'} severity="danger"></Badge>
+                </i>
+              </div>
             }
 
             <Tag value={table.tableBooking === null ? 'VACÍA' : 'OCUPADA'} severity={getSeverity(table)}></Tag>
