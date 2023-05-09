@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { createPaymentApi, getPaymentByTableApi, closePaymentApi, getPaymentsApi } from "../api/payment";
+import { createPaymentApi, getPaymentByTableApi, closePaymentApi, getPaymentsApi, getPaymentByIdApi } from "../api/payment";
 import { useAuth } from './';
 
 export function usePayment() {
@@ -32,6 +32,14 @@ export function usePayment() {
             throw error;
         }
     }, [auth?.token]);
+
+    const getPaymentByIdClient = useCallback( async (idTable) => {
+        try {
+            return await getPaymentByIdApi(idTable, authClient.token);
+        } catch (error) {
+            throw error;
+        }
+    }, [authClient?.token]);
 
     const closePayment = async (idPayment) => {
         try {
@@ -66,6 +74,7 @@ export function usePayment() {
         createPayment,
         createClientPayment,
         getPaymentByTable,
+        getPaymentByIdClient,
         closePayment,
         getPayments
     };

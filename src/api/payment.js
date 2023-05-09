@@ -1,7 +1,7 @@
 import { PAYMENT_STATUS } from "../utils/constants";
 const HOST_API = process.env.REACT_APP_HOST_API;
 
-export const createPaymentApi = async(dtoCreatePayment, token) => {
+export const createPaymentApi = async (dtoCreatePayment, token) => {
     try {
         const url = `${HOST_API}/api/payments`;
         const params = {
@@ -23,7 +23,7 @@ export const createPaymentApi = async(dtoCreatePayment, token) => {
     }
 }
 
-export const getPaymentByTableApi = async(idTableBooking, token) => {
+export const getPaymentByTableApi = async (idTableBooking, token) => {
     try {
         const tableFilter = `table=${idTableBooking}`;
         const statusFilter = `statusPayment=${PAYMENT_STATUS.PENDING}`;
@@ -45,7 +45,26 @@ export const getPaymentByTableApi = async(idTableBooking, token) => {
     }
 }
 
-export const closePaymentApi = async(idPayment, token) => {
+export const getPaymentByIdApi = async (id, token) => {
+    try {
+        const url = `${HOST_API}/api/payments/${id}`;
+        const params = {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+
+        const resp = await fetch(url, params);
+        const result = await resp.json();
+
+        return result;
+
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const closePaymentApi = async (idPayment, token) => {
     try {
         const url = `${HOST_API}/api/payments/${idPayment}`;
         const params = {
@@ -66,10 +85,10 @@ export const closePaymentApi = async(idPayment, token) => {
     }
 }
 
-export const getPaymentsApi = async(token) => {
+export const getPaymentsApi = async (token) => {
     try {
         const paymentFilter = `statusPayment=${PAYMENT_STATUS.PAID}`;
-        
+
         const url = `${HOST_API}/api/payments/?${paymentFilter}`;
         const params = {
             headers: {
