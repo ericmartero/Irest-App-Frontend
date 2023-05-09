@@ -31,6 +31,9 @@ export function OrdersAdmin() {
   const [showTableBookingQRDialog, setShowTableBookingQRDialog] = useState(false);
   const [newKey, setNewKey] = useState(null);
 
+  const [showIcon, setShowIcon] = useState(true);
+
+
   const onRefresh = () => setRefreshTables((state) => !state);
 
   useEffect(() => {
@@ -46,6 +49,13 @@ export function OrdersAdmin() {
       clearInterval(intervalRef.current);
     };
   }, [autoRefreshEnabled]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setShowIcon((prev) => !prev);
+    }, 500);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     getTables();
@@ -239,7 +249,9 @@ export function OrdersAdmin() {
               }
             </div>
 
-            <i className="pi pi-bell p-text-secondary p-overlay-badge" style={{ fontSize: '2rem' }}></i>
+            <i className={`pi pi-bell p-text-secondary p-overlay-badge ${showIcon ? 'visible' : 'hidden'}`} style={{ fontSize: '2rem' }}>
+              <Badge value={'!'} severity="danger"></Badge>
+            </i>
 
             <Tag value={table.tableBooking === null ? 'VACÍA' : 'OCUPADA'} severity={getSeverity(table)}></Tag>
           </div>
