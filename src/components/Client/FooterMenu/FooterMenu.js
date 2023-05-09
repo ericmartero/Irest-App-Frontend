@@ -96,8 +96,8 @@ export function FooterMenu(props) {
 
             <Dialog visible={showPaymentDialog} style={{ width: '90vw' }} header="Método de pago" modal onHide={hideShowPaymentDialog}>
                 <div className='paymentDialog-container'>
-                    <Button icon="pi pi-credit-card" label='Tarjeta' onClick={() => onCreatePayment(PAYMENT_TYPE.CARD)} />
-                    <Button icon="pi pi-wallet" label='Efectivo' onClick={() => onCreatePayment(PAYMENT_TYPE.CASH)} />
+                    <Button icon="pi pi-credit-card" label='Tarjeta' className='mr-1 paymentDialog-button' onClick={() => onCreatePayment(PAYMENT_TYPE.CARD)} />
+                    <Button icon="pi pi-wallet" label='Efectivo' className='ml-1 paymentDialog-button' onClick={() => onCreatePayment(PAYMENT_TYPE.CASH)} />
                 </div>
             </Dialog>
         </>

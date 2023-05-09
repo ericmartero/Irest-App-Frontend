@@ -41,6 +41,10 @@
 
 .paymentDialog-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     margin-top: 1.5rem;
+}
+
+.paymentDialog-button {
+    width: 100%;
 }
