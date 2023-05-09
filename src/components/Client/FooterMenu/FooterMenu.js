@@ -20,6 +20,7 @@ export function FooterMenu(props) {
 
     const [showTableBookingQRDialog, setShowTableBookingQRDialog] = useState(false);
     const [showPaymentDialog, setShowPaymentDialog] = useState(false);
+    const [showConfirmPaymentDialog, setShowConfirmPaymentDialog] = useState(false);
     const [table, setTable] = useState(null);
     const [ordersTable, setOrdersTable] = useState(null);
 
@@ -55,10 +56,16 @@ export function FooterMenu(props) {
         setShowPaymentDialog(false);
     };
 
+    const hideShowConfirmPaymentDialog = () => {
+        setShowConfirmPaymentDialog(false);
+        setShowPaymentDialog(true);
+    };
+
     const onCreatePayment = async (paymentType) => {
         setShowPaymentDialog(false);
+        setShowConfirmPaymentDialog(true);
 
-        let totalPayment = 0;
+        /*let totalPayment = 0;
         forEach(ordersTable, (order) => {
             totalPayment += order.product.price;
         });
@@ -73,8 +80,15 @@ export function FooterMenu(props) {
 
         for await (const order of ordersTable) {
             await addPaymentToOrder(order.id, payment.id);
-        };
+        };*/
     };
+
+    const showConfirmPaymentDialogFooter = (
+        <React.Fragment>
+            <Button label="No" icon="pi pi-times" outlined onClick={hideShowConfirmPaymentDialog} style={{ marginTop: "10px" }} />
+            <Button label="Si" icon="pi pi-check" onClick={''} />
+        </React.Fragment>
+    );
 
     return (
         <>
@@ -98,6 +112,14 @@ export function FooterMenu(props) {
                 <div className='paymentDialog-container'>
                     <Button icon="pi pi-credit-card" label='Tarjeta' className='mr-1 paymentDialog-button' onClick={() => onCreatePayment(PAYMENT_TYPE.CARD)} />
                     <Button icon="pi pi-wallet" label='Efectivo' className='ml-1 paymentDialog-button' onClick={() => onCreatePayment(PAYMENT_TYPE.CASH)} />
+                </div>
+            </Dialog>
+
+            <Dialog visible={showConfirmPaymentDialog} style={{ width: '90vw' }} header="Confirmar pago" modal footer={showConfirmPaymentDialogFooter} onHide={hideShowConfirmPaymentDialog}
+                className='dialog-payment-confirm-container'>
+                <div className="confirmation-content">
+                    <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                    <span>¿Seguro que quieres finalizar y realizar el pago?</span>
                 </div>
             </Dialog>
         </>

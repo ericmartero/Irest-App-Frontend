@@ -48,3 +48,9 @@
 .paymentDialog-button {
     width: 100%;
 }
+
+.dialog-payment-confirm-container {
+    .p-dialog-content {
+        padding: 1rem 1.5rem 1rem 1.5rem !important;
+    }
+}
