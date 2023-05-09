@@ -88,7 +88,7 @@ export function OrdersTracking() {
                     <ProgressSpinner />
                 </div>
                 :
-                <Header name="Pedidos" isMain={false} goBack={goBack} paramsURL={paramsURL} />
+                <Header name="Pedidos de la mesa" isMain={false} goBack={goBack} paramsURL={paramsURL} />
             }
             <>
                 {size(ordersTable) === 0 ?
