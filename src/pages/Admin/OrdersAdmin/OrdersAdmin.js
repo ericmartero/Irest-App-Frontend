@@ -249,9 +249,11 @@ export function OrdersAdmin() {
               }
             </div>
 
-            <i className={`pi pi-bell p-text-secondary p-overlay-badge ${showIcon ? 'visible' : 'hidden'}`} style={{ fontSize: '2rem' }}>
-              <Badge value={'!'} severity="danger"></Badge>
-            </i>
+            {table.tableBooking?.alert &&
+              <i className={`pi pi-bell p-text-secondary p-overlay-badge ${showIcon ? 'visible' : 'hidden'}`} style={{ fontSize: '2rem' }}>
+                <Badge value={'!'} severity="danger"></Badge>
+              </i>
+            }
 
             <Tag value={table.tableBooking === null ? 'VACÍA' : 'OCUPADA'} severity={getSeverity(table)}></Tag>
           </div>
