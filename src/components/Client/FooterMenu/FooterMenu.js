@@ -59,7 +59,7 @@ export function FooterMenu(props) {
     console.log(orders);
 
     useEffect(() => {
-        if (orders) {
+        if (size(orders) > 0) {
             (async () => {
                 const response = await getPaymentByIdClient(orders[0].payment.id);
                 setPaymentData(response);
@@ -229,22 +229,22 @@ export function FooterMenu(props) {
 
                 <div className='table-orders-payment' style={{ marginTop: '1.5rem' }}>
                     <DataTable value={orders && groupOrdersStatus(orders)} >
-                        <Column field="quantity" header="UNIDADES"></Column>
-                        <Column field="product.title" header="PRODUCTO"></Column>
-                        <Column field="product.price" header="IMPORTE" body={priceBodyTemplate}></Column>
+                        <Column field="quantity" header="UNIDADES" bodyStyle={{ textAlign: 'center' }}></Column>
+                        <Column field="product.title" header="PRODUCTO" bodyStyle={{ textAlign: 'center' }}></Column>
+                        <Column field="product.price" header="IMPORTE" body={priceBodyTemplate} bodyStyle={{ textAlign: 'center' }}></Column>
                     </DataTable>
                 </div>
 
 
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: "space-between", marginTop: "2rem" }}>
-                        <span className="font-bold">MÉTODO DE PAGO:</span>
-                        <i className={classNames({
-                            "pi pi-credit-card": paymentData?.paymentType === PAYMENT_TYPE.CARD,
-                            "pi pi-wallet": paymentData?.paymentType === PAYMENT_TYPE.CASH
-                        })} style={{ fontSize: '1.5rem' }}></i>
-                        <span className="font-bold">TOTAL: {paymentData?.totalPayment.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
-                    </div>
-                
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: "space-between", marginTop: "2rem" }}>
+                    <span className="font-bold">MÉTODO DE PAGO:</span>
+                    <i className={classNames({
+                        "pi pi-credit-card": paymentData?.paymentType === PAYMENT_TYPE.CARD,
+                        "pi pi-wallet": paymentData?.paymentType === PAYMENT_TYPE.CASH
+                    })} style={{ fontSize: '1.5rem' }}></i>
+                    <span className="font-bold">TOTAL: {paymentData?.totalPayment.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
+                </div>
+
             </Dialog>
 
             <Dialog visible={finishPaymentDialog} style={{ width: '90vw' }} header="Finalizar estancia en la mesa" modal footer={finishPaymentDialogFooter} onHide={hideFinishPaymentDialog}
