@@ -1,9 +1,9 @@
-import { resetKeyApi, reserveTableApi, joinTableApi } from "../api/table-booking";
+import { resetKeyApi, reserveTableApi, joinTableApi, changeAlertApi } from "../api/table-booking";
 import { useAuth } from "./useAuth";
 
 export function useTableBooking() {
 
-    const { auth } = useAuth();
+    const { auth, authClient } = useAuth();
 
     const resetKey = async (id) => {
         try {
@@ -29,9 +29,27 @@ export function useTableBooking() {
         }
     };
 
+    const changeAlert = async (id, status) => {
+        try {
+           return await changeAlertApi(id, status, auth.token);
+        } catch (error) {
+            throw error;
+        }
+    };
+
+    const changeAlertClient = async (id, status) => {
+        try {
+           return await changeAlertApi(id, status, authClient.token);
+        } catch (error) {
+            throw error;
+        }
+    };
+
     return {
         resetKey,
         reserveTable,
         joinTable,
+        changeAlert,
+        changeAlertClient,
     }
 }

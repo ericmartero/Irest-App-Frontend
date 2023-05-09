@@ -80,3 +80,28 @@ export const resetKeyApi = async(tableBookingId, token) => {
         throw error;
     }
 }
+
+export const changeAlertApi = async(tableBookingId, status, token) => {
+    try {
+        const url = `${HOST_API}/api/table-bookings/change-alert`;
+        const params = {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                table: tableBookingId,
+                alert: status
+            })
+        }
+
+        const resp = await fetch(url, params);
+        const result = await resp.json();
+
+        return result;
+        
+    } catch (error) {
+        throw error;
+    }
+}
