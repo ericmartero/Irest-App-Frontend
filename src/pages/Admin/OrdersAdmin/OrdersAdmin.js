@@ -238,6 +238,9 @@ export function OrdersAdmin() {
                 </>
               }
             </div>
+
+            <i className="pi pi-bell p-text-secondary p-overlay-badge" style={{ fontSize: '2rem' }}></i>
+
             <Tag value={table.tableBooking === null ? 'VACÍA' : 'OCUPADA'} severity={getSeverity(table)}></Tag>
           </div>
           <div className="flex flex-column align-items-center gap-3 py-5">
