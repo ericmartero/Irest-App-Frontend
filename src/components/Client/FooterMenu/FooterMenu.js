@@ -27,6 +27,7 @@ export function FooterMenu(props) {
     const [showPaymentDialog, setShowPaymentDialog] = useState(false);
     const [showConfirmPaymentDialog, setShowConfirmPaymentDialog] = useState(false);
     const [finishPaymentDialog, setFinishPaymentDialog] = useState(false);
+    const [noOrderPaymentDialog, setNoOrderPaymentDialog] = useState(false);
     const [showBillDialog, setShowBillDialog] = useState(false);
     const [table, setTable] = useState(null);
     const [ordersTable, setOrdersTable] = useState(null);
@@ -137,6 +138,10 @@ export function FooterMenu(props) {
         setShowBillDialog(true);
     };
 
+    const hideNoOrderPaymentDialog = () => {
+        setNoOrderPaymentDialog(false);
+    };
+
     const openDialogFinishPayment = () => {
         setFinishPaymentDialog(true);
         setShowBillDialog(false);
@@ -164,7 +169,7 @@ export function FooterMenu(props) {
 
     const onShowPaymentDialog = () => {
         if (size(orders) === 0) {
-            console.log("no puedesssss no se han echo pedidooooss");
+            setNoOrderPaymentDialog(true);
         }
 
         else {
@@ -261,6 +266,14 @@ export function FooterMenu(props) {
                 <div className="confirmation-content">
                     <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                     <span>¿Seguro que deseas finalizar la estancia en la mesa?</span>
+                </div>
+            </Dialog>
+
+            <Dialog visible={noOrderPaymentDialog} style={{ width: '90vw' }} header={`Cuenta Mesa ${table?.number}`} modal onHide={hideNoOrderPaymentDialog}
+                className='noOrders-payment-container'>
+                <div className="noOrders-payment-content">
+                    <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                    <span>No hay pedidos para poder realizar el pago</span>
                 </div>
             </Dialog>
         </>

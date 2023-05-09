@@ -66,3 +66,14 @@
         padding: 0 1rem 2rem 1rem !important;
     }
 }
+
+.noOrders-payment-content {
+    align-content: center;
+    display: flex;
+}
+
+.noOrders-payment-container {
+    .p-dialog-content {
+        padding: 0 1.5rem 2rem 1.5rem !important;
+    }
+}
