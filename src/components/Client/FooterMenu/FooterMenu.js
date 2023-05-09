@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { getBookingKey } from '../../../utils/constants';
 import { PAYMENT_TYPE } from '../../../utils/constants';
-import { useOrder, useTable, usePayment } from '../../../hooks';
+import { useOrder, useTable, usePayment, useTableBooking } from '../../../hooks';
 import { useParams } from 'react-router-dom';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
+import { Toast } from 'primereact/toast';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { classNames } from 'primereact/utils';
@@ -18,7 +19,9 @@ export function FooterMenu(props) {
 
     const { idTable } = props;
 
+    const toast = useRef(null);
     const paramsURL = useParams();
+    const { changeAlertClient } = useTableBooking();
     const { createClientPayment, getPaymentByIdClient } = usePayment();
     const { tables, getTableClient } = useTable();
     const { orders, getOrdersByTableClient, addPaymentToOrder } = useOrder();
@@ -58,7 +61,6 @@ export function FooterMenu(props) {
             setOrdersTable(orders);
         }
     }, [orders]);
-    console.log(orders);
 
     useEffect(() => {
         if (size(orders) > 0) {
@@ -68,6 +70,10 @@ export function FooterMenu(props) {
             })();
         }
     }, [orders, getPaymentByIdClient]);
+
+    const showError = (error) => {
+        toast.current.show({ severity: 'error', summary: 'Operacion Fallida', detail: error.message, life: 1500 });
+    }
 
     const hideShowTableBookingQRDialog = () => {
         setShowTableBookingQRDialog(false);
@@ -182,6 +188,17 @@ export function FooterMenu(props) {
         }
     };
 
+    const warnWaiter = async () => {
+        try {
+            await changeAlertClient(table.tableBooking.id, true);
+            toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: `Se ha llamado al camarero correctamente`, life: 1500 });
+        } catch (error) {
+            showError(error);
+        }
+
+        setWarnWaiterDialog(false);
+    };
+
     const showConfirmPaymentDialogFooter = (
         <React.Fragment>
             <Button label="No" icon="pi pi-times" outlined onClick={hideShowConfirmPaymentDialog} style={{ marginTop: "10px" }} />
@@ -205,18 +222,19 @@ export function FooterMenu(props) {
     const finishwarnWaiterDialogFooter = (
         <React.Fragment>
             <Button label="No" icon="pi pi-times" outlined onClick={hideWarnWaiterDialog} />
-            <Button label="Si" icon="pi pi-check" onClick={""} />
+            <Button label="Si" icon="pi pi-check" onClick={warnWaiter} />
         </React.Fragment>
     );
 
     return (
         <>
+            <Toast ref={toast} position="bottom-center" />
             <div>
                 <div className='fixed-button-container'>
                     <Button icon="pi pi-qrcode" className='footer-qr-button' rounded onClick={() => setShowTableBookingQRDialog(true)} />
                 </div>
                 <div className="footer-container">
-                    <i className="pi pi-home" style={{ fontSize: '1.8rem' }} onClick={() => setWarnWaiterDialog(true)} />
+                    <i className="pi pi-bell" style={{ fontSize: '1.8rem' }} onClick={() => setWarnWaiterDialog(true)} />
                     <i className="pi pi-credit-card" style={{ fontSize: '1.8rem' }} onClick={onShowPaymentDialog} />
                 </div>
             </div>
