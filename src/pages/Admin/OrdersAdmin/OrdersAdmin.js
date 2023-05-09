@@ -239,8 +239,8 @@ export function OrdersAdmin() {
       }
     }
 
-    const redIconStyle = { fontSize: '2rem', color: "#F29E00" };
-    const grayIconStyle = { fontSize: '2rem', color: 'green' };
+    const redIconStyle = { fontSize: '2rem', color: "#178DE4" };
+    const grayIconStyle = { fontSize: '2rem', color: 'black' };
 
     return (
       <div className="col-12 sm:col-6 lg:col-12 xl:col-4 p-2" onClick={renderDetails}>
