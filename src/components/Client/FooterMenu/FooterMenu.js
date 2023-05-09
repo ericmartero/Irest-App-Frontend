@@ -66,7 +66,6 @@ export function FooterMenu(props) {
             })();
         }
     }, [orders, getPaymentByIdClient]);
-    console.log(paymentData);
 
     const hideShowTableBookingQRDialog = () => {
         setShowTableBookingQRDialog(false);
@@ -163,6 +162,16 @@ export function FooterMenu(props) {
         }, []);
     };
 
+    const onShowPaymentDialog = () => {
+        if (size(orders) === 0) {
+            console.log("no puedesssss no se han echo pedidooooss");
+        }
+
+        else {
+            setShowPaymentDialog(true);
+        }
+    };
+
     const showConfirmPaymentDialogFooter = (
         <React.Fragment>
             <Button label="No" icon="pi pi-times" outlined onClick={hideShowConfirmPaymentDialog} style={{ marginTop: "10px" }} />
@@ -191,7 +200,7 @@ export function FooterMenu(props) {
                 </div>
                 <div className="footer-container">
                     <i className="pi pi-home" style={{ fontSize: '1.8rem' }} />
-                    <i className="pi pi-credit-card" style={{ fontSize: '1.8rem' }} onClick={() => setShowPaymentDialog(true)} />
+                    <i className="pi pi-credit-card" style={{ fontSize: '1.8rem' }} onClick={onShowPaymentDialog} />
                 </div>
             </div>
 
