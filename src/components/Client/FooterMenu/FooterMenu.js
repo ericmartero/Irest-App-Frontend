@@ -5,8 +5,13 @@ import { useOrder, useTable, usePayment } from '../../../hooks';
 import { useParams } from 'react-router-dom';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
-import { forEach } from 'lodash';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { classNames } from 'primereact/utils';
+import { forEach, size } from 'lodash';
 import QRCode from 'react-qr-code';
+import moment from 'moment';
+import 'moment/locale/es';
 import './FooterMenu.scss';
 
 export function FooterMenu(props) {
@@ -14,15 +19,19 @@ export function FooterMenu(props) {
     const { idTable } = props;
 
     const paramsURL = useParams();
-    const { createClientPayment } = usePayment();
+    const { createClientPayment, getPaymentByIdClient } = usePayment();
     const { tables, getTableClient } = useTable();
     const { orders, getOrdersByTableClient, addPaymentToOrder } = useOrder();
 
     const [showTableBookingQRDialog, setShowTableBookingQRDialog] = useState(false);
     const [showPaymentDialog, setShowPaymentDialog] = useState(false);
     const [showConfirmPaymentDialog, setShowConfirmPaymentDialog] = useState(false);
+    const [finishPaymentDialog, setFinishPaymentDialog] = useState(false);
+    const [showBillDialog, setShowBillDialog] = useState(false);
     const [table, setTable] = useState(null);
     const [ordersTable, setOrdersTable] = useState(null);
+    const [paymentType, setPaymentType] = useState(null);
+    const [paymentData, setPaymentData] = useState(null);
 
     useEffect(() => {
         getTableClient(paramsURL.idTable);
@@ -47,6 +56,17 @@ export function FooterMenu(props) {
             setOrdersTable(orders);
         }
     }, [orders]);
+    console.log(orders);
+
+    useEffect(() => {
+        if (orders) {
+            (async () => {
+                const response = await getPaymentByIdClient(orders[0].payment.id);
+                setPaymentData(response);
+            })();
+        }
+    }, [orders, getPaymentByIdClient]);
+    console.log(paymentData);
 
     const hideShowTableBookingQRDialog = () => {
         setShowTableBookingQRDialog(false);
@@ -61,11 +81,15 @@ export function FooterMenu(props) {
         setShowPaymentDialog(true);
     };
 
-    const onCreatePayment = async (paymentType) => {
+    const onPaymentDialog = async (paymentType) => {
         setShowPaymentDialog(false);
         setShowConfirmPaymentDialog(true);
+        setPaymentType(paymentType);
+    };
 
-        /*let totalPayment = 0;
+    const createPayment = async () => {
+
+        let totalPayment = 0;
         forEach(ordersTable, (order) => {
             totalPayment += order.product.price;
         });
@@ -80,13 +104,82 @@ export function FooterMenu(props) {
 
         for await (const order of ordersTable) {
             await addPaymentToOrder(order.id, payment.id);
-        };*/
+        };
+
+        setShowConfirmPaymentDialog(true);
+        setShowBillDialog(true);
+    };
+
+    const finishPayment = async () => {
+        /*try {
+          await closePayment(paymentData.id);
+    
+          for await (const order of orders) {
+            await closeOrder(order.id);
+          }
+    
+          await updateTable(table.id, { tableBooking: null });
+          
+          toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Pago finalizado correctamente', life: 3000 });
+          history.push("/admin");
+        } catch (error) {
+          showError(error);
+        }
+        onRefreshOrders();*/
+        setFinishPaymentDialog(false);
+    };
+
+    const hideBillDialog = () => {
+        setShowBillDialog(false);
+    };
+
+    const hideFinishPaymentDialog = () => {
+        setFinishPaymentDialog(false);
+        setShowBillDialog(true);
+    };
+
+    const openDialogFinishPayment = () => {
+        setFinishPaymentDialog(true);
+        setShowBillDialog(false);
+    };
+
+    const formatCurrency = (value) => {
+        return value?.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' });
+    };
+
+    const priceBodyTemplate = (rowData) => {
+        return formatCurrency(rowData.product.price * rowData.quantity);
+    };
+
+    const groupOrdersStatus = (data) => {
+        return data.reduce((acc, order) => {
+            const existingOrder = acc.find((o) => o.product.id === order.product.id);
+            if (existingOrder) {
+                existingOrder.quantity += 1;
+            } else {
+                acc.push({ id: order.id, product: order.product, status: order.status, tableBooking: order.tableBooking, quantity: 1, createdAt: order.createdAt });
+            }
+            return acc;
+        }, []);
     };
 
     const showConfirmPaymentDialogFooter = (
         <React.Fragment>
             <Button label="No" icon="pi pi-times" outlined onClick={hideShowConfirmPaymentDialog} style={{ marginTop: "10px" }} />
-            <Button label="Si" icon="pi pi-check" onClick={''} />
+            <Button label="Si" icon="pi pi-check" onClick={createPayment} />
+        </React.Fragment>
+    );
+
+    const showBillDialogFooter = (
+        <div className='footerBill'>
+            <Button label="Realizar el pago" onClick={openDialogFinishPayment} className="bttnFoot" />
+        </div>
+    );
+
+    const finishPaymentDialogFooter = (
+        <React.Fragment>
+            <Button label="No" icon="pi pi-times" outlined onClick={hideFinishPaymentDialog} />
+            <Button label="Si" icon="pi pi-check" severity="danger" onClick={finishPayment} />
         </React.Fragment>
     );
 
@@ -110,8 +203,8 @@ export function FooterMenu(props) {
 
             <Dialog visible={showPaymentDialog} style={{ width: '90vw' }} header="Método de pago" modal onHide={hideShowPaymentDialog}>
                 <div className='paymentDialog-container'>
-                    <Button icon="pi pi-credit-card" label='Tarjeta' className='mr-1 paymentDialog-button' onClick={() => onCreatePayment(PAYMENT_TYPE.CARD)} />
-                    <Button icon="pi pi-wallet" label='Efectivo' className='ml-1 paymentDialog-button' onClick={() => onCreatePayment(PAYMENT_TYPE.CASH)} />
+                    <Button icon="pi pi-credit-card" label='Tarjeta' className='mr-1 paymentDialog-button' onClick={() => onPaymentDialog(PAYMENT_TYPE.CARD)} />
+                    <Button icon="pi pi-wallet" label='Efectivo' className='ml-1 paymentDialog-button' onClick={() => onPaymentDialog(PAYMENT_TYPE.CASH)} />
                 </div>
             </Dialog>
 
@@ -120,6 +213,45 @@ export function FooterMenu(props) {
                 <div className="confirmation-content">
                     <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                     <span>¿Seguro que quieres finalizar y realizar el pago?</span>
+                </div>
+            </Dialog>
+
+            <Dialog visible={showBillDialog} style={{ width: '90vw' }} header={`Cuenta Mesa ${table?.number}`} modal className='bill-dialog-container'
+                footer={paymentType === PAYMENT_TYPE.CARD && showBillDialogFooter} onHide={hideBillDialog}>
+                <div className='product-add-order'>
+                    <div className='product-add-info'>
+                        <span className="font-bold">{`MESA: ${table?.number}`}</span>
+                    </div>
+                    <div>
+                        <span><strong>FECHA:</strong> {moment(paymentData?.createdAt).format('DD/MM/YYYY HH:mm:ss')}</span>
+                    </div>
+                </div>
+
+                <div className='table-orders-payment' style={{ marginTop: '1.5rem' }}>
+                    <DataTable value={orders && groupOrdersStatus(orders)} >
+                        <Column field="quantity" header="UNIDADES"></Column>
+                        <Column field="product.title" header="PRODUCTO"></Column>
+                        <Column field="product.price" header="IMPORTE" body={priceBodyTemplate}></Column>
+                    </DataTable>
+                </div>
+
+
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: "space-between", marginTop: "2rem" }}>
+                        <span className="font-bold">MÉTODO DE PAGO:</span>
+                        <i className={classNames({
+                            "pi pi-credit-card": paymentData?.paymentType === PAYMENT_TYPE.CARD,
+                            "pi pi-wallet": paymentData?.paymentType === PAYMENT_TYPE.CASH
+                        })} style={{ fontSize: '1.5rem' }}></i>
+                        <span className="font-bold">TOTAL: {paymentData?.totalPayment.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
+                    </div>
+                
+            </Dialog>
+
+            <Dialog visible={finishPaymentDialog} style={{ width: '90vw' }} header="Finalizar estancia en la mesa" modal footer={finishPaymentDialogFooter} onHide={hideFinishPaymentDialog}
+                className='dialog-payment-confirm-container'>
+                <div className="confirmation-content">
+                    <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                    <span>¿Seguro que deseas finalizar la estancia en la mesa?</span>
                 </div>
             </Dialog>
         </>
