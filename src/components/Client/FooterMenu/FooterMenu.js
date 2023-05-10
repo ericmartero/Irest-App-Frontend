@@ -64,10 +64,12 @@ export function FooterMenu(props) {
 
     useEffect(() => {
         if (size(orders) > 0) {
-            (async () => {
-                const response = await getPaymentByIdClient(orders[0].payment.id);
-                setPaymentData(response);
-            })();
+            if (size(orders[0].payment) > 0) {
+                (async () => {
+                    const response = await getPaymentByIdClient(orders[0].payment.id);
+                    setPaymentData(response);
+                })();
+            }
         }
     }, [orders, getPaymentByIdClient]);
 
