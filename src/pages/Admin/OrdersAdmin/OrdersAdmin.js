@@ -42,7 +42,7 @@ export function OrdersAdmin() {
     }
 
     if (autoRefreshEnabled) {
-      intervalRef.current = setInterval(autoRefreshTables, 100000);
+      intervalRef.current = setInterval(autoRefreshTables, 10000);
     }
 
     return () => {
