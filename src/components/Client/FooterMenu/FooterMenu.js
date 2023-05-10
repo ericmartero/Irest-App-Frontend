@@ -33,10 +33,12 @@ export function FooterMenu(props) {
     const [noOrderPaymentDialog, setNoOrderPaymentDialog] = useState(false);
     const [warnWaiterDialog, setWarnWaiterDialog] = useState(false);
     const [showBillDialog, setShowBillDialog] = useState(false);
+    const [showProductsToPayDialog, setShowProductsToPayDialog] = useState(false);
     const [table, setTable] = useState(null);
     const [ordersTable, setOrdersTable] = useState(null);
     const [paymentType, setPaymentType] = useState(null);
     const [paymentData, setPaymentData] = useState(null);
+    const [selectedProducts, setSelectedProducts] = useState(null);
 
     useEffect(() => {
         getTableClient(paramsURL.idTable);
@@ -155,6 +157,10 @@ export function FooterMenu(props) {
         setWarnWaiterDialog(false);
     };
 
+    const hideShowProductsToPayDialog = () => {
+        setShowProductsToPayDialog(false);
+    };
+
     const openDialogFinishPayment = () => {
         setFinishPaymentDialog(true);
         setShowBillDialog(false);
@@ -166,6 +172,10 @@ export function FooterMenu(props) {
 
     const priceBodyTemplate = (rowData) => {
         return formatCurrency(rowData.product.price * rowData.quantity);
+    };
+
+    const priceOrderTemplate = (rowData) => {
+        return formatCurrency(rowData.product.price);
     };
 
     const groupOrdersStatus = (data) => {
@@ -186,7 +196,8 @@ export function FooterMenu(props) {
         }
 
         else {
-            setShowPaymentDialog(true);
+            //setShowPaymentDialog(true);
+            setShowProductsToPayDialog(true);
         }
     };
 
@@ -200,6 +211,11 @@ export function FooterMenu(props) {
 
         setWarnWaiterDialog(false);
     };
+
+    const imageBodyTemplate = (rowData) => {
+        return <img src={rowData.product.image} alt={rowData.product.image} className="shadow-2 border-round" style={{ width: '50px' }} />;
+    };
+
 
     const showConfirmPaymentDialogFooter = (
         <React.Fragment>
@@ -225,6 +241,13 @@ export function FooterMenu(props) {
         <React.Fragment>
             <Button label="No" icon="pi pi-times" className='mt-3' outlined onClick={hideWarnWaiterDialog} />
             <Button label="Si" icon="pi pi-check" onClick={warnWaiter} />
+        </React.Fragment>
+    );
+
+    const finishShowProductsToPayDialogFooter = (
+        <React.Fragment>
+            <Button label="No" icon="pi pi-times" className='mt-3' outlined onClick={hideShowProductsToPayDialog} />
+            <Button label="Si" icon="pi pi-check" onClick={""} />
         </React.Fragment>
     );
 
@@ -313,6 +336,19 @@ export function FooterMenu(props) {
                 <div className="footer-payment-content">
                     <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                     <span>¿Seguro que quieres llamar a un camarero?</span>
+                </div>
+            </Dialog>
+
+            <Dialog visible={showProductsToPayDialog} style={{ width: '90vw' }} modal header="Realizar el pago" onHide={hideShowProductsToPayDialog}
+                dataKey="id" footer={finishShowProductsToPayDialogFooter} className='footer-orders-pay-container'>
+                <div className="footer-payment-content">
+                    <DataTable className='table-orders-pay mt-3' value={ordersTable} selection={selectedProducts}
+                        header="PEDIDOS A PAGAR" onSelectionChange={(e) => setSelectedProducts(e.value)}>
+                        <Column selectionMode="multiple"></Column>
+                        <Column field="product.image" body={imageBodyTemplate}></Column>
+                        <Column field="product.title"></Column>
+                        <Column field="product.price" body={priceOrderTemplate}></Column>
+                    </DataTable>
                 </div>
             </Dialog>
         </>
