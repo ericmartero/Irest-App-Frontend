@@ -258,7 +258,7 @@ export function FooterMenu(props) {
                 className='dialog-payment-confirm-container'>
                 <div className="confirmation-content">
                     <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                    <span>¿Seguro que quieres finalizar y realizar el pago?</span>
+                    <span>¿Seguro que quieres realizar el pago de los pedidos seleccionados?</span>
                 </div>
             </Dialog>
 
