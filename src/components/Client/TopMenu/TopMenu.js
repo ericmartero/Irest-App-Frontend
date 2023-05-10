@@ -55,7 +55,7 @@ export function TopMenu(props) {
         <Button icon="pi pi pi-book" className="layout-button p-button-secondary" onClick={goOrdersTracking} />
       </div>
 
-      <Dialog visible={showKeyDialog} style={{ width: '70vw' }} header="Clave de la mesa" modal className='dialog-key-confirm-container' onHide={hideShowKeyDialog}>
+      <Dialog visible={showKeyDialog} style={{ width: '70vw' }} header={`Clave mesa ${table.number}`} modal className='dialog-key-confirm-container' onHide={hideShowKeyDialog}>
         <Toast ref={toast} position="bottom-center" />
         <div className="showkey-container">
           <div className='key-container' onClick={() => handleCopyKeyToClipboard(getBookingKey())}>
