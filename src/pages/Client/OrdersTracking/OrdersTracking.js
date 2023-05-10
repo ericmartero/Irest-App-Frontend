@@ -108,10 +108,21 @@ export function OrdersTracking() {
                                         <span>{moment(order.createdAt).format('HH:mm')}</span>
                                     </div>
                                 </div>
-                                <Tag value={order.status === ORDER_STATUS.PENDING ? 'PENDIENTE'
-                                    : order.status === ORDER_STATUS.DELIVERED ? 'ENTREGADO' : 'PREPARADO'}
-                                    severity={getSeverity(order)}
-                                ></Tag>
+                                <div style={{ textAlign: "center" }}>
+                                    <Tag value={order.status === ORDER_STATUS.PENDING ? 'PENDIENTE'
+                                        : order.status === ORDER_STATUS.DELIVERED ? 'ENTREGADO' : 'PREPARADO'}
+                                        severity={getSeverity(order)}
+                                    ></Tag>
+                                    {order.payment ?
+                                        <div style={{ marginTop: "1rem" }}>
+                                            <span className="text-green-500 font-medium">Pagado</span>
+                                        </div>
+                                        :
+                                        <div style={{ marginTop: "1rem" }}>
+                                            <span className="text-red-500 font-medium">No pagado</span>
+                                        </div>
+                                    }
+                                </div>
                             </div>
                         ))}
                     </div>
