@@ -221,7 +221,7 @@ export function FooterMenu(props) {
 
     const finishwarnWaiterDialogFooter = (
         <React.Fragment>
-            <Button label="No" icon="pi pi-times" outlined onClick={hideWarnWaiterDialog} />
+            <Button label="No" icon="pi pi-times" className='mt-3' outlined onClick={hideWarnWaiterDialog} />
             <Button label="Si" icon="pi pi-check" onClick={warnWaiter} />
         </React.Fragment>
     );
@@ -279,7 +279,6 @@ export function FooterMenu(props) {
                     </DataTable>
                 </div>
 
-
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: "space-between", marginTop: "2rem" }}>
                     <span className="font-bold">MÉTODO DE PAGO:</span>
                     <i className={classNames({
@@ -300,7 +299,7 @@ export function FooterMenu(props) {
             </Dialog>
 
             <Dialog visible={noOrderPaymentDialog} style={{ width: '90vw' }} header={`Cuenta Mesa ${table?.number}`} modal onHide={hideNoOrderPaymentDialog}
-                className='footer-payment-container'>
+                className='footer-warnWaiter-container'>
                 <div className="footer-payment-content">
                     <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                     <span>No hay pedidos para poder realizar el pago</span>
