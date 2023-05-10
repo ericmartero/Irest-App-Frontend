@@ -40,6 +40,10 @@ export function FooterMenu(props) {
     const [paymentData, setPaymentData] = useState(null);
     const [selectedProducts, setSelectedProducts] = useState(null);
 
+    const [refreshOrders, setRefreshOrders] = useState(false);
+
+    const onRefresh = () => setRefreshOrders((state) => !state);
+
     useEffect(() => {
         getTableClient(paramsURL.idTable);
     }, [paramsURL.idTable, getTableClient]);
@@ -56,7 +60,7 @@ export function FooterMenu(props) {
                 getOrdersByTableClient(table.tableBooking?.id);
             }
         })();
-    }, [table, getOrdersByTableClient]);
+    }, [table, getOrdersByTableClient, refreshOrders]);
 
     useEffect(() => {
         if (orders) {
@@ -197,6 +201,7 @@ export function FooterMenu(props) {
 
         else {
             //setShowPaymentDialog(true);
+            onRefresh();
             setShowProductsToPayDialog(true);
         }
     };
