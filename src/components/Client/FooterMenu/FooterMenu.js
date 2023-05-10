@@ -299,7 +299,7 @@ export function FooterMenu(props) {
             </Dialog>
 
             <Dialog visible={noOrderPaymentDialog} style={{ width: '90vw' }} header={`Cuenta Mesa ${table?.number}`} modal onHide={hideNoOrderPaymentDialog}
-                className='footer-warnWaiter-container'>
+                className='footer-noPayment-container'>
                 <div className="footer-payment-content">
                     <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                     <span>No hay pedidos para poder realizar el pago</span>

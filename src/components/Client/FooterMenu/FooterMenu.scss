@@ -78,8 +78,14 @@
     }
 }
 
+.footer-noPayment-container {
+    .p-dialog-content {
+        padding: 1rem 1.5rem 1.5rem 1.5rem !important;
+    }
+}
+
 .footer-warnWaiter-container {
     .p-dialog-content {
-        padding: 0.5rem 1.5rem 1.5rem 1.5rem !important;
+        padding: 1.5rem 1.5rem 1.5rem 1.5rem !important;
     }
 }
