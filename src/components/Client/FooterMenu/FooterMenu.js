@@ -274,7 +274,7 @@ export function FooterMenu(props) {
                 <Checkbox onChange={e => allProductsChecked(e)} checked={checked}></Checkbox>
                 <span className="ml-3">Todos</span>
             </div>
-            <Button label="Mis pedidos" className="layout-button p-button-secondary" onClick={""} />
+            <Button label="Mis pedidos" className="p-button-secondary" />
         </div>
     );
 
