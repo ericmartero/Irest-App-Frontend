@@ -37,7 +37,7 @@ export function JoinTableClient(props) {
           const { tokenSession, key } = response;
           join(tokenSession);
           setBookingKey(key);
-          history.push(`/client/id_table=${props.table.id}`);
+          history.push(`/client/table=${props.table.id}`);
         } catch (error) {
           showError(error);
         }

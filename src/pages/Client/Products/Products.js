@@ -34,7 +34,7 @@ export function Products() {
     const onRefreshCartNumber = () => setRefreshCartNumber((state) => !state);
 
     const goBack = () => {
-        history.push(`/client/id_table=${paramsURL.idTable}`);
+        history.push(`/client/table=${paramsURL.idTable}`);
     };
 
     const addProductCart = (product) => {

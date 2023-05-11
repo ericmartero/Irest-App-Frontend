@@ -18,7 +18,7 @@ export function InviteClientTable() {
         const response = await joinTable(paramsURL.idTable, paramsURL.key);
         const { tokenSession } = response;
         join(tokenSession);
-        history.push(`/client/id_table=${paramsURL.idTable}&key=${paramsURL.key}`);
+        history.push(`/client/table=${paramsURL.idTable}`);
       } catch (error) {
         setError(true);
       }

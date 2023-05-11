@@ -23,7 +23,7 @@ export function ReserveTableClient(props) {
       const { tokenSession, key } = response;
       reserve(tokenSession);
       setBookingKey(key);
-      history.push(`/client/id_table=${props.table.id}`);
+      history.push(`/client/table=${props.table.id}`);
     } catch (error) {
       showError(error);
     }

@@ -38,7 +38,7 @@ export function TopMenu(props) {
   return (
     <div className="layout-topbar layout-mobile">
       <div className="layout-topbar-left">
-        <Link to={`/client/id_table=${idTable}`} className="layout-topbar-logo">
+        <Link to={`/client/table=${idTable}`} className="layout-topbar-logo">
           <img src="https://res.cloudinary.com/djwjh0wpw/image/upload/v1679673058/icono-irest_gvyksj.png" alt="logo" className='layout-image' />
         </Link>
       </div>

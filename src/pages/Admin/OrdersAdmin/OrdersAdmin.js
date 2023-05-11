@@ -353,7 +353,7 @@ export function OrdersAdmin() {
 
           <Dialog visible={showTableBookingQRDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={`Código QR de invitación mesa ${tableSelected?.number}`} modal onHide={hideShowTableBookingQRDialog} >
             <div className='qrDialog-container'>
-              {(newKey && tableSelected) && <QRCode value={`https://irest.netlify.app/client-invite/id_table=${tableSelected.id}&key=${newKey}`} />}
+              {(newKey && tableSelected) && <QRCode value={`https://irest.netlify.app/client-invite/table=${tableSelected.id}&key=${newKey}`} />}
             </div>
           </Dialog>
         </>

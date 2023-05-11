@@ -9,13 +9,13 @@ const routesClient = [
         exact: true
     },
         {
-        path: '/client-invite/id_table=:idTable&key=:key',
+        path: '/client-invite/table=:idTable&key=:key',
         layout: MainLayout,
         component: InviteClientTable,
         exact: true
     },
     {
-        path: '/client/id_table=:idTable',
+        path: '/client/table=:idTable',
         layout: ClientLayout,
         component: Categories,
         exact: true

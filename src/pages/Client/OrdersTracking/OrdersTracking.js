@@ -78,7 +78,7 @@ export function OrdersTracking() {
     };
 
     const goBack = () => {
-        history.push(`/client/id_table=${paramsURL.idTable}`);
+        history.push(`/client/table=${paramsURL.idTable}`);
     };
 
     return (

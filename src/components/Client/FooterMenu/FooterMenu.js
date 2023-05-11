@@ -77,7 +77,7 @@ export function FooterMenu(props) {
 
             <Dialog visible={showTableBookingQRDialog} style={{ width: '90vw' }} header="Código QR de invitación" modal onHide={hideShowTableBookingQRDialog}>
                 <div className='header-qrDialog-container'>
-                    {idTable && <QRCode value={`https://irest.netlify.app/client-invite/id_table=${idTable}&key=${getBookingKey()}`} />}
+                    {idTable && <QRCode value={`https://irest.netlify.app/client-invite/table=${idTable}&key=${getBookingKey()}`} />}
                 </div>
             </Dialog>
 
