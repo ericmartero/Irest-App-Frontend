@@ -9,6 +9,7 @@ import { Toast } from 'primereact/toast';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { classNames } from 'primereact/utils';
+import { Checkbox } from "primereact/checkbox";
 import { forEach, size } from 'lodash';
 import QRCode from 'react-qr-code';
 import moment from 'moment';
@@ -39,8 +40,8 @@ export function FooterMenu(props) {
     const [paymentType, setPaymentType] = useState(null);
     const [paymentData, setPaymentData] = useState(null);
     const [selectedProducts, setSelectedProducts] = useState(null);
-
     const [refreshOrders, setRefreshOrders] = useState(false);
+    const [checked, setChecked] = useState(false);
 
     const onRefresh = () => setRefreshOrders((state) => !state);
 
@@ -222,6 +223,17 @@ export function FooterMenu(props) {
         return <img src={rowData.product.image} alt={rowData.product.image} className="shadow-2 border-round" style={{ width: '50px' }} />;
     };
 
+    const allProductsChecked = (e) => {
+        if (e.checked) {
+            setSelectedProducts(ordersTable);
+        }
+
+        else {
+            setSelectedProducts(null);
+        }
+
+        setChecked(e.checked)
+    }
 
     const showConfirmPaymentDialogFooter = (
         <React.Fragment>
@@ -251,13 +263,20 @@ export function FooterMenu(props) {
     );
 
     const finishShowProductsToPayDialogFooter = (
-        <React.Fragment>
-            <Button label="No" icon="pi pi-times" className='mt-3' outlined onClick={hideShowProductsToPayDialog} />
-            <Button label="Si" icon="pi pi-check" onClick={""} />
-        </React.Fragment>
+        <div className='footerBill'>
+            <Button label="Realizar el pago" className='mt-4 bttnFoot' onClick={""} />
+        </div>
     );
 
-    console.log(selectedProducts);
+    const header = (
+        <div className="flex flex-wrap gap-2 align-items-center justify-content-between">
+            <div style={{ display: "flex" }}>
+                <Checkbox onChange={e => allProductsChecked(e)} checked={checked}></Checkbox>
+                <span className="ml-3">Todos</span>
+            </div>
+            <Button label="Mis pedidos" className="layout-button p-button-secondary" onClick={""} />
+        </div>
+    );
 
     return (
         <>
@@ -347,14 +366,14 @@ export function FooterMenu(props) {
                 </div>
             </Dialog>
 
-            <Dialog visible={showProductsToPayDialog} style={{ width: '90vw' }} modal header="Realizar el pago" onHide={hideShowProductsToPayDialog}
+            <Dialog visible={showProductsToPayDialog} style={{ width: '93vw' }} modal header="Selección de productos" onHide={hideShowProductsToPayDialog}
                 dataKey="id" footer={finishShowProductsToPayDialogFooter} className='footer-orders-pay-container'>
                 <div className="footer-payment-content">
-                    <DataTable className='table-orders-pay mt-3' value={ordersTable} selection={selectedProducts}
-                        header="PEDIDOS A PAGAR" onSelectionChange={(e) => setSelectedProducts(e.value)}>
+                    <DataTable className='table-orders-pay' value={ordersTable} selection={selectedProducts}
+                        header={header} onSelectionChange={(e) => setSelectedProducts(e.value)}>
                         <Column selectionMode="multiple"></Column>
                         <Column field="product.image" body={imageBodyTemplate}></Column>
-                        <Column field="product.title"></Column>
+                        <Column field="product.title" style={{ minWidth: '6rem' }}></Column>
                         <Column field="product.price" body={priceOrderTemplate}></Column>
                     </DataTable>
                 </div>
