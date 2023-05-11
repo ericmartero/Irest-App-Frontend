@@ -351,7 +351,7 @@ export function TablesAdmin() {
 
   const showTableQRDialogFooter = (
     <div className='footerBill'>
-      <Button label="Imprimir QR" className="m-0" onClick={handlePrint} />
+      <Button label="Imprimir QR" onClick={handlePrint} />
     </div>
   );
 
