@@ -199,7 +199,7 @@ export function Payment(props) {
 
     const finishShowProductsToPayDialogFooter = (
         <div className='footerBill'>
-            <Button label="Realizar el pago" className='mt-4 bttnFoot' onClick={onProductsToPay} />
+            <Button label="Realizar el pago" className='mt-4' onClick={onProductsToPay} />
         </div>
     );
 
