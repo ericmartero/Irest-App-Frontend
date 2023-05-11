@@ -39,63 +39,8 @@
     margin-top: 1rem;
 }
 
-.paymentDialog-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 1.5rem;
-}
-
-.paymentDialog-button {
-    width: 100%;
-}
-
-.dialog-payment-confirm-container {
-    .p-dialog-content {
-        padding: 1rem 1.5rem 1rem 1.5rem !important;
-    }
-}
-
-.table-orders-payment {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.bill-dialog-container {
-    .p-dialog-content {
-        padding: 0 1rem 2rem 1rem !important;
-    }
-}
-
-.footer-payment-content {
-    align-content: center;
-    display: flex;
-}
-
-.footer-payment-container {
-    .p-dialog-content {
-        padding: 0 1.5rem 2rem 1.5rem !important;
-    }
-}
-
-.footer-noPayment-container {
-    .p-dialog-content {
-        padding: 1rem 1.5rem 1.5rem 1.5rem !important;
-    }
-}
-
 .footer-warnWaiter-container {
     .p-dialog-content {
         padding: 1.5rem 1.5rem 1.5rem 1.5rem !important;
-    }
-}
-
-.table-orders-pay thead {
-    display:none;
-}
-
-.footer-orders-pay-container {
-    .p-dialog-content {
-        padding: 0 1rem 0rem 1rem !important;
     }
 }
