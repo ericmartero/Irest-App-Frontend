@@ -64,7 +64,8 @@ export function FooterMenu(props) {
 
     useEffect(() => {
         if (orders) {
-            setOrdersTable(orders);
+            const filteredOrders = orders.filter(order => order.payment === null);
+            setOrdersTable(filteredOrders);
         }
     }, [orders]);
 
@@ -255,6 +256,8 @@ export function FooterMenu(props) {
             <Button label="Si" icon="pi pi-check" onClick={""} />
         </React.Fragment>
     );
+
+    console.log(selectedProducts);
 
     return (
         <>
