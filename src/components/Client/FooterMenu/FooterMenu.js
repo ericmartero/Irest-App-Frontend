@@ -91,6 +91,7 @@ export function FooterMenu(props) {
 
     const hideShowPaymentDialog = () => {
         setShowPaymentDialog(false);
+        setShowProductsToPayDialog(true);
     };
 
     const hideShowConfirmPaymentDialog = () => {
@@ -235,6 +236,11 @@ export function FooterMenu(props) {
         setChecked(e.checked)
     }
 
+    const onProductsToPay = () => {
+        setShowPaymentDialog(true);
+        setShowProductsToPayDialog(false);
+    };
+
     const showConfirmPaymentDialogFooter = (
         <React.Fragment>
             <Button label="No" icon="pi pi-times" outlined onClick={hideShowConfirmPaymentDialog} style={{ marginTop: "10px" }} />
@@ -264,7 +270,7 @@ export function FooterMenu(props) {
 
     const finishShowProductsToPayDialogFooter = (
         <div className='footerBill'>
-            <Button label="Realizar el pago" className='mt-4 bttnFoot' onClick={""} />
+            <Button label="Realizar el pago" className='mt-4 bttnFoot' onClick={onProductsToPay} />
         </div>
     );
 
@@ -367,7 +373,7 @@ export function FooterMenu(props) {
             </Dialog>
 
             <Dialog visible={showProductsToPayDialog} style={{ width: '93vw' }} modal header="Selección de productos" onHide={hideShowProductsToPayDialog}
-                dataKey="id" footer={finishShowProductsToPayDialogFooter} className='footer-orders-pay-container'>
+                footer={finishShowProductsToPayDialogFooter} className='footer-orders-pay-container'>
                 <div className="footer-payment-content">
                     <DataTable className='table-orders-pay' value={ordersTable} selection={selectedProducts}
                         header={header} onSelectionChange={(e) => setSelectedProducts(e.value)}>
