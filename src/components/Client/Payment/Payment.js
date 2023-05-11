@@ -20,7 +20,7 @@ export function Payment(props) {
     const { orders, getOrdersByTableClient, addPaymentToOrder } = useOrder();
 
     const [refreshOrders, setRefreshOrders] = useState(false);
-    const [selectedProducts, setSelectedProducts] = useState(null);
+    const [selectedOrders, setSelectedOrders] = useState(null);
     const [ordersTable, setOrdersTable] = useState(null);
     const [paymentType, setPaymentType] = useState(null);
     const [paymentData, setPaymentData] = useState(null);
@@ -120,11 +120,11 @@ export function Payment(props) {
 
     const allProductsChecked = (e) => {
         if (e.checked) {
-            setSelectedProducts(ordersTable);
+            setSelectedOrders(ordersTable);
         }
 
         else {
-            setSelectedProducts(null);
+            setSelectedOrders(null);
         }
 
         setChecked(e.checked)
@@ -133,7 +133,7 @@ export function Payment(props) {
     const createPayment = async () => {
 
         let totalPayment = 0;
-        forEach(ordersTable, (order) => {
+        forEach(selectedOrders, (order) => {
             totalPayment += order.product.price;
         });
 
@@ -145,7 +145,7 @@ export function Payment(props) {
 
         const payment = await createClientPayment(paymentData);
 
-        for await (const order of ordersTable) {
+        for await (const order of selectedOrders) {
             await addPaymentToOrder(order.id, payment.id);
         };
 
@@ -199,7 +199,7 @@ export function Payment(props) {
 
     const finishShowProductsToPayDialogFooter = (
         <div className='footerBill'>
-            <Button label="Siguiente" className='mt-4' onClick={onProductsToPay} disabled={size(selectedProducts) === 0} />
+            <Button label="Siguiente" className='mt-4' onClick={onProductsToPay} disabled={size(selectedOrders) === 0} />
         </div>
     );
 
@@ -240,8 +240,8 @@ export function Payment(props) {
             <Dialog visible={showProductsToPayDialog} style={{ width: '93vw' }} modal header="Selección de productos" onHide={hideShowProductsToPayDialog}
                 footer={finishShowProductsToPayDialogFooter} className='footer-orders-pay-container'>
                 <div className="footer-payment-content">
-                    <DataTable className='table-orders-pay' value={ordersTable} selection={selectedProducts}
-                        header={header} onSelectionChange={(e) => setSelectedProducts(e.value)}>
+                    <DataTable className='table-orders-pay' value={ordersTable} selection={selectedOrders}
+                        header={header} onSelectionChange={(e) => setSelectedOrders(e.value)}>
                         <Column selectionMode="multiple"></Column>
                         <Column field="product.image" body={imageBodyTemplate}></Column>
                         <Column field="product.title" style={{ minWidth: '6rem' }}></Column>
@@ -269,7 +269,7 @@ export function Payment(props) {
                 </div>
 
                 <div className='table-orders-payment' style={{ marginTop: '1.5rem' }}>
-                    <DataTable value={orders && groupOrdersStatus(orders)} >
+                    <DataTable value={selectedOrders && groupOrdersStatus(selectedOrders)} >
                         <Column field="quantity" header="UNIDADES" bodyStyle={{ textAlign: 'center' }}></Column>
                         <Column field="product.title" header="PRODUCTO" bodyStyle={{ textAlign: 'center' }}></Column>
                         <Column field="product.price" header="IMPORTE" body={priceBodyTemplate} bodyStyle={{ textAlign: 'center' }}></Column>
