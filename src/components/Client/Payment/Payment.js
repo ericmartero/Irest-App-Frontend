@@ -56,7 +56,7 @@ export function Payment(props) {
                 })();
             }
         }
-    }, [orders, getPaymentByIdClient]);
+    }, [orders, getPaymentByIdClient, refreshOrders]);
 
     const onRefresh = () => setRefreshOrders((state) => !state);
 
@@ -149,6 +149,7 @@ export function Payment(props) {
             await addPaymentToOrder(order.id, payment.id);
         };
 
+        onRefresh();
         setShowConfirmPaymentDialog(true);
         setShowBillDialog(true);
     };
