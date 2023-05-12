@@ -17,7 +17,7 @@ export function Payment(props) {
     const { table } = props;
 
     const { createClientPayment, getPaymentByIdClient } = usePayment();
-    const { orders, getOrdersByTableClient, addPaymentToOrder } = useOrder();
+    const { orders, getOrdersByTableClient, addPaymentToOrderClient } = useOrder();
 
     const [refreshOrders, setRefreshOrders] = useState(false);
     const [selectedOrders, setSelectedOrders] = useState(null);
@@ -140,7 +140,7 @@ export function Payment(props) {
         const payment = await createClientPayment(paymentData);
 
         for await (const order of selectedOrders) {
-            await addPaymentToOrder(order.id, payment.id);
+            await addPaymentToOrderClient(order.id, payment.id);
         };
 
         onRefresh();

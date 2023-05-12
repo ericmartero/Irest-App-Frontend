@@ -80,6 +80,14 @@ export function useOrder() {
         }
     };
 
+    const addPaymentToOrderClient = async (idOrder, idPayment) => {
+        try {
+            await addPaymentToOrderApi(idOrder, idPayment, authClient.token);
+        } catch (error) {
+            throw error;
+        }
+    };
+
     const closeOrder = async (idOrder) => {
         try {
             await closeOrderApi(idOrder, auth.token);
@@ -105,6 +113,7 @@ export function useOrder() {
         addClientOrderToTable,
         deleteOrder,
         addPaymentToOrder,
+        addPaymentToOrderClient,
         closeOrder,
         getOrdersByPayment,
         getOrdersByTableClient,
