@@ -1,6 +1,15 @@
 import { useCallback, useState } from 'react';
 import { getMeApi } from '../api/auth';
-import { getUsersApi, addUserApi, deleteUserApi, updateUserApi } from '../api/user';
+import {
+    getUsersApi,
+    addUserApi,
+    deleteUserApi,
+    updateUserApi,
+    getUsersAllApi,
+    addUserAllApi,
+    updateUserAllApi,
+    deleteUserAllApi,
+} from '../api/user';
 import { useAuth } from '.';
 
 export function useUser() {
@@ -11,7 +20,7 @@ export function useUser() {
     const [error, setError] = useState(null);
     const { auth } = useAuth();
 
-    const getMe = useCallback( async (token) =>  {
+    const getMe = useCallback(async (token) => {
         try {
             const response = await getMeApi(token);
             return response;
@@ -21,7 +30,7 @@ export function useUser() {
         }
     }, []);
 
-    const getUsers = useCallback( async () => {
+    const getUsers = useCallback(async () => {
         try {
             setLoading(true);
             const response = await getUsersApi(auth.token);
@@ -35,7 +44,7 @@ export function useUser() {
 
         } catch (error) {
             setLoading(false);
-            throw(error);
+            throw (error);
         }
     }, [auth?.token]);
 
@@ -48,7 +57,7 @@ export function useUser() {
             setLoadingCrud(false);
             throw error;
         }
-    }
+    };
 
     const deleteUser = async (id) => {
         try {
@@ -57,9 +66,9 @@ export function useUser() {
             setLoadingCrud(false);
         } catch (error) {
             setLoadingCrud(false);
-            throw(error);
+            throw (error);
         }
-    }
+    };
 
     const updateUser = async (id, data) => {
         try {
@@ -70,7 +79,58 @@ export function useUser() {
             setLoadingCrud(false);
             throw error;
         }
-    }
+    };
+
+    const getUsersAll = useCallback(async () => {
+        try {
+            setLoading(true);
+            const response = await getUsersAllApi(auth.token);
+            setLoading(false);
+
+            if (response.error) {
+                setError(response.error);
+            } else {
+                setUsers(response);
+            }
+
+        } catch (error) {
+            setLoading(false);
+            throw (error);
+        }
+    }, [auth?.token]);
+
+    const addUserAll = async (data) => {
+        try {
+            setLoadingCrud(true);
+            await addUserAllApi(data, auth.token);
+            setLoadingCrud(false);
+        } catch (error) {
+            setLoadingCrud(false);
+            throw error;
+        }
+    };
+
+    const updateUserAll = async (id, data) => {
+        try {
+            setLoadingCrud(true);
+            await updateUserAllApi(id, data, auth.token);
+            setLoadingCrud(false);
+        } catch (error) {
+            setLoadingCrud(false);
+            throw error;
+        }
+    };
+
+    const deleteUserAll = async (id) => {
+        try {
+            setLoadingCrud(true);
+            await deleteUserAllApi(id, auth.token);
+            setLoadingCrud(false);
+        } catch (error) {
+            setLoadingCrud(false);
+            throw (error);
+        }
+    };
 
     return {
         users,
@@ -82,5 +142,9 @@ export function useUser() {
         addUser,
         deleteUser,
         updateUser,
+        getUsersAll,
+        addUserAll,
+        updateUserAll,
+        deleteUserAll
     };
 }
