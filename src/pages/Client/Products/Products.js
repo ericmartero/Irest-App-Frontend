@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCategory } from '../../../hooks';
 import { addProductShoppingCart } from '../../../api/shoppingCart';
 import { Header } from '../../../components/Client/Header/Header';
 import { useParams, useHistory } from 'react-router-dom';
-import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { map } from "lodash";
@@ -14,7 +13,6 @@ export function Products() {
 
     const paramsURL = useParams();
     const history = useHistory();
-    const toast = useRef(null);
     const { loading, getCategoryById } = useCategory();
     const [productsCateogry, setProductsCateogry] = useState([]);
     const [categoryName, setCategoryName] = useState(null);
@@ -40,12 +38,10 @@ export function Products() {
     const addProductCart = (product) => {
         addProductShoppingCart(product.id);
         onRefreshCartNumber();
-        toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: `Se ha añadido el producto ${product.title} correctamente`, life: 1500 });
     };
 
     return (
         <>
-            <Toast ref={toast} position="bottom-center" />
             {loading ?
                 <div className="align-content-mobile">
                     <ProgressSpinner />
