@@ -113,13 +113,9 @@ export function OrdersTracking() {
                                         : order.status === ORDER_STATUS.DELIVERED ? 'ENTREGADO' : 'PREPARADO'}
                                         severity={getSeverity(order)}
                                     ></Tag>
-                                    {order.payment ?
+                                    {order.payment &&
                                         <div style={{ marginTop: "1rem" }}>
                                             <span className="text-green-500 font-medium">Pagado</span>
-                                        </div>
-                                        :
-                                        <div style={{ marginTop: "1rem" }}>
-                                            <span className="text-red-500 font-medium">No pagado</span>
                                         </div>
                                     }
                                 </div>
