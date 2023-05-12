@@ -9,3 +9,4 @@ export * from './HomePageAdmin';
 export * from './PaymentsHistoryAdmin';
 export * from './EstablishmentsAdmin';
 export * from './TablesQRAdmin';
+export * from './UsersEstablishmentAdmin'
