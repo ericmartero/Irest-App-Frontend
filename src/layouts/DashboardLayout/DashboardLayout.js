@@ -104,6 +104,9 @@ export function DashboardLayout(props) {
                 ...(auth?.me.user.roles.includes('admin') || auth?.me.user.roles.includes('waiter') ?
                     [{ label: 'Historial de pagos', icon: 'pi pi-fw pi-history', to: '/admin/payments-history' }] : []
                 ),
+                ...(auth?.me.user.roles.includes('admin') || auth?.me.user.roles.includes('waiter') ?
+                    [{ label: 'QR Mesas', icon: 'pi pi-fw pi-qrcode', to: '/admin/tables-qr' }] : []
+                )
             ]
         }
     ];
