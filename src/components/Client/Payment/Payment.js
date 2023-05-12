@@ -30,7 +30,6 @@ export function Payment(props) {
     const [showConfirmPaymentDialog, setShowConfirmPaymentDialog] = useState(false);
     const [finishPaymentDialog, setFinishPaymentDialog] = useState(false);
     const [showBillDialog, setShowBillDialog] = useState(false);
-    const [noOrderPaymentDialog, setNoOrderPaymentDialog] = useState(false);
 
     useEffect(() => {
         (async () => {
@@ -61,15 +60,8 @@ export function Payment(props) {
     const onRefresh = () => setRefreshOrders((state) => !state);
 
     const onShowPaymentDialog = () => {
-
-        if (size(orders) === 0) {
-            setNoOrderPaymentDialog(true);
-        }
-
-        else {
-            onRefresh();
-            setShowProductsToPayDialog(true);
-        }
+        onRefresh();
+        setShowProductsToPayDialog(true);
     };
 
     const priceOrderTemplate = (rowData) => {
@@ -196,10 +188,6 @@ export function Payment(props) {
         setShowBillDialog(true);
     };
 
-    const hideNoOrderPaymentDialog = () => {
-        setNoOrderPaymentDialog(false);
-    };
-
     const finishShowProductsToPayDialogFooter = (
         <div className='footerBill'>
             <Button label="Siguiente" className='mt-4' onClick={onProductsToPay} disabled={size(selectedOrders) === 0} />
@@ -243,7 +231,7 @@ export function Payment(props) {
             <Dialog visible={showProductsToPayDialog} style={{ width: '93vw' }} modal header="Selección de productos" onHide={hideShowProductsToPayDialog}
                 footer={finishShowProductsToPayDialogFooter} className='footer-orders-pay-container'>
                 <div className="footer-payment-content">
-                    <DataTable className='table-orders-pay' style={{width: "100%"}} value={ordersTable} selection={selectedOrders}
+                    <DataTable className='table-orders-pay' style={{ width: "100%" }} value={ordersTable} selection={selectedOrders}
                         header={header} onSelectionChange={(e) => setSelectedOrders(e.value)} emptyMessage='No hay pedidos para pagar'>
                         <Column selectionMode="multiple"></Column>
                         <Column field="product.image" body={imageBodyTemplate}></Column>
@@ -302,14 +290,6 @@ export function Payment(props) {
                 <div className="confirmation-content">
                     <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                     <span>¿Seguro que deseas finalizar la estancia en la mesa?</span>
-                </div>
-            </Dialog>
-
-            <Dialog visible={noOrderPaymentDialog} style={{ width: '90vw' }} header={`Cuenta Mesa ${table?.number}`} modal onHide={hideNoOrderPaymentDialog}
-                className='footer-noPayment-container'>
-                <div className="footer-payment-content">
-                    <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                    <span>No hay pedidos para poder realizar el pago</span>
                 </div>
             </Dialog>
         </>
