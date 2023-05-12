@@ -51,7 +51,7 @@ export function UsersAdmin() {
 
   useEffect(() => {
     getUsers();
-  }, [refreshTable, getUsers])
+  }, [refreshTable, getUsers]);
 
   useEffect(() => {
     if (users) {
@@ -89,7 +89,7 @@ export function UsersAdmin() {
 
   const showError = (error) => {
     toast.current.show({ severity: 'error', summary: 'Operación Fallida', detail: error.message, life: 3000 });
-  }
+  };
 
   const saveUser = async () => {
 
@@ -190,13 +190,13 @@ export function UsersAdmin() {
       await Promise.all(selectedUsers.map(async (user) => {
         await deleteUser(user.id);
       }));
-      
+
       onRefresh();
 
       if (selectedUsers.length === 1) {
         toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Usuario borrado correctamente', life: 3000 });
       }
-  
+
       else {
         toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Usuarios borrados correctamente', life: 3000 });
       }
@@ -254,11 +254,10 @@ export function UsersAdmin() {
     setValidationErrors(errors);
   };
 
-
   const handleInputSwitch = (e, valid) => {
     const val = e.target.value;
     setUser(prevUser => ({ ...prevUser, [valid]: val }));
-  }
+  };
 
   const isValidEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -268,7 +267,7 @@ export function UsersAdmin() {
   function validatePassword(password) {
     const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[\w,.-]{6,}$/;
     return passwordRegex.test(password);
-  }
+  };
 
   const validateFields = () => {
     const errors = {};
@@ -336,18 +335,21 @@ export function UsersAdmin() {
       </span>
     </div>
   );
+
   const userDialogFooter = (
     <React.Fragment>
       <Button label="Cancelar" icon="pi pi-times" outlined onClick={hideDialog} />
       <Button label="Guardar" icon="pi pi-check" onClick={saveUser} disabled={!submitted || Object.keys(validationErrors).length === 0 ? false : true} />
     </React.Fragment>
   );
+
   const deleteUserDialogFooter = (
     <React.Fragment>
       <Button label="No" icon="pi pi-times" outlined onClick={hideDeleteUserDialog} />
       <Button label="Si" icon="pi pi-check" severity="danger" onClick={deleteSelectedUser} />
     </React.Fragment>
   );
+
   const deleteUsersDialogFooter = (
     <React.Fragment>
       <Button label="No" icon="pi pi-times" outlined onClick={hideDeleteUsersDialog} />
@@ -377,7 +379,7 @@ export function UsersAdmin() {
 
   return (
     <>
-      {error ? <AccessDenied/> :
+      {error ? <AccessDenied /> :
         <>
           <Toast ref={toast} />
           {loading ?
@@ -526,7 +528,7 @@ export function UsersAdmin() {
               <Dialog visible={deleteUsersDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteUsersDialogFooter} onHide={hideDeleteUsersDialog}>
                 <div className="confirmation-content">
                   <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                  {user && selectedUsers?.length === 1  
+                  {user && selectedUsers?.length === 1
                     ? <span>Seguro que quieres eliminar el usuario seleccionado?</span>
                     : <span>Seguro que quieres eliminar los usuarios seleccionados?</span>
                   }
