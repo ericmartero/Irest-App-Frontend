@@ -93,7 +93,7 @@ export function DashboardLayout(props) {
                     [{ label: 'Usuarios', icon: 'pi pi-fw pi-id-card', to: '/admin/users' }]
                     :
                     auth?.me.user.roles.includes('superuser') ?
-                        [{ label: 'Usuarios', icon: 'pi pi-fw pi-id-card', to: '/admin/users-establishment' }]
+                        [{ label: 'Usuarios', icon: 'pi pi-fw pi-id-card', to: '/admin/users-establishments' }]
                         : []
                 ),
                 ...(auth?.me.user.roles.includes('admin') || auth?.me.user.roles.includes('waiter') ?

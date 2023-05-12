@@ -7,7 +7,7 @@ import {
     TablesAdmin,
     PaymentsHistoryAdmin,
     TablesQRAdmin,
-    UsersEstablishmentAdmin
+    UsersEstablishmentsAdmin
 } from '../pages/Admin';
 import { WaiterTableDetails } from '../pages/Admin/TableDetailsAdmin';
 
@@ -61,9 +61,9 @@ const routesPanel = [
         exact: true
     },
     {
-        path: '/admin/users-establishment',
+        path: '/admin/users-establishments',
         layout: DashboardLayout,
-        component: UsersEstablishmentAdmin,
+        component: UsersEstablishmentsAdmin,
         exact: true
     }
 ];

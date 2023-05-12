@@ -1,6 +1,6 @@
 import React from 'react';
 
-export function UsersEstablishmentAdmin() {
+export function UsersEstablishmentsAdmin() {
   return (
     <div>UsersEstablishmentAdmin</div>
   )
