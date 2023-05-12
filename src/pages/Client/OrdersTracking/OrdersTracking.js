@@ -113,14 +113,19 @@ export function OrdersTracking() {
                                         : order.status === ORDER_STATUS.DELIVERED ? 'ENTREGADO' : 'PREPARADO'}
                                         severity={getSeverity(order)}
                                     ></Tag>
-                                    <div style={{ marginTop: "1rem" }}>
-                                        {order?.payment?.statusPayment === PAYMENT_STATUS.PENDING ?
+
+                                    {order?.payment?.statusPayment === PAYMENT_STATUS.PENDING ?
+                                        <div style={{ marginTop: "1rem" }}>
                                             <span className="text-red-500 font-medium">Pago pendiente</span>
-                                            :
-                                            order?.payment?.statusPayment === PAYMENT_STATUS.PAID ?
-                                                <span className="text-green-500 font-medium">Pagado</span> : null
-                                        }
-                                    </div>
+                                        </div>
+                                        :
+                                        order?.payment?.statusPayment === PAYMENT_STATUS.PAID ?
+                                            <div style={{ marginTop: "1rem" }}>
+                                                <span className="text-green-500 font-medium">Pagado</span>
+                                            </div>
+                                            : null
+                                    }
+
                                 </div>
                             </div>
                         ))}
