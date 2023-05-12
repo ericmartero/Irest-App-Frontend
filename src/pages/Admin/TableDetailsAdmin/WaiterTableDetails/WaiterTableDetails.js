@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useOrder, useTable, useProduct, usePayment } from '../../../../hooks';
 import { ORDER_STATUS, PAYMENT_TYPE } from '../../../../utils/constants';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { classNames } from 'primereact/utils';
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
@@ -26,9 +26,9 @@ export function WaiterTableDetails() {
   const toast = useRef(null);
   const intervalRef = useRef();
   const tableURL = useParams();
-  const history = useHistory();
-  const { orders, loading, getOrdersByTable, checkDeliveredOrder, addOrderToTable, deleteOrder, addPaymentToOrder, closeOrder } = useOrder();
-  const { tables, getTableById, updateTable } = useTable();
+  //const history = useHistory();
+  const { orders, loading, getOrdersByTable, checkDeliveredOrder, addOrderToTable, deleteOrder, addPaymentToOrder } = useOrder();
+  const { tables, getTableById } = useTable();
   const { products, getProducts, getProductById } = useProduct();
   const { createPayment, getPaymentByTable, closePayment } = usePayment();
 
@@ -307,14 +307,14 @@ export function WaiterTableDetails() {
     try {
       await closePayment(paymentData.id);
 
-      for await (const order of orders) {
+      /*for await (const order of orders) {
         await closeOrder(order.id);
-      }
+      }*/
 
-      await updateTable(table.id, { tableBooking: null });
+      //await updateTable(table.id, { tableBooking: null });
       
       toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Pago finalizado correctamente', life: 3000 });
-      history.push("/admin");
+      //history.push("/admin");
     } catch (error) {
       showError(error);
     }
