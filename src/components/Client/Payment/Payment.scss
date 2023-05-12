@@ -5,12 +5,13 @@
 }
 
 .footer-payment-content {
-    align-content: center;
     display: flex;
+    align-content: center;
+    justify-content: center;
 }
 
 .table-orders-pay thead {
-    display:none;
+    display: none;
 }
 
 .paymentDialog-container {

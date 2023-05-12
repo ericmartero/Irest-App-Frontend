@@ -91,6 +91,8 @@ export function Payment(props) {
 
     const hideBillDialog = () => {
         setShowBillDialog(false);
+        setShowConfirmPaymentDialog(false);
+        setShowPaymentDialog(false);
     };
 
     const openDialogFinishPayment = () => {
@@ -241,8 +243,8 @@ export function Payment(props) {
             <Dialog visible={showProductsToPayDialog} style={{ width: '93vw' }} modal header="Selección de productos" onHide={hideShowProductsToPayDialog}
                 footer={finishShowProductsToPayDialogFooter} className='footer-orders-pay-container'>
                 <div className="footer-payment-content">
-                    <DataTable className='table-orders-pay' value={ordersTable} selection={selectedOrders}
-                        header={header} onSelectionChange={(e) => setSelectedOrders(e.value)}>
+                    <DataTable className='table-orders-pay' style={{width: "100%"}} value={ordersTable} selection={selectedOrders}
+                        header={header} onSelectionChange={(e) => setSelectedOrders(e.value)} emptyMessage='No hay pedidos para pagar'>
                         <Column selectionMode="multiple"></Column>
                         <Column field="product.image" body={imageBodyTemplate}></Column>
                         <Column field="product.title" style={{ minWidth: '6rem' }}></Column>
