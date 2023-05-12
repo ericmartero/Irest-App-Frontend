@@ -1,5 +1,5 @@
 import { DashboardLayout } from '../layouts';
-import { HomePageAdmin, UsersAdmin, CategoriesAdmin, ProductsAdmin, TablesAdmin, PaymentsHistoryAdmin } from '../pages/Admin';
+import { HomePageAdmin, UsersAdmin, CategoriesAdmin, ProductsAdmin, TablesAdmin, PaymentsHistoryAdmin, TablesQRAdmin } from '../pages/Admin';
 import { WaiterTableDetails } from '../pages/Admin/TableDetailsAdmin';
 
 const routesPanel = [
@@ -43,6 +43,12 @@ const routesPanel = [
         path: '/admin/payments-history',
         layout: DashboardLayout,
         component: PaymentsHistoryAdmin,
+        exact: true
+    },
+    {
+        path: '/admin/tables-qr',
+        layout: DashboardLayout,
+        component: TablesQRAdmin,
         exact: true
     }
 ];
