@@ -1,5 +1,14 @@
 import { DashboardLayout } from '../layouts';
-import { HomePageAdmin, UsersAdmin, CategoriesAdmin, ProductsAdmin, TablesAdmin, PaymentsHistoryAdmin, TablesQRAdmin } from '../pages/Admin';
+import {
+    HomePageAdmin,
+    UsersAdmin,
+    CategoriesAdmin,
+    ProductsAdmin,
+    TablesAdmin,
+    PaymentsHistoryAdmin,
+    TablesQRAdmin,
+    UsersEstablishmentAdmin
+} from '../pages/Admin';
 import { WaiterTableDetails } from '../pages/Admin/TableDetailsAdmin';
 
 const routesPanel = [
@@ -49,6 +58,12 @@ const routesPanel = [
         path: '/admin/tables-qr',
         layout: DashboardLayout,
         component: TablesQRAdmin,
+        exact: true
+    },
+    {
+        path: '/admin/users-establishment',
+        layout: DashboardLayout,
+        component: UsersEstablishmentAdmin,
         exact: true
     }
 ];
