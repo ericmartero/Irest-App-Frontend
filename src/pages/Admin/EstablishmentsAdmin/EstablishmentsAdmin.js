@@ -210,7 +210,7 @@ export function EstablishmentsAdmin() {
               currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} establecimientos" globalFilter={globalFilter} header={header}>
               <Column field="name" header="Establecimiento" sortable style={{ minWidth: '24rem' }} ></Column>
               <Column field="active" header="Activo" sortable dataType="boolean" body={activeBodyTemplate} style={{ minWidth: '10rem' }}></Column>
-              <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }}></Column>
+              <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '12rem' }} bodyClassName="text-center"></Column>
             </DataTable>
           </div>
 
