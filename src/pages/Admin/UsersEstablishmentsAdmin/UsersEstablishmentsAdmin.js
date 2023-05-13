@@ -131,6 +131,8 @@ export function UsersEstablishmentsAdmin() {
                             role = 'Superusuario';
                             break;
                           default:
+                            role = 'Cliente';
+                            tagClass = 'info';
                             break;
                         }
                         return (
