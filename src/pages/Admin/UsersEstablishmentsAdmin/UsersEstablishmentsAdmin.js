@@ -4,6 +4,7 @@ import { AccessDenied } from '../../AccessdDenied';
 import { classNames } from 'primereact/utils';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { InputText } from 'primereact/inputtext';
+import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
 import { Toolbar } from 'primereact/toolbar';
 import { DataTable } from 'primereact/datatable';
@@ -31,6 +32,8 @@ export function UsersEstablishmentsAdmin() {
   const [globalFilter, setGlobalFilter] = useState(null);
   const [usersTable, setUsersTable] = useState(null);
   const [selectedUsers, setSelectedUsers] = useState(null);
+  const [user, setUser] = useState(emptyUser);
+  const [deleteUserDialog, setDeleteUserDialog] = useState(false);
 
   useEffect(() => {
     getUsersAll();
@@ -45,8 +48,35 @@ export function UsersEstablishmentsAdmin() {
 
   const onRefresh = () => setRefreshTable((state) => !state);
 
+  const showError = (error) => {
+    toast.current.show({ severity: 'error', summary: 'Operación Fallida', detail: error.message, life: 3000 });
+  };
+
   const exportCSV = () => {
     dt.current.exportCSV();
+  };
+
+  const confirmDeleteUser = (user) => {
+    setUser(user);
+    setDeleteUserDialog(true);
+  };
+
+  
+  const deleteSelectedUser = async () => {
+    try {
+      await deleteUserAll(user.id);
+      onRefresh();
+      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Usuario borrado correctamente', life: 3000 });
+    } catch (error) {
+      showError(error);
+    }
+
+    setDeleteUserDialog(false);
+    setUser(emptyUser);
+  };
+
+  const hideDeleteUserDialog = () => {
+    setDeleteUserDialog(false);
   };
 
   const activeBodyTemplate = (rowData) => {
@@ -70,10 +100,17 @@ export function UsersEstablishmentsAdmin() {
     return (
       <React.Fragment>
         <Button icon="pi pi-pencil" rounded outlined className="mr-2" onClick={""} />
-        <Button icon="pi pi-trash" rounded outlined severity="danger" onClick={""} />
+        <Button icon="pi pi-trash" rounded outlined severity="danger" onClick={() => confirmDeleteUser(rowData)} />
       </React.Fragment>
     );
   };
+
+  const deleteUserDialogFooter = (
+    <React.Fragment>
+      <Button label="No" icon="pi pi-times" outlined onClick={hideDeleteUserDialog} />
+      <Button label="Si" icon="pi pi-check" severity="danger" onClick={deleteSelectedUser} />
+    </React.Fragment>
+  );
 
   const header = (
     <div className="flex flex-wrap gap-2 align-items-center justify-content-between">
@@ -84,8 +121,6 @@ export function UsersEstablishmentsAdmin() {
       </span>
     </div>
   );
-
-  console.log(usersTable);
 
   return (
     <>
@@ -150,6 +185,17 @@ export function UsersEstablishmentsAdmin() {
                   <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '10rem' }}></Column>
                 </DataTable>
               </div>
+
+              <Dialog visible={deleteUserDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteUserDialogFooter} onHide={hideDeleteUserDialog}>
+                <div className="confirmation-content">
+                  <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                  {user && (
+                    <span>
+                      Seguro que quieres eliminar el usuario <b>{user.firstName}</b>?
+                    </span>
+                  )}
+                </div>
+              </Dialog>
             </div>
           }
         </>
