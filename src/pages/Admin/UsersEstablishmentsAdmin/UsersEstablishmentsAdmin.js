@@ -34,6 +34,7 @@ export function UsersEstablishmentsAdmin() {
   const [selectedUsers, setSelectedUsers] = useState(null);
   const [user, setUser] = useState(emptyUser);
   const [deleteUserDialog, setDeleteUserDialog] = useState(false);
+  const [deleteUsersDialog, setDeleteUsersDialog] = useState(false);
 
   useEffect(() => {
     getUsersAll();
@@ -61,7 +62,7 @@ export function UsersEstablishmentsAdmin() {
     setDeleteUserDialog(true);
   };
 
-  
+
   const deleteSelectedUser = async () => {
     try {
       await deleteUserAll(user.id);
@@ -75,8 +76,40 @@ export function UsersEstablishmentsAdmin() {
     setUser(emptyUser);
   };
 
+  const deleteSelectedUsers = async () => {
+    try {
+      await Promise.all(selectedUsers.map(async (user) => {
+        await deleteUserAll(user.id);
+      }));
+
+      onRefresh();
+
+      if (selectedUsers.length === 1) {
+        toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Usuario borrado correctamente', life: 3000 });
+      }
+
+      else {
+        toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Usuarios borrados correctamente', life: 3000 });
+      }
+
+    } catch (error) {
+      showError(error);
+    }
+
+    setDeleteUsersDialog(false);
+    setSelectedUsers(null);
+  };
+
   const hideDeleteUserDialog = () => {
     setDeleteUserDialog(false);
+  };
+
+  const hideDeleteUsersDialog = () => {
+    setDeleteUsersDialog(false);
+  };
+
+  const confirmDeleteSelected = () => {
+    setDeleteUsersDialog(true);
   };
 
   const activeBodyTemplate = (rowData) => {
@@ -87,7 +120,7 @@ export function UsersEstablishmentsAdmin() {
     return (
       <div className="flex flex-wrap gap-2">
         <Button label="Nuevo" icon="pi pi-plus" severity="success" onClick={""} />
-        <Button label="Borrar" icon="pi pi-trash" severity="danger" onClick={""} disabled={!selectedUsers || !selectedUsers.length} />
+        <Button label="Borrar" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedUsers || !selectedUsers.length} />
       </div>
     );
   };
@@ -109,6 +142,13 @@ export function UsersEstablishmentsAdmin() {
     <React.Fragment>
       <Button label="No" icon="pi pi-times" outlined onClick={hideDeleteUserDialog} />
       <Button label="Si" icon="pi pi-check" severity="danger" onClick={deleteSelectedUser} />
+    </React.Fragment>
+  );
+
+  const deleteUsersDialogFooter = (
+    <React.Fragment>
+      <Button label="No" icon="pi pi-times" outlined onClick={hideDeleteUsersDialog} />
+      <Button label="Si" icon="pi pi-check" severity="danger" onClick={deleteSelectedUsers} />
     </React.Fragment>
   );
 
@@ -194,6 +234,16 @@ export function UsersEstablishmentsAdmin() {
                       Seguro que quieres eliminar el usuario <b>{user.firstName}</b>?
                     </span>
                   )}
+                </div>
+              </Dialog>
+
+              <Dialog visible={deleteUsersDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteUsersDialogFooter} onHide={hideDeleteUsersDialog}>
+                <div className="confirmation-content">
+                  <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                  {user && selectedUsers?.length === 1
+                    ? <span>Seguro que quieres eliminar el usuario seleccionado?</span>
+                    : <span>Seguro que quieres eliminar los usuarios seleccionados?</span>
+                  }
                 </div>
               </Dialog>
             </div>
