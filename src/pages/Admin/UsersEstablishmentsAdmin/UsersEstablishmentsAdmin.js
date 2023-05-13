@@ -85,6 +85,8 @@ export function UsersEstablishmentsAdmin() {
     </div>
   );
 
+  console.log(usersTable);
+
   return (
     <>
       {error ? <AccessDenied /> :
@@ -107,6 +109,7 @@ export function UsersEstablishmentsAdmin() {
                   <Column field="email" header="Email" sortable style={{ minWidth: '14rem' }}></Column>
                   <Column field="firstName" header="Nombre" sortable style={{ minWidth: '10rem' }}></Column>
                   <Column field="lastName" header="Apellidos" sortable style={{ minWidth: '12rem' }}></Column>
+                  <Column field="establishment.name" header="Establecimiento" sortable style={{ minWidth: '12rem' }}></Column>
                   <Column field="roles" header="Roles" sortable style={{ minWidth: '10rem' }}
                     body={(rowData) =>
                       rowData.roles.map((role) => {
