@@ -81,7 +81,7 @@ export const addOrderToTableApi = async (idTableBooking, idProduct, token) => {
         }
 
         const resp = await fetch(url, params);
-        await resp.json();
+        return await resp.json();
 
     } catch (error) {
         throw error;
