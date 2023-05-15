@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useUser, useAuth } from '../../../hooks';
+import { useUser, useAuth, useEstablishment } from '../../../hooks';
 import { AccessDenied } from '../../AccessdDenied';
 import { classNames } from 'primereact/utils';
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { Dropdown } from 'primereact/dropdown';
 import { MultiSelect } from 'primereact/multiselect';
 import { InputSwitch } from "primereact/inputswitch";
 import { InputText } from 'primereact/inputtext';
@@ -13,6 +14,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Toast } from 'primereact/toast';
 import { Tag } from 'primereact/tag';
+import { map } from 'lodash';
 
 export function UsersEstablishmentsAdmin() {
 
@@ -31,6 +33,7 @@ export function UsersEstablishmentsAdmin() {
   const toast = useRef(null);
   const { auth } = useAuth();
   const { users, loading, error, loadingCrud, getUsersAll, addUserAll, deleteUserAll, updateUserAll } = useUser();
+  const { establishments, getEstablishments } = useEstablishment();
 
   const [refreshTable, setRefreshTable] = useState(false);
   const [globalFilter, setGlobalFilter] = useState(null);
@@ -46,6 +49,8 @@ export function UsersEstablishmentsAdmin() {
   const [isEditUser, setIsEditUser] = useState(false)
   const [lastUserEdit, setlastUserEdit] = useState({});
   const [selectedRoles, setSelectedRoles] = useState(null);
+  const [selectedEstablishment, setSelectedEstablishment] = useState(null);
+  const [establishmentsDropdown, setEstablishmentsDropdown] = useState([])
 
   useEffect(() => {
     getUsersAll();
@@ -58,6 +63,16 @@ export function UsersEstablishmentsAdmin() {
     }
   }, [users, auth]);
 
+  useEffect(() => {
+    getEstablishments();
+  }, [getEstablishments]);
+
+  useEffect(() => {
+    if (establishments) {
+      setEstablishmentsDropdown(formatDropdownData(establishments));
+    }
+  }, [establishments]);
+
   const onRefresh = () => setRefreshTable((state) => !state);
 
   const showError = (error) => {
@@ -67,6 +82,13 @@ export function UsersEstablishmentsAdmin() {
   const exportCSV = () => {
     dt.current.exportCSV();
   };
+
+  const formatDropdownData = (data) => {
+    return map(data, (item) => ({
+      id: item.id,
+      value: item.name
+    }));
+  }
 
   const saveUser = async () => {
 
@@ -248,6 +270,21 @@ export function UsersEstablishmentsAdmin() {
   const handleInputSwitch = (e, valid) => {
     const val = e.target.value;
     setUser(prevUser => ({ ...prevUser, [valid]: val }));
+  };
+
+  
+  const onDropdownChange = (value) => {
+
+    let errors = { ...validationErrors };
+    setSelectedEstablishment(value);
+
+    if (value === null) {
+      errors.category = "La categoría es requerida";
+    } else {
+      delete errors.category;
+    }
+
+    setValidationErrors(errors);
   };
 
   const isValidEmail = (email) => {
@@ -457,6 +494,15 @@ export function UsersEstablishmentsAdmin() {
                     itemTemplate={itemTemplate}
                     selectedItemTemplate={selectedItemTemplate}
                   />
+                </div>
+
+                <div className="field">
+                  <label htmlFor="categoria" className="font-bold">
+                    Establecimiento
+                  </label>
+                  <Dropdown value={selectedEstablishment} onChange={(e) => onDropdownChange(e.value)} options={establishmentsDropdown} optionLabel="value"
+                    placeholder="Selecciona un establecimiento" appendTo="self" className={classNames({ "p-invalid": submitted && (validationErrors.category) })} />
+                  {submitted && validationErrors.category && (<small className="p-error">{validationErrors.category}</small>)}
                 </div>
 
                 <div className="field">
