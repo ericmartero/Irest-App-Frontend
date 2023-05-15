@@ -287,16 +287,15 @@ export function UsersEstablishmentsAdmin() {
     setUser(prevUser => ({ ...prevUser, [valid]: val }));
   };
 
-  
   const onDropdownChange = (value) => {
 
     let errors = { ...validationErrors };
     setSelectedEstablishment(value);
 
     if (value === null) {
-      errors.category = "La categoría es requerida";
+      errors.establishment = "El establecimiento es requerido";
     } else {
-      delete errors.category;
+      delete errors.establishment;
     }
 
     setValidationErrors(errors);
@@ -512,12 +511,12 @@ export function UsersEstablishmentsAdmin() {
                 </div>
 
                 <div className="field">
-                  <label htmlFor="categoria" className="font-bold">
+                  <label htmlFor="establishment" className="font-bold">
                     Establecimiento
                   </label>
                   <Dropdown value={selectedEstablishment} onChange={(e) => onDropdownChange(e.value)} options={establishmentsDropdown} optionLabel="value"
-                    placeholder="Selecciona un establecimiento" appendTo="self" className={classNames({ "p-invalid": submitted && (validationErrors.category) })} />
-                  {submitted && validationErrors.category && (<small className="p-error">{validationErrors.category}</small>)}
+                    placeholder="Selecciona un establecimiento" appendTo="self" className={classNames({ "p-invalid": submitted && (validationErrors.establishment) })} />
+                  {submitted && validationErrors.establishment && (<small className="p-error">{validationErrors.establishment}</small>)}
                 </div>
 
                 <div className="field">
