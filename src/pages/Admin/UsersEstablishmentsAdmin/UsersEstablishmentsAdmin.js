@@ -142,8 +142,9 @@ export function UsersEstablishmentsAdmin() {
           firstName: user.firstName,
           password: user.password,
           isActive: user.isActive,
+          ...(selectedOption !== undefined && {establishment: selectedOption.id}),
           ...(user.lastName && { lastName: user.lastName }),
-          ...(user.roles.length !== 0 ? { roles: lowerCaseSelectedRoles } : { roles: ['waiter'] })
+          ...(user.roles !== undefined ? { roles: lowerCaseSelectedRoles } : { roles: ['waiter'] })
         };
 
         try {
