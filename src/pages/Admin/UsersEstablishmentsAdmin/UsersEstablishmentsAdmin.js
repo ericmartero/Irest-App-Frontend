@@ -88,7 +88,19 @@ export function UsersEstablishmentsAdmin() {
       id: item.id,
       value: item.name
     }));
-  }
+  };
+
+  const openNew = () => {
+    setIsEditUser(false);
+    setUser(emptyUser);
+    setSelectedEstablishment(null);
+    setSubmitted(false);
+    setUserDialog(true);
+    setActionName('Añadir Producto');
+    setSelectedRoles(null);
+    document.body.classList.add('body-scroll-lock');
+  };
+
 
   const saveUser = async () => {
 
@@ -353,7 +365,7 @@ export function UsersEstablishmentsAdmin() {
   const leftToolbarTemplate = () => {
     return (
       <div className="flex flex-wrap gap-2">
-        <Button label="Nuevo" icon="pi pi-plus" severity="success" onClick={""} />
+        <Button label="Nuevo" icon="pi pi-plus" severity="success" onClick={openNew} />
         <Button label="Borrar" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedUsers || !selectedUsers.length} />
       </div>
     );
