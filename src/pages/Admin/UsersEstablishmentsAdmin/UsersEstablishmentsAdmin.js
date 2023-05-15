@@ -277,8 +277,10 @@ export function UsersEstablishmentsAdmin() {
       errors.firstName = "El nombre tiene que tener mínimo 2 letras";
     }
 
-    if (size(selectedRoles) > 1 && selectedRoles.includes('superuser') ) {
+    if (size(selectedRoles) > 1 && selectedRoles.includes('superuser')) {
       errors.roles = "El usuario con el rol de superusuario no puede tener más roles";
+    } else if (size(selectedRoles) > 1 && selectedRoles.includes('customer')) {
+      errors.roles = "El usuario con el rol de cliente no puede tener más roles";
     }
 
     if (isEditUser) {
@@ -322,8 +324,10 @@ export function UsersEstablishmentsAdmin() {
     let errors = { ...validationErrors };
     setSelectedRoles(e.value)
 
-    if (size(e.value) > 1 && e.value.includes('superuser') ) {
+    if (size(e.value) > 1 && e.value.includes('superuser')) {
       errors.roles = "El usuario con el rol de superusuario no puede tener más roles";
+    } else if (size(e.value) > 1 && e.value.includes('customer')) {
+      errors.roles = "El usuario con el rol de cliente no puede tener más roles";
     } else {
       delete errors.roles;
     }
@@ -539,7 +543,7 @@ export function UsersEstablishmentsAdmin() {
                     placeholder="Selecciona los roles"
                     itemTemplate={itemTemplate}
                     selectedItemTemplate={selectedItemTemplate}
-                    className={classNames({ "p-invalid": submitted && (validationErrors.roles) })} 
+                    className={classNames({ "p-invalid": submitted && (validationErrors.roles) })}
                   />
                   {submitted && validationErrors.roles && (<small className="p-error">{validationErrors.roles}</small>)}
                 </div>
