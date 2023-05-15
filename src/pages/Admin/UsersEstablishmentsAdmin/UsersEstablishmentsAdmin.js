@@ -14,7 +14,7 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Toast } from 'primereact/toast';
 import { Tag } from 'primereact/tag';
-import { map } from 'lodash';
+import { map, size } from 'lodash';
 
 export function UsersEstablishmentsAdmin() {
 
@@ -277,9 +277,13 @@ export function UsersEstablishmentsAdmin() {
       errors.firstName = "El nombre tiene que tener mínimo 2 letras";
     }
 
+    if (size(selectedRoles) > 1 && selectedRoles.includes('superuser') ) {
+      errors.roles = "El usuario con el rol de superusuario no puede tener más roles";
+    }
+
     if (isEditUser) {
       if (user.password.length > 0 && !validatePassword(user.password)) {
-        errors.password = "La contraseña tiene que tener mínimo 6 caracteres, una mayúscula, una minúscula y un número"
+        errors.password = "La contraseña tiene que tener mínimo 6 caracteres, una mayúscula, una minúscula y un número";
       }
     }
 
@@ -287,7 +291,7 @@ export function UsersEstablishmentsAdmin() {
       if (!user.password) {
         errors.password = "La contraseña es requerida";
       } else if (!validatePassword(user.password)) {
-        errors.password = "La contraseña tiene que tener mínimo 6 caracteres, una mayúscula, una minúscula y un número"
+        errors.password = "La contraseña tiene que tener mínimo 6 caracteres, una mayúscula, una minúscula y un número";
       }
     }
 
@@ -309,6 +313,19 @@ export function UsersEstablishmentsAdmin() {
       errors.establishment = "El establecimiento es requerido";
     } else {
       delete errors.establishment;
+    }
+
+    setValidationErrors(errors);
+  };
+
+  const onMultiSelect = (e) => {
+    let errors = { ...validationErrors };
+    setSelectedRoles(e.value)
+
+    if (size(e.value) > 1 && e.value.includes('superuser') ) {
+      errors.roles = "El usuario con el rol de superusuario no puede tener más roles";
+    } else {
+      delete errors.roles;
     }
 
     setValidationErrors(errors);
@@ -516,13 +533,15 @@ export function UsersEstablishmentsAdmin() {
                   </label>
                   <MultiSelect
                     value={selectedRoles}
-                    onChange={(e) => setSelectedRoles(e.value)}
+                    onChange={(e) => onMultiSelect(e)}
                     options={rolesList}
                     optionLabel="role"
                     placeholder="Selecciona los roles"
                     itemTemplate={itemTemplate}
                     selectedItemTemplate={selectedItemTemplate}
+                    className={classNames({ "p-invalid": submitted && (validationErrors.roles) })} 
                   />
+                  {submitted && validationErrors.roles && (<small className="p-error">{validationErrors.roles}</small>)}
                 </div>
                 {establishmentActive &&
                   <div className="field">
