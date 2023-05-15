@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getClientOrders } from '../../../api/clientOrders';
 import { useOrder, usePayment } from '../../../hooks';
 import { PAYMENT_TYPE } from '../../../utils/constants';
 import { classNames } from 'primereact/utils';
@@ -167,6 +168,10 @@ export function Payment(props) {
         setFinishPaymentDialog(false);
     };
 
+    const clientOrders = () => {
+        //LISTA DE PEDIDOS DEL CLIENTE
+    };
+
     const onProductsToPay = () => {
         setShowPaymentDialog(true);
         setShowProductsToPayDialog(false);
@@ -220,7 +225,7 @@ export function Payment(props) {
                 <Checkbox onChange={e => allProductsChecked(e)} checked={checked}></Checkbox>
                 <span className="ml-3">Todos</span>
             </div>
-            <Button label="Mis pedidos" className="p-button-secondary" />
+            <Button label="Mis pedidos" className="p-button-secondary" onClick={clientOrders} />
         </div>
     );
 
