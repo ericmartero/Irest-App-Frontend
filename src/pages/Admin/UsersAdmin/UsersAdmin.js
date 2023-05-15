@@ -129,7 +129,7 @@ export function UsersAdmin() {
           password: user.password,
           isActive: user.isActive,
           ...(user.lastName && { lastName: user.lastName }),
-          ...(user.roles.length !== 0 ? { roles: lowerCaseSelectedRoles } : { roles: ['waiter'] })
+          ...(user.roles !== undefined ? { roles: lowerCaseSelectedRoles } : { roles: ['waiter'] })
         };
 
         try {
