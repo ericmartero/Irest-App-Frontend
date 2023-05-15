@@ -121,7 +121,9 @@ export function UsersEstablishmentsAdmin() {
           ...(user.password !== '' && { password: user.password }),
           ...(user.lastName !== '' ? { lastName: user.lastName } : { lastName: null }),
           ...(selectedRoles.length !== 0 ? { roles: lowerCaseSelectedRoles } : { roles: ['waiter'] }),
-          ...(lastUserEdit.establishment.id !== selectedOption.id && { establishment: selectedOption.id }),
+          ...(lastUserEdit.establishment !== null &&
+            (lastUserEdit.establishment.id !== selectedOption.id && { establishment: selectedOption.id })
+          ),
           ...(lastUserEdit.isActive !== user.isActive && { isActive: user.isActive }),
         };
 
@@ -142,7 +144,7 @@ export function UsersEstablishmentsAdmin() {
           firstName: user.firstName,
           password: user.password,
           isActive: user.isActive,
-          ...(selectedOption !== undefined && {establishment: selectedOption.id}),
+          ...(selectedOption !== undefined && { establishment: selectedOption.id }),
           ...(user.lastName && { lastName: user.lastName }),
           ...(user.roles !== undefined ? { roles: lowerCaseSelectedRoles } : { roles: ['waiter'] })
         };
