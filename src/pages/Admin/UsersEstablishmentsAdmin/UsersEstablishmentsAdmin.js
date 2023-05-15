@@ -52,6 +52,7 @@ export function UsersEstablishmentsAdmin() {
   const [selectedRoles, setSelectedRoles] = useState(null);
   const [selectedEstablishment, setSelectedEstablishment] = useState(null);
   const [establishmentsDropdown, setEstablishmentsDropdown] = useState([])
+  const [establishmentActive, setEstablishmentActive] = useState(true);
 
   useEffect(() => {
     getUsersAll();
@@ -73,6 +74,19 @@ export function UsersEstablishmentsAdmin() {
       setEstablishmentsDropdown(formatDropdownData(establishments));
     }
   }, [establishments]);
+
+  useEffect(() => {
+    if (selectedRoles?.includes('superuser')) {
+      setEstablishmentActive(false);
+      setSelectedEstablishment(null);
+    }
+
+    else {
+      setEstablishmentActive(true);
+    }
+  }, [selectedRoles])
+
+  console.log(selectedEstablishment);
 
   const onRefresh = () => setRefreshTable((state) => !state);
 
@@ -514,16 +528,16 @@ export function UsersEstablishmentsAdmin() {
                     selectedItemTemplate={selectedItemTemplate}
                   />
                 </div>
-
-                <div className="field">
-                  <label htmlFor="establishment" className="font-bold">
-                    Establecimiento
-                  </label>
-                  <Dropdown value={selectedEstablishment} onChange={(e) => onDropdownChange(e.value)} options={establishmentsDropdown} optionLabel="value"
-                    placeholder="Selecciona un establecimiento" appendTo="self" className={classNames({ "p-invalid": submitted && (validationErrors.establishment) })} />
-                  {submitted && validationErrors.establishment && (<small className="p-error">{validationErrors.establishment}</small>)}
-                </div>
-
+                {establishmentActive &&
+                  <div className="field">
+                    <label htmlFor="establishment" className="font-bold">
+                      Establecimiento
+                    </label>
+                    <Dropdown value={selectedEstablishment} onChange={(e) => onDropdownChange(e.value)} options={establishmentsDropdown} optionLabel="value"
+                      placeholder="Selecciona un establecimiento" appendTo="self" className={classNames({ "p-invalid": submitted && (validationErrors.establishment) })} />
+                    {submitted && validationErrors.establishment && (<small className="p-error">{validationErrors.establishment}</small>)}
+                  </div>
+                }
                 <div className="field">
                   <label htmlFor="firstName" className="font-bold">
                     Nombre
