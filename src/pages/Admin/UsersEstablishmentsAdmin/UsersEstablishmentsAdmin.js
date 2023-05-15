@@ -84,9 +84,7 @@ export function UsersEstablishmentsAdmin() {
     else {
       setEstablishmentActive(true);
     }
-  }, [selectedRoles])
-
-  console.log(selectedEstablishment);
+  }, [selectedRoles]);
 
   const onRefresh = () => setRefreshTable((state) => !state);
 
@@ -135,9 +133,7 @@ export function UsersEstablishmentsAdmin() {
           ...(user.password !== '' && { password: user.password }),
           ...(user.lastName !== '' ? { lastName: user.lastName } : { lastName: null }),
           ...(selectedRoles.length !== 0 ? { roles: lowerCaseSelectedRoles } : { roles: ['waiter'] }),
-          ...(lastUserEdit.establishment !== null &&
-            (lastUserEdit.establishment.id !== selectedOption.id && { establishment: selectedOption.id })
-          ),
+          ...((establishmentActive !== false && selectedOption !== undefined) && { establishment: selectedOption.id }),
           ...(lastUserEdit.isActive !== user.isActive && { isActive: user.isActive }),
         };
 
