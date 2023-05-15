@@ -318,9 +318,10 @@ export function UsersEstablishmentsAdmin() {
     setlastUserEdit(userEdit);
     setUser({ ...userEdit, password: '' });
     setSelectedRoles(userEdit.roles);
-    setSelectedEstablishment(userEdit.establishment.name);
     setUserDialog(true);
     setActionName('Editar Usuario');
+
+    if (userEdit.establishment) setSelectedEstablishment(userEdit.establishment.name);
   };
 
   const hideDeleteUserDialog = () => {
