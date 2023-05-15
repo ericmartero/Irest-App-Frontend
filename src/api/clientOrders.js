@@ -5,15 +5,15 @@ export function getClientOrders() {
     return JSON.parse(clientOrders || "[]");
 };
 
-export function addClientOrder(idProductOrder) {
+export function addClientOrder(idOrder) {
     const clientOrders = getClientOrders();
-    clientOrders.push(idProductOrder);
+    clientOrders.push(idOrder);
     localStorage.setItem(CLIENT_ORDERS, JSON.stringify(clientOrders));
 };
 
-export function removeClientOrder(idProductOrder) {
+export function removeClientOrder(idOrder) {
     const clientOrders = getClientOrders();
-    const index = clientOrders.indexOf(idProductOrder);
+    const index = clientOrders.indexOf(idOrder);
     if (index > -1) {
         clientOrders.splice(index, 1);
     }
