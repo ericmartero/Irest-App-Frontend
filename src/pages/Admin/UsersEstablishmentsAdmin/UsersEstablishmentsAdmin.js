@@ -24,6 +24,7 @@ export function UsersEstablishmentsAdmin() {
     lastName: '',
     password: '',
     isActive: true,
+    establishment: '',
     roles: [],
   };
 
@@ -101,11 +102,12 @@ export function UsersEstablishmentsAdmin() {
     document.body.classList.add('body-scroll-lock');
   };
 
-
   const saveUser = async () => {
 
     const isValid = validateFields();
     setSubmitted(true);
+
+    const selectedOption = establishmentsDropdown.find((option) => option.value === selectedEstablishment);
 
     if (isValid) {
 
@@ -119,6 +121,7 @@ export function UsersEstablishmentsAdmin() {
           ...(user.password !== '' && { password: user.password }),
           ...(user.lastName !== '' ? { lastName: user.lastName } : { lastName: null }),
           ...(selectedRoles.length !== 0 ? { roles: lowerCaseSelectedRoles } : { roles: ['waiter'] }),
+          ...(lastUserEdit.establishment.id !== selectedOption.id && { establishment: selectedOption.id }),
           ...(lastUserEdit.isActive !== user.isActive && { isActive: user.isActive }),
         };
 
