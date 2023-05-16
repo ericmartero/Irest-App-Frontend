@@ -71,7 +71,10 @@ export function ProductsAdmin() {
     setCategoriesDropdown(formatDropdownData(categories));
   }, [categories])
 
-  const onRefresh = () => setRefreshTable((state) => !state);
+  const onRefresh = () => { 
+    setRefreshTable((state) => !state);
+    setGlobalFilter(null);
+  };
 
   const openNew = () => {
     setIsEditProduct(false);

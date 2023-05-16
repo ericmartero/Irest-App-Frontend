@@ -60,7 +60,10 @@ export function UsersAdmin() {
     }
   }, [users, auth]);
 
-  const onRefresh = () => setRefreshTable((state) => !state);
+  const onRefresh = () => { 
+    setRefreshTable((state) => !state);
+    setGlobalFilter(null);
+  };
 
   const openNew = () => {
     setIsEditUser(false);

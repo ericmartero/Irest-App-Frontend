@@ -70,7 +70,10 @@ export function TablesAdmin() {
     }
   }, [tables]);
 
-  const onRefresh = () => setRefreshTable((state) => !state);
+  const onRefresh = () => { 
+    setRefreshTable((state) => !state)
+    setGlobalFilter(null);
+  };
 
   const openNew = () => {
     setIsEditTable(false);

@@ -55,7 +55,10 @@ export function CategoriesAdmin() {
     }
   }, [categories]);
 
-  const onRefresh = () => setRefreshTable((state) => !state);
+  const onRefresh = () => { 
+    setRefreshTable((state) => !state);
+    setGlobalFilter(null);
+  };
 
   const openNew = () => {
     setIsEditCategory(false);
