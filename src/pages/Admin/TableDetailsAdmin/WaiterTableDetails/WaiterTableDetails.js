@@ -53,7 +53,6 @@ export function WaiterTableDetails() {
   const [showBillDialog, setShowBillDialog] = useState(false);
 
   const [onPaymentChange, setOnPaymentChange] = useState(false);
-  const [enablePayment, setEnablePayment] = useState(false);
   const [finishPaymentDialog, setFinishPaymentDialog] = useState(false);
 
   const [autoRefreshEnabled, setAutoRefreshEnabled] = useState(true);
@@ -123,19 +122,6 @@ export function WaiterTableDetails() {
       })();
     }
   }, [table, refreshOrders, getPaymentByTable]);
-
-  useEffect(() => {
-    if (orders) {
-      const pendingOrders = orders.filter((order) => order.status === ORDER_STATUS.PENDING);
-      if (size(pendingOrders) > 0 || size(orders) === 0) {
-        setEnablePayment(true);
-      }
-
-      else {
-        setEnablePayment(false);
-      }
-    }
-  }, [onPaymentChange, orders])
 
   useEffect(() => {
     const autoRefreshTables = () => {
@@ -453,7 +439,7 @@ export function WaiterTableDetails() {
       <div className="flex flex-wrap gap-2">
         {!paymentData ? <Button label="Añadir pedido" severity="success" className='ml-5' onClick={openNew} />
           : <Button label="Ver Cuenta" severity="secondary" className='ml-5' onClick={onShowBill} />}
-        {!paymentData ? <Button label="Generar Cuenta" severity="secondary" className='ml-2' disabled={enablePayment} onClick={onConfirmPayment} />
+        {!paymentData ? <Button label="Generar Cuenta" severity="secondary" className='ml-2' onClick={onConfirmPayment} />
           : null
         }
       </div>
