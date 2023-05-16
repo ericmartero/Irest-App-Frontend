@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ORDER_STATUS } from '../../../utils/constants';
+import { ORDER_STATUS, PAYMENT_TYPE } from '../../../utils/constants';
 import { useHistory } from 'react-router-dom';
 import { size } from 'lodash';
 import { useTable, useTableBooking } from '../../../hooks';
@@ -251,7 +251,10 @@ export function OrdersAdmin() {
                 <>
                   {size(table.tableBooking.payments) > 0 ?
                     <i className="pi pi-shopping-cart mr-4 p-text-secondary p-overlay-badge" style={{ fontSize: '2rem' }}>
-                      <Badge value={'€'} style={{ background: '#A855F7' }}></Badge>
+                      <Badge value={table.tableBooking.payments[0].paymentType === PAYMENT_TYPE.CARD ?
+                        <i className="pi pi-credit-card mt-1"></i> :
+                        <i className="pi pi-wallet mt-1"></i>
+                      } style={{ background: '#A855F7' }}></Badge>
                     </i>
                     :
                     <i className="pi pi-shopping-cart mr-4 p-text-secondary p-overlay-badge" style={{ fontSize: '2rem' }}>
