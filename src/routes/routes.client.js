@@ -3,15 +3,15 @@ import { HomeClient, Categories, Products, InviteClientTable, OrdersTracking } f
 
 const routesClient = [
     {
-        path: '/:idTable',
-        layout: MainLayout,
-        component: HomeClient,
-        exact: true
-    },
-        {
         path: '/client-invite/table=:idTable&key=:key',
         layout: MainLayout,
         component: InviteClientTable,
+        exact: true
+    },
+    {
+        path: '/:idTable',
+        layout: MainLayout,
+        component: HomeClient,
         exact: true
     },
     {
