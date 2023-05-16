@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useOrder, useTable, useProduct, usePayment } from '../../../../hooks';
 import { ORDER_STATUS, PAYMENT_TYPE } from '../../../../utils/constants';
+import { useHistory } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { classNames } from 'primereact/utils';
 import { Dialog } from 'primereact/dialog';
@@ -15,7 +16,6 @@ import { RadioButton } from "primereact/radiobutton";
 import { Divider } from 'primereact/divider';
 import { Badge } from 'primereact/badge';
 import { Toast } from 'primereact/toast';
-import { Checkbox } from "primereact/checkbox";
 import { Tag } from 'primereact/tag';
 import { map, forEach, size } from 'lodash';
 import moment from 'moment';
@@ -27,9 +27,9 @@ export function WaiterTableDetails() {
   const toast = useRef(null);
   const intervalRef = useRef();
   const tableURL = useParams();
-  //const history = useHistory();
-  const { orders, loading, getOrdersByTable, checkDeliveredOrder, addOrderToTable, deleteOrder, addPaymentToOrder } = useOrder();
-  const { tables, getTableById } = useTable();
+  const history = useHistory();
+  const { orders, loading, getOrdersByTable, checkDeliveredOrder, addOrderToTable, deleteOrder, addPaymentToOrder, closeOrder } = useOrder();
+  const { tables, getTableById, updateTable } = useTable();
   const { products, getProducts, getProductById } = useProduct();
   const { createPayment, getPaymentByTable, closePayment } = usePayment();
 
@@ -53,16 +53,14 @@ export function WaiterTableDetails() {
   const [paymentData, setPaymentData] = useState(null);
   const [showBillDialog, setShowBillDialog] = useState(false);
 
+  const [onPaymentChange, setOnPaymentChange] = useState(false);
+  const [enablePayment, setEnablePayment] = useState(false);
   const [finishPaymentDialog, setFinishPaymentDialog] = useState(false);
 
   const [autoRefreshEnabled, setAutoRefreshEnabled] = useState(true);
 
-  const [ordersTable, setOrdersTable] = useState(null);
-  const [selectedOrders, setSelectedOrders] = useState(null);
-  const [showProductsToPayDialog, setShowProductsToPayDialog] = useState(false);
-  const [checked, setChecked] = useState(false);
-
   const onRefreshOrders = () => setRefreshOrders((prev) => !prev);
+  const onRefreshPayment = () => setOnPaymentChange((prev) => !prev);
 
   useEffect(() => {
     getTableById(tableURL.id);
@@ -86,7 +84,6 @@ export function WaiterTableDetails() {
       const deliveredOrders = orders.filter((order) => order.status === ORDER_STATUS.DELIVERED);
       const preparedOrders = orders.filter((order) => order.status === ORDER_STATUS.PREPARED);
       setOrdersBooking(groupOrdersStatus(pendingOrders).concat(groupOrdersStatus(deliveredOrders)).concat(groupOrdersStatus(preparedOrders)));
-      setOrdersTable(orders);
     }
   }, [orders]);
 
@@ -127,6 +124,19 @@ export function WaiterTableDetails() {
       })();
     }
   }, [table, refreshOrders, getPaymentByTable]);
+
+  useEffect(() => {
+    if (orders) {
+      const pendingOrders = orders.filter((order) => order.status === ORDER_STATUS.PENDING);
+      if (size(pendingOrders) > 0 || size(orders) === 0) {
+        setEnablePayment(true);
+      }
+
+      else {
+        setEnablePayment(false);
+      }
+    }
+  }, [onPaymentChange, orders])
 
   useEffect(() => {
     const autoRefreshTables = () => {
@@ -243,10 +253,6 @@ export function WaiterTableDetails() {
     setAutoRefreshEnabled(true);
   };
 
-  const hideShowProductsToPayDialog = () => {
-    setShowProductsToPayDialog(false);
-  };
-
   const openDialogFinishPayment = () => {
     setFinishPaymentDialog(true);
     setShowBillDialog(false);
@@ -288,6 +294,7 @@ export function WaiterTableDetails() {
     try {
       await deleteOrder(orderDelete);
       onRefreshOrders();
+      onRefreshPayment();
       toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Pedido cancelado correctamente', life: 3000 });
     } catch (error) {
       showError(error);
@@ -301,14 +308,14 @@ export function WaiterTableDetails() {
     try {
       await closePayment(paymentData.id);
 
-      /*for await (const order of orders) {
+      for await (const order of orders) {
         await closeOrder(order.id);
-      }*/
+      }
 
-      //await updateTable(table.id, { tableBooking: null });
+      await updateTable(table.id, { tableBooking: null });
 
       toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Pago finalizado correctamente', life: 3000 });
-      //history.push("/admin");
+      history.push("/admin");
     } catch (error) {
       showError(error);
     }
@@ -374,11 +381,6 @@ export function WaiterTableDetails() {
     }));
   };
 
-  const onProductsToPay = () => {
-    setConfirmTypePaymentDialog(true);
-    setShowProductsToPayDialog(false);
-};
-
   const orderDialogFooter = (
     <React.Fragment>
       <Button label="Cancelar" icon="pi pi-times" className="bttnFoot" outlined onClick={hideDialog} />
@@ -421,11 +423,6 @@ export function WaiterTableDetails() {
     </React.Fragment>
   );
 
-  const finishShowProductsToPayDialogFooter = (
-    <div className='footerBill'>
-      <Button label="Siguiente" className='mt-4' onClick={onProductsToPay} disabled={size(selectedOrders) === 0} />
-    </div>
-  );
 
   const formatCurrency = (value) => {
     return value?.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' });
@@ -443,7 +440,7 @@ export function WaiterTableDetails() {
   };
 
   const onConfirmPayment = () => {
-    setShowProductsToPayDialog(true);
+    setConfirmTypePaymentDialog(true);
     setAutoRefreshEnabled(false);
   };
 
@@ -457,27 +454,11 @@ export function WaiterTableDetails() {
       <div className="flex flex-wrap gap-2">
         {!paymentData ? <Button label="Añadir pedido" severity="success" className='ml-5' onClick={openNew} />
           : <Button label="Ver Cuenta" severity="secondary" className='ml-5' onClick={onShowBill} />}
-        {!paymentData ? <Button label="Generar Cuenta" severity="secondary" className='ml-2' onClick={onConfirmPayment} />
+        {!paymentData ? <Button label="Generar Cuenta" severity="secondary" className='ml-2' disabled={enablePayment} onClick={onConfirmPayment} />
           : null
         }
       </div>
     );
-  };
-
-  const allProductsChecked = (e) => {
-    if (e.checked) {
-      setSelectedOrders(ordersTable);
-    }
-
-    else {
-      setSelectedOrders(null);
-    }
-
-    setChecked(e.checked)
-  };
-
-  const priceOrderTemplate = (rowData) => {
-    return formatCurrency(rowData.product.price);
   };
 
   const header = () => {
@@ -486,25 +467,13 @@ export function WaiterTableDetails() {
     );
   };
 
-  const headerOrders = (
-    <div className="flex flex-wrap gap-2 align-items-center justify-content-between">
-      <div style={{ display: "flex" }}>
-        <Checkbox onChange={e => allProductsChecked(e)} checked={checked}></Checkbox>
-        <span className="ml-3">Todos</span>
-      </div>
-    </div>
-  );
-
-  const imageBodyTemplate = (rowData) => {
-    return <img src={rowData.product.image} alt={rowData.product.image} className="shadow-2 border-round" style={{ width: '80px' }} />;
-  };
-
   const itemTemplate = (order) => {
 
     const onCheckDeliveredOrder = async (status) => {
       order.quantity--;
       await checkDeliveredOrder(order.id, status);
       onRefreshOrders();
+      onRefreshPayment();
     }
 
     return (
@@ -618,19 +587,6 @@ export function WaiterTableDetails() {
             </div>
           </Dialog>
 
-          <Dialog visible={showProductsToPayDialog} style={{ width: '45rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} modal header="Selección de productos a pagar" onHide={hideShowProductsToPayDialog}
-            footer={finishShowProductsToPayDialogFooter} className='footer-orders-pay-container'>
-            <div className="footer-payment-content">
-              <DataTable className='table-orders-pay' style={{ width: "100%" }} value={ordersTable} selection={selectedOrders}
-                header={headerOrders} onSelectionChange={(e) => setSelectedOrders(e.value)} emptyMessage='No hay pedidos para pagar'>
-                <Column selectionMode="multiple"></Column>
-                <Column field="product.image" body={imageBodyTemplate}></Column>
-                <Column field="product.title"></Column>
-                <Column field="product.price" body={priceOrderTemplate}></Column>
-              </DataTable>
-            </div>
-          </Dialog>
-
           <Dialog visible={deleteOrderDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteOrderDialogFooter} onHide={hideDeleteOrderDialog}>
             <div className="confirmation-content">
               <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
@@ -698,5 +654,4 @@ export function WaiterTableDetails() {
       }
     </div>
   )
-
 }
