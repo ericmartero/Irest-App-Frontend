@@ -19,7 +19,7 @@ export function LoginAdmin() {
 
   const showError = (error) => {
     toastError.current.show({ severity: 'error', summary: 'Error al iniciar sessión', detail: error.message, life: 3000 });
-  }
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -53,8 +53,7 @@ export function LoginAdmin() {
     e.preventDefault();
     setSubmitted(true);
     formik.handleSubmit();
-  }
-
+  };
 
   return (
     <div>
