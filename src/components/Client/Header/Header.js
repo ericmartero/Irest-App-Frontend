@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useProduct, useOrder, useTable } from '../../../hooks';
 import { getProductShoppingCart, cleanProductShoppingCart } from '../../../api/shoppingCart';
-import {  addClientOrder } from '../../../api/clientOrders';
 import { ShoppingCart } from '../ShoppingCart';
 import { Toast } from 'primereact/toast';
 import { Badge } from 'primereact/badge';
@@ -74,8 +73,7 @@ export function Header(props) {
     const addOrder = async () => {
         try {
             for await (const product of products) {
-                const order = await addClientOrderToTable(table.tableBooking.id, product.id);
-                addClientOrder(order.id);
+                await addClientOrderToTable(table.tableBooking.id, product.id);
             }
             cleanProductShoppingCart();
             onRefresh();

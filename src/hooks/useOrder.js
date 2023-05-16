@@ -58,8 +58,7 @@ export function useOrder() {
 
     const addClientOrderToTable = async (idTableBooking, idProduct) => {
         try {
-            const response = await addOrderToTableApi(idTableBooking, idProduct, authClient.token);
-            return response;
+            await addOrderToTableApi(idTableBooking, idProduct, authClient.token);
         } catch (error) {
             throw error;
         }

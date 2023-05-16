@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { getClientOrders } from '../../../api/clientOrders';
 import { useOrder, usePayment } from '../../../hooks';
 import { PAYMENT_TYPE } from '../../../utils/constants';
 import { classNames } from 'primereact/utils';
