@@ -374,6 +374,11 @@ export function WaiterTableDetails() {
     }));
   };
 
+  const onProductsToPay = () => {
+    setConfirmTypePaymentDialog(true);
+    setShowProductsToPayDialog(false);
+};
+
   const orderDialogFooter = (
     <React.Fragment>
       <Button label="Cancelar" icon="pi pi-times" className="bttnFoot" outlined onClick={hideDialog} />
@@ -418,7 +423,7 @@ export function WaiterTableDetails() {
 
   const finishShowProductsToPayDialogFooter = (
     <div className='footerBill'>
-      <Button label="Siguiente" className='mt-4' onClick={""} disabled={size(selectedOrders) === 0} />
+      <Button label="Siguiente" className='mt-4' onClick={onProductsToPay} disabled={size(selectedOrders) === 0} />
     </div>
   );
 
@@ -438,7 +443,6 @@ export function WaiterTableDetails() {
   };
 
   const onConfirmPayment = () => {
-    //setConfirmTypePaymentDialog(true);
     setShowProductsToPayDialog(true);
     setAutoRefreshEnabled(false);
   };
@@ -492,7 +496,7 @@ export function WaiterTableDetails() {
   );
 
   const imageBodyTemplate = (rowData) => {
-    return <img src={rowData.product.image} alt={rowData.product.image} className="shadow-2 border-round" style={{ width: '50px' }} />;
+    return <img src={rowData.product.image} alt={rowData.product.image} className="shadow-2 border-round" style={{ width: '80px' }} />;
   };
 
   const itemTemplate = (order) => {
