@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useOrder, usePayment } from '../../../hooks';
 import { PAYMENT_TYPE } from '../../../utils/constants';
 import { classNames } from 'primereact/utils';
@@ -6,6 +6,7 @@ import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
+import { Toast } from 'primereact/toast';
 import { forEach, size } from 'lodash';
 import moment from 'moment';
 import 'moment/locale/es';
@@ -13,8 +14,9 @@ import './Payment.scss';
 
 export function Payment(props) {
 
-    const { table } = props;
+    const { table, isPaidToast } = props;
 
+    const toast = useRef(null);
     const { createClientPayment, getPaymentByIdClient } = usePayment();
     const { orders, getOrdersByTableClient, addPaymentToOrderClient } = useOrder();
 
@@ -55,8 +57,13 @@ export function Payment(props) {
     const onRefresh = () => setRefreshOrders((state) => !state);
 
     const onShowPaymentDialog = () => {
-        onRefresh();
-        setShowPaymentDialog(true);
+        if (paymentData) {
+            isPaidToast();
+        }
+
+        else {
+            setShowPaymentDialog(true);
+        }
     };
 
     const hideShowPaymentDialog = () => {
@@ -175,6 +182,8 @@ export function Payment(props) {
 
     return (
         <>
+            <Toast ref={toast} position="top-center" />
+
             <i className="pi pi-credit-card" style={{ fontSize: '1.8rem' }} onClick={onShowPaymentDialog} />
 
             <Dialog visible={showPaymentDialog} style={{ width: '90vw' }} header="Método de pago" modal onHide={hideShowPaymentDialog}>

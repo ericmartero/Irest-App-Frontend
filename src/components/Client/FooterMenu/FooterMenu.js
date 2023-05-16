@@ -32,6 +32,10 @@ export function FooterMenu(props) {
         }
     }, [tables]);
 
+    const isPaidToast = () => {
+        toast.current.show({ severity: 'info', summary: 'Pago realizado', detail: `Ya se ha realizado el pago de los pedidos`, life: 1500 });
+    };
+
     const showError = (error) => {
         toast.current.show({ severity: 'error', summary: 'Operacion Fallida', detail: error.message, life: 1500 });
     }
@@ -71,7 +75,7 @@ export function FooterMenu(props) {
                 </div>
                 <div className="footer-container">
                     <i className="pi pi-bell" style={{ fontSize: '1.8rem' }} onClick={() => setWarnWaiterDialog(true)} />
-                    <Payment table={table} />
+                    <Payment table={table} isPaidToast={isPaidToast} />
                 </div>
             </div>
 
