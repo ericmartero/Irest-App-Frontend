@@ -123,7 +123,7 @@ export function Payment(props) {
         }
 
         setChecked(e.checked)
-    }
+    };
 
     const createPayment = async () => {
 
