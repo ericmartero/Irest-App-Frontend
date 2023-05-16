@@ -4,7 +4,6 @@ import { PAYMENT_TYPE } from '../../../utils/constants';
 import { classNames } from 'primereact/utils';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
-import { Checkbox } from "primereact/checkbox";
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { forEach, size } from 'lodash';
@@ -20,12 +19,9 @@ export function Payment(props) {
     const { orders, getOrdersByTableClient, addPaymentToOrderClient } = useOrder();
 
     const [refreshOrders, setRefreshOrders] = useState(false);
-    const [selectedOrders, setSelectedOrders] = useState(null);
     const [ordersTable, setOrdersTable] = useState(null);
     const [paymentType, setPaymentType] = useState(null);
     const [paymentData, setPaymentData] = useState(null);
-    const [checked, setChecked] = useState(false);
-    const [showProductsToPayDialog, setShowProductsToPayDialog] = useState(false);
     const [showPaymentDialog, setShowPaymentDialog] = useState(false);
     const [showConfirmPaymentDialog, setShowConfirmPaymentDialog] = useState(false);
     const [finishPaymentDialog, setFinishPaymentDialog] = useState(false);
@@ -61,24 +57,11 @@ export function Payment(props) {
 
     const onShowPaymentDialog = () => {
         onRefresh();
-        setShowProductsToPayDialog(true);
-    };
-
-    const priceOrderTemplate = (rowData) => {
-        return formatCurrency(rowData.product.price);
-    };
-
-    const imageBodyTemplate = (rowData) => {
-        return <img src={rowData.product.image} alt={rowData.product.image} className="shadow-2 border-round" style={{ width: '50px' }} />;
-    };
-
-    const hideShowProductsToPayDialog = () => {
-        setShowProductsToPayDialog(false);
+        setShowPaymentDialog(true);
     };
 
     const hideShowPaymentDialog = () => {
         setShowPaymentDialog(false);
-        setShowProductsToPayDialog(true);
     };
 
     const hideBillDialog = () => {
@@ -112,22 +95,10 @@ export function Payment(props) {
         }, []);
     };
 
-    const allProductsChecked = (e) => {
-        if (e.checked) {
-            setSelectedOrders(ordersTable);
-        }
-
-        else {
-            setSelectedOrders(null);
-        }
-
-        setChecked(e.checked)
-    };
-
     const createPayment = async () => {
 
         let totalPayment = 0;
-        forEach(selectedOrders, (order) => {
+        forEach(ordersTable, (order) => {
             totalPayment += order.product.price;
         });
 
@@ -139,7 +110,7 @@ export function Payment(props) {
 
         const payment = await createClientPayment(paymentData);
 
-        for await (const order of selectedOrders) {
+        for await (const order of ordersTable) {
             await addPaymentToOrderClient(order.id, payment.id);
         };
 
@@ -167,15 +138,6 @@ export function Payment(props) {
         setFinishPaymentDialog(false);
     };
 
-    const clientOrders = () => {
-        //LISTA DE PEDIDOS DEL CLIENTE
-    };
-
-    const onProductsToPay = () => {
-        setShowPaymentDialog(true);
-        setShowProductsToPayDialog(false);
-    };
-
     const onPaymentDialog = async (paymentType) => {
         setShowPaymentDialog(false);
         setShowConfirmPaymentDialog(true);
@@ -191,12 +153,6 @@ export function Payment(props) {
         setFinishPaymentDialog(false);
         setShowBillDialog(true);
     };
-
-    const finishShowProductsToPayDialogFooter = (
-        <div className='footerBill'>
-            <Button label="Siguiente" className='mt-4' onClick={onProductsToPay} disabled={size(selectedOrders) === 0} />
-        </div>
-    );
 
     const showBillDialogFooter = (
         <div className='footerBill'>
@@ -218,32 +174,9 @@ export function Payment(props) {
         </React.Fragment>
     );
 
-    const header = (
-        <div className="flex flex-wrap gap-2 align-items-center justify-content-between">
-            <div style={{ display: "flex" }}>
-                <Checkbox onChange={e => allProductsChecked(e)} checked={checked}></Checkbox>
-                <span className="ml-3">Todos</span>
-            </div>
-            <Button label="Mis pedidos" className="p-button-secondary" onClick={clientOrders} />
-        </div>
-    );
-
     return (
         <>
             <i className="pi pi-credit-card" style={{ fontSize: '1.8rem' }} onClick={onShowPaymentDialog} />
-
-            <Dialog visible={showProductsToPayDialog} style={{ width: '93vw' }} modal header="Selección de productos" onHide={hideShowProductsToPayDialog}
-                footer={finishShowProductsToPayDialogFooter} className='footer-orders-pay-container'>
-                <div className="footer-payment-content">
-                    <DataTable className='table-orders-pay' style={{ width: "100%" }} value={ordersTable} selection={selectedOrders}
-                        header={header} onSelectionChange={(e) => setSelectedOrders(e.value)} emptyMessage='No hay pedidos para pagar'>
-                        <Column selectionMode="multiple"></Column>
-                        <Column field="product.image" body={imageBodyTemplate}></Column>
-                        <Column field="product.title" style={{ minWidth: '6rem' }}></Column>
-                        <Column field="product.price" body={priceOrderTemplate}></Column>
-                    </DataTable>
-                </div>
-            </Dialog>
 
             <Dialog visible={showPaymentDialog} style={{ width: '90vw' }} header="Método de pago" modal onHide={hideShowPaymentDialog}>
                 <div className='paymentDialog-container'>
@@ -264,7 +197,7 @@ export function Payment(props) {
                 </div>
 
                 <div className='table-orders-payment' style={{ marginTop: '1.5rem' }}>
-                    <DataTable value={selectedOrders && groupOrdersStatus(selectedOrders)} >
+                    <DataTable value={ordersTable && groupOrdersStatus(ordersTable)} >
                         <Column field="quantity" header="UNIDADES" bodyStyle={{ textAlign: 'center' }}></Column>
                         <Column field="product.title" header="PRODUCTO" bodyStyle={{ textAlign: 'center' }}></Column>
                         <Column field="product.price" header="IMPORTE" body={priceBodyTemplate} bodyStyle={{ textAlign: 'center' }}></Column>
