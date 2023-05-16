@@ -37,8 +37,7 @@ export function Payment(props) {
 
     useEffect(() => {
         if (orders) {
-            const filteredOrders = orders.filter(order => order.payment === null);
-            setOrdersTable(filteredOrders);
+            setOrdersTable(orders);
         }
     }, [orders]);
 
@@ -218,7 +217,7 @@ export function Payment(props) {
                 className='dialog-payment-confirm-container'>
                 <div className="confirmation-content">
                     <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                    <span>¿Seguro que quieres realizar el pago de los pedidos seleccionados?</span>
+                    <span>¿Seguro que quieres realizar el pago con {paymentType === PAYMENT_TYPE.CARD ? "tarjeta" : "efectivo"}?</span>
                 </div>
             </Dialog>
 
