@@ -316,7 +316,7 @@ export function Header(props) {
                 className='dialog-payment-confirm-container'>
                 <div className="confirmation-content">
                     <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                    <span>¿Seguro que deseas finalizar la estancia en la mesa?</span>
+                    <span>¿Seguro que deseas finalizar la estancia en la mesa? <br/> Esta acción hará que se cierre el servicio de la mesa.</span>
                 </div>
             </Dialog>
         </>
