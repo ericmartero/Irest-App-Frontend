@@ -19,7 +19,6 @@ export function Payment(props) {
     const [paymentData, setPaymentData] = useState(null);
     const [showPaymentDialog, setShowPaymentDialog] = useState(false);
     const [showConfirmPaymentDialog, setShowConfirmPaymentDialog] = useState(false);
-    const [finishPaymentDialog, setFinishPaymentDialog] = useState(false);
 
     useEffect(() => {
         (async () => {
@@ -92,25 +91,6 @@ export function Payment(props) {
         setShowConfirmPaymentDialog(false);
     };
 
-    const finishPayment = async () => {
-        /*try {
-          await closePayment(paymentData.id);
-    
-          for await (const order of orders) {
-            await closeOrder(order.id);
-          }
-    
-          await updateTable(table.id, { tableBooking: null });
-          
-          toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Pago finalizado correctamente', life: 3000 });
-          history.push("/admin");
-        } catch (error) {
-          showError(error);
-        }
-        onRefreshOrders();*/
-        setFinishPaymentDialog(false);
-    };
-
     const onPaymentDialog = async (paymentType) => {
         setShowPaymentDialog(false);
         setShowConfirmPaymentDialog(true);
@@ -122,21 +102,10 @@ export function Payment(props) {
         setShowPaymentDialog(true);
     };
 
-    const hideFinishPaymentDialog = () => {
-        setFinishPaymentDialog(false);
-    };
-
     const showConfirmPaymentDialogFooter = (
         <React.Fragment>
             <Button label="No" icon="pi pi-times" outlined onClick={hideShowConfirmPaymentDialog} style={{ marginTop: "10px" }} />
             <Button label="Si" icon="pi pi-check" onClick={createPayment} />
-        </React.Fragment>
-    );
-
-    const finishPaymentDialogFooter = (
-        <React.Fragment>
-            <Button label="No" icon="pi pi-times" outlined onClick={hideFinishPaymentDialog} />
-            <Button label="Si" icon="pi pi-check" onClick={finishPayment} />
         </React.Fragment>
     );
 
@@ -160,14 +129,6 @@ export function Payment(props) {
                 <div className="confirmation-content">
                     <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                     <span>¿Seguro que quieres realizar el pago con {paymentType === PAYMENT_TYPE.CARD ? "tarjeta" : "efectivo"}?</span>
-                </div>
-            </Dialog>
-
-            <Dialog visible={finishPaymentDialog} style={{ width: '90vw' }} header="Finalizar estancia en la mesa" modal footer={finishPaymentDialogFooter} onHide={hideFinishPaymentDialog}
-                className='dialog-payment-confirm-container'>
-                <div className="confirmation-content">
-                    <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                    <span>¿Seguro que deseas finalizar la estancia en la mesa?</span>
                 </div>
             </Dialog>
         </>
