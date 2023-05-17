@@ -8,7 +8,7 @@ import './Payment.scss';
 
 export function Payment(props) {
 
-    const { table, isPaidToast, noOrdersToPaymentToast } = props;
+    const { table, isPaidToast, noOrdersToPaymentToast, requestedAccount } = props;
 
     const { createClientPayment, getPaymentByIdClient } = usePayment();
     const { orders, getOrdersByTableClient, addPaymentToOrderClient } = useOrder();
@@ -88,8 +88,8 @@ export function Payment(props) {
         };
 
         onRefresh();
-        setShowConfirmPaymentDialog(true);
-        //SE ACABAAA MOSTRAR TOAST
+        requestedAccount();
+        setShowConfirmPaymentDialog(false);
     };
 
     const finishPayment = async () => {

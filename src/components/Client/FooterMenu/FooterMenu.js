@@ -37,7 +37,11 @@ export function FooterMenu(props) {
     };
 
     const noOrdersToPaymentToast = () => {
-        toast.current.show({ severity: 'info', summary: 'Pago', detail: `No hay pedidos para poder realizar el pago`, life: 1500 });
+        toast.current.show({ severity: 'info', summary: 'Realizar pago', detail: `No hay pedidos para poder realizar el pago`, life: 1500 });
+    };
+
+    const requestedAccount = () => {
+        toast.current.show({ severity: 'success', summary: 'Cuenta pedida', detail: `Se ha pedido la cuenta correctamente`, life: 1500 });
     };
 
     const showError = (error) => {
@@ -79,7 +83,12 @@ export function FooterMenu(props) {
                 </div>
                 <div className="footer-container">
                     <i className="pi pi-bell" style={{ fontSize: '1.8rem' }} onClick={() => setWarnWaiterDialog(true)} />
-                    <Payment table={table} isPaidToast={isPaidToast} noOrdersToPaymentToast={noOrdersToPaymentToast} />
+                    <Payment
+                        table={table}
+                        isPaidToast={isPaidToast}
+                        noOrdersToPaymentToast={noOrdersToPaymentToast}
+                        requestedAccount={requestedAccount}
+                    />
                 </div>
             </div>
 
