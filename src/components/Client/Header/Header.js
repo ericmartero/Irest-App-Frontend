@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useProduct, useOrder, useTable } from '../../../hooks';
+import { useProduct, useOrder, useTable, usePayment } from '../../../hooks';
 import { getProductShoppingCart, cleanProductShoppingCart } from '../../../api/shoppingCart';
 import { ShoppingCart } from '../ShoppingCart';
 import { Toast } from 'primereact/toast';
@@ -15,8 +15,9 @@ export function Header(props) {
 
     const toast = useRef(null);
     const { getClientProductById } = useProduct();
-    const { addClientOrderToTable } = useOrder();
+    const { orders, getOrdersByTableClient, addClientOrderToTable } = useOrder();
     const { tables, getTableClient } = useTable();
+    const { getPaymentByIdClient } = usePayment();
 
     const [totalPriceCart, setTotalPriceCart] = useState(0);
     const [showShoppingCartDialog, setShoppingCartDialog] = useState(false);
@@ -24,6 +25,7 @@ export function Header(props) {
     const [showAddOrderDialog, setShowAddOrderDialog] = useState(false);
     const [products, setProducts] = useState(null);
     const [table, setTable] = useState(null);
+    const [paymentData, setPaymentData] = useState(null);
 
     useEffect(() => {
         (async () => {
@@ -59,6 +61,25 @@ export function Header(props) {
             setTable(tables);
         }
     }, [tables])
+
+    useEffect(() => {
+        (async () => {
+            if (table) {
+                getOrdersByTableClient(table.tableBooking?.id);
+            }
+        })();
+    }, [table, getOrdersByTableClient]);
+
+    useEffect(() => {
+        if (size(orders) > 0) {
+            if (size(orders[0].payment) > 0) {
+                (async () => {
+                    const response = await getPaymentByIdClient(orders[0].payment.id);
+                    setPaymentData(response);
+                })();
+            }
+        }
+    }, [orders, getPaymentByIdClient]);
 
     useEffect(() => {
         onRefresh();
@@ -123,13 +144,18 @@ export function Header(props) {
             {isMain ?
                 <div className='header-main-container'>
                     <h2>{name}</h2>
-
-                    {products ?
-                        <i className="pi pi-shopping-cart p-overlay-badge shoppingCart-icon" onClick={onShoppingCart}>
-                            <Badge value={size(products)}></Badge>
-                        </i>
+                    {!paymentData ?
+                        <>
+                            {products ?
+                                <i className="pi pi-shopping-cart p-overlay-badge shoppingCart-icon" onClick={onShoppingCart}>
+                                    <Badge value={size(products)}></Badge>
+                                </i>
+                                :
+                                <i className="pi pi-shopping-cart p-overlay-badge shoppingCart-icon" onClick={onShoppingCart} />
+                            }
+                        </>
                         :
-                        <i className="pi pi-shopping-cart p-overlay-badge shoppingCart-icon" onClick={onShoppingCart} />
+                        <Button label='Cuenta' className="p-button-secondary button-payment" />
                     }
                 </div>
                 :
@@ -138,13 +164,18 @@ export function Header(props) {
                         <i className="pi pi-arrow-left" style={{ fontSize: '1rem', marginRight: '1rem' }} onClick={goBack}></i>
                         <h2>{name}</h2>
                     </div>
-
-                    {products ?
-                        <i className="pi pi-shopping-cart p-overlay-badge shoppingCart-icon" onClick={onShoppingCart}>
-                            <Badge value={size(products)}></Badge>
-                        </i>
+                    {!paymentData ?
+                        <>
+                            {products ?
+                                <i className="pi pi-shopping-cart p-overlay-badge shoppingCart-icon" onClick={onShoppingCart}>
+                                    <Badge value={size(products)}></Badge>
+                                </i>
+                                :
+                                <i className="pi pi-shopping-cart p-overlay-badge shoppingCart-icon" onClick={onShoppingCart} />
+                            }
+                        </>
                         :
-                        <i className="pi pi-shopping-cart p-overlay-badge shoppingCart-icon" onClick={onShoppingCart} />
+                        <Button label='Cuenta' className="p-button-secondary button-payment" />
                     }
                 </div>
             }
