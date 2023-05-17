@@ -439,7 +439,7 @@ export function ProductsAdmin() {
                   </label>
                   <InputNumber inputId="price" value={product.price} onValueChange={(e) => onInputChange(e, 'price')} showButtons buttonLayout="horizontal" step={0.25}
                     decrementButtonClassName="p-button-primary" incrementButtonClassName="p-button-primary" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-                    mode="currency" currency="EUR" min={0.01} />
+                    mode="currency" currency="EUR" min={0.01} max={1000} />
                 </div>
 
                 <div className="field">
