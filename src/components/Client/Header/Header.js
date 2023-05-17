@@ -3,6 +3,7 @@ import { useProduct, useOrder, useTable, usePayment } from '../../../hooks';
 import { getProductShoppingCart, cleanProductShoppingCart } from '../../../api/shoppingCart';
 import { PAYMENT_TYPE } from '../../../utils/constants';
 import { ShoppingCart } from '../ShoppingCart';
+import { useHistory } from 'react-router-dom';
 import { classNames } from 'primereact/utils';
 import { Toast } from 'primereact/toast';
 import { Badge } from 'primereact/badge';
@@ -20,10 +21,11 @@ export function Header(props) {
     const { name, isMain, goBack, refreshCartNumber, paramsURL } = props;
 
     const toast = useRef(null);
+    const history = useHistory();
     const { getClientProductById } = useProduct();
-    const { orders, getOrdersByTableClient, addClientOrderToTable } = useOrder();
-    const { tables, getTableClient } = useTable();
-    const { getPaymentByIdClient } = usePayment();
+    const { orders, getOrdersByTableClient, addClientOrderToTable, closeOrderClient } = useOrder();
+    const { tables, getTableClient, updateTableClient } = useTable();
+    const { getPaymentByIdClient, closePaymentClient } = usePayment();
 
     const [totalPriceCart, setTotalPriceCart] = useState(0);
     const [showShoppingCartDialog, setShoppingCartDialog] = useState(false);
@@ -142,22 +144,21 @@ export function Header(props) {
     };
 
     const finishPayment = async () => {
-        /*try {
-          await closePayment(paymentData.id);
+        try {
+          await closePaymentClient(paymentData.id);
     
           for await (const order of orders) {
-            await closeOrder(order.id);
+            await closeOrderClient(order.id);
           }
     
-          await updateTable(table.id, { tableBooking: null });
+          await updateTableClient(table.id, { tableBooking: null });
           
-          toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Pago finalizado correctamente', life: 3000 });
-          history.push("/admin");
+          history.push(`/${table.id}`);
+          localStorage.clear();
         } catch (error) {
           showError(error);
         }
-        onRefreshOrders();*/
-        console.log("se finalizaaaa");
+
         setFinishPaymentDialog(false);
     };
 
