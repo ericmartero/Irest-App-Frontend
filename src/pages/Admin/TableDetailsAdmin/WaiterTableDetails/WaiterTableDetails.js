@@ -496,7 +496,7 @@ export function WaiterTableDetails() {
                     order.product.category.chefVisible && order.status === ORDER_STATUS.PENDING ? 'PENDIENTE DE COCINA' :
                       order.status === ORDER_STATUS.PENDING ? 'PENDIENTE'
                         : order.status === ORDER_STATUS.DELIVERED ? 'ENTREGADO'
-                          : 'PREPARADO'}
+                          : 'PREPARADO EN COCINA'}
                     severity={getSeverity(order)}></Tag>
                 </div>
               </div>
