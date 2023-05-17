@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { useTableBooking, useAuth } from '../../../../hooks';
-import { setBookingKey } from '../../../../utils/constants';
+import { setBookingKey } from '../../../../api/bookingKey';
 import { useHistory } from "react-router-dom";
 import { useFormik } from 'formik';
 import { Button } from 'primereact/button';

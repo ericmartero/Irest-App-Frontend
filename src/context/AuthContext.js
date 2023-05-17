@@ -1,6 +1,6 @@
 import React, { useState, useEffect, createContext, useRef } from 'react';
 import { setToken, getToken, removeToken, setClientToken, getClientToken, removeClientToken } from '../api/token';
-import { removeBookingKey } from '../utils/constants';
+import { removeBookingKey } from '../api/bookingKey';
 import { useUser } from '../hooks';
 import { useHistory } from "react-router-dom";
 import { Toast } from 'primereact/toast';

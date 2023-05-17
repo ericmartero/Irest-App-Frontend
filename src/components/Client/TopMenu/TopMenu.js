@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { getBookingKey } from '../../../utils/constants';
+import { getBookingKey } from '../../../api/bookingKey';
 import { Link, useHistory } from 'react-router-dom';
 import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';

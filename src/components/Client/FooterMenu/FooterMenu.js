@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { getBookingKey } from '../../../utils/constants';
+import { getBookingKey } from '../../../api/bookingKey';
 import { Payment } from '../Payment';
 import { useTable, useTableBooking } from '../../../hooks';
 import { useParams } from 'react-router-dom';
