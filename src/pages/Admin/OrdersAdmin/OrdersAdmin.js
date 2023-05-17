@@ -218,6 +218,7 @@ export function OrdersAdmin() {
   const gridItem = (table) => {
 
     const ordersPending = size(table.tableBooking?.orders.filter(order => order.status === ORDER_STATUS.PENDING));
+    const ordersPrepared = size(table.tableBooking?.orders.filter(order => order.status === ORDER_STATUS.PREPARED));
 
     const renderDetails = () => {
       if (table.tableBooking === null) {
@@ -250,15 +251,22 @@ export function OrdersAdmin() {
               {table.tableBooking === null ? null :
                 <>
                   {size(table.tableBooking.payments) > 0 ?
-                    <i className="pi pi-shopping-cart mr-4 p-text-secondary p-overlay-badge" style={{ fontSize: '2rem' }}>
-                      <Badge value={table.tableBooking.payments[0].paymentType === PAYMENT_TYPE.CARD ?
-                        <i className="pi pi-credit-card mt-1"></i> :
-                        <i className="pi pi-wallet mt-1"></i>
-                      } style={{ background: '#A855F7' }}></Badge>
-                    </i>
+                    <>
+                      <i className="pi pi-shopping-cart mr-4 p-text-secondary p-overlay-badge" style={{ fontSize: '2rem' }}>
+                        <Badge value={table.tableBooking.payments[0].paymentType === PAYMENT_TYPE.CARD ?
+                          <i className="pi pi-credit-card mt-1"></i> :
+                          <i className="pi pi-wallet mt-1"></i>
+                        } style={{ background: '#A855F7' }}></Badge>
+                      </i>
+                      {ordersPending > 0 &&
+                        <i className="pi mr-4 mb-5 p-text-secondary p-overlay-badge" style={{ fontSize: '2rem' }}>
+                          <Badge value={ordersPending + ordersPrepared} severity="warning"></Badge>
+                        </i>
+                      }
+                    </>
                     :
                     <i className="pi pi-shopping-cart mr-4 p-text-secondary p-overlay-badge" style={{ fontSize: '2rem' }}>
-                      <Badge value={ordersPending > 0 ? ordersPending : 0} severity="warning"></Badge>
+                      <Badge value={ordersPending + ordersPrepared} severity="warning"></Badge>
                     </i>
                   }
                 </>
