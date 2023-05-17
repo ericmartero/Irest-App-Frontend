@@ -127,8 +127,7 @@ export function WaiterTableDetails() {
 
   useEffect(() => {
     if (orders) {
-      const pendingOrders = orders.filter((order) => order.status === ORDER_STATUS.PENDING);
-      if (size(pendingOrders) > 0 || size(orders) === 0) {
+      if (size(orders) === 0) {
         setEnablePayment(true);
       }
 
