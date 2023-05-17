@@ -34,6 +34,7 @@ export function Header(props) {
     const [paymentData, setPaymentData] = useState(null);
     const [ordersTable, setOrdersTable] = useState(null);
     const [showBillDialog, setShowBillDialog] = useState(false);
+    const [finishPaymentDialog, setFinishPaymentDialog] = useState(false);
 
     useEffect(() => {
         (async () => {
@@ -140,11 +141,25 @@ export function Header(props) {
         setShowAddOrderDialog(false);
     };
 
-    const showBillDialogFooter = (
-        <div className='footerBill'>
-            <Button label="Finalizar estancia en la mesa" className="bttnFoot" />
-        </div>
-    );
+    const finishPayment = async () => {
+        /*try {
+          await closePayment(paymentData.id);
+    
+          for await (const order of orders) {
+            await closeOrder(order.id);
+          }
+    
+          await updateTable(table.id, { tableBooking: null });
+          
+          toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Pago finalizado correctamente', life: 3000 });
+          history.push("/admin");
+        } catch (error) {
+          showError(error);
+        }
+        onRefreshOrders();*/
+        console.log("se finalizaaaa");
+        setFinishPaymentDialog(false);
+    };
 
     const hideShoppingCartDialog = () => {
         setShoppingCartDialog(false);
@@ -164,10 +179,26 @@ export function Header(props) {
         setShowBillDialog(false);
     };
 
+    const hideFinishPaymentDialog = () => {
+        setFinishPaymentDialog(false);
+        setShowBillDialog(true);
+    };
+
     const showAddOrder = () => {
         setShowAddOrderDialog(true);
         setShoppingCartDialog(false);
     };
+
+    const onFinishPayment = () => {
+        setFinishPaymentDialog(true);
+        setShowBillDialog(false);
+    };
+
+    const showBillDialogFooter = (
+        <div className='footerBill'>
+            <Button label="Finalizar estancia en la mesa" className="bttnFoot" onClick={onFinishPayment} />
+        </div>
+    );
 
     const showAddOrderDialogFooter = (
         <React.Fragment>
@@ -180,6 +211,13 @@ export function Header(props) {
         <div className='footerBill'>
             <Button label={`Realizar pedido (${totalPriceCart})`} className="bttnFoot" onClick={showAddOrder} />
         </div>
+    );
+
+    const finishPaymentDialogFooter = (
+        <React.Fragment>
+            <Button label="No" icon="pi pi-times" className='mt-3' outlined onClick={hideFinishPaymentDialog} />
+            <Button label="Si" icon="pi pi-check" onClick={finishPayment} />
+        </React.Fragment>
     );
 
     return (
@@ -271,6 +309,14 @@ export function Header(props) {
                         "pi pi-wallet": paymentData?.paymentType === PAYMENT_TYPE.CASH
                     })} style={{ fontSize: '1.5rem' }}></i>
                     <span className="font-bold">TOTAL: {paymentData?.totalPayment.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
+                </div>
+            </Dialog>
+
+            <Dialog visible={finishPaymentDialog} style={{ width: '90vw' }} header="Finalizar estancia" modal footer={finishPaymentDialogFooter} onHide={hideFinishPaymentDialog}
+                className='dialog-payment-confirm-container'>
+                <div className="confirmation-content">
+                    <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                    <span>¿Seguro que deseas finalizar la estancia en la mesa?</span>
                 </div>
             </Dialog>
         </>
