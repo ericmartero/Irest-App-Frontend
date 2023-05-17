@@ -258,7 +258,7 @@ export function OrdersAdmin() {
                           <i className="pi pi-wallet mt-1"></i>
                         } style={{ background: '#A855F7' }}></Badge>
                       </i>
-                      {ordersPending > 0 &&
+                      {(ordersPending > 0 || ordersPrepared > 0) &&
                         <i className="pi mr-4 mb-5 p-text-secondary p-overlay-badge" style={{ fontSize: '2rem' }}>
                           <Badge value={ordersPending + ordersPrepared} severity="warning"></Badge>
                         </i>
