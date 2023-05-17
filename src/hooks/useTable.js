@@ -8,7 +8,7 @@ export function useTable() {
     const [loading, setLoading] = useState(true);
     const [loadingCrud, setLoadingCrud] = useState(false);
     const [error, setError] = useState(null);
-    const { auth } = useAuth();
+    const { auth, authClient } = useAuth();
 
     const getTables = useCallback( async () => {
         try {
@@ -43,6 +43,16 @@ export function useTable() {
         try {
             setLoadingCrud(true);
             await updateTableApi(id, data, auth.token);
+            setLoadingCrud(false);
+        } catch (error) {
+            setLoadingCrud(false);
+            throw error;
+        }
+    };
+    const updateTableClient = async (id, data) => {
+        try {
+            setLoadingCrud(true);
+            await updateTableApi(id, data, authClient.token);
             setLoadingCrud(false);
         } catch (error) {
             setLoadingCrud(false);
@@ -90,6 +100,7 @@ export function useTable() {
         getTables,
         addTable,
         updateTable,
+        updateTableClient,
         deleteTable,
         getTableById,
         getTableClient,

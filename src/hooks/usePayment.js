@@ -49,6 +49,14 @@ export function usePayment() {
         }
     };
 
+    const closePaymentClient = async (idPayment) => {
+        try {
+            await closePaymentApi(idPayment, authClient.token);
+        } catch (error) {
+            throw error;
+        }
+    };
+
     const getPayments = useCallback( async () => {
         try {
             setLoading(true);
@@ -76,6 +84,7 @@ export function usePayment() {
         getPaymentByTable,
         getPaymentByIdClient,
         closePayment,
+        closePaymentClient,
         getPayments
     };
 }
