@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ORDER_STATUS, PAYMENT_STATUS } from '../../../utils/constants';
+import { ORDER_STATUS } from '../../../utils/constants';
 import { useParams, useHistory } from 'react-router-dom';
 import { useOrder, useTable } from '../../../hooks';
 import { Header } from '../../../components/Client';
