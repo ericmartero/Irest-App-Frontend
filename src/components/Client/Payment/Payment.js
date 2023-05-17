@@ -49,6 +49,8 @@ export function Payment(props) {
     const onRefresh = () => setRefreshOrders((state) => !state);
 
     const onShowPaymentDialog = () => {
+        onRefresh();
+        
         if (paymentData) {
             isPaidToast();
         }
