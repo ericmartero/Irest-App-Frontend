@@ -572,7 +572,7 @@ export function WaiterTableDetails() {
                 Producto a pedir
               </label>
               <Dropdown value={null} onChange={(e) => onDropdownChange(e.value)} options={productsDropdown} filter optionLabel="text" placeholder="Selecciona una producto"
-                style={{ marginBottom: "0.5rem" }} className={classNames({ "p-invalid": submitted && (validationErrors.product) })} />
+                style={{ marginBottom: "0.5rem" }} className={classNames({ "p-invalid": submitted && (validationErrors.product) })} emptyFilterMessage="No se encuentra este nombre del producto" />
               {submitted && validationErrors.product && (<small className="p-error">{validationErrors.product}</small>)}
 
               {map(productsData, (product, index) => (
