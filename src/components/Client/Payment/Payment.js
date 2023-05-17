@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useOrder, usePayment } from '../../../hooks';
 import { PAYMENT_TYPE } from '../../../utils/constants';
 import { Button } from 'primereact/button';
@@ -10,6 +10,7 @@ export function Payment(props) {
 
     const { table, isPaidToast, noOrdersToPaymentToast, requestedAccount } = props;
 
+    const intervalRef = useRef();
     const { createClientPayment, getPaymentByIdClient } = usePayment();
     const { orders, getOrdersByTableClient, addPaymentToOrderClient } = useOrder();
 
@@ -45,11 +46,23 @@ export function Payment(props) {
         }
     }, [orders, getPaymentByIdClient, refreshOrders]);
 
+    useEffect(() => {
+        const autoRefreshTables = () => {
+            onRefresh();
+        }
+
+        intervalRef.current = setInterval(autoRefreshTables, 4000);
+
+        return () => {
+            clearInterval(intervalRef.current);
+        };
+    }, []);
+
     const onRefresh = () => setRefreshOrders((state) => !state);
 
     const onShowPaymentDialog = () => {
         onRefresh();
-        
+
         if (paymentData) {
             isPaidToast();
         }
