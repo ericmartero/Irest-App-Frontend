@@ -533,7 +533,21 @@ export function WaiterTableDetails() {
                       </>
                   }
                 </>
-                : null
+                :
+                <>
+                  {
+                    <>
+                      {
+                        order.status === ORDER_STATUS.PENDING ?
+                          <Button label="Entregar pedido" icon="pi pi-check" onClick={() => onCheckDeliveredOrder(ORDER_STATUS.DELIVERED)} /> :
+                          order.status === ORDER_STATUS.PREPARED &&
+                          <>
+                            <Button label='Entregar pedido' icon="pi pi-check" onClick={() => onCheckDeliveredOrder(ORDER_STATUS.DELIVERED)} />
+                          </>
+                      }
+                    </>
+                  }
+                </>
               }
             </div>
           </div>
