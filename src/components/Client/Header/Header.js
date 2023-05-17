@@ -1,12 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useProduct, useOrder, useTable, usePayment } from '../../../hooks';
 import { getProductShoppingCart, cleanProductShoppingCart } from '../../../api/shoppingCart';
+import { PAYMENT_TYPE } from '../../../utils/constants';
 import { ShoppingCart } from '../ShoppingCart';
+import { classNames } from 'primereact/utils';
 import { Toast } from 'primereact/toast';
 import { Badge } from 'primereact/badge';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
 import { size, forEach } from 'lodash';
+import moment from 'moment';
+import 'moment/locale/es';
 import './Header.scss';
 
 export function Header(props) {
@@ -26,6 +32,8 @@ export function Header(props) {
     const [products, setProducts] = useState(null);
     const [table, setTable] = useState(null);
     const [paymentData, setPaymentData] = useState(null);
+    const [ordersTable, setOrdersTable] = useState(null);
+    const [showBillDialog, setShowBillDialog] = useState(false);
 
     useEffect(() => {
         (async () => {
@@ -71,6 +79,12 @@ export function Header(props) {
     }, [table, getOrdersByTableClient]);
 
     useEffect(() => {
+        if (orders) {
+            setOrdersTable(orders);
+        }
+    }, [orders]);
+
+    useEffect(() => {
         if (size(orders) > 0) {
             if (size(orders[0].payment) > 0) {
                 (async () => {
@@ -89,7 +103,27 @@ export function Header(props) {
 
     const showError = (error) => {
         toast.current.show({ severity: 'error', summary: 'Operacion Fallida', detail: error.message, life: 1500 });
-    }
+    };
+
+    const formatCurrency = (value) => {
+        return value?.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' });
+    };
+
+    const priceBodyTemplate = (rowData) => {
+        return formatCurrency(rowData.product.price * rowData.quantity);
+    };
+
+    const groupOrdersStatus = (data) => {
+        return data.reduce((acc, order) => {
+            const existingOrder = acc.find((o) => o.product.id === order.product.id);
+            if (existingOrder) {
+                existingOrder.quantity += 1;
+            } else {
+                acc.push({ id: order.id, product: order.product, status: order.status, tableBooking: order.tableBooking, quantity: 1, createdAt: order.createdAt });
+            }
+            return acc;
+        }, []);
+    };
 
     const addOrder = async () => {
         try {
@@ -106,6 +140,12 @@ export function Header(props) {
         setShowAddOrderDialog(false);
     };
 
+    const showBillDialogFooter = (
+        <div className='footerBill'>
+            <Button label="Finalizar estancia en la mesa" className="bttnFoot" />
+        </div>
+    );
+
     const hideShoppingCartDialog = () => {
         setShoppingCartDialog(false);
     };
@@ -118,6 +158,10 @@ export function Header(props) {
     const hideShowAddOrderDialog = () => {
         setShowAddOrderDialog(false);
         setShoppingCartDialog(true);
+    };
+
+    const hideBillDialog = () => {
+        setShowBillDialog(false);
     };
 
     const showAddOrder = () => {
@@ -155,7 +199,7 @@ export function Header(props) {
                             }
                         </>
                         :
-                        <Button label='Cuenta' className="p-button-secondary button-payment" />
+                        <Button label='Cuenta' className="p-button-secondary button-payment" onClick={() => setShowBillDialog(true)} />
                     }
                 </div>
                 :
@@ -175,7 +219,7 @@ export function Header(props) {
                             }
                         </>
                         :
-                        <Button label='Cuenta' className="p-button-secondary button-payment" />
+                        <Button label='Cuenta' className="p-button-secondary button-payment" onClick={() => setShowBillDialog(true)} />
                     }
                 </div>
             }
@@ -198,6 +242,35 @@ export function Header(props) {
                 <div className="confirmation-content">
                     <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                     <span>Seguro que quieres realizar el pedido?</span>
+                </div>
+            </Dialog>
+
+            <Dialog visible={showBillDialog} style={{ width: '90vw' }} header={`Cuenta Mesa ${table?.number}`} modal className='bill-dialog-container'
+                footer={showBillDialogFooter} onHide={hideBillDialog}>
+                <div className='product-add-order'>
+                    <div className='product-add-info'>
+                        <span className="font-bold">{`MESA: ${table?.number}`}</span>
+                    </div>
+                    <div>
+                        <span><strong>FECHA:</strong> {moment(paymentData?.createdAt).format('DD/MM/YYYY HH:mm:ss')}</span>
+                    </div>
+                </div>
+
+                <div className='table-orders-payment' style={{ marginTop: '1.5rem' }}>
+                    <DataTable value={ordersTable && groupOrdersStatus(ordersTable)} >
+                        <Column field="quantity" header="UNIDADES" bodyStyle={{ textAlign: 'center' }}></Column>
+                        <Column field="product.title" header="PRODUCTO" bodyStyle={{ textAlign: 'center' }}></Column>
+                        <Column field="product.price" header="IMPORTE" body={priceBodyTemplate} bodyStyle={{ textAlign: 'center' }}></Column>
+                    </DataTable>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: "space-between", marginTop: "2rem" }}>
+                    <span className="font-bold">MÉTODO DE PAGO:</span>
+                    <i className={classNames({
+                        "pi pi-credit-card": paymentData?.paymentType === PAYMENT_TYPE.CARD,
+                        "pi pi-wallet": paymentData?.paymentType === PAYMENT_TYPE.CASH
+                    })} style={{ fontSize: '1.5rem' }}></i>
+                    <span className="font-bold">TOTAL: {paymentData?.totalPayment.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
                 </div>
             </Dialog>
         </>
