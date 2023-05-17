@@ -344,6 +344,7 @@ export function WaiterTableDetails() {
     toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Se ha creado la cuenta correctamente', life: 3000 });
     setPaymentType(PAYMENT_TYPE.CARD);
     setConfirmTypePaymentDialog(false);
+    setAutoRefreshEnabled(true);
   };
 
   const onDropdownChange = (value) => {
