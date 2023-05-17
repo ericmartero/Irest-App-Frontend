@@ -47,3 +47,14 @@
         padding: 1rem 1.5rem 1.5rem 1.5rem !important;
     }
 }
+
+.paymentDialog-top-buttons {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.paymentDialog-bottom-buttons {
+    display: flex;
+    justify-content: center;
+}
