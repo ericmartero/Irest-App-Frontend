@@ -13,7 +13,7 @@ import './Payment.scss';
 
 export function Payment(props) {
 
-    const { table, isPaidToast } = props;
+    const { table, isPaidToast, noOrdersToPaymentToast } = props;
 
     const { createClientPayment, getPaymentByIdClient } = usePayment();
     const { orders, getOrdersByTableClient, addPaymentToOrderClient } = useOrder();
@@ -57,6 +57,10 @@ export function Payment(props) {
     const onShowPaymentDialog = () => {
         if (paymentData) {
             isPaidToast();
+        }
+
+        else if (size(ordersTable) === 0) {
+            noOrdersToPaymentToast();
         }
 
         else {
