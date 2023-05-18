@@ -12,7 +12,7 @@ import './OrdersTracking.scss';
 
 export function OrdersTracking(props) {
 
-    const { table, orders, onRefreshOrders, loadingOrders } = props;
+    const { table, orders, onRefreshOrders, loadingOrders, payment } = props;
 
     const intervalRef = useRef();
     const paramsURL = useParams();
@@ -64,6 +64,7 @@ export function OrdersTracking(props) {
                     orders={orders}
                     table={table}
                     onRefreshOrders={onRefreshOrders}
+                    payment={payment}
                 />
             }
             <>

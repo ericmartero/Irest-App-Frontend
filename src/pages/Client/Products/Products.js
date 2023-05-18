@@ -11,7 +11,7 @@ import './Products.scss';
 
 export function Products(props) {
 
-    const { orders, table, onRefreshOrders } = props;
+    const { orders, table, onRefreshOrders, payment } = props;
 
     const paramsURL = useParams();
     const history = useHistory();
@@ -59,6 +59,7 @@ export function Products(props) {
                             orders={orders}
                             table={table}
                             onRefreshOrders={onRefreshOrders}
+                            payment={payment}
                         />
                         <div className='products-container'>
                             {map(productsCateogry, (product) => (
