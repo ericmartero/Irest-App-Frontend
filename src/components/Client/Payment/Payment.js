@@ -18,6 +18,7 @@ export function Payment(props) {
     const [paymentType, setPaymentType] = useState(null);
     const [showPaymentDialog, setShowPaymentDialog] = useState(false);
     const [showConfirmPaymentDialog, setShowConfirmPaymentDialog] = useState(false);
+    const [showStripePaymentDialog, setShowStripePaymentDialog] = useState(false);
 
     useEffect(() => {
         if (orders) {
@@ -45,39 +46,39 @@ export function Payment(props) {
 
     const createPayment = async () => {
 
-        let totalPayment = 0;
-        forEach(ordersTable, (order) => {
-            totalPayment += order.product.price;
-        });
+        if (paymentType === PAYMENT_TYPE.APP) {
+            setShowStripePaymentDialog(true);
+        }
 
-        const paymentData = {
-            table: table.tableBooking.id,
-            totalPayment: Number(totalPayment.toFixed(2)),
-            paymentType,
-        };
+        else {
+            let totalPayment = 0;
+            forEach(ordersTable, (order) => {
+                totalPayment += order.product.price;
+            });
 
-        const payment = await createClientPayment(paymentData);
+            const paymentData = {
+                table: table.tableBooking.id,
+                totalPayment: Number(totalPayment.toFixed(2)),
+                paymentType,
+            };
 
-        for await (const order of ordersTable) {
-            await addPaymentToOrderClient(order.id, payment.id);
-        };
+            const payment = await createClientPayment(paymentData);
 
-        onRefreshPayment();
-        requestedAccount();
+            for await (const order of ordersTable) {
+                await addPaymentToOrderClient(order.id, payment.id);
+            };
+
+            onRefreshPayment();
+            requestedAccount();
+        }
+
         setShowConfirmPaymentDialog(false);
     };
 
     const onPaymentDialog = async (paymentType) => {
         setShowPaymentDialog(false);
         setPaymentType(paymentType);
-
-        if (paymentType === PAYMENT_TYPE.APP) {
-
-        }
-
-        else {
-            setShowConfirmPaymentDialog(true);
-        }
+        setShowConfirmPaymentDialog(true);
     };
 
     const hideShowConfirmPaymentDialog = () => {
@@ -85,10 +86,22 @@ export function Payment(props) {
         setShowPaymentDialog(true);
     };
 
+    const hideShowStripePaymentDialog = () => {
+        setShowPaymentDialog(true);
+        setShowStripePaymentDialog(false);
+    };
+
     const showConfirmPaymentDialogFooter = (
         <React.Fragment>
             <Button label="No" icon="pi pi-times" outlined onClick={hideShowConfirmPaymentDialog} style={{ marginTop: "10px" }} />
             <Button label="Si" icon="pi pi-check" onClick={createPayment} />
+        </React.Fragment>
+    );
+
+    const ShowStripePaymentDialogFooter = (
+        <React.Fragment>
+            <Button label="No" icon="pi pi-times" outlined onClick={hideShowStripePaymentDialog} style={{ marginTop: "10px" }} />
+            <Button label="Si" icon="pi pi-check" onClick={""} />
         </React.Fragment>
     );
 
@@ -113,6 +126,13 @@ export function Payment(props) {
                 <div className="confirmation-content">
                     <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                     <span>¿Seguro que quieres realizar el pago con {paymentType === PAYMENT_TYPE.CARD ? "tarjeta" : paymentType === PAYMENT_TYPE.CASH ? "efectivo" : "la aplicación"}?</span>
+                </div>
+            </Dialog>
+
+            <Dialog visible={showStripePaymentDialog} style={{ width: '90vw' }} header="Pago" modal footer={ShowStripePaymentDialogFooter} onHide={hideShowStripePaymentDialog}>
+                <div className="confirmation-content">
+                    <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                    <span>¿holaaaaaaaaaaaaaa</span>
                 </div>
             </Dialog>
         </>
