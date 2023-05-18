@@ -24,19 +24,20 @@ export function StripePayment() {
     return (
         <form onSubmit={handleSubmit}>
             <div>
-                <span>Tarjeta de crédito:</span>
-
-                <CardElement
-                    options={{
-                        style: {
-                            base: {
-                                fontSize: '15px',
-                                fontFamily: 'Arial, sans-serif',
+                <span className='font-bold text-900'>Tarjeta de crédito:</span>
+                <div className='stripe-payment-container'>
+                    <CardElement
+                        options={{
+                            style: {
+                                base: {
+                                    fontSize: '16px',
+                                    fontFamily: 'Arial, sans-serif',
+                                },
                             },
-                        },
-                    }}
-                    className='mt-4 mb-4'
-                />
+                        }}
+                        className='mt-4 mb-4'
+                    />
+                </div>
             </div>
             <div className='btn-stripe-payment'>
                 <Button type="submit" label='Realizar el pago' disabled={!stripe} />
