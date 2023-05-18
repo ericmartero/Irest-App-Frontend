@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { getBookingKey } from '../../../api/bookingKey';
 import { Payment } from '../Payment';
-import { useTable, useTableBooking } from '../../../hooks';
-import { useParams } from 'react-router-dom';
+import { useTableBooking } from '../../../hooks';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { Toast } from 'primereact/toast';
@@ -11,26 +10,13 @@ import './FooterMenu.scss';
 
 export function FooterMenu(props) {
 
-    const { idTable } = props;
+    const { table, orders } = props;
 
     const toast = useRef(null);
-    const paramsURL = useParams();
     const { changeAlertClient } = useTableBooking();
-    const { tables, getTableClient } = useTable();
 
     const [showTableBookingQRDialog, setShowTableBookingQRDialog] = useState(false);
     const [warnWaiterDialog, setWarnWaiterDialog] = useState(false);
-    const [table, setTable] = useState(null);
-
-    useEffect(() => {
-        getTableClient(paramsURL.idTable);
-    }, [paramsURL.idTable, getTableClient]);
-
-    useEffect(() => {
-        if (tables) {
-            setTable(tables);
-        }
-    }, [tables]);
 
     const isPaidToast = () => {
         toast.current.show({ severity: 'info', summary: 'Pago realizado', detail: `Ya se ha realizado el pago de los pedidos`, life: 1500 });
@@ -85,6 +71,7 @@ export function FooterMenu(props) {
                     <i className="pi pi-bell" style={{ fontSize: '1.8rem' }} onClick={() => setWarnWaiterDialog(true)} />
                     <Payment
                         table={table}
+                        orders={orders}
                         isPaidToast={isPaidToast}
                         noOrdersToPaymentToast={noOrdersToPaymentToast}
                         requestedAccount={requestedAccount}
@@ -94,7 +81,7 @@ export function FooterMenu(props) {
 
             <Dialog visible={showTableBookingQRDialog} style={{ width: '90vw' }} header="Código QR de invitación" modal onHide={hideShowTableBookingQRDialog}>
                 <div className='header-qrDialog-container'>
-                    {idTable && <QRCode value={`https://irest.netlify.app/client-invite/table=${idTable}&key=${getBookingKey()}`} />}
+                    {table && <QRCode value={`https://irest.netlify.app/client-invite/table=${table.id}&key=${getBookingKey()}`} />}
                 </div>
             </Dialog>
 

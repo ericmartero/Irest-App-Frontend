@@ -18,13 +18,13 @@ import './Header.scss';
 
 export function Header(props) {
 
-    const { name, isMain, goBack, refreshCartNumber, paramsURL } = props;
+    const { name, isMain, goBack, refreshCartNumber, orders, table, onRefreshOrders } = props;
 
     const toast = useRef(null);
     const history = useHistory();
     const { getClientProductById } = useProduct();
-    const { orders, getOrdersByTableClient, addClientOrderToTable, closeOrderClient } = useOrder();
-    const { tables, getTableClient, updateTableClient } = useTable();
+    const { addClientOrderToTable, closeOrderClient } = useOrder();
+    const { updateTableClient } = useTable();
     const { getPaymentByIdClient, closePaymentClient } = usePayment();
 
     const [totalPriceCart, setTotalPriceCart] = useState(0);
@@ -32,9 +32,7 @@ export function Header(props) {
     const [refreshShoppingCart, setRefreshShoppingCart] = useState(false);
     const [showAddOrderDialog, setShowAddOrderDialog] = useState(false);
     const [products, setProducts] = useState(null);
-    const [table, setTable] = useState(null);
     const [paymentData, setPaymentData] = useState(null);
-    const [ordersTable, setOrdersTable] = useState(null);
     const [showBillDialog, setShowBillDialog] = useState(false);
     const [finishPaymentDialog, setFinishPaymentDialog] = useState(false);
 
@@ -62,30 +60,6 @@ export function Header(props) {
 
         setTotalPriceCart(totalPriceCart.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' }));
     }, [products]);
-
-    useEffect(() => {
-        getTableClient(paramsURL.idTable);
-    }, [paramsURL.idTable, getTableClient]);
-
-    useEffect(() => {
-        if (tables) {
-            setTable(tables);
-        }
-    }, [tables])
-
-    useEffect(() => {
-        (async () => {
-            if (table) {
-                getOrdersByTableClient(table.tableBooking?.id);
-            }
-        })();
-    }, [table, getOrdersByTableClient]);
-
-    useEffect(() => {
-        if (orders) {
-            setOrdersTable(orders);
-        }
-    }, [orders]);
 
     useEffect(() => {
         if (size(orders) > 0) {
@@ -135,6 +109,7 @@ export function Header(props) {
             }
             cleanProductShoppingCart();
             onRefresh();
+            onRefreshOrders();
             toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: `Se ha realizado el pedido correctamente`, life: 1500 });
         } catch (error) {
             showError(error);
@@ -296,7 +271,7 @@ export function Header(props) {
                 </div>
 
                 <div className='table-orders-payment' style={{ marginTop: '1.5rem' }}>
-                    <DataTable value={ordersTable && groupOrdersStatus(ordersTable)} >
+                    <DataTable value={orders && groupOrdersStatus(orders)} >
                         <Column field="quantity" header="UNIDADES" bodyStyle={{ textAlign: 'center' }}></Column>
                         <Column field="product.title" header="PRODUCTO" bodyStyle={{ textAlign: 'center' }}></Column>
                         <Column field="product.price" header="IMPORTE" body={priceBodyTemplate} bodyStyle={{ textAlign: 'center' }}></Column>

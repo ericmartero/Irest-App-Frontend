@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useOrder, usePayment } from '../../../hooks';
 import { PAYMENT_TYPE } from '../../../utils/constants';
 import { Button } from 'primereact/button';
@@ -8,11 +8,10 @@ import './Payment.scss';
 
 export function Payment(props) {
 
-    const { table, isPaidToast, noOrdersToPaymentToast, requestedAccount } = props;
+    const { table, orders, isPaidToast, noOrdersToPaymentToast, requestedAccount } = props;
 
-    const intervalRef = useRef();
     const { createClientPayment, getPaymentByIdClient } = usePayment();
-    const { orders, getOrdersByTableClient, addPaymentToOrderClient } = useOrder();
+    const { addPaymentToOrderClient } = useOrder();
 
     const [refreshOrders, setRefreshOrders] = useState(false);
     const [ordersTable, setOrdersTable] = useState(null);
@@ -20,14 +19,6 @@ export function Payment(props) {
     const [paymentData, setPaymentData] = useState(null);
     const [showPaymentDialog, setShowPaymentDialog] = useState(false);
     const [showConfirmPaymentDialog, setShowConfirmPaymentDialog] = useState(false);
-
-    useEffect(() => {
-        (async () => {
-            if (table) {
-                getOrdersByTableClient(table.tableBooking?.id);
-            }
-        })();
-    }, [table, getOrdersByTableClient, refreshOrders]);
 
     useEffect(() => {
         if (orders) {
@@ -45,18 +36,6 @@ export function Payment(props) {
             }
         }
     }, [orders, getPaymentByIdClient, refreshOrders]);
-
-    useEffect(() => {
-        const autoRefreshTables = () => {
-            onRefresh();
-        }
-
-        intervalRef.current = setInterval(autoRefreshTables, 4000);
-
-        return () => {
-            clearInterval(intervalRef.current);
-        };
-    }, []);
 
     const onRefresh = () => setRefreshOrders((state) => !state);
 

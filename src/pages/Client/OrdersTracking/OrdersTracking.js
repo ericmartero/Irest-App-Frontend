@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ORDER_STATUS } from '../../../utils/constants';
 import { useParams, useHistory } from 'react-router-dom';
-import { useOrder, useTable } from '../../../hooks';
 import { Header } from '../../../components/Client';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { Tag } from 'primereact/tag';
@@ -11,19 +10,13 @@ import 'moment/locale/es';
 import '../../../scss/AlignComponent.scss';
 import './OrdersTracking.scss';
 
-export function OrdersTracking() {
+export function OrdersTracking(props) {
+
+    const { table, orders, onRefreshOrders, loadingOrders } = props;
 
     const intervalRef = useRef();
     const paramsURL = useParams();
     const history = useHistory();
-    const { tables, getTableClient } = useTable();
-    const { loading, orders, getOrdersByTableClient } = useOrder();
-
-    const [table, setTable] = useState(null);
-    const [ordersTable, setOrdersTable] = useState(null);
-    const [refreshOrders, setRefreshOrders] = useState(false);
-
-    const onRefreshOrders = () => setRefreshOrders((prev) => !prev);
 
     useEffect(() => {
         const autoRefreshTables = () => {
@@ -35,31 +28,7 @@ export function OrdersTracking() {
         return () => {
             clearInterval(intervalRef.current);
         };
-    }, []);
-
-    useEffect(() => {
-        getTableClient(paramsURL.idTable);
-    }, [paramsURL.idTable, getTableClient]);
-
-    useEffect(() => {
-        if (tables) {
-            setTable(tables);
-        }
-    }, [tables]);
-
-    useEffect(() => {
-        (async () => {
-            if (table) {
-                getOrdersByTableClient(table.tableBooking?.id);
-            }
-        })();
-    }, [table, getOrdersByTableClient, refreshOrders]);
-
-    useEffect(() => {
-        if (orders) {
-            setOrdersTable(orders);
-        }
-    }, [orders]);
+    }, [onRefreshOrders]);
 
     const getSeverity = (order) => {
         switch (order.status) {
@@ -83,15 +52,22 @@ export function OrdersTracking() {
 
     return (
         <div className="card">
-            {loading ?
+            {loadingOrders ?
                 <div className="align-content-mobile">
                     <ProgressSpinner />
                 </div>
                 :
-                <Header name="Pedidos mesa" isMain={false} goBack={goBack} paramsURL={paramsURL} />
+                <Header
+                    name="Pedidos mesa"
+                    isMain={false}
+                    goBack={goBack}
+                    orders={orders}
+                    table={table}
+                    onRefreshOrders={onRefreshOrders}
+                />
             }
             <>
-                {size(ordersTable) === 0 ?
+                {size(orders) === 0 ?
                     <div className='noOrders-container'>
                         <div className='noOrder_container'>
                             <p>No hay pedidos actualmente</p>
@@ -99,7 +75,7 @@ export function OrdersTracking() {
                     </div>
                     :
                     <div className='orders-container'>
-                        {map(ordersTable, (order) => (
+                        {map(orders, (order) => (
                             <div key={order.id} className='order_container'>
                                 <div className='content_order'>
                                     <img className="w-4 sm:w-8rem xl:w-8rem block xl:block border-round" src={order.product.image} alt={order.product.title} />

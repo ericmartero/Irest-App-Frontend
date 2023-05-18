@@ -9,7 +9,9 @@ import { map } from "lodash";
 import '../../../scss/AlignComponent.scss';
 import './Products.scss';
 
-export function Products() {
+export function Products(props) {
+
+    const { orders, table, onRefreshOrders } = props;
 
     const paramsURL = useParams();
     const history = useHistory();
@@ -49,7 +51,15 @@ export function Products() {
                 :
                 <>
                     <div className="card">
-                        <Header name={categoryName} isMain={false} goBack={goBack} refreshCartNumber={refreshCartNumber} paramsURL={paramsURL} />
+                        <Header
+                            name={categoryName}
+                            isMain={false}
+                            goBack={goBack}
+                            refreshCartNumber={refreshCartNumber}
+                            orders={orders}
+                            table={table}
+                            onRefreshOrders={onRefreshOrders}
+                        />
                         <div className='products-container'>
                             {map(productsCateogry, (product) => (
                                 <div key={product.id} className='product_container'>

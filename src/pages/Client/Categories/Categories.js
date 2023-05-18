@@ -7,7 +7,9 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import '../../../scss/AlignComponent.scss';
 import './Categories.scss';
 
-export function Categories() {
+export function Categories(props) {
+
+  const { orders, table, onRefreshOrders } = props;
 
   const paramsURL = useParams();
   const history = useHistory();
@@ -52,7 +54,13 @@ export function Categories() {
         :
         <>
           <div className="card">
-            <Header name="Nuestra Carta" isMain={true} paramsURL={paramsURL} />
+            <Header
+              name="Nuestra Carta"
+              isMain={true}
+              orders={orders}
+              table={table}
+              onRefreshOrders={onRefreshOrders}
+            />
             <div className='categories-container'>
               <DataView value={categoriesTable} itemTemplate={itemTemplate} emptyMessage='No se ha encontrado ninguna categoría en la carta' />
             </div>
