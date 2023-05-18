@@ -10,13 +10,11 @@ export function Payment(props) {
 
     const { table, orders, payment, isPaidToast, noOrdersToPaymentToast, requestedAccount, onRefreshPayment } = props;
 
-    const { createClientPayment, getPaymentByIdClient } = usePayment();
+    const { createClientPayment } = usePayment();
     const { addPaymentToOrderClient } = useOrder();
 
-    const [refreshOrders, setRefreshOrders] = useState(false);
     const [ordersTable, setOrdersTable] = useState(null);
     const [paymentType, setPaymentType] = useState(null);
-    //const [paymentData, setPaymentData] = useState(null);
     const [showPaymentDialog, setShowPaymentDialog] = useState(false);
     const [showConfirmPaymentDialog, setShowConfirmPaymentDialog] = useState(false);
 
@@ -26,22 +24,7 @@ export function Payment(props) {
         }
     }, [orders]);
 
-    /*useEffect(() => {
-        if (size(orders) > 0) {
-            if (size(orders[0].payment) > 0) {
-                (async () => {
-                    const response = await getPaymentByIdClient(orders[0].payment.id);
-                    setPaymentData(response);
-                })();
-            }
-        }
-    }, [orders, getPaymentByIdClient, refreshOrders]);*/
-
-    const onRefresh = () => setRefreshOrders((state) => !state);
-
     const onShowPaymentDialog = () => {
-        //onRefresh();
-
         if (payment) {
             isPaidToast();
         }
@@ -78,7 +61,6 @@ export function Payment(props) {
             await addPaymentToOrderClient(order.id, payment.id);
         };
 
-        //onRefresh();
         onRefreshPayment();
         requestedAccount();
         setShowConfirmPaymentDialog(false);
