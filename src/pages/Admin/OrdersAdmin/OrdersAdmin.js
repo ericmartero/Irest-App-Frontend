@@ -194,7 +194,7 @@ export function OrdersAdmin() {
                 <div className="flex align-items-center gap-2">
                   <Button icon="pi pi-refresh"
                     onClick={(event) => { event.stopPropagation(); onResetKey(table); }}
-                    tooltip='Regenerar clave'
+                    label='Regenerar clave'
                     rounded />
                 </div>
                 :
@@ -293,7 +293,7 @@ export function OrdersAdmin() {
               <div className="flex align-items-center gap-2">
                 <Button icon="pi pi-refresh"
                   onClick={(event) => { event.stopPropagation(); onResetKey(table); }}
-                  tooltip='Regenerar clave'
+                  label='Regenerar clave'
                   rounded />
               </div>
               :
