@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useAuth } from './useAuth'
 import { PAYMENT_TYPE } from '../utils/constants';
 import { checkoutStripeApi } from '../api/stripe';
-import { useElements, useStripe } from '@stripe/react-stripe-js';
+import { useElements, useStripe } from '@stripe/react-stripe-js/dist/react-stripe';
 
 export function useStripePayment() {
 
