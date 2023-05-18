@@ -71,10 +71,14 @@ export function Products(props) {
                                             <span>{product.price.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</span>
                                         </div>
                                     </div>
-                                    <Button
-                                        icon="pi pi-plus" className="layout-button p-button-secondary mr-1"
-                                        style={{ flexShrink: 0 }}
-                                        onClick={() => addProductCart(product)} />
+                                    {!payment ?
+                                        <Button
+                                            icon="pi pi-plus" className="layout-button p-button-secondary mr-1"
+                                            style={{ flexShrink: 0 }}
+                                            onClick={() => addProductCart(product)} />
+                                        :
+                                        null
+                                    }
                                 </div>
                             ))}
                         </div>
