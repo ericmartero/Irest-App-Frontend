@@ -197,7 +197,7 @@ export function Payment(props) {
                     </DataTable>
                 </div>
 
-                <div className='mt-3' style={{display: 'flex', alignItems: 'center'}}>
+                <div className='mt-3' style={{ display: 'flex', alignItems: 'center' }}>
                     <span className="font-bold">MÉTODO DE PAGO:</span> <i className={"pi pi-credit-card ml-5"} style={{ fontSize: "1.5rem" }}></i>
 
                 </div>
@@ -208,9 +208,7 @@ export function Payment(props) {
             </Dialog>
 
             <Dialog visible={showStripePaymentDialog} style={{ width: '90vw' }} header={`Pago mesa ${table?.number}`} modal onHide={hideShowStripePaymentDialog}>
-                <div className="mt-4">
-                    <StripePayment />
-                </div>
+                <StripePayment />
             </Dialog>
         </>
     )
