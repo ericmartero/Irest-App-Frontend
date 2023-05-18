@@ -96,7 +96,7 @@ export function Payment(props) {
                 </div>
 
                 <div className='paymentDialog-bottom-buttons'>
-                    <Button icon="pi pi-credit-card" label='Aplicación' className='paymentDialog-button' style={{ width: "49%" }} onClick={() => onPaymentDialog(PAYMENT_TYPE.CARD)} />
+                    <Button icon="pi pi-credit-card" label='Aplicación' className='paymentDialog-button' style={{ width: "49%" }} onClick={() => onPaymentDialog(PAYMENT_TYPE.APP)} />
                 </div>
             </Dialog>
 
@@ -104,7 +104,7 @@ export function Payment(props) {
                 className='dialog-payment-confirm-container'>
                 <div className="confirmation-content">
                     <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                    <span>¿Seguro que quieres realizar el pago con {paymentType === PAYMENT_TYPE.CARD ? "tarjeta" : "efectivo"}?</span>
+                    <span>¿Seguro que quieres realizar el pago con {paymentType === PAYMENT_TYPE.CARD ? "tarjeta" : paymentType === PAYMENT_TYPE.CASH ? "efectivo" : "la aplicación"}?</span>
                 </div>
             </Dialog>
         </>
