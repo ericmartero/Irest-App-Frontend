@@ -11,7 +11,7 @@ export function StripePayment(props) {
 
     const makePayment = async () => {
         try {
-            const response = await checkoutStripe(totalPayment);
+            const response = await checkoutStripe(totalPayment, CardElement);
             console.log(response);
         } catch (error) {
             console.log(error);
