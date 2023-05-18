@@ -113,7 +113,7 @@ export function UsersEstablishmentsAdmin() {
     setSelectedEstablishment(null);
     setSubmitted(false);
     setUserDialog(true);
-    setActionName('Añadir Producto');
+    setActionName('Añadir Usuario');
     setSelectedRoles(null);
     document.body.classList.add('body-scroll-lock');
   };
