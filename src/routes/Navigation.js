@@ -12,7 +12,7 @@ export function Navigation() {
           path={route.path}
           exact={route.exact}
           render={(props) => (
-            <route.layout>
+            <route.layout {...props} >
               <route.component {...props} />
             </route.layout>
           )}

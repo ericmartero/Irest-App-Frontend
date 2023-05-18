@@ -35,7 +35,7 @@ export function ClientLayout(props) {
 
             <div className="layout-main-container layout-main-mobile">
                 <div className="layout-main children-margin">
-                    {children}
+                    {React.cloneElement(children, { table: table })}
                 </div>
             </div>
 
