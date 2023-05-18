@@ -86,7 +86,10 @@ export function UsersEstablishmentsAdmin() {
     }
   }, [selectedRoles]);
 
-  const onRefresh = () => setRefreshTable((state) => !state);
+  const onRefresh = () => { 
+    setRefreshTable((state) => !state);
+    setGlobalFilter(null);
+  };
 
   const showError = (error) => {
     toast.current.show({ severity: 'error', summary: 'Operación Fallida', detail: error.message, life: 3000 });
@@ -473,10 +476,10 @@ export function UsersEstablishmentsAdmin() {
                   currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} usuarios" globalFilter={globalFilter} header={header}>
                   <Column selectionMode="multiple" exportable={false}></Column>
                   <Column field="email" header="Email" sortable style={{ minWidth: '14rem' }}></Column>
-                  <Column field="firstName" header="Nombre" sortable style={{ minWidth: '10rem' }}></Column>
-                  <Column field="lastName" header="Apellidos" sortable style={{ minWidth: '12rem' }}></Column>
+                  <Column field="firstName" header="Nombre" sortable style={{ minWidth: '6rem' }}></Column>
+                  <Column field="lastName" header="Apellidos" sortable style={{ minWidth: '8rem' }}></Column>
                   <Column field="establishment.name" header="Establecimiento" sortable style={{ minWidth: '12rem' }}></Column>
-                  <Column field="roles" header="Roles" sortable style={{ minWidth: '10rem' }}
+                  <Column field="roles" header="Roles" sortable style={{ minWidth: '8rem' }}
                     body={(rowData) =>
                       rowData.roles.map((role) => {
                         let tagClass = '';
@@ -512,7 +515,7 @@ export function UsersEstablishmentsAdmin() {
                       })
                     }
                   ></Column>
-                  <Column field="isActive" header="Activo" sortable dataType="boolean" body={activeBodyTemplate} style={{ minWidth: '4rem' }}></Column>
+                  <Column field="isActive" header="Activo" sortable dataType="boolean" body={activeBodyTemplate} style={{ minWidth: '1rem' }}></Column>
                   <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '10rem' }}></Column>
                 </DataTable>
               </div>
