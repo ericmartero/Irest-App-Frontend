@@ -25,14 +25,13 @@ export function Header(props) {
     const { getClientProductById } = useProduct();
     const { addClientOrderToTable, closeOrderClient } = useOrder();
     const { updateTableClient } = useTable();
-    const { getPaymentByIdClient, closePaymentClient } = usePayment();
+    const { closePaymentClient } = usePayment();
 
     const [totalPriceCart, setTotalPriceCart] = useState(0);
     const [showShoppingCartDialog, setShoppingCartDialog] = useState(false);
     const [refreshShoppingCart, setRefreshShoppingCart] = useState(false);
     const [showAddOrderDialog, setShowAddOrderDialog] = useState(false);
     const [products, setProducts] = useState(null);
-    //const [paymentData, setPaymentData] = useState(null);
     const [showBillDialog, setShowBillDialog] = useState(false);
     const [finishPaymentDialog, setFinishPaymentDialog] = useState(false);
 
@@ -60,17 +59,6 @@ export function Header(props) {
 
         setTotalPriceCart(totalPriceCart.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' }));
     }, [products]);
-
-    /*useEffect(() => {
-        if (size(orders) > 0) {
-            if (size(orders[0].payment) > 0) {
-                (async () => {
-                    const response = await getPaymentByIdClient(orders[0].payment.id);
-                    setPaymentData(response);
-                })();
-            }
-        }
-    }, [orders, getPaymentByIdClient]);*/
 
     useEffect(() => {
         onRefresh();
