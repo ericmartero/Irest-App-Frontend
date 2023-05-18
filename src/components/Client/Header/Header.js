@@ -109,18 +109,18 @@ export function Header(props) {
 
     const finishPayment = async () => {
         try {
-          await closePaymentClient(payment.id);
-    
-          for await (const order of orders) {
-            await closeOrderClient(order.id);
-          }
-    
-          await updateTableClient(table.id, { tableBooking: null });
-          
-          history.push(`/${table.id}`);
-          localStorage.clear();
+            await closePaymentClient(payment.id);
+
+            for await (const order of orders) {
+                await closeOrderClient(order.id);
+            }
+
+            await updateTableClient(table.id, { tableBooking: null });
+
+            history.push(`/${table.id}`);
+            localStorage.clear();
         } catch (error) {
-          showError(error);
+            showError(error);
         }
 
         setFinishPaymentDialog(false);
@@ -161,7 +161,7 @@ export function Header(props) {
 
     const showBillDialogFooter = (
         <div className='footerBill'>
-            <Button label="Finalizar estancia en la mesa" className="bttnFoot" style={{margin: 0}} onClick={onFinishPayment} />
+            <Button label="Finalizar estancia en la mesa" className="bttnFoot" style={{ margin: 0 }} onClick={onFinishPayment} />
         </div>
     );
 
@@ -267,13 +267,17 @@ export function Header(props) {
                     </DataTable>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: "space-between", marginTop: "2rem" }}>
+                <div className='mt-4' style={{ display: 'flex', alignItems: 'center' }}>
                     <span className="font-bold">MÉTODO DE PAGO:</span>
                     <i className={classNames({
-                        "pi pi-credit-card": payment?.paymentType === PAYMENT_TYPE.CARD || payment?.paymentType === PAYMENT_TYPE.APP,
-                        "pi pi-wallet": payment?.paymentType === PAYMENT_TYPE.CASH
+                        "pi pi-credit-card ml-5": payment?.paymentType === PAYMENT_TYPE.CARD || payment?.paymentType === PAYMENT_TYPE.APP,
+                        "pi pi-wallet ml-5": payment?.paymentType === PAYMENT_TYPE.CASH
                     })} style={{ fontSize: '1.5rem' }}></i>
-                    <span className="font-bold ml-4">TOTAL: {payment?.totalPayment.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
+
+                </div>
+                <div className='mt-3'>
+                    <span className="font-bold">TOTAL A PAGAR: </span>
+                    <span className="font-bold ml-6">{payment?.totalPayment.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
                 </div>
             </Dialog>
 
@@ -281,7 +285,7 @@ export function Header(props) {
                 className='dialog-payment-confirm-container'>
                 <div className="confirmation-content">
                     <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                    <span>¿Seguro que deseas finalizar la estancia en la mesa? <br/> Esta acción hará que se cierre el servicio de la mesa.</span>
+                    <span>¿Seguro que deseas finalizar la estancia en la mesa? <br /> Esta acción hará que se cierre el servicio de la mesa.</span>
                 </div>
             </Dialog>
         </>
