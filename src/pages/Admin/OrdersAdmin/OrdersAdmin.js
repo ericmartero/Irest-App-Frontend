@@ -164,6 +164,7 @@ export function OrdersAdmin() {
   const listItem = (table) => {
 
     const ordersPending = size(table.tableBooking?.orders.filter(order => order.status === ORDER_STATUS.PENDING));
+    const ordersPrepared = size(table.tableBooking?.orders.filter(order => order.status === ORDER_STATUS.PREPARED));
 
     const renderDetails = () => {
       history.push(`/admin/table/${table.id}`);
@@ -178,13 +179,20 @@ export function OrdersAdmin() {
               <div className="text-2xl font-bold text-900">Mesa {table.number}</div>
               <div className="flex align-items-center gap-3">
                 {table.tableBooking === null ? null :
-                  <span className="flex align-items-center gap-2">
+                  <>
                     {size(table.tableBooking.payments) > 0 ?
-                      <i>Cuenta: <Badge value={'€'} style={{ background: '#A855F7' }}></Badge></i>
+                      <>
+                        <i>Cuenta pedida: <Badge value={table.tableBooking.payments[0].paymentType === PAYMENT_TYPE.CARD ?
+                            <i className="pi pi-credit-card mt-1"></i> :
+                            <i className="pi pi-wallet mt-1"></i>
+                          } style={{ background: '#A855F7' }}></Badge>
+                        </i>
+                        <Badge value={ordersPending + ordersPrepared} severity="warning"></Badge>
+                      </>
                       :
-                      <i>Pedidos pendientes: <Badge value={ordersPending > 0 ? ordersPending : 0} severity="warning"></Badge></i>
+                      <i>Pedidos pendientes: <Badge value={ordersPending + ordersPrepared} severity="warning"></Badge></i>
                     }
-                  </span>
+                  </>
                 }
                 <Tag value={table.tableBooking === null ? 'VACÍA' : 'OCUPADA'} severity={getSeverity(table)}></Tag>
               </div>
