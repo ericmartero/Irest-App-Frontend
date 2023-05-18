@@ -1,4 +1,4 @@
-import { DashboardLayout } from '../layouts';
+import { DashboardLayout, MainLayout } from '../layouts';
 import {
     HomePageAdmin,
     UsersAdmin,
@@ -7,11 +7,18 @@ import {
     TablesAdmin,
     PaymentsHistoryAdmin,
     TablesQRAdmin,
-    UsersEstablishmentsAdmin
+    UsersEstablishmentsAdmin,
 } from '../pages/Admin';
+import { Error404Main } from '../pages/Error404Main';
 import { WaiterTableDetails } from '../pages/Admin/TableDetailsAdmin';
 
 const routesPanel = [
+    {
+        path: '/',
+        layout: MainLayout,
+        component: Error404Main,
+        exact: true
+    },
     {
         path: '/admin',
         layout: DashboardLayout,
