@@ -38,7 +38,7 @@ export function ClientLayout(props) {
                 getOrdersByTableClient(tables.tableBooking.id);
             }
         })();
-    }, [tables, getOrdersByTableClient, refreshOrders]);
+    }, [tables, getOrdersByTableClient, refreshOrders, refreshPayment]);
 
     useEffect(() => {
         if (orders) {
