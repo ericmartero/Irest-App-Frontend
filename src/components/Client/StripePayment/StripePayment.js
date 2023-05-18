@@ -1,12 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
+import { useStripePayment } from '../../../hooks';
+import { CardElement } from '@stripe/react-stripe-js';
 import { Button } from 'primereact/button';
 import './StripePayment.scss';
 
-export function StripePayment() {
+export function StripePayment(props) {
 
-    //const stripe = useStripe();
-    //const elements = useElements();
+    const { totalPayment } = props;
+    const { error, loading, checkoutStripe } = useStripePayment();
+
+    const makePayment = async () => {
+        try {
+            const response = await checkoutStripe(totalPayment);
+            console.log(response);
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     return (
         <>
@@ -27,7 +37,7 @@ export function StripePayment() {
                 </div>
             </div>
             <div className='btn-stripe-payment'>
-                <Button label='Realizar el pago' />
+                <Button label='Realizar el pago' onClick={makePayment}/>
             </div>
         </>
     );

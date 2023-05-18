@@ -208,7 +208,7 @@ export function Payment(props) {
             </Dialog>
 
             <Dialog visible={showStripePaymentDialog} style={{ width: '90vw' }} header={`Pago mesa ${table?.number}`} modal onHide={hideShowStripePaymentDialog}>
-                <StripePayment />
+                <StripePayment totalPayment={totalPayment} />
             </Dialog>
         </>
     )
