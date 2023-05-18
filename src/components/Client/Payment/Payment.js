@@ -69,8 +69,15 @@ export function Payment(props) {
 
     const onPaymentDialog = async (paymentType) => {
         setShowPaymentDialog(false);
-        setShowConfirmPaymentDialog(true);
         setPaymentType(paymentType);
+
+        if (paymentType === PAYMENT_TYPE.APP) {
+
+        }
+
+        else {
+            setShowConfirmPaymentDialog(true);
+        }
     };
 
     const hideShowConfirmPaymentDialog = () => {
@@ -90,7 +97,7 @@ export function Payment(props) {
             <i className="pi pi-credit-card" style={{ fontSize: '1.8rem' }} onClick={onShowPaymentDialog} />
 
             <Dialog visible={showPaymentDialog} style={{ width: '90vw' }} header="Método de pago" modal onHide={hideShowPaymentDialog}
-            className='footer-orders-pay-container'>
+                className='footer-orders-pay-container'>
                 <div className='paymentDialog-top-buttons'>
                     <Button icon="pi pi-credit-card" label='Tarjeta' className='mr-1 paymentDialog-button' onClick={() => onPaymentDialog(PAYMENT_TYPE.CARD)} />
                     <Button icon="pi pi-wallet" label='Efectivo' className='ml-1 paymentDialog-button' onClick={() => onPaymentDialog(PAYMENT_TYPE.CASH)} />
@@ -101,7 +108,7 @@ export function Payment(props) {
                 </div>
             </Dialog>
 
-            <Dialog visible={showConfirmPaymentDialog} style={{ width: '90vw' }} header="Confirmar pago" modal footer={showConfirmPaymentDialogFooter} onHide={hideShowConfirmPaymentDialog}
+            <Dialog visible={showConfirmPaymentDialog} style={{ width: '90vw' }} header="Pedir cuenta" modal footer={showConfirmPaymentDialogFooter} onHide={hideShowConfirmPaymentDialog}
                 className='dialog-payment-confirm-container'>
                 <div className="confirmation-content">
                     <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
