@@ -12,6 +12,7 @@ import { DataView, DataViewLayoutOptions } from 'primereact/dataview';
 import { Tag } from 'primereact/tag';
 import QRCode from 'react-qr-code';
 import './OrdersAdmin.scss';
+import '../../../scss/Dialogs.scss';
 
 export function OrdersAdmin() {
 

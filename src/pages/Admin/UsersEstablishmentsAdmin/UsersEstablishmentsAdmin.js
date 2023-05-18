@@ -15,6 +15,7 @@ import { Column } from 'primereact/column';
 import { Toast } from 'primereact/toast';
 import { Tag } from 'primereact/tag';
 import { map, size } from 'lodash';
+import '../../../scss/Dialogs.scss';
 
 export function UsersEstablishmentsAdmin() {
 

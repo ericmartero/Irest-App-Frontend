@@ -15,6 +15,7 @@ import { InputSwitch } from "primereact/inputswitch";
 import { useDropzone } from 'react-dropzone';
 import '../../../scss/AlignComponent.scss';
 import './CategoriesAdmin.scss';
+import '../../../scss/Dialogs.scss';
 
 export function CategoriesAdmin() {
 

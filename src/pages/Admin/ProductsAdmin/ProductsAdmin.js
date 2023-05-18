@@ -18,6 +18,7 @@ import { useDropzone } from 'react-dropzone';
 import { map } from 'lodash';
 import '../../../scss/AlignComponent.scss';
 import './ProductsAdmin.scss';
+import '../../../scss/Dialogs.scss';
 
 export function ProductsAdmin() {
 

@@ -15,6 +15,7 @@ import { Tag } from 'primereact/tag';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import QRCode from 'react-qr-code';
 import '../../../scss/AlignComponent.scss';
+import '../../../scss/Dialogs.scss';
 
 export function TablesAdmin() {
 

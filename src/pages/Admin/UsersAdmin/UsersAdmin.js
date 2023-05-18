@@ -14,6 +14,7 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import { useUser, useAuth } from '../../../hooks';
 import { AccessDenied } from '../../AccessdDenied';
 import '../../../scss/AlignComponent.scss';
+import '../../../scss/Dialogs.scss';
 import './UsersAdmin.scss';
 
 export function UsersAdmin() {

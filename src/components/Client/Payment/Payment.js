@@ -4,6 +4,7 @@ import { PAYMENT_TYPE } from '../../../utils/constants';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { forEach, size } from 'lodash';
+import '../../../scss/Dialogs.scss';
 import './Payment.scss';
 
 export function Payment(props) {

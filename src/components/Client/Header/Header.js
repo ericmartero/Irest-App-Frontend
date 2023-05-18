@@ -15,6 +15,7 @@ import { size, forEach } from 'lodash';
 import moment from 'moment';
 import 'moment/locale/es';
 import './Header.scss';
+import '../../../scss/Dialogs.scss';
 
 export function Header(props) {
 
