@@ -21,6 +21,7 @@ import { map, forEach, size } from 'lodash';
 import moment from 'moment';
 import 'moment/locale/es';
 import '../TableDetailsAdmin.scss';
+import '../../../../scss/Dialogs.scss'
 
 export function WaiterTableDetails() {
 
@@ -56,7 +57,7 @@ export function WaiterTableDetails() {
   const [onPaymentChange, setOnPaymentChange] = useState(false);
   const [enablePayment, setEnablePayment] = useState(false);
   const [finishPaymentDialog, setFinishPaymentDialog] = useState(false);
-
+  const [confirmCreateAccountDialog, setConfirmCreateAccountDialog] = useState(false);
   const [autoRefreshEnabled, setAutoRefreshEnabled] = useState(true);
 
   const onRefreshOrders = () => setRefreshOrders((prev) => !prev);
@@ -246,6 +247,11 @@ export function WaiterTableDetails() {
     setShowBillDialog(true);
   };
 
+  const hideConfirmCreateAccountDialog = () => {
+    setConfirmCreateAccountDialog(false);
+    setConfirmTypePaymentDialog(true);
+  };
+
   const hideConfirmTypePaymentDialog = () => {
     setConfirmTypePaymentDialog(false);
     setPaymentType(PAYMENT_TYPE.CARD);
@@ -343,8 +349,13 @@ export function WaiterTableDetails() {
     onRefreshOrders();
     toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Se ha creado la cuenta correctamente', life: 3000 });
     setPaymentType(PAYMENT_TYPE.CARD);
-    setConfirmTypePaymentDialog(false);
+    setConfirmCreateAccountDialog(false);
     setAutoRefreshEnabled(true);
+  };
+
+  const onConfirmCreateAccount = () => {
+    setConfirmCreateAccountDialog(true);
+    setConfirmTypePaymentDialog(false);
   };
 
   const onDropdownChange = (value) => {
@@ -406,7 +417,7 @@ export function WaiterTableDetails() {
   const confirmTypePaymentDialogFooter = (
     <React.Fragment>
       <Button label="Cancelar" icon="pi pi-times" outlined onClick={hideConfirmTypePaymentDialog} />
-      <Button label="Generar Cuenta" icon="pi pi-check" severity="primary" onClick={onPayment} />
+      <Button label="Generar Cuenta" icon="pi pi-check" severity="primary" onClick={onConfirmCreateAccount} />
     </React.Fragment>
   );
 
@@ -422,7 +433,13 @@ export function WaiterTableDetails() {
       <Button label="Si" icon="pi pi-check" severity="danger" onClick={finishPayment} />
     </React.Fragment>
   );
-
+  
+  const confirmCreateAccountDialogFooter = (
+    <React.Fragment>
+      <Button label="No" icon="pi pi-times" outlined onClick={hideConfirmCreateAccountDialog} />
+      <Button label="Si" icon="pi pi-check" onClick={onPayment} />
+    </React.Fragment>
+  );
 
   const formatCurrency = (value) => {
     return value?.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' });
@@ -610,7 +627,7 @@ export function WaiterTableDetails() {
 
           <Dialog visible={confirmTypePaymentDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Cuenta" modal footer={confirmTypePaymentDialogFooter} onHide={hideConfirmTypePaymentDialog}>
             <div className="confirmation-typePayment">
-              <span className="font-semibold">Tipo de pago:</span>
+              <span className="font-semibold">Método de pago:</span>
               <div className="card flex justify-content-center">
                 <div className="flex flex-wrap gap-3">
                   <div className="flex align-items-center">
@@ -661,7 +678,14 @@ export function WaiterTableDetails() {
           <Dialog visible={finishPaymentDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Finalizar mesa" modal footer={finishPaymentDialogFooter} onHide={hideFinishPaymentDialog}>
             <div className="confirmation-content">
               <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-              <span>Seguro que quieres finalizar la cuenta y cerrar la mesa?</span>
+              <span>Seguro de que quieres finalizar la cuenta y cerrar la mesa?</span>
+            </div>
+          </Dialog>
+
+          <Dialog visible={confirmCreateAccountDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Finalizar mesa" modal footer={confirmCreateAccountDialogFooter} onHide={hideConfirmCreateAccountDialog}>
+            <div className="confirmation-content">
+              <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+              {table && <span>Estas seguro que quieres generar la cuenta de la mesa {table.number}?</span>}
             </div>
           </Dialog>
         </>
