@@ -8,7 +8,7 @@ import './Payment.scss';
 
 export function Payment(props) {
 
-    const { table, orders, isPaidToast, noOrdersToPaymentToast, requestedAccount } = props;
+    const { table, orders, payment, isPaidToast, noOrdersToPaymentToast, requestedAccount, onRefreshPayment } = props;
 
     const { createClientPayment, getPaymentByIdClient } = usePayment();
     const { addPaymentToOrderClient } = useOrder();
@@ -16,7 +16,7 @@ export function Payment(props) {
     const [refreshOrders, setRefreshOrders] = useState(false);
     const [ordersTable, setOrdersTable] = useState(null);
     const [paymentType, setPaymentType] = useState(null);
-    const [paymentData, setPaymentData] = useState(null);
+    //const [paymentData, setPaymentData] = useState(null);
     const [showPaymentDialog, setShowPaymentDialog] = useState(false);
     const [showConfirmPaymentDialog, setShowConfirmPaymentDialog] = useState(false);
 
@@ -26,7 +26,7 @@ export function Payment(props) {
         }
     }, [orders]);
 
-    useEffect(() => {
+    /*useEffect(() => {
         if (size(orders) > 0) {
             if (size(orders[0].payment) > 0) {
                 (async () => {
@@ -35,14 +35,14 @@ export function Payment(props) {
                 })();
             }
         }
-    }, [orders, getPaymentByIdClient, refreshOrders]);
+    }, [orders, getPaymentByIdClient, refreshOrders]);*/
 
     const onRefresh = () => setRefreshOrders((state) => !state);
 
     const onShowPaymentDialog = () => {
-        onRefresh();
+        //onRefresh();
 
-        if (paymentData) {
+        if (payment) {
             isPaidToast();
         }
 
@@ -78,7 +78,8 @@ export function Payment(props) {
             await addPaymentToOrderClient(order.id, payment.id);
         };
 
-        onRefresh();
+        //onRefresh();
+        onRefreshPayment();
         requestedAccount();
         setShowConfirmPaymentDialog(false);
     };

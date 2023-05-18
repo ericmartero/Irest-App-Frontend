@@ -10,7 +10,7 @@ import './FooterMenu.scss';
 
 export function FooterMenu(props) {
 
-    const { table, orders } = props;
+    const { table, orders, payment, onRefreshPayment } = props;
 
     const toast = useRef(null);
     const { changeAlertClient } = useTableBooking();
@@ -72,6 +72,8 @@ export function FooterMenu(props) {
                     <Payment
                         table={table}
                         orders={orders}
+                        payment={payment}
+                        onRefreshPayment={onRefreshPayment}
                         isPaidToast={isPaidToast}
                         noOrdersToPaymentToast={noOrdersToPaymentToast}
                         requestedAccount={requestedAccount}
