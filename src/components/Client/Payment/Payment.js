@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useOrder, usePayment } from '../../../hooks';
+import { StripePayment } from '../StripePayment';
 import { PAYMENT_TYPE } from '../../../utils/constants';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
@@ -129,10 +130,9 @@ export function Payment(props) {
                 </div>
             </Dialog>
 
-            <Dialog visible={showStripePaymentDialog} style={{ width: '90vw' }} header="Pago" modal footer={ShowStripePaymentDialogFooter} onHide={hideShowStripePaymentDialog}>
-                <div className="confirmation-content">
-                    <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                    <span>¿holaaaaaaaaaaaaaa</span>
+            <Dialog visible={showStripePaymentDialog} style={{ width: '90vw' }} header="Pago" modal onHide={hideShowStripePaymentDialog}>
+                <div className="mt-4">
+                    <StripePayment />
                 </div>
             </Dialog>
         </>
