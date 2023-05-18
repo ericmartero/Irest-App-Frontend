@@ -161,7 +161,7 @@ export function Header(props) {
 
     const showBillDialogFooter = (
         <div className='footerBill'>
-            <Button label="Finalizar estancia en la mesa" className="bttnFoot" onClick={onFinishPayment} />
+            <Button label="Finalizar estancia en la mesa" className="bttnFoot" style={{margin: 0}} onClick={onFinishPayment} />
         </div>
     );
 
@@ -270,10 +270,10 @@ export function Header(props) {
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: "space-between", marginTop: "2rem" }}>
                     <span className="font-bold">MÉTODO DE PAGO:</span>
                     <i className={classNames({
-                        "pi pi-credit-card": payment?.paymentType === PAYMENT_TYPE.CARD,
+                        "pi pi-credit-card": payment?.paymentType === PAYMENT_TYPE.CARD || payment?.paymentType === PAYMENT_TYPE.APP,
                         "pi pi-wallet": payment?.paymentType === PAYMENT_TYPE.CASH
                     })} style={{ fontSize: '1.5rem' }}></i>
-                    <span className="font-bold">TOTAL: {payment?.totalPayment.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
+                    <span className="font-bold ml-4">TOTAL: {payment?.totalPayment.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
                 </div>
             </Dialog>
 
