@@ -9,7 +9,7 @@ import './Categories.scss';
 
 export function Categories(props) {
 
-  const { orders, table, onRefreshOrders } = props;
+  const { orders, table, onRefreshOrders, payment } = props;
 
   const paramsURL = useParams();
   const history = useHistory();
@@ -60,6 +60,7 @@ export function Categories(props) {
               orders={orders}
               table={table}
               onRefreshOrders={onRefreshOrders}
+              payment={payment}
             />
             <div className='categories-container'>
               <DataView value={categoriesTable} itemTemplate={itemTemplate} emptyMessage='No se ha encontrado ninguna categoría en la carta' />

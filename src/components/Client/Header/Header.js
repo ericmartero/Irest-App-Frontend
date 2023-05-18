@@ -18,7 +18,7 @@ import './Header.scss';
 
 export function Header(props) {
 
-    const { name, isMain, goBack, refreshCartNumber, orders, table, onRefreshOrders } = props;
+    const { name, isMain, goBack, refreshCartNumber, orders, table, onRefreshOrders, payment } = props;
 
     const toast = useRef(null);
     const history = useHistory();
@@ -32,7 +32,7 @@ export function Header(props) {
     const [refreshShoppingCart, setRefreshShoppingCart] = useState(false);
     const [showAddOrderDialog, setShowAddOrderDialog] = useState(false);
     const [products, setProducts] = useState(null);
-    const [paymentData, setPaymentData] = useState(null);
+    //const [paymentData, setPaymentData] = useState(null);
     const [showBillDialog, setShowBillDialog] = useState(false);
     const [finishPaymentDialog, setFinishPaymentDialog] = useState(false);
 
@@ -61,7 +61,7 @@ export function Header(props) {
         setTotalPriceCart(totalPriceCart.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' }));
     }, [products]);
 
-    useEffect(() => {
+    /*useEffect(() => {
         if (size(orders) > 0) {
             if (size(orders[0].payment) > 0) {
                 (async () => {
@@ -70,7 +70,7 @@ export function Header(props) {
                 })();
             }
         }
-    }, [orders, getPaymentByIdClient]);
+    }, [orders, getPaymentByIdClient]);*/
 
     useEffect(() => {
         onRefresh();
@@ -120,7 +120,7 @@ export function Header(props) {
 
     const finishPayment = async () => {
         try {
-          await closePaymentClient(paymentData.id);
+          await closePaymentClient(payment.id);
     
           for await (const order of orders) {
             await closeOrderClient(order.id);
@@ -202,7 +202,7 @@ export function Header(props) {
             {isMain ?
                 <div className='header-main-container'>
                     <h2>{name}</h2>
-                    {!paymentData ?
+                    {!payment ?
                         <>
                             {products ?
                                 <i className="pi pi-shopping-cart p-overlay-badge shoppingCart-icon" onClick={onShoppingCart}>
@@ -222,7 +222,7 @@ export function Header(props) {
                         <i className="pi pi-arrow-left" style={{ fontSize: '1rem', marginRight: '1rem' }} onClick={goBack}></i>
                         <h2>{name}</h2>
                     </div>
-                    {!paymentData ?
+                    {!payment ?
                         <>
                             {products ?
                                 <i className="pi pi-shopping-cart p-overlay-badge shoppingCart-icon" onClick={onShoppingCart}>
@@ -266,7 +266,7 @@ export function Header(props) {
                         <span className="font-bold">{`MESA: ${table?.number}`}</span>
                     </div>
                     <div>
-                        <span><strong>FECHA:</strong> {moment(paymentData?.createdAt).format('DD/MM/YYYY HH:mm:ss')}</span>
+                        <span><strong>FECHA:</strong> {moment(payment?.createdAt).format('DD/MM/YYYY HH:mm:ss')}</span>
                     </div>
                 </div>
 
@@ -281,10 +281,10 @@ export function Header(props) {
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: "space-between", marginTop: "2rem" }}>
                     <span className="font-bold">MÉTODO DE PAGO:</span>
                     <i className={classNames({
-                        "pi pi-credit-card": paymentData?.paymentType === PAYMENT_TYPE.CARD,
-                        "pi pi-wallet": paymentData?.paymentType === PAYMENT_TYPE.CASH
+                        "pi pi-credit-card": payment?.paymentType === PAYMENT_TYPE.CARD,
+                        "pi pi-wallet": payment?.paymentType === PAYMENT_TYPE.CASH
                     })} style={{ fontSize: '1.5rem' }}></i>
-                    <span className="font-bold">TOTAL: {paymentData?.totalPayment.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
+                    <span className="font-bold">TOTAL: {payment?.totalPayment.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
                 </div>
             </Dialog>
 
