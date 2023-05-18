@@ -1,4 +1,4 @@
-const PRODUCTS_SHOPPING_CART = "products_cart";
+const PRODUCTS_SHOPPING_CART = process.env.REACT_APP_SHOPPING_CART;
 
 export function getProductShoppingCart() {
     const productsCart = localStorage.getItem(PRODUCTS_SHOPPING_CART);
