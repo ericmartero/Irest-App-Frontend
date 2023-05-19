@@ -249,7 +249,7 @@ export function Header(props) {
             </Dialog>
 
             <Dialog visible={showBillDialog} style={{ width: '90vw' }} header={`Cuenta Mesa ${table?.number}`} modal className='bill-dialog-container'
-                footer={showBillDialogFooter} onHide={hideBillDialog}>
+                footer={payment?.paymentType === PAYMENT_TYPE.CARD || PAYMENT_TYPE.CASH ? null : showBillDialogFooter} onHide={hideBillDialog}>
                 <div className='product-add-order'>
                     <div className='product-add-info'>
                         <span className="font-bold">{`MESA: ${table?.number}`}</span>
@@ -275,7 +275,10 @@ export function Header(props) {
                     })} style={{ fontSize: '1.5rem' }}></i>
 
                 </div>
-                <div className='mt-3'>
+                <div className={classNames({
+                    "mt-4 mb-2": payment?.paymentType === PAYMENT_TYPE.CARD || payment?.paymentType === PAYMENT_TYPE.CASH,
+                    "mt-3": payment?.paymentType === PAYMENT_TYPE.APP
+                })}>
                     <span className="font-bold">TOTAL A PAGAR: </span>
                     <span className="font-bold ml-6">{payment?.totalPayment.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
                 </div>
