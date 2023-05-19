@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useStripePayment } from '../../../hooks';
 import { CardElement } from '@stripe/react-stripe-js';
 import { Button } from 'primereact/button';
@@ -7,7 +7,7 @@ import './StripePayment.scss';
 export function StripePayment(props) {
 
     const { totalPayment } = props;
-    const { error, loading, checkoutStripe } = useStripePayment();
+    const { checkoutStripe } = useStripePayment();
 
     const makePayment = async () => {
         try {
