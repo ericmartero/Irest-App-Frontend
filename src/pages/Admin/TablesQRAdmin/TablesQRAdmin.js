@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { AccessDenied } from '../../AccessdDenied';
 import { useTable } from '../../../hooks';
 import { DataView } from 'primereact/dataview';
 import { ProgressSpinner } from 'primereact/progressspinner';
@@ -8,7 +9,7 @@ import QRCode from 'react-qr-code';
 export function TablesQRAdmin() {
 
     const intervalRef = useRef();
-    const { loading, tables, getTables } = useTable();
+    const { error, loading, tables, getTables } = useTable();
 
     const [refreshTables, setRefreshTables] = useState(false);
     const [tablesCrud, setTablesCrud] = useState([]);
@@ -86,12 +87,16 @@ export function TablesQRAdmin() {
 
     return (
         <>
-            {loading ?
-                <div className="align-container">
-                    <ProgressSpinner />
-                </div>
-                :
-                <DataView value={tablesCrud} itemTemplate={itemTemplate} layout={'grid'} header={header()} emptyMessage='No se ha encontrado ninguna mesa' />
+            {error ? <AccessDenied /> :
+                <>
+                    {loading ?
+                        <div className="align-container">
+                            <ProgressSpinner />
+                        </div>
+                        :
+                        <DataView value={tablesCrud} itemTemplate={itemTemplate} layout={'grid'} header={header()} emptyMessage='No se ha encontrado ninguna mesa' />
+                    }
+                </>
             }
         </>
     )
