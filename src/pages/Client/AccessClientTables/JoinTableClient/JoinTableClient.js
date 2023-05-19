@@ -55,7 +55,7 @@ export function JoinTableClient(props) {
     <>
       <Toast ref={toastError} position="top-center" />
       <div className='image-container'>
-        <img src="https://res.cloudinary.com/djwjh0wpw/image/upload/v1682460299/ushuaia_ibiza_wxoois.jpg" alt="hyper" className='image-fill-container' />
+        <img src="https://res.cloudinary.com/djwjh0wpw/image/upload/v1684488250/imagen_bar_cliente_a2qxwr.png" alt="hyper" className='image-fill-container' />
       </div>
       <div className="flex align-items-center justify-content-center content-container">
         <div className="p-4 w-full lg:w-6 mx-auto">
