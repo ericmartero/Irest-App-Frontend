@@ -37,7 +37,7 @@ export function StripePayment(props) {
                 </div>
             </div>
             <div className='btn-stripe-payment'>
-                <Button label='Realizar el pago' onClick={makePayment}/>
+                <Button label='Pagar' onClick={makePayment}/>
             </div>
         </>
     );
