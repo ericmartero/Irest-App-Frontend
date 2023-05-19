@@ -164,7 +164,7 @@ export function WaiterTableDetails() {
       return acc;
     }, []);
   };
-  console.log(error);
+
   const removeProductList = (index) => {
     const arrayTemp = [...productList];
     const product = arrayTemp[index];
