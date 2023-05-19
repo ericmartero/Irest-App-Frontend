@@ -6,13 +6,14 @@ import './StripePayment.scss';
 
 export function StripePayment(props) {
 
-    const { totalPayment } = props;
+    const { totalPayment, createAppPayment } = props;
     const { checkoutStripe } = useStripePayment();
 
     const makePayment = async () => {
         try {
             const response = await checkoutStripe(totalPayment, CardElement);
             console.log(response);
+            createAppPayment();
         } catch (error) {
             console.log(error);
         }

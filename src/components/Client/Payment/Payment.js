@@ -61,6 +61,29 @@ export function Payment(props) {
         setShowPaymentDialog(false);
     };
 
+    const createAppPayment = async () => {
+        let totalPayment = 0;
+        forEach(ordersTable, (order) => {
+            totalPayment += order.product.price;
+        });
+
+        const paymentData = {
+            table: table.tableBooking.id,
+            totalPayment: Number(totalPayment.toFixed(2)),
+            paymentType,
+        };
+
+        const payment = await createClientPayment(paymentData);
+
+        for await (const order of ordersTable) {
+            await addPaymentToOrderClient(order.id, payment.id);
+        };
+
+        onRefreshPayment();
+        requestedAccount();
+        setShowStripePaymentDialog(false);
+    };
+
     const createPayment = async () => {
 
         if (paymentType === PAYMENT_TYPE.APP) {
@@ -208,7 +231,7 @@ export function Payment(props) {
             </Dialog>
 
             <Dialog visible={showStripePaymentDialog} style={{ width: '90vw' }} header={`Pago mesa ${table?.number}`} modal onHide={hideShowStripePaymentDialog}>
-                <StripePayment totalPayment={totalPayment} />
+                <StripePayment totalPayment={totalPayment} createAppPayment={createAppPayment} />
             </Dialog>
         </>
     )
