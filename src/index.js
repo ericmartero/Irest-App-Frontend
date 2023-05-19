@@ -14,7 +14,9 @@ import "primeicons/primeicons.css";
 
 import "primeflex/primeflex.css";
 
-const stripeKey = loadStripe('pk_test_51N19O8LGn95IZX0nn5qvwmGAlgcPkKnSaB7ab8B1N30ukaIZGJGl2nIGbYFD5qLuN4OXs4c7zWPQ7Q046rIaWGEs0014objLCY');
+const STRIPE_PUBLIC_KEY = process.env.REACT_APP_STRIPE_PUBLIC_KEY;
+
+const stripeKey = loadStripe(STRIPE_PUBLIC_KEY);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
