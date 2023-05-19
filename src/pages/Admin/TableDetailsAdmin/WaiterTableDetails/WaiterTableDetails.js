@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useOrder, useTable, useProduct, usePayment } from '../../../../hooks';
 import { ORDER_STATUS, PAYMENT_TYPE } from '../../../../utils/constants';
+import { AccessDenied } from '../../../AccessdDenied';
 import { useHistory } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { classNames } from 'primereact/utils';
@@ -29,7 +30,7 @@ export function WaiterTableDetails() {
   const intervalRef = useRef();
   const tableURL = useParams();
   const history = useHistory();
-  const { orders, loading, getOrdersByTable, checkDeliveredOrder, addOrderToTable, deleteOrder, addPaymentToOrder, closeOrder } = useOrder();
+  const { orders, loading, error, getOrdersByTable, checkDeliveredOrder, addOrderToTable, deleteOrder, addPaymentToOrder, closeOrder } = useOrder();
   const { tables, getTableById, updateTable } = useTable();
   const { products, getProducts, getProductById } = useProduct();
   const { createPayment, getPaymentByTable, closePayment } = usePayment();
@@ -75,7 +76,7 @@ export function WaiterTableDetails() {
 
   useEffect(() => {
     if (table && table.tableBooking !== null) {
-      getOrdersByTable(table.tableBooking.id);
+      getOrdersByTable(table?.tableBooking?.id);
     }
   }, [table, refreshOrders, getOrdersByTable]);
 
@@ -120,7 +121,7 @@ export function WaiterTableDetails() {
   useEffect(() => {
     if (table) {
       (async () => {
-        const response = await getPaymentByTable(table.tableBooking.id);
+        const response = await getPaymentByTable(table?.tableBooking?.id);
         if (size(response) > 0) setPaymentData(response[0]);
       })();
     }
@@ -163,7 +164,7 @@ export function WaiterTableDetails() {
       return acc;
     }, []);
   };
-
+  console.log(error);
   const removeProductList = (index) => {
     const arrayTemp = [...productList];
     const product = arrayTemp[index];
@@ -433,7 +434,7 @@ export function WaiterTableDetails() {
       <Button label="Si" icon="pi pi-check" severity="danger" onClick={finishPayment} />
     </React.Fragment>
   );
-  
+
   const confirmCreateAccountDialogFooter = (
     <React.Fragment>
       <Button label="No" icon="pi pi-times" outlined onClick={hideConfirmCreateAccountDialog} />
@@ -575,121 +576,125 @@ export function WaiterTableDetails() {
   };
 
   return (
-    <div className="card">
-      <Toast ref={toast} />
-      {loading ?
-        <div className="align-container">
-          <ProgressSpinner />
-        </div>
-        :
-        <>
-          <DataView value={ordersBooking} itemTemplate={itemTemplate} header={header()} emptyMessage='No hay pedidos en la mesa' />
-          <Dialog visible={productDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={'Añadir pedidos'} modal className="p-fluid" footer={orderDialogFooter} onHide={hideDialog}>
-            <div className="field">
-              <label htmlFor="categoria" className="font-bold">
-                Producto a pedir
-              </label>
-              <Dropdown value={null} onChange={(e) => onDropdownChange(e.value)} options={productsDropdown} filter optionLabel="text" placeholder="Selecciona una producto"
-                style={{ marginBottom: "0.5rem" }} className={classNames({ "p-invalid": submitted && (validationErrors.product) })} emptyFilterMessage="No se encuentra este nombre del producto" />
-              {submitted && validationErrors.product && (<small className="p-error">{validationErrors.product}</small>)}
+    <>
+      {error ? <AccessDenied /> :
+        <div className="card">
+          <Toast ref={toast} />
+          {loading ?
+            <div className="align-container">
+              <ProgressSpinner />
+            </div>
+            :
+            <>
+              <DataView value={ordersBooking} itemTemplate={itemTemplate} header={header()} emptyMessage='No hay pedidos en la mesa' />
+              <Dialog visible={productDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={'Añadir pedidos'} modal className="p-fluid" footer={orderDialogFooter} onHide={hideDialog}>
+                <div className="field">
+                  <label htmlFor="categoria" className="font-bold">
+                    Producto a pedir
+                  </label>
+                  <Dropdown value={null} onChange={(e) => onDropdownChange(e.value)} options={productsDropdown} filter optionLabel="text" placeholder="Selecciona una producto"
+                    style={{ marginBottom: "0.5rem" }} className={classNames({ "p-invalid": submitted && (validationErrors.product) })} emptyFilterMessage="No se encuentra este nombre del producto" />
+                  {submitted && validationErrors.product && (<small className="p-error">{validationErrors.product}</small>)}
 
-              {map(productsData, (product, index) => (
-                <div key={index}>
-                  <div className='product-add-order'>
-                    <div className='product-add-info'>
-                      <img className="w-9 sm:w-13rem xl:w-7rem block xl:block mx-auto border-round" src={product.image} alt={product.title} />
-                      <div style={{ marginLeft: '1.5rem' }}>
-                        <span className="font-bold">{product.title}</span>
-                        <div style={{ marginTop: '0.5rem' }}>
-                          <span style={{ marginRight: '0.5rem' }}>Cantidad: </span>
-                          <Badge value={product.quantity} />
+                  {map(productsData, (product, index) => (
+                    <div key={index}>
+                      <div className='product-add-order'>
+                        <div className='product-add-info'>
+                          <img className="w-9 sm:w-13rem xl:w-7rem block xl:block mx-auto border-round" src={product.image} alt={product.title} />
+                          <div style={{ marginLeft: '1.5rem' }}>
+                            <span className="font-bold">{product.title}</span>
+                            <div style={{ marginTop: '0.5rem' }}>
+                              <span style={{ marginRight: '0.5rem' }}>Cantidad: </span>
+                              <Badge value={product.quantity} />
+                            </div>
+                          </div>
+                        </div>
+                        <div style={{ display: "flex" }}>
+                          <Button icon="pi pi-minus" severity="danger" style={{ marginRight: "10px" }} onClick={() => removeProductList(index, product)} />
+                          <Button icon="pi pi-plus" severity="success" onClick={() => addProductListButton(index)} />
                         </div>
                       </div>
+                      <Divider />
                     </div>
-                    <div style={{ display: "flex" }}>
-                      <Button icon="pi pi-minus" severity="danger" style={{ marginRight: "10px" }} onClick={() => removeProductList(index, product)} />
-                      <Button icon="pi pi-plus" severity="success" onClick={() => addProductListButton(index)} />
+                  ))}
+
+                </div>
+              </Dialog>
+
+              <Dialog visible={deleteOrderDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteOrderDialogFooter} onHide={hideDeleteOrderDialog}>
+                <div className="confirmation-content">
+                  <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                  <span>Seguro que quieres cancelar el pedido?</span>
+                </div>
+              </Dialog>
+
+              <Dialog visible={confirmTypePaymentDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Cuenta" modal footer={confirmTypePaymentDialogFooter} onHide={hideConfirmTypePaymentDialog}>
+                <div className="confirmation-typePayment">
+                  <span className="font-semibold">Método de pago:</span>
+                  <div className="card flex justify-content-center">
+                    <div className="flex flex-wrap gap-3">
+                      <div className="flex align-items-center">
+                        <RadioButton inputId="card" name="payment" value="CARD" onChange={(e) => setPaymentType(e.value)} checked={paymentType === PAYMENT_TYPE.CARD} />
+                        <label htmlFor="card" className="ml-2">Targeta</label>
+                      </div>
+                      <div className="flex align-items-center">
+                        <RadioButton inputId="cash" name="payment" value="CASH" onChange={(e) => setPaymentType(e.value)} checked={paymentType === PAYMENT_TYPE.CASH} />
+                        <label htmlFor="card" className="ml-2">Efectivo</label>
+                      </div>
                     </div>
                   </div>
-                  <Divider />
+
                 </div>
-              ))}
+              </Dialog>
 
-            </div>
-          </Dialog>
-
-          <Dialog visible={deleteOrderDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Confirmar" modal footer={deleteOrderDialogFooter} onHide={hideDeleteOrderDialog}>
-            <div className="confirmation-content">
-              <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-              <span>Seguro que quieres cancelar el pedido?</span>
-            </div>
-          </Dialog>
-
-          <Dialog visible={confirmTypePaymentDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Cuenta" modal footer={confirmTypePaymentDialogFooter} onHide={hideConfirmTypePaymentDialog}>
-            <div className="confirmation-typePayment">
-              <span className="font-semibold">Método de pago:</span>
-              <div className="card flex justify-content-center">
-                <div className="flex flex-wrap gap-3">
-                  <div className="flex align-items-center">
-                    <RadioButton inputId="card" name="payment" value="CARD" onChange={(e) => setPaymentType(e.value)} checked={paymentType === PAYMENT_TYPE.CARD} />
-                    <label htmlFor="card" className="ml-2">Targeta</label>
+              <Dialog visible={showBillDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={`Cuenta Mesa ${table.number}`} modal footer={showBillDialogFooter} onHide={hideBillDialog}>
+                <div className='product-add-order'>
+                  <div className='product-add-info'>
+                    <span className="font-bold">{`MESA ${table.number}`}</span>
                   </div>
-                  <div className="flex align-items-center">
-                    <RadioButton inputId="cash" name="payment" value="CASH" onChange={(e) => setPaymentType(e.value)} checked={paymentType === PAYMENT_TYPE.CASH} />
-                    <label htmlFor="card" className="ml-2">Efectivo</label>
+                  <div>
+                    <span><strong>FECHA:</strong> {moment(paymentData?.createdAt).format('DD/MM/YYYY HH:mm:ss')}</span>
                   </div>
                 </div>
-              </div>
+                <div className='product-add-order' style={{ marginTop: '1.5rem' }}>
+                  <DataTable value={groupOrdersStatus(orders)} style={{ width: '100%' }}>
+                    <Column field="quantity" header="UNIDADES"></Column>
+                    <Column field="product.title" header="PRODUCTO" style={{ minWidth: '12rem' }}></Column>
+                    <Column field="product.price" header="IMPORTE" body={priceBodyTemplate}></Column>
+                  </DataTable>
+                </div>
 
-            </div>
-          </Dialog>
+                <div className='product-add-order'>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <span className="font-bold" style={{ marginRight: '1rem' }}>MÉTODO DE PAGO:</span>
+                    <i className={classNames({
+                      "pi pi-credit-card": paymentData?.paymentType === PAYMENT_TYPE.CARD,
+                      "pi pi-wallet": paymentData?.paymentType === PAYMENT_TYPE.CASH
+                    })} style={{ fontSize: '1.5rem' }}></i>
+                  </div>
+                  <div>
+                    <span className="font-bold" style={{ marginRight: '1rem' }}>TOTAL: {paymentData?.totalPayment.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
+                  </div>
+                </div>
+              </Dialog>
 
-          <Dialog visible={showBillDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={`Cuenta Mesa ${table.number}`} modal footer={showBillDialogFooter} onHide={hideBillDialog}>
-            <div className='product-add-order'>
-              <div className='product-add-info'>
-                <span className="font-bold">{`MESA ${table.number}`}</span>
-              </div>
-              <div>
-                <span><strong>FECHA:</strong> {moment(paymentData?.createdAt).format('DD/MM/YYYY HH:mm:ss')}</span>
-              </div>
-            </div>
-            <div className='product-add-order' style={{ marginTop: '1.5rem' }}>
-              <DataTable value={groupOrdersStatus(orders)} style={{ width: '100%' }}>
-                <Column field="quantity" header="UNIDADES"></Column>
-                <Column field="product.title" header="PRODUCTO" style={{ minWidth: '12rem' }}></Column>
-                <Column field="product.price" header="IMPORTE" body={priceBodyTemplate}></Column>
-              </DataTable>
-            </div>
+              <Dialog visible={finishPaymentDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Finalizar mesa" modal footer={finishPaymentDialogFooter} onHide={hideFinishPaymentDialog}>
+                <div className="confirmation-content">
+                  <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                  <span>Seguro de que quieres finalizar la cuenta y cerrar la mesa?</span>
+                </div>
+              </Dialog>
 
-            <div className='product-add-order'>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
-                <span className="font-bold" style={{ marginRight: '1rem' }}>MÉTODO DE PAGO:</span>
-                <i className={classNames({
-                  "pi pi-credit-card": paymentData?.paymentType === PAYMENT_TYPE.CARD,
-                  "pi pi-wallet": paymentData?.paymentType === PAYMENT_TYPE.CASH
-                })} style={{ fontSize: '1.5rem' }}></i>
-              </div>
-              <div>
-                <span className="font-bold" style={{ marginRight: '1rem' }}>TOTAL: {paymentData?.totalPayment.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
-              </div>
-            </div>
-          </Dialog>
-
-          <Dialog visible={finishPaymentDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Finalizar mesa" modal footer={finishPaymentDialogFooter} onHide={hideFinishPaymentDialog}>
-            <div className="confirmation-content">
-              <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-              <span>Seguro de que quieres finalizar la cuenta y cerrar la mesa?</span>
-            </div>
-          </Dialog>
-
-          <Dialog visible={confirmCreateAccountDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Finalizar mesa" modal footer={confirmCreateAccountDialogFooter} onHide={hideConfirmCreateAccountDialog}>
-            <div className="confirmation-content">
-              <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-              {table && <span>Estas seguro que quieres generar la cuenta de la mesa {table.number}?</span>}
-            </div>
-          </Dialog>
-        </>
+              <Dialog visible={confirmCreateAccountDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Finalizar mesa" modal footer={confirmCreateAccountDialogFooter} onHide={hideConfirmCreateAccountDialog}>
+                <div className="confirmation-content">
+                  <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                  {table && <span>Estas seguro que quieres generar la cuenta de la mesa {table.number}?</span>}
+                </div>
+              </Dialog>
+            </>
+          }
+        </div>
       }
-    </div>
+    </>
   )
 }
