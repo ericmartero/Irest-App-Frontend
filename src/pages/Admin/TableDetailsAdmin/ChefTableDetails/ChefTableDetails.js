@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useOrder } from '../../../../hooks';
 import { ORDER_STATUS } from '../../../../utils/constants';
+import { AccessDenied } from '../../../AccessdDenied';
 import { Button } from 'primereact/button';
 import { DataView } from 'primereact/dataview';
 import { Toolbar } from 'primereact/toolbar';
@@ -16,7 +17,7 @@ export function ChefTableDetails() {
 
   const toast = useRef(null);
   const intervalRef = useRef();
-  const { orders, loading, getOrdersByTable, checkDeliveredOrder } = useOrder();
+  const { error, orders, loading, getOrdersByTable, checkDeliveredOrder } = useOrder();
   const [ordersBooking, setOrdersBooking] = useState([]);
   const [refreshOrders, setRefreshOrders] = useState(false);
 
@@ -140,15 +141,19 @@ export function ChefTableDetails() {
   };
 
   return (
-    <div className="card">
-      <Toast ref={toast} />
-      {loading ?
-        <div className="align-container">
-          <ProgressSpinner />
+    <>
+      {error ? <AccessDenied /> :
+        <div className="card">
+          <Toast ref={toast} />
+          {loading ?
+            <div className="align-container">
+              <ProgressSpinner />
+            </div>
+            :
+            <DataView value={ordersBooking} itemTemplate={itemTemplate} header={header()} emptyMessage='No hay pedidos en la mesa' />
+          }
         </div>
-        :
-        <DataView value={ordersBooking} itemTemplate={itemTemplate} header={header()} emptyMessage='No hay pedidos en la mesa' />
       }
-    </div>
+    </>
   )
 }
