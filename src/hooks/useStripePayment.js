@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import { useAuth } from './useAuth'
-import { PAYMENT_TYPE } from '../utils/constants';
 import { checkoutStripeApi } from '../api/stripe';
-import { useElements, useStripe } from '@stripe/react-stripe-js/dist/react-stripe';
+import { useElements, useStripe } from '@stripe/react-stripe-js';
 
 export function useStripePayment() {
 
@@ -16,17 +15,16 @@ export function useStripePayment() {
         try {
             setLoading(true);
 
-            const response = await stripe.createPaymentMethod({
-                type: PAYMENT_TYPE.CARD,
+            const { error, paymentMethod } = await stripe.createPaymentMethod({
+                type: "card",
                 card: elements.getElement(element),
             });
 
-            if (response.error) {
-                setError(response.error);
+            if (error) {
+                setError(error);
             }
-            const paymentStripe = { "amount": totalPayment };
             
-            const result = await checkoutStripeApi(paymentStripe, authClient.token);
+            const result = await checkoutStripeApi(totalPayment, paymentMethod.id, authClient.token);
             setLoading(false);
 
             return result;
@@ -34,7 +32,7 @@ export function useStripePayment() {
             setLoading(false);
             throw error;
         }
-    }
+    };
 
     return {
         error,
