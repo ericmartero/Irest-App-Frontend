@@ -4,6 +4,8 @@ import App from './App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements } from '@stripe/react-stripe-js';
 
 //import "primereact/resources/themes/tailwind-light/theme.css";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
@@ -12,12 +14,16 @@ import "primeicons/primeicons.css";
 
 import "primeflex/primeflex.css";
 
+const stripeKey = loadStripe('pk_test_51N19O8LGn95IZX0nn5qvwmGAlgcPkKnSaB7ab8B1N30ukaIZGJGl2nIGbYFD5qLuN4OXs4c7zWPQ7Q046rIaWGEs0014objLCY');
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
+  <Elements stripe={stripeKey}>
     <React.StrictMode>
-      <App />
+        <App />
     </React.StrictMode>
+    </Elements>
   </BrowserRouter>
 );
 
