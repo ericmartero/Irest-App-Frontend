@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useAuth, useTable, useOrder, usePayment } from '../../hooks';
 import { HomeClient } from '../../pages/Client';
 import { TopMenu, FooterMenu } from '../../components/Client';
@@ -11,6 +12,7 @@ export function ClientLayout(props) {
     const { children } = props;
 
     const paramsURL = useParams();
+    const history = useHistory();
     const { authClient } = useAuth();
     const { tables, getTableClient } = useTable();
     const { loading, orders, getOrdersByTableClient } = useOrder();
@@ -28,9 +30,16 @@ export function ClientLayout(props) {
 
     useEffect(() => {
         if (tables) {
-            setTable(tables);
+            if (tables.tableBooking === null) {
+                localStorage.clear();
+                history.push(`/${tables.id}`);
+            }
+
+            else {
+                setTable(tables);
+            }
         }
-    }, [tables]);
+    }, [tables, history]);
 
     useEffect(() => {
         (async () => {
