@@ -10,14 +10,14 @@ import {
     UsersEstablishmentsAdmin,
     ChefTableDetails
 } from '../pages/Admin';
-import { Error404Main } from '../pages/Error404Main';
+import { MainPage } from '../pages/MainPage';
 import { WaiterTableDetails } from '../pages/Admin/TableDetailsAdmin';
 
 const routesPanel = [
     {
         path: '/',
         layout: MainLayout,
-        component: Error404Main,
+        component: MainPage,
         exact: true
     },
     {
