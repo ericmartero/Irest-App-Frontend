@@ -89,6 +89,9 @@ export function DashboardLayout(props) {
                     ? [{ label: 'Establecimientos', icon: 'pi pi-fw pi-home', to: '/admin' }]
                     : [{ label: 'Pedidos', icon: 'pi pi-fw pi-home', to: '/admin' }]
                 ),
+
+                ...(auth?.me.user.roles.includes('admin') && [{ label: 'Cocina', icon: 'pi pi-fw pi-user', to: '/admin/orders-kitchen' }]),
+
                 ...(auth?.me.user.roles.includes('admin') ?
                     [{ label: 'Usuarios', icon: 'pi pi-fw pi-id-card', to: '/admin/users' }]
                     :

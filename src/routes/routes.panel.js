@@ -8,6 +8,7 @@ import {
     PaymentsHistoryAdmin,
     TablesQRAdmin,
     UsersEstablishmentsAdmin,
+    ChefTableDetails
 } from '../pages/Admin';
 import { Error404Main } from '../pages/Error404Main';
 import { WaiterTableDetails } from '../pages/Admin/TableDetailsAdmin';
@@ -71,6 +72,12 @@ const routesPanel = [
         path: '/admin/users-establishments',
         layout: DashboardLayout,
         component: UsersEstablishmentsAdmin,
+        exact: true
+    },
+    {
+        path: '/admin/orders-kitchen',
+        layout: DashboardLayout,
+        component: ChefTableDetails,
         exact: true
     }
 ];
