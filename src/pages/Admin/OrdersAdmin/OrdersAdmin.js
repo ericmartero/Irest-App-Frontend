@@ -114,11 +114,9 @@ export function OrdersAdmin() {
   }
 
   const resetKeyTable = async () => {
-
     try {
       const response = await resetKey(tableSelected.tableBooking.id);
       setNewKey(response.key);
-      toast.current.show({ severity: 'success', summary: 'Operación Exitosa', detail: `Se ha cambiado la clave de la mesa número ${tableSelected.number} correctamente`, life: 3000 });
     } catch (error) {
       showError(error);
     }
