@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ORDER_STATUS } from '../../../utils/constants';
 import { useParams, useHistory } from 'react-router-dom';
 import { Header } from '../../../components/Client';
@@ -18,17 +18,21 @@ export function OrdersTracking(props) {
     const paramsURL = useParams();
     const history = useHistory();
 
+    const [autoRefreshEnabled, setAutoRefreshEnabled] = useState(true);
+
     useEffect(() => {
         const autoRefreshTables = () => {
             onRefreshOrders();
         }
 
-        intervalRef.current = setInterval(autoRefreshTables, 10000);
+        if (autoRefreshEnabled) {
+            intervalRef.current = setInterval(autoRefreshTables, 10000);
+        }
 
         return () => {
             clearInterval(intervalRef.current);
         };
-    }, [onRefreshOrders]);
+    }, [onRefreshOrders, autoRefreshEnabled]);
 
     const getSeverity = (order) => {
         switch (order.status) {
@@ -65,6 +69,7 @@ export function OrdersTracking(props) {
                     table={table}
                     onRefreshOrders={onRefreshOrders}
                     payment={payment}
+                    setAutoRefreshEnabled={setAutoRefreshEnabled}
                 />
             }
             <>

@@ -19,7 +19,7 @@ import '../../../scss/Dialogs.scss';
 
 export function Header(props) {
 
-    const { name, isMain, goBack, refreshCartNumber, orders, table, onRefreshOrders, payment } = props;
+    const { name, isMain, goBack, refreshCartNumber, orders, table, onRefreshOrders, payment, setAutoRefreshEnabled } = props;
 
     const toast = useRef(null);
     const history = useHistory();
@@ -135,6 +135,13 @@ export function Header(props) {
         onRefresh();
     };
 
+    const onShowBillDialog = () => {
+        setShowBillDialog(true);
+        if (typeof setAutoRefreshEnabled !== 'undefined') {
+            setAutoRefreshEnabled(false);
+        }
+    };
+
     const hideShowAddOrderDialog = () => {
         setShowAddOrderDialog(false);
         setShoppingCartDialog(true);
@@ -142,6 +149,9 @@ export function Header(props) {
 
     const hideBillDialog = () => {
         setShowBillDialog(false);
+        if (typeof setAutoRefreshEnabled !== 'undefined') {
+            setAutoRefreshEnabled(true);
+        }
     };
 
     const hideFinishPaymentDialog = () => {
@@ -202,7 +212,7 @@ export function Header(props) {
                             }
                         </>
                         :
-                        <Button label='Cuenta' className="p-button-secondary button-payment" onClick={() => setShowBillDialog(true)} />
+                        <Button label='Cuenta' className="p-button-secondary button-payment" onClick={onShowBillDialog} />
                     }
                 </div>
                 :
@@ -222,7 +232,7 @@ export function Header(props) {
                             }
                         </>
                         :
-                        <Button label='Cuenta' className="p-button-secondary button-payment" onClick={() => setShowBillDialog(true)} />
+                        <Button label='Cuenta' className="p-button-secondary button-payment" onClick={onShowBillDialog} />
                     }
                 </div>
             }
@@ -259,7 +269,7 @@ export function Header(props) {
                         <div>
                             <span><strong>Fecha:</strong> {moment(payment?.createdAt).format('DD/MM/YYYY')}</span>
                         </div>
-                        <div style={{marginTop: "0.5rem"}}>
+                        <div style={{ marginTop: "0.5rem" }}>
                             <span><strong>Hora:</strong> {moment(payment?.createdAt).format('HH:mm:ss')}</span>
                         </div>
 
