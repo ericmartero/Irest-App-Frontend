@@ -45,6 +45,10 @@
     margin: auto;
 }
 
+.account-info {
+    display: flex;
+    flex-direction: column;
+}
 
 .p-datatable-tfoot>tr>td {
     border: none !important;

@@ -472,7 +472,7 @@ export function WaiterTableDetails() {
   const totalPaymentFooter = (
     <ColumnGroup>
       <Row>
-        <Column/>
+        <Column />
         <Column footer="TOTAL:" align={"right"} />
         <Column footer={`${paymentData?.totalPayment.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`} />
       </Row>
@@ -483,11 +483,11 @@ export function WaiterTableDetails() {
     return (
       <div className="flex flex-wrap gap-2">
         {!paymentData ? <Button label="Añadir pedido" severity="success" className='ml-5' onClick={openNew} />
-          : <Button label="Ver Cuenta" severity="secondary" className='ml-5' style={{width: "10rem"}} onClick={onShowBill} />}
+          : <Button label="Ver Cuenta" severity="secondary" className='ml-5' style={{ width: "10rem" }} onClick={onShowBill} />}
         {!paymentData ? <Button label="Generar Cuenta" severity="secondary" className='ml-2' disabled={enablePayment} onClick={onConfirmPayment} />
           : null
         }
-        <Button label="Cerrar mesa" severity="danger" className='ml-2' style={{width: "10rem"}} onClick={onShowBill} />
+        <Button label="Cerrar mesa" severity="danger" className='ml-2' style={{ width: "10rem" }} onClick={onShowBill} />
       </div>
     );
   };
@@ -662,11 +662,26 @@ export function WaiterTableDetails() {
 
               <Dialog visible={showBillDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={`Cuenta Mesa ${table.number}`} modal footer={showBillDialogFooter} onHide={hideBillDialog}>
                 <div className='product-add-order'>
-                  <div className='product-add-info'>
-                    <span className="font-bold">{`MESA ${table.number}`}</span>
+                  <div className='account-info'>
+                    <div>
+                      <span className="font-bold mr-5">Mesa:</span>
+                      <span className='font-bold'>{`${table.number}`}</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', marginTop: "0.5rem" }}>
+                      <span className="font-bold mr-5">Método de pago:</span>
+                      <i className={classNames({
+                        "pi pi-credit-card": paymentData?.paymentType === PAYMENT_TYPE.CARD || paymentData?.paymentType === PAYMENT_TYPE.APP,
+                        "pi pi-wallet": paymentData?.paymentType === PAYMENT_TYPE.CASH
+                      })} style={{ fontSize: '1.5rem' }}></i>
+                    </div>
                   </div>
                   <div>
-                    <span><strong>FECHA:</strong> {moment(paymentData?.createdAt).format('DD/MM/YYYY HH:mm:ss')}</span>
+                    <div>
+                      <span><strong>Hora:</strong> {moment(paymentData?.createdAt).format('HH:mm:ss')}</span>
+                    </div>
+                    <div style={{ marginTop: "0.5rem" }}>
+                      <span><strong>Fecha:</strong> {moment(paymentData?.createdAt).format('DD/MM/YYYY')}</span>
+                    </div>
                   </div>
                 </div>
                 <div className='product-add-order' style={{ marginTop: '1.5rem' }}>
@@ -675,16 +690,6 @@ export function WaiterTableDetails() {
                     <Column field="product.title" header="PRODUCTO" style={{ minWidth: '10rem' }}></Column>
                     <Column field="product.price" header="IMPORTE" body={priceBodyTemplate}></Column>
                   </DataTable>
-                </div>
-
-                <div className='product-add-order'>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <span className="font-bold" style={{ marginRight: '1rem' }}>MÉTODO DE PAGO:</span>
-                    <i className={classNames({
-                      "pi pi-credit-card": paymentData?.paymentType === PAYMENT_TYPE.CARD || paymentData?.paymentType === PAYMENT_TYPE.APP,
-                      "pi pi-wallet": paymentData?.paymentType === PAYMENT_TYPE.CASH
-                    })} style={{ fontSize: '1.5rem' }}></i>
-                  </div>
                 </div>
               </Dialog>
 
