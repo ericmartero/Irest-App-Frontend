@@ -12,6 +12,8 @@ import { Toolbar } from 'primereact/toolbar';
 import { Dropdown } from 'primereact/dropdown';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
+import { ColumnGroup } from 'primereact/columngroup';
+import { Row } from 'primereact/row';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { RadioButton } from "primereact/radiobutton";
 import { Divider } from 'primereact/divider';
@@ -467,6 +469,16 @@ export function WaiterTableDetails() {
     setAutoRefreshEnabled(false);
   };
 
+  const totalPaymentFooter = (
+    <ColumnGroup>
+      <Row>
+        <Column/>
+        <Column footer="TOTAL:" align={"right"} />
+        <Column footer={`${paymentData?.totalPayment.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`} />
+      </Row>
+    </ColumnGroup>
+  );
+
   const rightToolbarTemplate = () => {
     return (
       <div className="flex flex-wrap gap-2">
@@ -657,9 +669,9 @@ export function WaiterTableDetails() {
                   </div>
                 </div>
                 <div className='product-add-order' style={{ marginTop: '1.5rem' }}>
-                  <DataTable value={groupOrdersStatus(orders)} style={{ width: '100%' }}>
+                  <DataTable value={groupOrdersStatus(orders)} style={{ width: '100%' }} footerColumnGroup={totalPaymentFooter}>
                     <Column field="quantity" header="UNIDADES"></Column>
-                    <Column field="product.title" header="PRODUCTO" style={{ minWidth: '12rem' }}></Column>
+                    <Column field="product.title" header="PRODUCTO" style={{ minWidth: '10rem' }}></Column>
                     <Column field="product.price" header="IMPORTE" body={priceBodyTemplate}></Column>
                   </DataTable>
                 </div>
@@ -671,9 +683,6 @@ export function WaiterTableDetails() {
                       "pi pi-credit-card": paymentData?.paymentType === PAYMENT_TYPE.CARD || paymentData?.paymentType === PAYMENT_TYPE.APP,
                       "pi pi-wallet": paymentData?.paymentType === PAYMENT_TYPE.CASH
                     })} style={{ fontSize: '1.5rem' }}></i>
-                  </div>
-                  <div>
-                    <span className="font-bold" style={{ marginRight: '1rem' }}>TOTAL: {paymentData?.totalPayment.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
                   </div>
                 </div>
               </Dialog>

@@ -17,7 +17,7 @@
 
 .product-info {
     width: 15rem;
-  }
+}
 
 .bttnFoot {
     margin-top: 1rem !important;
@@ -43,4 +43,10 @@
     object-fit: contain;
     max-height: 100%;
     margin: auto;
+}
+
+
+.p-datatable-tfoot>tr>td {
+    border: none !important;
+    background: none !important;
 }
