@@ -54,3 +54,9 @@
     border: none !important;
     background: none !important;
 }
+
+.dialog-account-container {
+    .p-dialog-content {
+        padding: 0 1.5rem 0.5rem 1.5rem !important;
+    }
+}

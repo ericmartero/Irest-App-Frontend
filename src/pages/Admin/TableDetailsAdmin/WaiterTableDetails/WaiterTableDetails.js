@@ -426,7 +426,7 @@ export function WaiterTableDetails() {
 
   const showBillDialogFooter = (
     <div className='footerBill'>
-      <Button label="Finalizar cuenta y cerrar mesa" onClick={openDialogFinishPayment} className="bttnFoot" />
+      <Button label="Finalizar cuenta y cerrar mesa" onClick={openDialogFinishPayment} style={{ margin: 0 }} />
     </div>
   );
 
@@ -660,7 +660,8 @@ export function WaiterTableDetails() {
                 </div>
               </Dialog>
 
-              <Dialog visible={showBillDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={`Cuenta Mesa ${table.number}`} modal footer={showBillDialogFooter} onHide={hideBillDialog}>
+              <Dialog visible={showBillDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={`Cuenta Mesa ${table.number}`} modal footer={showBillDialogFooter}
+                className='dialog-account-container' onHide={hideBillDialog}>
                 <div className='product-add-order'>
                   <div className='account-info'>
                     <div>
