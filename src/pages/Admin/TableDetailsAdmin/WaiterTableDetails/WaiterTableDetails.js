@@ -487,6 +487,7 @@ export function WaiterTableDetails() {
         {!paymentData ? <Button label="Generar Cuenta" severity="secondary" className='ml-2' disabled={enablePayment} onClick={onConfirmPayment} />
           : null
         }
+        <Button label="Cerrar mesa" severity="danger" className='ml-2' style={{width: "10rem"}} onClick={onShowBill} />
       </div>
     );
   };
