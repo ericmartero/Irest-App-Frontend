@@ -678,10 +678,10 @@ export function WaiterTableDetails() {
                   </div>
                   <div>
                     <div>
-                      <span><strong>Hora:</strong> {moment(paymentData?.createdAt).format('HH:mm:ss')}</span>
+                      <span><strong>Fecha:</strong> {moment(paymentData?.createdAt).format('DD/MM/YYYY')}</span>
                     </div>
                     <div style={{ marginTop: "0.5rem" }}>
-                      <span><strong>Fecha:</strong> {moment(paymentData?.createdAt).format('DD/MM/YYYY')}</span>
+                      <span><strong>Hora:</strong> {moment(paymentData?.createdAt).format('HH:mm:ss')}</span>
                     </div>
                   </div>
                 </div>

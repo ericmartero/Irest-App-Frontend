@@ -252,10 +252,17 @@ export function Header(props) {
                 footer={payment?.paymentType === PAYMENT_TYPE.CARD || payment?.paymentType === PAYMENT_TYPE.CASH ? null : showBillDialogFooter} onHide={hideBillDialog}>
                 <div className='product-add-order'>
                     <div className='product-add-info'>
-                        <span className="font-bold">{`MESA: ${table?.number}`}</span>
+                        <span className="font-bold mr-4">Mesa:</span>
+                        <span className="font-bold">{`${table?.number}`}</span>
                     </div>
                     <div>
-                        <span><strong>FECHA:</strong> {moment(payment?.createdAt).format('DD/MM/YYYY HH:mm:ss')}</span>
+                        <div>
+                            <span><strong>Fecha:</strong> {moment(payment?.createdAt).format('DD/MM/YYYY')}</span>
+                        </div>
+                        <div style={{marginTop: "0.5rem"}}>
+                            <span><strong>Hora:</strong> {moment(payment?.createdAt).format('HH:mm:ss')}</span>
+                        </div>
+
                     </div>
                 </div>
 
@@ -268,7 +275,7 @@ export function Header(props) {
                 </div>
 
                 <div className='mt-4' style={{ display: 'flex', alignItems: 'center' }}>
-                    <span className="font-bold">MÉTODO DE PAGO:</span>
+                    <span className="font-bold">Método de pago:</span>
                     <i className={classNames({
                         "pi pi-credit-card ml-5": payment?.paymentType === PAYMENT_TYPE.CARD || payment?.paymentType === PAYMENT_TYPE.APP,
                         "pi pi-wallet ml-5": payment?.paymentType === PAYMENT_TYPE.CASH
@@ -280,7 +287,7 @@ export function Header(props) {
                     "mt-3": payment?.paymentType === PAYMENT_TYPE.APP
                 })}>
                     <span className="font-bold">PAGO TOTAL: </span>
-                    <span className="font-bold ml-7">{payment?.totalPayment.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
+                    <span className="font-bold ml-6">{payment?.totalPayment.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
                 </div>
             </Dialog>
 
