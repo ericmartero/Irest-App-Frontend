@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useOrder } from '../../../../hooks';
+import { useOrder, useAuth } from '../../../../hooks';
 import { ORDER_STATUS } from '../../../../utils/constants';
 import { AccessDenied } from '../../../AccessdDenied';
 import { Button } from 'primereact/button';
@@ -9,6 +9,7 @@ import { ProgressSpinner } from 'primereact/progressspinner';
 import { Badge } from 'primereact/badge';
 import { Toast } from 'primereact/toast';
 import { Tag } from 'primereact/tag';
+import { size } from 'lodash';
 import moment from 'moment';
 import 'moment/locale/es';
 import '../TableDetailsAdmin.scss';
@@ -17,6 +18,7 @@ export function ChefTableDetails() {
 
   const toast = useRef(null);
   const intervalRef = useRef();
+  const { auth } = useAuth();
   const { error, orders, loading, getOrdersByTable, checkDeliveredOrder } = useOrder();
   const [ordersBooking, setOrdersBooking] = useState([]);
   const [refreshOrders, setRefreshOrders] = useState(false);
@@ -142,7 +144,7 @@ export function ChefTableDetails() {
 
   return (
     <>
-      {error ? <AccessDenied /> :
+      {error || (size(auth?.me.user.roles) === 1 && auth?.me.user.roles.includes('waiter')) ? <AccessDenied /> :
         <div className="card">
           <Toast ref={toast} />
           {loading ?

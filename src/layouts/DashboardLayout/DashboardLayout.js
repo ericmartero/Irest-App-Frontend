@@ -90,7 +90,7 @@ export function DashboardLayout(props) {
                     : [{ label: 'Pedidos', icon: 'pi pi-fw pi-home', to: '/admin' }]
                 ),
 
-                ...(auth?.me.user.roles.includes('admin') || auth?.me.user.roles.includes('waiter') ?
+                ...(auth?.me.user.roles.includes('admin') || (auth?.me.user.roles.includes('waiter') && auth?.me.user.roles.includes('chef')) ?
                     [{ label: 'Cocina', icon: 'pi pi-fw pi-user', to: '/admin/orders-kitchen' }] : []
                 ),
 
