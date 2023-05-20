@@ -249,7 +249,7 @@ export function Header(props) {
             </Dialog>
 
             <Dialog visible={showBillDialog} style={{ width: '90vw' }} header={`Cuenta Mesa ${table?.number}`} modal className='bill-dialog-container'
-                footer={showBillDialogFooter} onHide={hideBillDialog}>
+                footer={payment?.paymentType === PAYMENT_TYPE.CARD || payment?.paymentType === PAYMENT_TYPE.CASH ? null : showBillDialogFooter} onHide={hideBillDialog}>
                 <div className='product-add-order'>
                     <div className='product-add-info'>
                         <span className="font-bold">{`MESA: ${table?.number}`}</span>
