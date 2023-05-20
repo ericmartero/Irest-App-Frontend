@@ -483,7 +483,7 @@ export function WaiterTableDetails() {
     return (
       <div className="flex flex-wrap gap-2">
         {!paymentData ? <Button label="Añadir pedido" severity="success" className='ml-5' onClick={openNew} />
-          : <Button label="Ver Cuenta" severity="secondary" className='ml-5' onClick={onShowBill} />}
+          : <Button label="Ver Cuenta" severity="secondary" className='ml-5' style={{width: "10rem"}} onClick={onShowBill} />}
         {!paymentData ? <Button label="Generar Cuenta" severity="secondary" className='ml-2' disabled={enablePayment} onClick={onConfirmPayment} />
           : null
         }
