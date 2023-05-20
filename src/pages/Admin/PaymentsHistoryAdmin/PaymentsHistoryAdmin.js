@@ -91,7 +91,7 @@ export function PaymentsHistoryAdmin() {
     };
 
     const paidMethodBodyTemplate = (rowData) => {
-        if (rowData.paymentType === PAYMENT_TYPE.CARD) {
+        if (rowData.paymentType === PAYMENT_TYPE.CARD || rowData.paymentType === PAYMENT_TYPE.APP) {
             return <i className={"pi pi-credit-card"} style={{ fontSize: '1.5rem' }}></i>;
         }
 
