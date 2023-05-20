@@ -279,8 +279,8 @@ export function Header(props) {
                     "mt-4 mb-2": payment?.paymentType === PAYMENT_TYPE.CARD || payment?.paymentType === PAYMENT_TYPE.CASH,
                     "mt-3": payment?.paymentType === PAYMENT_TYPE.APP
                 })}>
-                    <span className="font-bold">TOTAL A PAGAR: </span>
-                    <span className="font-bold ml-6">{payment?.totalPayment.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
+                    <span className="font-bold">PAGO TOTAL: </span>
+                    <span className="font-bold ml-7">{payment?.totalPayment.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
                 </div>
             </Dialog>
 
