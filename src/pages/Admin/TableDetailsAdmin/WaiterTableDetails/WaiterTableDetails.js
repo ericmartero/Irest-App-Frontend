@@ -668,7 +668,7 @@ export function WaiterTableDetails() {
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     <span className="font-bold" style={{ marginRight: '1rem' }}>MÉTODO DE PAGO:</span>
                     <i className={classNames({
-                      "pi pi-credit-card": paymentData?.paymentType === PAYMENT_TYPE.CARD,
+                      "pi pi-credit-card": paymentData?.paymentType === PAYMENT_TYPE.CARD || paymentData?.paymentType === PAYMENT_TYPE.APP,
                       "pi pi-wallet": paymentData?.paymentType === PAYMENT_TYPE.CASH
                     })} style={{ fontSize: '1.5rem' }}></i>
                   </div>
