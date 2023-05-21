@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ORDER_STATUS } from '../../../utils/constants';
+import { ORDER_STATUS, PAYMENT_STATUS } from '../../../utils/constants';
 import { useParams, useHistory } from 'react-router-dom';
 import { Header } from '../../../components/Client';
+import { classNames } from 'primereact/utils';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { Tag } from 'primereact/tag';
 import { map, size } from "lodash";
@@ -81,23 +82,39 @@ export function OrdersTracking(props) {
                     </div>
                     :
                     <div className='orders-container'>
-                        {map(orders, (order) => (
-                            <div key={order.id} className='order_container'>
-                                <div className='content_order'>
-                                    <img className="w-4 sm:w-8rem xl:w-8rem block xl:block border-round" src={order.product.image} alt={order.product.title} />
-                                    <div className='content_order_info'>
-                                        <span className="font-bold text-900">{order.product.title}</span>
-                                        <span>{moment(order.createdAt).format('HH:mm')}</span>
+                        {payment?.statusPayment === PAYMENT_STATUS.PAID ?
+                            <div className='status-payment-tracking-container'>
+                                <Tag icon="pi pi-euro" severity="success" value="PAGADO" />
+                            </div>
+                            : payment?.statusPayment === PAYMENT_STATUS.PENDING ?
+                                <div className='status-payment-tracking-container'>
+                                    <Tag icon="pi pi-euro" severity="danger" value="PAGO PENDIENTE" />
+                                </div>
+                                : null
+                        }
+                        <div
+                            className={classNames({
+                                "orders-payment-tracking-container": payment,
+                            })}
+                        >
+                            {map(orders, (order) => (
+                                <div key={order.id} className='order_container'>
+                                    <div className='content_order'>
+                                        <img className="w-4 sm:w-8rem xl:w-8rem block xl:block border-round" src={order.product.image} alt={order.product.title} />
+                                        <div className='content_order_info'>
+                                            <span className="font-bold text-900">{order.product.title}</span>
+                                            <span>{moment(order.createdAt).format('HH:mm')}</span>
+                                        </div>
+                                    </div>
+                                    <div style={{ textAlign: "center" }}>
+                                        <Tag value={order.status === ORDER_STATUS.PENDING ? 'PENDIENTE'
+                                            : order.status === ORDER_STATUS.DELIVERED ? 'ENTREGADO' : 'PREPARADO'}
+                                            severity={getSeverity(order)}
+                                        ></Tag>
                                     </div>
                                 </div>
-                                <div style={{ textAlign: "center" }}>
-                                    <Tag value={order.status === ORDER_STATUS.PENDING ? 'PENDIENTE'
-                                        : order.status === ORDER_STATUS.DELIVERED ? 'ENTREGADO' : 'PREPARADO'}
-                                        severity={getSeverity(order)}
-                                    ></Tag>
-                                </div>
-                            </div>
-                        ))}
+                            ))}
+                        </div>
                     </div>
                 }
             </>
