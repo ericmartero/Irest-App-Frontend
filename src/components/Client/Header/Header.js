@@ -210,8 +210,13 @@ export function Header(props) {
     };
 
     const showBillDialogSripePaymentFooter = (
-        <div className='footerBill'>
-            <Button label="Finalizar estancia en la mesa" className="bttnFoot" style={{ margin: 0 }} onClick={onFinishPayment} />
+        <div className='footerPayment-client'>
+            <div>
+                {showDownloadButtons && <Button label="Imprimir cuenta" className="bttnFoot" style={{ margin: 0, width: "80%" }} onClick={downloadAccountPDF} />}
+            </div>
+            <div>
+                {showDownloadButtons && <Button label="Finalizar mesa" className="bttnFoot" severity="danger" style={{ margin: 0, width: "80%" }} onClick={onFinishPayment} />}
+            </div>
         </div>
     );
 
@@ -356,7 +361,7 @@ export function Header(props) {
                     "mt-3": payment?.paymentType === PAYMENT_TYPE.APP
                 })}>
                     <span className="font-bold">TOTAL: </span>
-                    <span className="font-bold" style={{marginLeft: "6.5rem"}}>{payment?.totalPayment.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
+                    <span className="font-bold" style={{ marginLeft: "6.5rem" }}>{payment?.totalPayment.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
                 </div>
             </Dialog>
 
