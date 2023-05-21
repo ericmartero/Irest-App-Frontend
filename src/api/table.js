@@ -74,6 +74,11 @@ export const deleteTableApi = async(id, token) => {
         }
 
         const resp = await fetch(url, params);
+
+        if (resp.status === 409) {
+            throw new Error('No se ha podido eliminar la mesa ya que tiene objetos referenciados');
+        }
+
         const result = await resp.json();
 
         return result;
