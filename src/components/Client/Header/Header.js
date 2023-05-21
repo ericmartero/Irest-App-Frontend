@@ -337,18 +337,26 @@ export function Header(props) {
 
                 <div className='mt-4' style={{ display: 'flex', alignItems: 'center' }}>
                     <span className="font-bold">Método de pago:</span>
-                    <i className={classNames({
-                        "pi pi-credit-card ml-5": payment?.paymentType === PAYMENT_TYPE.CARD || payment?.paymentType === PAYMENT_TYPE.APP,
-                        "pi pi-wallet ml-5": payment?.paymentType === PAYMENT_TYPE.CASH
-                    })} style={{ fontSize: '1.5rem' }}></i>
-
+                    {!showDownloadButtons ?
+                        <>
+                            {payment?.paymentType === PAYMENT_TYPE.CARD || payment?.paymentType === PAYMENT_TYPE.APP ?
+                                <span className="font-bold ml-5">Tarjeta</span>
+                                : <span className="font-bold ml-5"> Efectivo</span>
+                            }
+                        </>
+                        :
+                        <i className={classNames({
+                            "pi pi-credit-card ml-5": payment?.paymentType === PAYMENT_TYPE.CARD || payment?.paymentType === PAYMENT_TYPE.APP,
+                            "pi pi-wallet ml-5": payment?.paymentType === PAYMENT_TYPE.CASH
+                        })} style={{ fontSize: '1.5rem' }}></i>
+                    }
                 </div>
                 <div className={classNames({
                     "mt-4 mb-2": payment?.paymentType === PAYMENT_TYPE.CARD || payment?.paymentType === PAYMENT_TYPE.CASH,
                     "mt-3": payment?.paymentType === PAYMENT_TYPE.APP
                 })}>
-                    <span className="font-bold">PAGO TOTAL: </span>
-                    <span className="font-bold ml-6">{payment?.totalPayment.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
+                    <span className="font-bold">TOTAL: </span>
+                    <span className="font-bold" style={{marginLeft: "6.5rem"}}>{payment?.totalPayment.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
                 </div>
             </Dialog>
 
