@@ -6,7 +6,6 @@ export const getOrdersByTableApi = async (idTableBooking, token, chefVisible, st
         const tableFilter = `table=${idTableBooking}`;
         const statusFilter = `status=${status}`;
         const chefVisibleFilter = `chefVisible=${chefVisible}`
-        const closeFilter = `close=false`;
 
         let url = '';
 
@@ -16,11 +15,11 @@ export const getOrdersByTableApi = async (idTableBooking, token, chefVisible, st
 
         else {
             if (status === '') {
-                url = `${HOST_API}/api/orders/?${tableFilter}&${closeFilter}`;
+                url = `${HOST_API}/api/orders/?${tableFilter}`;
             }
 
             else {
-                url = `${HOST_API}/api/orders/?${tableFilter}&${statusFilter}&${closeFilter}`;
+                url = `${HOST_API}/api/orders/?${tableFilter}&${statusFilter}`;
             }
         }
 
