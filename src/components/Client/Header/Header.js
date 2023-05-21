@@ -161,7 +161,7 @@ export function Header(props) {
 
             await updateTableClient(table.id, { tableBooking: null });
 
-            history.push(`/${table.id}`);
+            history.push('/');
             localStorage.clear();
         } catch (error) {
             showError(error);
