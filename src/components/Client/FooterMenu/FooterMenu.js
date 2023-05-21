@@ -30,7 +30,7 @@ export function FooterMenu(props) {
         toast.current.show({ severity: 'success', summary: 'Cuenta pedida', detail: `Se ha pedido la cuenta correctamente`, life: 3000 });
     };
     const requestedAccountStripe = () => {
-        toast.current.show({ severity: 'success', summary: 'Cuenta pedida', detail: `Se ha realizado el pago correctamente`, life: 3000 });
+        toast.current.show({ severity: 'success', summary: 'Cuenta pedida', detail: `Se ha realizado el pago correctamente`, life: 5000 });
     };
 
     const showError = (error) => {
@@ -48,7 +48,7 @@ export function FooterMenu(props) {
     const warnWaiter = async () => {
         try {
             await changeAlertClient(table.tableBooking.id, true);
-            toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: `Se ha llamado al camarero correctamente`, life: 1500 });
+            toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: `Se ha llamado al camarero correctamente`, life: 3000 });
         } catch (error) {
             showError(error);
         }
