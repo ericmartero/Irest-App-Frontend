@@ -9,11 +9,9 @@ import {
     closeOrderApi,
     getOrdersByPaymentApi 
 } from '../api/order';
-import { useHistory } from "react-router-dom";
 
 export function useOrder() {
 
-    const history = useHistory();
     const { auth, authClient } = useAuth();
     const [orders, setOrders] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -25,11 +23,6 @@ export function useOrder() {
             const response = await getOrdersByTableApi(id, auth.token, status);
             setLoading(false);
 
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                localStorage.clear();
-                history.push("/");
-            }
-
             if (response.error) {
                 setError(response.error);
             } else {
@@ -40,7 +33,7 @@ export function useOrder() {
             setLoading(false);
             throw error;
         }
-    }, [auth?.token, history]);
+    }, [auth?.token]);
 
     const getOrdersByTableClient = useCallback( async (id, status) => {
         try {
@@ -48,17 +41,12 @@ export function useOrder() {
             const response = await getOrdersByTableApi(id, authClient.token, status);
             setLoading(false);
 
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                localStorage.clear();
-                history.push("/");
-            }
-
             setOrders(response);
         } catch (error) {
             setLoading(false);
             throw error;
         }
-    }, [authClient?.token, history]);
+    }, [authClient?.token]);
 
     const checkDeliveredOrder = async (id, status) => {
         try {
@@ -126,18 +114,11 @@ export function useOrder() {
 
     const getOrdersByPayment = useCallback( async (idPayment) => {
         try {
-            const response = await getOrdersByPaymentApi(idPayment, auth.token);
-
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                localStorage.clear();
-                history.push("/");
-            }
-
-            return response;
+            return await getOrdersByPaymentApi(idPayment, auth.token);
         } catch (error) {
             throw error;
         }
-    }, [auth?.token, history]);
+    }, [auth?.token]);
 
     return {
         error,
