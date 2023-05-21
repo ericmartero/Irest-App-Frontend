@@ -162,7 +162,7 @@ export function WaiterTableDetails() {
     };
   }, [autoRefreshEnabled]);
 
-  const downloadAsPDF = () => {
+  const downloadAccountPDF = () => {
     setShowDownloadButtons(false);
 
     setTimeout(() => {
@@ -482,7 +482,7 @@ export function WaiterTableDetails() {
     <div className='footerBill'>
       {showDownloadButtons &&
         <>
-          <Button label='Descargar Cuenta' onClick={downloadAsPDF} />
+          <Button label='Descargar Cuenta' onClick={downloadAccountPDF} />
           <Button label="Finalizar cuenta" onClick={openDialogFinishPayment} severity="danger" style={{ margin: 0, marginLeft: "1rem", width: "11rem" }} />
 
         </>
