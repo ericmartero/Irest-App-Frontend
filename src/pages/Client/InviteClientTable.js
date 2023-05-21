@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTableBooking, useAuth } from '../../hooks';
+import { setBookingKey } from '../../api/bookingKey';
 import { Error404Client } from '../Error404';
 import { useParams, useHistory } from 'react-router-dom';
 import { ProgressSpinner } from 'primereact/progressspinner';
@@ -17,8 +18,9 @@ export function InviteClientTable() {
     (async () => {
       try {
         const response = await joinTable(paramsURL.idTable, paramsURL.key);
-        const { tokenSession } = response;
+        const { tokenSession, key } = response;
         join(tokenSession);
+        setBookingKey(key);
         history.push(`/client/table=${paramsURL.idTable}`);
       } catch (error) {
         setError(true);
