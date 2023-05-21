@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ORDER_STATUS, PAYMENT_TYPE } from '../../../utils/constants';
+import { ORDER_STATUS, PAYMENT_STATUS, PAYMENT_TYPE } from '../../../utils/constants';
 import { useHistory } from 'react-router-dom';
 import { size } from 'lodash';
 import { useTable, useTableBooking } from '../../../hooks';
@@ -183,9 +183,9 @@ export function OrdersAdmin() {
                     {size(table.tableBooking.payments) > 0 ?
                       <>
                         <i>Cuenta pedida: <Badge value={table.tableBooking.payments[0].paymentType === PAYMENT_TYPE.CARD || table.tableBooking.payments[0].paymentType === PAYMENT_TYPE.APP ?
-                            <i className="pi pi-credit-card mt-1"></i> :
-                            <i className="pi pi-wallet mt-1"></i>
-                          } style={{ background: '#A855F7' }}></Badge>
+                          <i className="pi pi-credit-card mt-1"></i> :
+                          <i className="pi pi-wallet mt-1"></i>
+                        } style={{ background: '#A855F7' }}></Badge>
                         </i>
                         <Badge value={ordersPending + ordersPrepared} severity="warning"></Badge>
                       </>
@@ -260,12 +260,19 @@ export function OrdersAdmin() {
                 <>
                   {size(table.tableBooking.payments) > 0 ?
                     <>
-                      <i className="pi pi-shopping-cart mr-4 p-text-secondary p-overlay-badge" style={{ fontSize: '2rem' }}>
-                        <Badge value={table.tableBooking.payments[0].paymentType === PAYMENT_TYPE.CARD || table.tableBooking.payments[0].paymentType === PAYMENT_TYPE.APP ?
-                          <i className="pi pi-credit-card mt-1"></i> :
-                          <i className="pi pi-wallet mt-1"></i>
-                        } style={{ background: '#A855F7' }}></Badge>
-                      </i>
+                      {table.tableBooking.payments[0].statusPayment === PAYMENT_STATUS.PAID ?
+                        <i className="pi pi-shopping-cart mr-4 p-text-secondary p-overlay-badge" style={{ fontSize: '2rem' }}>
+                          <Badge value={<i className="pi pi-euro mt-1"></i>} severity={'success'}></Badge>
+                        </i>
+                        :
+                        <i className="pi pi-shopping-cart mr-4 p-text-secondary p-overlay-badge" style={{ fontSize: '2rem' }}>
+                          <Badge value={table.tableBooking.payments[0].paymentType === PAYMENT_TYPE.CARD || table.tableBooking.payments[0].paymentType === PAYMENT_TYPE.APP ?
+                            <i className="pi pi-credit-card mt-1"></i> :
+                            <i className="pi pi-wallet mt-1"></i>
+                          } style={{ background: '#A855F7' }}></Badge>
+                        </i>
+                      }
+
                       {(ordersPending > 0 || ordersPrepared > 0) &&
                         <i className="pi mr-4 mb-5 p-text-secondary p-overlay-badge" style={{ fontSize: '2rem' }}>
                           <Badge value={ordersPending + ordersPrepared} severity="warning"></Badge>
