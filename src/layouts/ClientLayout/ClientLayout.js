@@ -32,7 +32,7 @@ export function ClientLayout(props) {
         if (tables) {
             if (tables.tableBooking === null) {
                 localStorage.clear();
-                history.push(`/${tables.id}`);
+                history.push('/');
             }
 
             else {
