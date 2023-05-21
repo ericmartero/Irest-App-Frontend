@@ -398,7 +398,6 @@ export function WaiterTableDetails() {
     onRefreshOrders();
     setFinishPaymentDialog(false);
   };
-  console.log(orders);
 
   const onPayment = async () => {
     let totalPayment = 0;
