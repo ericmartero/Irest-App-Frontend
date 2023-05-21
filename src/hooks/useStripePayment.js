@@ -9,7 +9,6 @@ export function useStripePayment() {
     const elements = useElements()
     const { authClient } = useAuth();
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
 
     const checkoutStripe = async (totalPayment, element) => {
         try {
@@ -21,13 +20,13 @@ export function useStripePayment() {
             });
 
             if (error) {
-                setError(error);
+                setLoading(false);
+                return { error: error, result: null };
+            } else {
+                const result = await checkoutStripeApi(totalPayment, paymentMethod.id, authClient.token);
+                setLoading(false);
+                return { error: null, result: result };
             }
-            
-            const result = await checkoutStripeApi(totalPayment, paymentMethod.id, authClient.token);
-            setLoading(false);
-
-            return result;
         } catch (error) {
             setLoading(false);
             throw error;
@@ -35,7 +34,6 @@ export function useStripePayment() {
     };
 
     return {
-        error,
         loading,
         checkoutStripe
     }
