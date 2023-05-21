@@ -387,20 +387,18 @@ export function WaiterTableDetails() {
     try {
       await closePayment(paymentData.id);
 
-      /*for await (const order of orders) {
+      for await (const order of orders) {
         await closeOrder(order.id);
-      }*/
-
-      //await updateTable(table.id, { tableBooking: null });
+      }
 
       toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Cuenta pagada correctamente', life: 3000 });
-      history.push("/admin");
     } catch (error) {
       showError(error);
     }
     onRefreshOrders();
     setFinishPaymentDialog(false);
   };
+  console.log(orders);
 
   const onPayment = async () => {
     let totalPayment = 0;
@@ -604,7 +602,11 @@ export function WaiterTableDetails() {
     return (
       <Toolbar
         className='toolbarOrders'
-        center={paymentData?.statusPayment === PAYMENT_STATUS.PAID && <Tag icon="pi pi-euro" severity="success" value="PAGADO" />}
+        center={
+          paymentData?.statusPayment === PAYMENT_STATUS.PAID ? <Tag icon="pi pi-euro" severity="success" value="PAGADO" />
+            : paymentData?.statusPayment === PAYMENT_STATUS.PENDING ? <Tag icon="pi pi-euro" severity="danger" value="PAGO PENDIENTE" />
+              : null
+        }
         left={leftToolbarTemplate}
         right={rightToolbarTemplate}>
       </Toolbar>
