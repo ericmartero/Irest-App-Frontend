@@ -16,8 +16,8 @@ export function Payment(props) {
 
     const { table, orders, payment, isPaidToast, noOrdersToPaymentToast, requestedAccount, requestedAccountStripe, onRefreshPayment } = props;
 
-    const { createClientPayment } = usePayment();
-    const { addPaymentToOrderClient } = useOrder();
+    const { createClientPayment, closePaymentClient } = usePayment();
+    const { addPaymentToOrderClient, closeOrderClient } = useOrder();
 
     const [ordersTable, setOrdersTable] = useState(null);
     const [paymentType, setPaymentType] = useState(null);
@@ -78,6 +78,12 @@ export function Payment(props) {
         for await (const order of ordersTable) {
             await addPaymentToOrderClient(order.id, payment.id);
         };
+
+        await closePaymentClient(payment.id);
+
+        for await (const order of orders) {
+            await closeOrderClient(order.id);
+        }
 
         onRefreshPayment();
         requestedAccountStripe();

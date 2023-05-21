@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useProduct, useOrder, useTable, usePayment } from '../../../hooks';
+import { useProduct, useOrder, useTable } from '../../../hooks';
 import { getProductShoppingCart, cleanProductShoppingCart } from '../../../api/shoppingCart';
 import { PAYMENT_TYPE } from '../../../utils/constants';
 import { ShoppingCart } from '../ShoppingCart';
@@ -26,9 +26,8 @@ export function Header(props) {
     const toast = useRef(null);
     const history = useHistory();
     const { getClientProductById } = useProduct();
-    const { addClientOrderToTable, closeOrderClient } = useOrder();
+    const { addClientOrderToTable } = useOrder();
     const { updateTableClient } = useTable();
-    const { closePaymentClient } = usePayment();
 
     const [totalPriceCart, setTotalPriceCart] = useState(0);
     const [showShoppingCartDialog, setShoppingCartDialog] = useState(false);
@@ -153,12 +152,6 @@ export function Header(props) {
 
     const finishPayment = async () => {
         try {
-            await closePaymentClient(payment.id);
-
-            for await (const order of orders) {
-                await closeOrderClient(order.id);
-            }
-
             await updateTableClient(table.id, { tableBooking: null });
 
             history.push('/');
