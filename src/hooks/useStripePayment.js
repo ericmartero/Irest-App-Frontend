@@ -8,7 +8,7 @@ export function useStripePayment() {
     const stripe = useStripe();
     const elements = useElements()
     const { authClient } = useAuth();
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     const checkoutStripe = async (totalPayment, element) => {
         try {
