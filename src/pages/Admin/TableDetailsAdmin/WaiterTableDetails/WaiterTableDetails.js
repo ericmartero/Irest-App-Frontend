@@ -727,8 +727,11 @@ export function WaiterTableDetails() {
                 </div>
               </Dialog>
 
-              <Dialog visible={showBillDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={`Cuenta Mesa ${table.number}`} modal footer={showBillDialogFooter}
-                className='dialog-account-container' onHide={hideBillDialog}>
+              <Dialog visible={showBillDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header={`Cuenta Mesa ${table.number}`} modal footer={showBillDialogFooter} onHide={hideBillDialog}
+                className={classNames({
+                  "dialog-account-container hide-iconClose-onDonwload": !showDownloadButtons,
+                  "dialog-account-container show-iconClose-onDonwload": showDownloadButtons
+                })}>
                 <div className='product-add-order'>
                   <div className='account-info'>
                     <div>

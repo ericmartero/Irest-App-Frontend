@@ -60,3 +60,15 @@
         padding: 0 1.5rem 0.5rem 1.5rem !important;
     }
 }
+
+.hide-iconClose-onDonwload {
+    .pi-times:before {
+        content: none;
+    }
+}
+
+.show-iconClose-onDonwload {
+    .pi-times:before {
+        content: "\e90b";
+    }
+}
