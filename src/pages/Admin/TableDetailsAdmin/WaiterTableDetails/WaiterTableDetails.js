@@ -492,7 +492,7 @@ export function WaiterTableDetails() {
   const finishPaymentDialogFooter = (
     <React.Fragment>
       <Button label="No" icon="pi pi-times" outlined onClick={hideFinishPaymentDialog} />
-      <Button label="Si" icon="pi pi-check" severity="danger" onClick={finishPayment} />
+      <Button label="Si" icon="pi pi-check" onClick={finishPayment} />
     </React.Fragment>
   );
 
@@ -772,10 +772,10 @@ export function WaiterTableDetails() {
                 </div>
               </Dialog>
 
-              <Dialog visible={finishPaymentDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Finalizar mesa" modal footer={finishPaymentDialogFooter} onHide={hideFinishPaymentDialog}>
+              <Dialog visible={finishPaymentDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Cuenta pagada" modal footer={finishPaymentDialogFooter} onHide={hideFinishPaymentDialog}>
                 <div className="confirmation-content">
                   <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                  <span>Seguro de que quieres finalizar la cuenta y cerrar la mesa?</span>
+                  <span>Seguro de que quieres marcar la cuenta como pagada?</span>
                 </div>
               </Dialog>
 
