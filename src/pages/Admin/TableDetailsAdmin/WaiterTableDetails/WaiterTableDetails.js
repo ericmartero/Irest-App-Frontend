@@ -661,7 +661,7 @@ export function WaiterTableDetails() {
                 </div>
               </Dialog>
 
-              <Dialog visible={confirmTypePaymentDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Cuenta" modal footer={confirmTypePaymentDialogFooter} onHide={hideConfirmTypePaymentDialog}>
+              <Dialog visible={confirmTypePaymentDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Generar Cuenta" modal footer={confirmTypePaymentDialogFooter} onHide={hideConfirmTypePaymentDialog}>
                 <div className="confirmation-typePayment">
                   <span className="font-semibold">Método de pago:</span>
                   <div className="card flex justify-content-center">
