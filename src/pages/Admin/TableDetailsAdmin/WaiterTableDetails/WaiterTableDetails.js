@@ -20,6 +20,8 @@ import { Divider } from 'primereact/divider';
 import { Badge } from 'primereact/badge';
 import { Toast } from 'primereact/toast';
 import { Tag } from 'primereact/tag';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 import { map, forEach, size } from 'lodash';
 import moment from 'moment';
 import 'moment/locale/es';
@@ -64,6 +66,8 @@ export function WaiterTableDetails() {
   const [finishPaymentDialog, setFinishPaymentDialog] = useState(false);
   const [confirmCreateAccountDialog, setConfirmCreateAccountDialog] = useState(false);
   const [autoRefreshEnabled, setAutoRefreshEnabled] = useState(true);
+
+  const [showDownloadButtons, setShowDownloadButtons] = useState(true);
 
   const onRefreshOrders = () => setRefreshOrders((prev) => !prev);
   const onRefreshPayment = () => setOnPaymentChange((prev) => !prev);
@@ -158,6 +162,31 @@ export function WaiterTableDetails() {
       clearInterval(intervalRef.current);
     };
   }, [autoRefreshEnabled]);
+
+  const downloadAsPDF = () => {
+    // Ocultar los botones de descarga
+    setShowDownloadButtons(false);
+
+    setTimeout(() => {
+      // Capturar el contenido del diálogo como una imagen
+      const dialogElement = document.querySelector('.dialog-account-container');
+      html2canvas(dialogElement).then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
+
+        // Crear un nuevo objeto PDF
+        const pdf = new jsPDF();
+
+        // Agregar la imagen capturada al PDF
+        pdf.addImage(imgData, 'PNG', 0, 0);
+
+        // Descargar el archivo PDF
+        pdf.save('cuenta.pdf');
+
+        // Restaurar la visibilidad de los botones de descarga
+        setShowDownloadButtons(true);
+      });
+    }, 100);
+  };
 
   const groupOrdersStatus = (data) => {
     return data.reduce((acc, order) => {
@@ -439,7 +468,12 @@ export function WaiterTableDetails() {
 
   const showBillDialogFooter = (
     <div className='footerBill'>
-      <Button label="Finalizar cuenta" onClick={openDialogFinishPayment} style={{ margin: 0, width: "12rem" }} />
+      {showDownloadButtons &&
+        <>
+          <Button label="Finalizar cuenta" onClick={openDialogFinishPayment} style={{ margin: 0, width: "12rem" }} />
+          <Button label='Descargar PDF' onClick={downloadAsPDF} />
+        </>
+      }
     </div>
   );
 
