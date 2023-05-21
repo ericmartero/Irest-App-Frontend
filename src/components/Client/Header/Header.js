@@ -12,6 +12,7 @@ import { Dialog } from 'primereact/dialog';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { size, forEach } from 'lodash';
+import jsPDF from 'jspdf';
 import moment from 'moment';
 import 'moment/locale/es';
 import './Header.scss';
@@ -35,6 +36,7 @@ export function Header(props) {
     const [products, setProducts] = useState(null);
     const [showBillDialog, setShowBillDialog] = useState(false);
     const [finishPaymentDialog, setFinishPaymentDialog] = useState(false);
+    const [showDownloadButtons, setShowDownloadButtons] = useState(true);
 
     useEffect(() => {
         (async () => {
@@ -64,6 +66,44 @@ export function Header(props) {
     useEffect(() => {
         onRefresh();
     }, [refreshCartNumber]);
+
+    const downloadAccountPDF = () => {
+        setShowDownloadButtons(false);
+
+        setTimeout(() => {
+            const dialogElement = document.querySelector('.bill-dialog-container');
+            const dialogWidth = dialogElement.offsetWidth;
+            const dialogHeight = dialogElement.offsetHeight;
+
+            const pdf = new jsPDF('p', 'pt', 'a4');
+
+            const scaleFactor = pdf.internal.pageSize.getWidth() / dialogWidth;
+
+            const pageCount = Math.ceil(dialogHeight / pdf.internal.pageSize.getHeight());
+
+            for (let i = 0; i < pageCount; i++) {
+                if (i > 0) {
+                    pdf.addPage();
+                }
+                pdf.setPage(i + 1);
+                pdf.html(dialogElement, {
+                    x: 0,
+                    y: -i * pdf.internal.pageSize.getHeight(),
+                    width: pdf.internal.pageSize.getWidth(),
+                    height: dialogHeight,
+                    html2canvas: {
+                        scale: scaleFactor,
+                    },
+                    callback: () => {
+                        if (i === pageCount - 1) {
+                            pdf.save(`Cuenta-Mesa${table?.number}-${moment(payment?.createdAt).format('DD/MM/YYYY')}${moment(payment?.createdAt).format('HH:mm:ss')}.pdf`);
+                            setShowDownloadButtons(true);
+                        }
+                    },
+                });
+            }
+        }, 100);
+    };
 
     const onRefresh = () => setRefreshShoppingCart((state) => !state);
 
@@ -169,9 +209,15 @@ export function Header(props) {
         setShowBillDialog(false);
     };
 
-    const showBillDialogFooter = (
+    const showBillDialogSripePaymentFooter = (
         <div className='footerBill'>
             <Button label="Finalizar estancia en la mesa" className="bttnFoot" style={{ margin: 0 }} onClick={onFinishPayment} />
+        </div>
+    );
+
+    const showBillDialogPaymentFooter = (
+        <div className='footerBill'>
+            <Button label="Imprimir cuenta" className="bttnFoot" style={{ margin: 0 }} onClick={downloadAccountPDF} />
         </div>
     );
 
@@ -258,8 +304,8 @@ export function Header(props) {
                 </div>
             </Dialog>
 
-            <Dialog visible={showBillDialog} style={{ width: '90vw' }} header={`Cuenta Mesa ${table?.number}`} modal className='bill-dialog-container'
-                footer={payment?.paymentType === PAYMENT_TYPE.CARD || payment?.paymentType === PAYMENT_TYPE.CASH ? null : showBillDialogFooter} onHide={hideBillDialog}>
+            <Dialog visible={showBillDialog} style={{ width: '90vw' }} header={`Cuenta Mesa ${table?.number}`} modal className='bill-dialog-container' onHide={hideBillDialog}
+                footer={payment?.paymentType === PAYMENT_TYPE.CARD || payment?.paymentType === PAYMENT_TYPE.CASH ? showBillDialogPaymentFooter : showBillDialogSripePaymentFooter}>
                 <div className='product-add-order'>
                     <div className='product-add-info'>
                         <span className="font-bold mr-4">Mesa:</span>
