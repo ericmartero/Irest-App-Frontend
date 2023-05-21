@@ -316,7 +316,7 @@ export function Header(props) {
                     "bill-dialog-container show-client-iconClose-onDonwload": showDownloadButtons
                 })}>
 
-                <div className='product-add-order'>
+                <div className='orders-account-info'>
                     <div className='product-add-info'>
                         <span className="font-bold mr-4">Mesa:</span>
                         <span className="font-bold">{`${table?.number}`}</span>
