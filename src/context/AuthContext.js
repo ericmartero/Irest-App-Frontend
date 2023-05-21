@@ -40,6 +40,8 @@ export function AuthProvider(props) {
 
                 if (me.statusCode === 401) {
                     setAuth(null);
+                    localStorage.clear();
+                    history.push("/");
                     return;
                 }
 
@@ -55,6 +57,8 @@ export function AuthProvider(props) {
 
                 if (me.statusCode === 401) {
                     setAuthClient(null);
+                    localStorage.clear();
+                    history.push("/");
                     return;
                 }
 
@@ -65,7 +69,7 @@ export function AuthProvider(props) {
                 setAuthClient(null);
             }
         })()
-    }, [getMe])
+    }, [getMe, history])
 
     const login = async (token) => {
         try {
