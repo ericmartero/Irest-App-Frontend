@@ -1,6 +1,6 @@
 import routesPanel from './routes.panel';
 import routesClient from './routes.client';
-import { Error404 } from '../pages';
+import { Error404 } from '../pages/Error404';
 import { Error404Layout } from '../layouts';
 
 const routes = [

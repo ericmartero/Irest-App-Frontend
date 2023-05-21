@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTableBooking, useAuth } from '../../hooks';
+import { Error404Client } from '../Error404';
 import { useParams, useHistory } from 'react-router-dom';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import '../../scss/AlignComponent.scss';
@@ -26,7 +27,7 @@ export function InviteClientTable() {
   }, [history, join, joinTable, paramsURL.idTable, paramsURL.key])
 
   if (error) {
-    return <h1>ERROR!!</h1>
+    return <Error404Client/>
   }
 
   return (
