@@ -17,10 +17,11 @@ export function PaymentsHistoryAdmin() {
     const { getOrdersByPayment } = useOrder();
     const [paymentsHistory, setPaymentsHistory] = useState(null);
     const [expandedRows, setExpandedRows] = useState(null);
+    const [loadingUpdatePayments, setLoadingUpdatePayments] = useState(true);
 
     useEffect(() => {
         getPayments();
-    }, [getPayments])
+    }, [getPayments]);
 
     useEffect(() => {
         if (payments) {
@@ -47,6 +48,7 @@ export function PaymentsHistoryAdmin() {
                     })
                 );
                 setPaymentsHistory(updatedPaymentsHistory);
+                setLoadingUpdatePayments(false);
             };
             updatePaymentsHistory();
         }
@@ -54,29 +56,34 @@ export function PaymentsHistoryAdmin() {
 
     const rowExpansionTemplate = (data) => {
         return (
-            <div className="orders-subtable">
-                <div style={{ marginLeft: '4rem', marginRight: '4rem', marginBottom: '3rem' }}>
-                    <h4>Pedidos del pago: {data.id}</h4>
-                    <DataTable value={data.ordersProduct} responsiveLayout="scroll" showGridlines style={{ backgroundColor: 'blue-200' }}>
-                        <Column field="quantity" header="Unidades" sortable></Column>
-                        <Column field="title" header="Producto" sortable></Column>
-                        <Column field="price" header="Importe" sortable body={priceBodyTemplate}></Column>
-                    </DataTable>
-                </div>
-            </div>
+            <>
+                {loading && loadingUpdatePayments ? null
+                    :
+                    <div className="orders-subtable">
+                        <div style={{ marginLeft: '4rem', marginRight: '4rem', marginBottom: '3rem' }}>
+                            <h4>Pedidos del pago: {data.id}</h4>
+                            <DataTable value={data.ordersProduct} responsiveLayout="scroll" showGridlines style={{ backgroundColor: 'blue-200' }}>
+                                <Column field="quantity" header="Unidades" sortable></Column>
+                                <Column field="title" header="Producto" sortable></Column>
+                                <Column field="price" header="Importe" sortable body={priceBodyTemplate}></Column>
+                            </DataTable>
+                        </div>
+                    </div>
+                }
+            </>
         );
-    }
+    };
 
     const expandAll = () => {
         let _expandedRows = {};
         paymentsHistory.forEach(p => _expandedRows[`${p.id}`] = true);
 
         setExpandedRows(_expandedRows);
-    }
+    };
 
     const collapseAll = () => {
         setExpandedRows(null);
-    }
+    };
 
     const formatCurrency = (value) => {
         return value.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' });
@@ -132,7 +139,7 @@ export function PaymentsHistoryAdmin() {
             <>
                 {error ? <AccessDenied /> :
                     <>
-                        {loading ?
+                        {loading && loadingUpdatePayments ?
                             <div className="align-container">
                                 <ProgressSpinner />
                             </div>
