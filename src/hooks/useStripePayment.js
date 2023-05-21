@@ -25,6 +25,16 @@ export function useStripePayment() {
             } else {
                 const result = await checkoutStripeApi(totalPayment, paymentMethod.id, authClient.token);
                 setLoading(false);
+
+                const clientSecret = result.client_secret;
+
+                const confirmCard = await stripe.confirmCardPayment(clientSecret);
+
+                if (confirmCard.error) {
+                    setLoading(false);
+                    return { error: error, result: null };
+                }
+
                 return { error: null, result: result };
             }
         } catch (error) {
