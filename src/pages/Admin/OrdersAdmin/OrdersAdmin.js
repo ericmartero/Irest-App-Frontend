@@ -116,6 +116,7 @@ export function OrdersAdmin() {
   const resetKeyTable = async () => {
     try {
       const response = await resetKey(tableSelected.tableBooking.id);
+      toast.current.show({ severity: 'success', summary: 'Operación Exitosa', detail: `Se ha restablecido la clave de la mesa número ${tableSelected.number} correctamente`, life: 3000 });
       setNewKey(response.key);
     } catch (error) {
       showError(error);
@@ -342,7 +343,7 @@ export function OrdersAdmin() {
 
   return (
     <div className="card">
-      <Toast ref={toast} />
+      <Toast ref={toast} className="custom-toast" />
       {loading ?
         <div className="align-container">
           <ProgressSpinner />
