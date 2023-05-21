@@ -482,8 +482,9 @@ export function WaiterTableDetails() {
     <div className='footerBill'>
       {showDownloadButtons &&
         <>
-          <Button label="Finalizar cuenta" onClick={openDialogFinishPayment} style={{ margin: 0, width: "12rem" }} />
-          <Button label='Descargar PDF' onClick={downloadAsPDF} />
+          <Button label='Descargar Cuenta' onClick={downloadAsPDF} />
+          <Button label="Finalizar cuenta" onClick={openDialogFinishPayment} severity="danger" style={{ margin: 0, marginLeft: "1rem", width: "11rem" }} />
+
         </>
       }
     </div>
