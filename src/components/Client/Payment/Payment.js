@@ -14,7 +14,7 @@ import './Payment.scss';
 
 export function Payment(props) {
 
-    const { table, orders, payment, isPaidToast, noOrdersToPaymentToast, requestedAccount, onRefreshPayment } = props;
+    const { table, orders, payment, isPaidToast, noOrdersToPaymentToast, requestedAccount, requestedAccountStripe, onRefreshPayment } = props;
 
     const { createClientPayment } = usePayment();
     const { addPaymentToOrderClient } = useOrder();
@@ -80,7 +80,7 @@ export function Payment(props) {
         };
 
         onRefreshPayment();
-        requestedAccount();
+        requestedAccountStripe();
         setShowStripePaymentDialog(false);
     };
 

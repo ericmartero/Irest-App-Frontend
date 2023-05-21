@@ -27,7 +27,10 @@ export function FooterMenu(props) {
     };
 
     const requestedAccount = () => {
-        toast.current.show({ severity: 'success', summary: 'Cuenta pedida', detail: `Se ha pedido la cuenta correctamente`, life: 1500 });
+        toast.current.show({ severity: 'success', summary: 'Cuenta pedida', detail: `Se ha pedido la cuenta correctamente`, life: 3000 });
+    };
+    const requestedAccountStripe = () => {
+        toast.current.show({ severity: 'success', summary: 'Cuenta pedida', detail: `Se ha realizado el pago correctamente`, life: 3000 });
     };
 
     const showError = (error) => {
@@ -77,6 +80,7 @@ export function FooterMenu(props) {
                         isPaidToast={isPaidToast}
                         noOrdersToPaymentToast={noOrdersToPaymentToast}
                         requestedAccount={requestedAccount}
+                        requestedAccountStripe={requestedAccountStripe}
                     />
                 </div>
             </div>
