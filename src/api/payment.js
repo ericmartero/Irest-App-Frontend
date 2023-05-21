@@ -26,9 +26,8 @@ export const createPaymentApi = async (dtoCreatePayment, token) => {
 export const getPaymentByTableApi = async (idTableBooking, token) => {
     try {
         const tableFilter = `table=${idTableBooking}`;
-        const statusFilter = `statusPayment=${PAYMENT_STATUS.PENDING}`;
 
-        const url = `${HOST_API}/api/payments/?${tableFilter}&${statusFilter}`;
+        const url = `${HOST_API}/api/payments/?${tableFilter}`;
         const params = {
             headers: {
                 Authorization: `Bearer ${token}`
