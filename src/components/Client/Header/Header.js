@@ -217,7 +217,7 @@ export function Header(props) {
 
     const showBillDialogPaymentFooter = (
         <div className='footerBill'>
-            <Button label="Imprimir cuenta" className="bttnFoot" style={{ margin: 0 }} onClick={downloadAccountPDF} />
+            {showDownloadButtons && <Button label="Imprimir cuenta" className="bttnFoot" style={{ margin: 0 }} onClick={downloadAccountPDF} />}
         </div>
     );
 
@@ -304,8 +304,13 @@ export function Header(props) {
                 </div>
             </Dialog>
 
-            <Dialog visible={showBillDialog} style={{ width: '90vw' }} header={`Cuenta Mesa ${table?.number}`} modal className='bill-dialog-container' onHide={hideBillDialog}
-                footer={payment?.paymentType === PAYMENT_TYPE.CARD || payment?.paymentType === PAYMENT_TYPE.CASH ? showBillDialogPaymentFooter : showBillDialogSripePaymentFooter}>
+            <Dialog visible={showBillDialog} style={{ width: '90vw' }} header={`Cuenta Mesa ${table?.number}`} modal onHide={hideBillDialog}
+                footer={payment?.paymentType === PAYMENT_TYPE.CARD || payment?.paymentType === PAYMENT_TYPE.CASH ? showBillDialogPaymentFooter : showBillDialogSripePaymentFooter}
+                className={classNames({
+                    "bill-dialog-container hide-client-iconClose-onDonwload": !showDownloadButtons,
+                    "bill-dialog-container show-client-iconClose-onDonwload": showDownloadButtons
+                })}>
+
                 <div className='product-add-order'>
                     <div className='product-add-info'>
                         <span className="font-bold mr-4">Mesa:</span>
