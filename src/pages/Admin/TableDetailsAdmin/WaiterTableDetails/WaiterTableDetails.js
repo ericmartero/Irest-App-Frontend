@@ -598,7 +598,7 @@ export function WaiterTableDetails() {
     return (
       <Toolbar
         className='toolbarOrders'
-        center={<Tag icon="pi pi-euro" severity="success" value="PAGADO" />}
+        center={paymentData?.statusPayment === PAYMENT_STATUS.PAID && <Tag icon="pi pi-euro" severity="success" value="PAGADO" />}
         left={leftToolbarTemplate}
         right={rightToolbarTemplate}>
       </Toolbar>
