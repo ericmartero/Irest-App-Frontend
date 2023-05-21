@@ -1,9 +1,11 @@
 import { useState, useCallback } from "react";
 import { getProductsApi, addProductApi, updateProductApi, deleteProductApi, getProductByIdApi } from '../api/product';
 import { useAuth } from './';
+import { useHistory } from "react-router-dom";
 
 export function useProduct() {
 
+    const history = useHistory();
     const [products, setProducts] = useState(null);
     const [loading, setLoading] = useState(true);
     const [loadingCrud, setLoadingCrud] = useState(false);
@@ -16,6 +18,11 @@ export function useProduct() {
             const response = await getProductsApi(auth.token);
             setLoading(false);
 
+            if (response.statusCode === 401 || response.statusCode === 500) {
+                localStorage.clear();
+                history.push("/");
+            }
+
             if (response.error) {
                 setError(response.error);
             } else {
@@ -26,13 +33,18 @@ export function useProduct() {
             setLoading(false);
             throw error;
         }
-    }, [auth?.token]);
+    }, [auth?.token, history]);
 
     const addProduct = async (data) => {
         try {
             setLoadingCrud(true);
-            await addProductApi(data, auth.token);
+            const response = await addProductApi(data, auth.token);
             setLoadingCrud(false);
+
+            if (response.statusCode === 401 || response.statusCode === 500) {
+                localStorage.clear();
+                history.push("/");
+            }
         } catch (error) {
             setLoadingCrud(false);
             throw error;
@@ -42,8 +54,13 @@ export function useProduct() {
     const updateProduct = async (id, data) => {
         try {
             setLoadingCrud(true);
-            await updateProductApi(id, data, auth.token);
+            const response = await updateProductApi(id, data, auth.token);
             setLoadingCrud(false);
+
+            if (response.statusCode === 401 || response.statusCode === 500) {
+                localStorage.clear();
+                history.push("/");
+            }
         } catch (error) {
             setLoadingCrud(false);
             throw error;
@@ -53,8 +70,13 @@ export function useProduct() {
     const deleteProduct = async (id) => {
         try {
             setLoadingCrud(true);
-            await deleteProductApi(id, auth.token);
+            const response = await deleteProductApi(id, auth.token);
             setLoadingCrud(false);
+
+            if (response.statusCode === 401 || response.statusCode === 500) {
+                localStorage.clear();
+                history.push("/");
+            }
         } catch (error) {
             setLoadingCrud(false);
             throw error;
@@ -63,21 +85,33 @@ export function useProduct() {
 
     const getProductById = useCallback(async (id) =>{
         try {
-            const product = await getProductByIdApi(id, auth.token);
-            return product;
+            const response = await getProductByIdApi(id, auth.token);
+
+            if (response.statusCode === 401 || response.statusCode === 500) {
+                localStorage.clear();
+                history.push("/");
+            }
+
+            return response;
         } catch (error) {
             throw error;    
         }
-    }, [auth?.token])
+    }, [auth?.token, history])
 
     const getClientProductById = useCallback(async (id) =>{
         try {
-            const product = await getProductByIdApi(id, authClient.token);
-            return product;
+            const response = await getProductByIdApi(id, authClient.token);
+
+            if (response.statusCode === 401 || response.statusCode === 500) {
+                localStorage.clear();
+                history.push("/");
+            }
+
+            return response;
         } catch (error) {
             throw error;    
         }
-    }, [authClient?.token])
+    }, [authClient?.token, history])
 
     return {
         products,

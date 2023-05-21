@@ -38,8 +38,13 @@ export function useTable() {
     const addTable = async (data) => {
         try {
             setLoadingCrud(true);
-            await addTableApi(data, auth.token);
+            const response = await addTableApi(data, auth.token);
             setLoadingCrud(false);
+
+            if (response.statusCode === 401 || response.statusCode === 500) {
+                localStorage.clear();
+                history.push("/");
+            }
         } catch (error) {
             setLoadingCrud(false);
             throw error;
@@ -49,8 +54,13 @@ export function useTable() {
     const updateTable = async (id, data) => {
         try {
             setLoadingCrud(true);
-            await updateTableApi(id, data, auth.token);
+            const response = await updateTableApi(id, data, auth.token);
             setLoadingCrud(false);
+
+            if (response.statusCode === 401 || response.statusCode === 500) {
+                localStorage.clear();
+                history.push("/");
+            }
         } catch (error) {
             setLoadingCrud(false);
             throw error;
@@ -59,8 +69,13 @@ export function useTable() {
     const updateTableClient = async (id, data) => {
         try {
             setLoadingCrud(true);
-            await updateTableApi(id, data, authClient.token);
+            const response = await updateTableApi(id, data, authClient.token);
             setLoadingCrud(false);
+
+            if (response.statusCode === 401 || response.statusCode === 500) {
+                localStorage.clear();
+                history.push("/");
+            }
         } catch (error) {
             setLoadingCrud(false);
             throw error;
@@ -70,8 +85,13 @@ export function useTable() {
     const deleteTable = async (id) => {
         try {
             setLoadingCrud(true);
-            await deleteTableApi(id, auth.token);
+            const response = await deleteTableApi(id, auth.token);
             setLoadingCrud(false);
+
+            if (response.statusCode === 401 || response.statusCode === 500) {
+                localStorage.clear();
+                history.push("/");
+            }
         } catch (error) {
             setLoadingCrud(false);
             throw error;

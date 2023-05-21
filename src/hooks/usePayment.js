@@ -1,9 +1,11 @@
 import { useCallback, useState } from "react";
 import { createPaymentApi, getPaymentByTableApi, closePaymentApi, getPaymentsApi, getPaymentByIdApi } from "../api/payment";
 import { useAuth } from './';
+import { useHistory } from "react-router-dom";
 
 export function usePayment() {
 
+    const history = useHistory();
     const { auth, authClient } = useAuth();
     const [loading, setLoading] = useState(true);
     const [payments, setPayments] = useState(null);
@@ -11,7 +13,14 @@ export function usePayment() {
 
     const createPayment = async (paymentData) => {
         try {
-            return await createPaymentApi(paymentData, auth.token);
+            const response = await createPaymentApi(paymentData, auth.token);
+
+            if (response.statusCode === 401 || response.statusCode === 500) {
+                localStorage.clear();
+                history.push("/");
+            }
+
+            return response;
         } catch (error) {
             throw error;
         }
@@ -19,7 +28,14 @@ export function usePayment() {
 
     const createClientPayment = async (paymentData) => {
         try {
-            return await createPaymentApi(paymentData, authClient.token);
+            const response = await createPaymentApi(paymentData, authClient.token);
+
+            if (response.statusCode === 401 || response.statusCode === 500) {
+                localStorage.clear();
+                history.push("/");
+            }
+
+            return response;
         } catch (error) {
             throw error;
         }
@@ -27,15 +43,23 @@ export function usePayment() {
 
     const getPaymentByTable = useCallback( async (idTable) => {
         try {
-            return await getPaymentByTableApi(idTable, auth.token);
+            const response = await getPaymentByTableApi(idTable, auth.token);
+
+            if (response.statusCode === 401 || response.statusCode === 500) {
+                localStorage.clear();
+                history.push("/");
+            }
+
+            return response;
         } catch (error) {
             throw error;
         }
-    }, [auth?.token]);
+    }, [auth?.token, history]);
 
     const getPaymentByIdClient = useCallback( async (idTable) => {
         try {
-            return await getPaymentByIdApi(idTable, authClient.token);
+            const response = await getPaymentByIdApi(idTable, authClient.token);
+            return response;
         } catch (error) {
             throw error;
         }
@@ -43,7 +67,12 @@ export function usePayment() {
 
     const closePayment = async (idPayment) => {
         try {
-            await closePaymentApi(idPayment, auth.token);
+            const response = await closePaymentApi(idPayment, auth.token);
+
+            if (response.statusCode === 401 || response.statusCode === 500) {
+                localStorage.clear();
+                history.push("/");
+            }
         } catch (error) {
             throw error;
         }
@@ -51,7 +80,12 @@ export function usePayment() {
 
     const closePaymentClient = async (idPayment) => {
         try {
-            await closePaymentApi(idPayment, authClient.token);
+            const response = await closePaymentApi(idPayment, authClient.token);
+
+            if (response.statusCode === 401 || response.statusCode === 500) {
+                localStorage.clear();
+                history.push("/");
+            }
         } catch (error) {
             throw error;
         }
@@ -63,6 +97,11 @@ export function usePayment() {
             const response = await getPaymentsApi(auth.token);
             setLoading(false);
 
+            if (response.statusCode === 401 || response.statusCode === 500) {
+                localStorage.clear();
+                history.push("/");
+            }
+
             if (response.error) {
                 setError(response.error);
             } else {
@@ -73,7 +112,7 @@ export function usePayment() {
             setLoading(false);
             throw error;
         }
-    }, [auth?.token]);
+    }, [auth?.token, history]);
 
     return {
         payments,

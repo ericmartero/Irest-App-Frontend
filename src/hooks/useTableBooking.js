@@ -1,13 +1,22 @@
 import { resetKeyApi, reserveTableApi, joinTableApi, changeAlertApi } from "../api/table-booking";
 import { useAuth } from "./useAuth";
+import { useHistory } from "react-router-dom";
 
 export function useTableBooking() {
 
+    const history = useHistory();
     const { auth, authClient } = useAuth();
 
     const resetKey = async (id) => {
         try {
-           return await resetKeyApi(id, auth.token);
+            const response = await resetKeyApi(id, auth.token);
+
+            if (response.statusCode === 401 || response.statusCode === 500) {
+                localStorage.clear();
+                history.push("/");
+            }
+
+            return response;
         } catch (error) {
             throw error;
         }
@@ -15,7 +24,7 @@ export function useTableBooking() {
 
     const reserveTable = async (id) => {
         try {
-           return await reserveTableApi(id);
+            return await reserveTableApi(id);
         } catch (error) {
             throw error;
         }
@@ -23,7 +32,7 @@ export function useTableBooking() {
 
     const joinTable = async (id, key) => {
         try {
-           return await joinTableApi(id, key);
+            return await joinTableApi(id, key);
         } catch (error) {
             throw error;
         }
@@ -31,7 +40,14 @@ export function useTableBooking() {
 
     const changeAlert = async (id, status) => {
         try {
-           return await changeAlertApi(id, status, auth.token);
+            const response = await changeAlertApi(id, status, auth.token);
+
+            if (response.statusCode === 401 || response.statusCode === 500) {
+                localStorage.clear();
+                history.push("/");
+            }
+
+            return response;
         } catch (error) {
             throw error;
         }
@@ -39,7 +55,14 @@ export function useTableBooking() {
 
     const changeAlertClient = async (id, status) => {
         try {
-           return await changeAlertApi(id, status, authClient.token);
+            const response = await changeAlertApi(id, status, authClient.token);
+
+            if (response.statusCode === 401 || response.statusCode === 500) {
+                localStorage.clear();
+                history.push("/");
+            }
+
+            return response;
         } catch (error) {
             throw error;
         }

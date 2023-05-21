@@ -1,9 +1,11 @@
 import { useState, useCallback } from "react";
 import { getCategoriesApi, addCategoryApi, updateCategoryApi, deleteCategoryApi, getCategoryByIdApi } from '../api/category';
 import { useAuth } from './';
+import { useHistory } from "react-router-dom";
 
 export function useCategory() {
 
+    const history = useHistory();
     const [categories, setCategories] = useState(null);
     const [loading, setLoading] = useState(true);
     const [loadingCrud, setLoadingCrud] = useState(false);
@@ -16,6 +18,11 @@ export function useCategory() {
             const response = await getCategoriesApi(auth.token);
             setLoading(false);
 
+            if (response.statusCode === 401 || response.statusCode === 500) {
+                localStorage.clear();
+                history.push("/");
+            }
+
             if (response.error) {
                 setError(response.error);
             } else {
@@ -26,13 +33,18 @@ export function useCategory() {
             setLoading(false);
             throw error;
         }
-    }, [auth?.token]);
+    }, [auth?.token, history]);
 
     const addCategory = async (data) => {
         try {
             setLoadingCrud(true);
-            await addCategoryApi(data, auth.token);
+            const response = await addCategoryApi(data, auth.token);
             setLoadingCrud(false);
+
+            if (response.statusCode === 401 || response.statusCode === 500) {
+                localStorage.clear();
+                history.push("/");
+            }
         } catch (error) {
             setLoadingCrud(false);
             throw error;
@@ -42,8 +54,13 @@ export function useCategory() {
     const updateCategory = async (id, data) => {
         try {
             setLoadingCrud(true);
-            await updateCategoryApi(id, data, auth.token);
+            const response = await updateCategoryApi(id, data, auth.token);
             setLoadingCrud(false);
+
+            if (response.statusCode === 401 || response.statusCode === 500) {
+                localStorage.clear();
+                history.push("/");
+            }
         } catch (error) {
             setLoadingCrud(false);
             throw error;
@@ -53,8 +70,13 @@ export function useCategory() {
     const deleteCategory = async (id) => {
         try {
             setLoadingCrud(true);
-            await deleteCategoryApi(id, auth.token);
+            const response = await deleteCategoryApi(id, auth.token);
             setLoadingCrud(false);
+
+            if (response.statusCode === 401 || response.statusCode === 500) {
+                localStorage.clear();
+                history.push("/");
+            }
         } catch (error) {
             setLoadingCrud(false);
             throw error;
@@ -67,6 +89,11 @@ export function useCategory() {
             const response = await getCategoriesApi(authClient.token);
             setLoading(false);
 
+            if (response.statusCode === 401 || response.statusCode === 500) {
+                localStorage.clear();
+                history.push("/");
+            }
+
             if (response.error) {
                 setError(response.error);
             } else {
@@ -77,19 +104,25 @@ export function useCategory() {
             setLoading(false);
             throw error;
         }
-    }, [authClient?.token]);
+    }, [authClient?.token, history]);
 
     const getCategoryById = useCallback(async (id) =>{
         try {
             setLoading(true);
-            const category = await getCategoryByIdApi(id, authClient.token);
+            const response = await getCategoryByIdApi(id, authClient.token);
             setLoading(false);
-            return category;
+
+            if (response.statusCode === 401 || response.statusCode === 500) {
+                localStorage.clear();
+                history.push("/");
+            }
+            
+            return response;
         } catch (error) {
             setLoading(false);
             throw error;    
         }
-    }, [authClient?.token])
+    }, [authClient?.token, history])
 
     return {
         categories,

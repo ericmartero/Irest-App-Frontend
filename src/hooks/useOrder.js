@@ -9,9 +9,11 @@ import {
     closeOrderApi,
     getOrdersByPaymentApi 
 } from '../api/order';
+import { useHistory } from "react-router-dom";
 
 export function useOrder() {
 
+    const history = useHistory();
     const { auth, authClient } = useAuth();
     const [orders, setOrders] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -23,6 +25,11 @@ export function useOrder() {
             const response = await getOrdersByTableApi(id, auth.token, status);
             setLoading(false);
 
+            if (response.statusCode === 401 || response.statusCode === 500) {
+                localStorage.clear();
+                history.push("/");
+            }
+
             if (response.error) {
                 setError(response.error);
             } else {
@@ -33,23 +40,34 @@ export function useOrder() {
             setLoading(false);
             throw error;
         }
-    }, [auth?.token]);
+    }, [auth?.token, history]);
 
     const getOrdersByTableClient = useCallback( async (id, status) => {
         try {
             setLoading(true);
             const response = await getOrdersByTableApi(id, authClient.token, status);
             setLoading(false);
+
+            if (response.statusCode === 401 || response.statusCode === 500) {
+                localStorage.clear();
+                history.push("/");
+            }
+
             setOrders(response);
         } catch (error) {
             setLoading(false);
             throw error;
         }
-    }, [authClient?.token]);
+    }, [authClient?.token, history]);
 
     const checkDeliveredOrder = async (id, status) => {
         try {
-            await checkDeliveredOrderApi(id, status, auth.token);
+            const response = await checkDeliveredOrderApi(id, status, auth.token);
+
+            if (response.statusCode === 401 || response.statusCode === 500) {
+                localStorage.clear();
+                history.push("/");
+            }
         } catch (error) {
             throw error;
         }
@@ -57,7 +75,12 @@ export function useOrder() {
 
     const addOrderToTable = async (idTableBooking, idProduct) => {
         try {
-            await addOrderToTableApi(idTableBooking, idProduct, auth.token);
+            const response = await addOrderToTableApi(idTableBooking, idProduct, auth.token);
+
+            if (response.statusCode === 401 || response.statusCode === 500) {
+                localStorage.clear();
+                history.push("/");
+            }
         } catch (error) {
             throw error;
         }
@@ -65,7 +88,12 @@ export function useOrder() {
 
     const addClientOrderToTable = async (idTableBooking, idProduct) => {
         try {
-            await addOrderToTableApi(idTableBooking, idProduct, authClient.token);
+            const response =  await addOrderToTableApi(idTableBooking, idProduct, authClient.token);
+
+            if (response.statusCode === 401 || response.statusCode === 500) {
+                localStorage.clear();
+                history.push("/");
+            }
         } catch (error) {
             throw error;
         }
@@ -73,7 +101,12 @@ export function useOrder() {
 
     const deleteOrder = async (id) => {
         try {
-            await deleteOrderApi(id, auth.token);
+            const response = await deleteOrderApi(id, auth.token);
+
+            if (response.statusCode === 401 || response.statusCode === 500) {
+                localStorage.clear();
+                history.push("/");
+            }
         } catch (error) {
             throw error;
         }
@@ -81,7 +114,12 @@ export function useOrder() {
 
     const addPaymentToOrder = async (idOrder, idPayment) => {
         try {
-            await addPaymentToOrderApi(idOrder, idPayment, auth.token);
+            const response = await addPaymentToOrderApi(idOrder, idPayment, auth.token);
+
+            if (response.statusCode === 401 || response.statusCode === 500) {
+                localStorage.clear();
+                history.push("/");
+            }
         } catch (error) {
             throw error;
         }
@@ -89,7 +127,12 @@ export function useOrder() {
 
     const addPaymentToOrderClient = async (idOrder, idPayment) => {
         try {
-            await addPaymentToOrderApi(idOrder, idPayment, authClient.token);
+            const response = await addPaymentToOrderApi(idOrder, idPayment, authClient.token);
+
+            if (response.statusCode === 401 || response.statusCode === 500) {
+                localStorage.clear();
+                history.push("/");
+            }
         } catch (error) {
             throw error;
         }
@@ -97,7 +140,12 @@ export function useOrder() {
 
     const closeOrder = async (idOrder) => {
         try {
-            await closeOrderApi(idOrder, auth.token);
+            const response = await closeOrderApi(idOrder, auth.token);
+
+            if (response.statusCode === 401 || response.statusCode === 500) {
+                localStorage.clear();
+                history.push("/");
+            }
         } catch (error) {
             throw error;
         }
@@ -105,7 +153,12 @@ export function useOrder() {
 
     const closeOrderClient = async (idOrder) => {
         try {
-            await closeOrderApi(idOrder, authClient.token);
+            const response = await closeOrderApi(idOrder, authClient.token);
+
+            if (response.statusCode === 401 || response.statusCode === 500) {
+                localStorage.clear();
+                history.push("/");
+            }
         } catch (error) {
             throw error;
         }
@@ -113,11 +166,18 @@ export function useOrder() {
 
     const getOrdersByPayment = useCallback( async (idPayment) => {
         try {
-            return await getOrdersByPaymentApi(idPayment, auth.token);
+            const response = await getOrdersByPaymentApi(idPayment, auth.token);
+
+            if (response.statusCode === 401 || response.statusCode === 500) {
+                localStorage.clear();
+                history.push("/");
+            }
+
+            return response;
         } catch (error) {
             throw error;
         }
-    }, [auth?.token]);
+    }, [auth?.token, history]);
 
     return {
         error,
