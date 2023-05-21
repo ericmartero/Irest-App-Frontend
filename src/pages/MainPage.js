@@ -43,7 +43,7 @@ export function MainPage() {
                             <>
                                 <img src="https://res.cloudinary.com/djwjh0wpw/image/upload/v1679673058/icono-irest_gvyksj.png" alt="logo" />
                                 <h1 className="text-900 font-bold text-5xl mb-5" style={{ textAlign: "center" }}>Bienvenido a iRest</h1>
-                                <div className="text-600 mb-5" style={{ textAlign: "center" }}>Escanea el codigo QR para poder acceder a una mesa</div>
+                                <div className="text-600 mb-5" style={{ textAlign: "center" }}>Escanea el código QR para poder acceder a una mesa</div>
                                 <Button icon='pi pi-qrcode' label='Escanear código QR' className='mb-4' onClick={onQRScanner} style={{ width: "15.5rem" }} />
                                 <Button label='Acceder al panel de control' onClick={goAdmin} />
                             </>
