@@ -21,7 +21,6 @@ import { Badge } from 'primereact/badge';
 import { Toast } from 'primereact/toast';
 import { Tag } from 'primereact/tag';
 import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 import { map, forEach, size } from 'lodash';
 import moment from 'moment';
 import 'moment/locale/es';
@@ -164,27 +163,40 @@ export function WaiterTableDetails() {
   }, [autoRefreshEnabled]);
 
   const downloadAsPDF = () => {
-    // Ocultar los botones de descarga
     setShowDownloadButtons(false);
 
     setTimeout(() => {
-      // Capturar el contenido del diálogo como una imagen
       const dialogElement = document.querySelector('.dialog-account-container');
-      html2canvas(dialogElement).then((canvas) => {
-        const imgData = canvas.toDataURL('image/png');
+      const dialogWidth = dialogElement.offsetWidth;
+      const dialogHeight = dialogElement.offsetHeight;
 
-        // Crear un nuevo objeto PDF
-        const pdf = new jsPDF();
+      const pdf = new jsPDF('p', 'pt', 'a4');
 
-        // Agregar la imagen capturada al PDF
-        pdf.addImage(imgData, 'PNG', 0, 0);
+      const scaleFactor = pdf.internal.pageSize.getWidth() / dialogWidth;
 
-        // Descargar el archivo PDF
-        pdf.save('cuenta.pdf');
+      const pageCount = Math.ceil(dialogHeight / pdf.internal.pageSize.getHeight());
 
-        // Restaurar la visibilidad de los botones de descarga
-        setShowDownloadButtons(true);
-      });
+      for (let i = 0; i < pageCount; i++) {
+        if (i > 0) {
+          pdf.addPage();
+        }
+        pdf.setPage(i + 1);
+        pdf.html(dialogElement, {
+          x: 0,
+          y: -i * pdf.internal.pageSize.getHeight(),
+          width: pdf.internal.pageSize.getWidth(),
+          height: dialogHeight,
+          html2canvas: {
+            scale: scaleFactor,
+          },
+          callback: () => {
+            if (i === pageCount - 1) {
+              pdf.save(`Cuenta-Mesa${table?.number}-${moment(paymentData?.createdAt).format('DD/MM/YYYY')}${moment(paymentData?.createdAt).format('HH:mm:ss')}.pdf`);
+              setShowDownloadButtons(true);
+            }
+          },
+        });
+      }
     }, 100);
   };
 
@@ -724,10 +736,19 @@ export function WaiterTableDetails() {
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', marginTop: "0.5rem" }}>
                       <span className="font-bold mr-5">Método de pago:</span>
-                      <i className={classNames({
-                        "pi pi-credit-card": paymentData?.paymentType === PAYMENT_TYPE.CARD || paymentData?.paymentType === PAYMENT_TYPE.APP,
-                        "pi pi-wallet": paymentData?.paymentType === PAYMENT_TYPE.CASH
-                      })} style={{ fontSize: '1.5rem' }}></i>
+                      {!showDownloadButtons ?
+                        <>
+                          {paymentData?.paymentType === PAYMENT_TYPE.CARD || paymentData?.paymentType === PAYMENT_TYPE.APP ?
+                            <span className="font-bold mr-5">Tarjeta</span>
+                            : <span className="font-bold mr-5">Efectivo</span>
+                          }
+                        </>
+                        :
+                        <i className={classNames({
+                          "pi pi-credit-card": paymentData?.paymentType === PAYMENT_TYPE.CARD || paymentData?.paymentType === PAYMENT_TYPE.APP,
+                          "pi pi-wallet": paymentData?.paymentType === PAYMENT_TYPE.CASH
+                        })} style={{ fontSize: '1.5rem' }}></i>
+                      }
                     </div>
                   </div>
                   <div>
