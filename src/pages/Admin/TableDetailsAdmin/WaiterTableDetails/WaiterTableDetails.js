@@ -65,6 +65,7 @@ export function WaiterTableDetails() {
   const [finishPaymentDialog, setFinishPaymentDialog] = useState(false);
   const [confirmCreateAccountDialog, setConfirmCreateAccountDialog] = useState(false);
   const [autoRefreshEnabled, setAutoRefreshEnabled] = useState(true);
+  const [allOrdersDelivered, setAllOrdersDelivered] = useState(false);
 
   const [showDownloadButtons, setShowDownloadButtons] = useState(true);
   const [loadingPDF, setLoadingPDF] = useState(false);
@@ -150,14 +151,31 @@ export function WaiterTableDetails() {
   }, [onPaymentChange, orders])
 
   useEffect(() => {
+    let ordersDelivered = 0;
+    forEach(ordersBooking, (order) => {
+      if (order.status === ORDER_STATUS.DELIVERED) {
+        ordersDelivered += 1;
+      }
+    })
+
+    if (size(ordersBooking) === ordersDelivered) {
+      setAllOrdersDelivered(true);
+    }
+
+    else {
+      setAllOrdersDelivered(false);
+    }
+  }, [ordersBooking])
+
+  useEffect(() => {
     const autoRefreshTables = () => {
       onRefreshOrders();
     }
 
     if (autoRefreshEnabled) {
-      intervalRef.current = setInterval(autoRefreshTables, 10000000000000);
+      intervalRef.current = setInterval(autoRefreshTables, 10000);
     }
-    //10000
+
     return () => {
       clearInterval(intervalRef.current);
     };
@@ -382,7 +400,7 @@ export function WaiterTableDetails() {
     onRefreshOrders();
     setFinishPaymentDialog(false);
   };
-  console.log(paymentData);
+
   const onPayment = async () => {
     let totalPayment = 0;
     forEach(orders, (order) => {
@@ -567,7 +585,10 @@ export function WaiterTableDetails() {
           {!paymentData ? <Button label="Generar Cuenta" severity="secondary" className='ml-2' disabled={enablePayment} onClick={onConfirmPayment} />
             : null
           }
-          <Button label="Cerrar mesa" severity="danger" className='ml-2' style={{ width: "10rem" }} disabled={closeTable} onClick={() => setCloseTableDialog(true)} />
+          {!paymentData ? <Button label="Cerrar mesa" severity="danger" className='ml-2' style={{ width: "10rem" }} disabled={closeTable} onClick={() => setCloseTableDialog(true)} />
+            : <Button label="Cerrar mesa" severity="danger" className='ml-2' style={{ width: "10rem" }} disabled={!allOrdersDelivered} onClick={() => setCloseTableDialog(true)} />
+          }
+
         </div>
       </>
     );
