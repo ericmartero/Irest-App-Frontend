@@ -5,6 +5,7 @@ import { PAYMENT_TYPE } from '../../../utils/constants';
 import { ShoppingCart } from '../ShoppingCart';
 import { useHistory } from 'react-router-dom';
 import { classNames } from 'primereact/utils';
+import { ProgressSpinner } from 'primereact/progressspinner';
 import { Toast } from 'primereact/toast';
 import { Badge } from 'primereact/badge';
 import { Button } from 'primereact/button';
@@ -37,6 +38,7 @@ export function Header(props) {
     const [showBillDialog, setShowBillDialog] = useState(false);
     const [finishPaymentDialog, setFinishPaymentDialog] = useState(false);
     const [showDownloadButtons, setShowDownloadButtons] = useState(true);
+    const [loadingPDF, setLoadingPDF] = useState(false);
 
     useEffect(() => {
         (async () => {
@@ -69,6 +71,7 @@ export function Header(props) {
 
     const downloadAccountPDF = () => {
         setShowDownloadButtons(false);
+        setLoadingPDF(true);
 
         setTimeout(() => {
             const dialogElement = document.querySelector('.bill-dialog-container');
@@ -98,6 +101,7 @@ export function Header(props) {
                         if (i === pageCount - 1) {
                             pdf.save(`Cuenta-Mesa${table?.number}-${moment(payment?.createdAt).format('DD/MM/YYYY')}${moment(payment?.createdAt).format('HH:mm:ss')}.pdf`);
                             setShowDownloadButtons(true);
+                            setLoadingPDF(false);
                         }
                     },
                 });
@@ -222,7 +226,7 @@ export function Header(props) {
 
     const showBillDialogPaymentFooter = (
         <div className='footerBill'>
-            {showDownloadButtons && <Button label="Imprimir cuenta" className="bttnFoot" style={{ margin: 0 }} onClick={downloadAccountPDF} />}
+            {showDownloadButtons && <Button label="Imprimir cuenta" style={{ margin: 0 }} onClick={downloadAccountPDF} />}
         </div>
     );
 
@@ -315,7 +319,7 @@ export function Header(props) {
                     "bill-dialog-container hide-client-iconClose-onDonwload": !showDownloadButtons,
                     "bill-dialog-container show-client-iconClose-onDonwload": showDownloadButtons
                 })}>
-
+                {loadingPDF && <ProgressSpinner style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', zIndex: 1 }} />}
                 <div className='orders-account-info'>
                     <div className='product-add-info'>
                         <span className="font-bold mr-4">Mesa:</span>
@@ -332,7 +336,7 @@ export function Header(props) {
                     </div>
                 </div>
 
-                <div className='table-orders-payment' style={{ marginTop: '1.5rem' }}>
+                <div className='table-orders-payment' style={{ marginTop: '0.5rem' }}>
                     <DataTable value={orders && groupOrdersStatus(orders)} >
                         <Column field="quantity" header="UNIDADES" bodyStyle={{ textAlign: 'center' }}></Column>
                         <Column field="product.title" header="PRODUCTO" bodyStyle={{ textAlign: 'center' }}></Column>
@@ -340,7 +344,7 @@ export function Header(props) {
                     </DataTable>
                 </div>
 
-                <div className='mt-4' style={{ display: 'flex', alignItems: 'center' }}>
+                <div className='mt-3' style={{ display: 'flex', alignItems: 'center' }}>
                     <span className="font-bold">Método de pago:</span>
                     {!showDownloadButtons ?
                         <>
@@ -357,8 +361,8 @@ export function Header(props) {
                     }
                 </div>
                 <div className={classNames({
-                    "mt-4 mb-2": payment?.paymentType === PAYMENT_TYPE.CARD || payment?.paymentType === PAYMENT_TYPE.CASH,
-                    "mt-3": payment?.paymentType === PAYMENT_TYPE.APP
+                    "mt-2 mb-2": payment?.paymentType === PAYMENT_TYPE.CARD || payment?.paymentType === PAYMENT_TYPE.CASH,
+                    "mt-2": payment?.paymentType === PAYMENT_TYPE.APP
                 })}>
                     <span className="font-bold">TOTAL: </span>
                     <span className="font-bold" style={{ marginLeft: "6.5rem" }}>{payment?.totalPayment.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</span>
