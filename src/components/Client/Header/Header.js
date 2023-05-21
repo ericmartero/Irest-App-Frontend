@@ -219,7 +219,7 @@ export function Header(props) {
                 {showDownloadButtons && <Button label="Imprimir cuenta" className="bttnFoot" style={{ margin: 0, width: "80%" }} onClick={downloadAccountPDF} />}
             </div>
             <div>
-                {showDownloadButtons && <Button label="Finalizar mesa" className="bttnFoot" severity="danger" style={{ margin: 0, width: "80%" }} onClick={onFinishPayment} />}
+                {showDownloadButtons && <Button label="Finalizar mesa" className="bttnFoot" severity="success" style={{ margin: 0, width: "80%" }} onClick={onFinishPayment} />}
             </div>
         </div>
     );
