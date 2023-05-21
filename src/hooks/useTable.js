@@ -18,11 +18,6 @@ export function useTable() {
             const response = await getTablesApi(auth.token);
             setLoading(false);
 
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                localStorage.clear();
-                history.push("/");
-            }
-
             if (response.error) {
                 setError(response.error);
             } else {
@@ -33,18 +28,13 @@ export function useTable() {
             setLoading(false);
             throw error;
         }
-    }, [auth?.token, history]);
+    }, [auth?.token]);
 
     const addTable = async (data) => {
         try {
             setLoadingCrud(true);
-            const response = await addTableApi(data, auth.token);
+            await addTableApi(data, auth.token);
             setLoadingCrud(false);
-
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                localStorage.clear();
-                history.push("/");
-            }
         } catch (error) {
             setLoadingCrud(false);
             throw error;
@@ -54,13 +44,8 @@ export function useTable() {
     const updateTable = async (id, data) => {
         try {
             setLoadingCrud(true);
-            const response = await updateTableApi(id, data, auth.token);
+            await updateTableApi(id, data, auth.token);
             setLoadingCrud(false);
-
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                localStorage.clear();
-                history.push("/");
-            }
         } catch (error) {
             setLoadingCrud(false);
             throw error;
@@ -69,13 +54,8 @@ export function useTable() {
     const updateTableClient = async (id, data) => {
         try {
             setLoadingCrud(true);
-            const response = await updateTableApi(id, data, authClient.token);
+            await updateTableApi(id, data, authClient.token);
             setLoadingCrud(false);
-
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                localStorage.clear();
-                history.push("/");
-            }
         } catch (error) {
             setLoadingCrud(false);
             throw error;
@@ -85,13 +65,8 @@ export function useTable() {
     const deleteTable = async (id) => {
         try {
             setLoadingCrud(true);
-            const response = await deleteTableApi(id, auth.token);
+            await deleteTableApi(id, auth.token);
             setLoadingCrud(false);
-
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                localStorage.clear();
-                history.push("/");
-            }
         } catch (error) {
             setLoadingCrud(false);
             throw error;

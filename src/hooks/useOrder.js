@@ -62,12 +62,7 @@ export function useOrder() {
 
     const checkDeliveredOrder = async (id, status) => {
         try {
-            const response = await checkDeliveredOrderApi(id, status, auth.token);
-
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                localStorage.clear();
-                history.push("/");
-            }
+            await checkDeliveredOrderApi(id, status, auth.token);
         } catch (error) {
             throw error;
         }
@@ -75,12 +70,7 @@ export function useOrder() {
 
     const addOrderToTable = async (idTableBooking, idProduct) => {
         try {
-            const response = await addOrderToTableApi(idTableBooking, idProduct, auth.token);
-
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                localStorage.clear();
-                history.push("/");
-            }
+            await addOrderToTableApi(idTableBooking, idProduct, auth.token);
         } catch (error) {
             throw error;
         }
@@ -88,12 +78,7 @@ export function useOrder() {
 
     const addClientOrderToTable = async (idTableBooking, idProduct) => {
         try {
-            const response =  await addOrderToTableApi(idTableBooking, idProduct, authClient.token);
-
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                localStorage.clear();
-                history.push("/");
-            }
+            await addOrderToTableApi(idTableBooking, idProduct, authClient.token);
         } catch (error) {
             throw error;
         }
@@ -101,12 +86,7 @@ export function useOrder() {
 
     const deleteOrder = async (id) => {
         try {
-            const response = await deleteOrderApi(id, auth.token);
-
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                localStorage.clear();
-                history.push("/");
-            }
+            await deleteOrderApi(id, auth.token);
         } catch (error) {
             throw error;
         }
@@ -114,12 +94,7 @@ export function useOrder() {
 
     const addPaymentToOrder = async (idOrder, idPayment) => {
         try {
-            const response = await addPaymentToOrderApi(idOrder, idPayment, auth.token);
-
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                localStorage.clear();
-                history.push("/");
-            }
+            await addPaymentToOrderApi(idOrder, idPayment, auth.token);
         } catch (error) {
             throw error;
         }
@@ -127,12 +102,7 @@ export function useOrder() {
 
     const addPaymentToOrderClient = async (idOrder, idPayment) => {
         try {
-            const response = await addPaymentToOrderApi(idOrder, idPayment, authClient.token);
-
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                localStorage.clear();
-                history.push("/");
-            }
+            await addPaymentToOrderApi(idOrder, idPayment, authClient.token);
         } catch (error) {
             throw error;
         }
@@ -140,12 +110,7 @@ export function useOrder() {
 
     const closeOrder = async (idOrder) => {
         try {
-            const response = await closeOrderApi(idOrder, auth.token);
-
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                localStorage.clear();
-                history.push("/");
-            }
+            await closeOrderApi(idOrder, auth.token);
         } catch (error) {
             throw error;
         }
@@ -153,12 +118,7 @@ export function useOrder() {
 
     const closeOrderClient = async (idOrder) => {
         try {
-            const response = await closeOrderApi(idOrder, authClient.token);
-
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                localStorage.clear();
-                history.push("/");
-            }
+            await closeOrderApi(idOrder, authClient.token);
         } catch (error) {
             throw error;
         }

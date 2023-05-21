@@ -13,14 +13,7 @@ export function usePayment() {
 
     const createPayment = async (paymentData) => {
         try {
-            const response = await createPaymentApi(paymentData, auth.token);
-
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                localStorage.clear();
-                history.push("/");
-            }
-
-            return response;
+            return await createPaymentApi(paymentData, auth.token);
         } catch (error) {
             throw error;
         }
@@ -28,14 +21,7 @@ export function usePayment() {
 
     const createClientPayment = async (paymentData) => {
         try {
-            const response = await createPaymentApi(paymentData, authClient.token);
-
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                localStorage.clear();
-                history.push("/");
-            }
-
-            return response;
+            return await createPaymentApi(paymentData, authClient.token);
         } catch (error) {
             throw error;
         }
@@ -43,23 +29,15 @@ export function usePayment() {
 
     const getPaymentByTable = useCallback( async (idTable) => {
         try {
-            const response = await getPaymentByTableApi(idTable, auth.token);
-
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                localStorage.clear();
-                history.push("/");
-            }
-
-            return response;
+            return await getPaymentByTableApi(idTable, auth.token);
         } catch (error) {
             throw error;
         }
-    }, [auth?.token, history]);
+    }, [auth?.token]);
 
     const getPaymentByIdClient = useCallback( async (idTable) => {
         try {
-            const response = await getPaymentByIdApi(idTable, authClient.token);
-            return response;
+            return await getPaymentByIdApi(idTable, authClient.token);
         } catch (error) {
             throw error;
         }
@@ -67,12 +45,7 @@ export function usePayment() {
 
     const closePayment = async (idPayment) => {
         try {
-            const response = await closePaymentApi(idPayment, auth.token);
-
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                localStorage.clear();
-                history.push("/");
-            }
+            await closePaymentApi(idPayment, auth.token);
         } catch (error) {
             throw error;
         }
@@ -80,12 +53,7 @@ export function usePayment() {
 
     const closePaymentClient = async (idPayment) => {
         try {
-            const response = await closePaymentApi(idPayment, authClient.token);
-
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                localStorage.clear();
-                history.push("/");
-            }
+            await closePaymentApi(idPayment, authClient.token);
         } catch (error) {
             throw error;
         }

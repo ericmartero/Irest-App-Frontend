@@ -24,19 +24,12 @@ export function useUser() {
 
     const getMe = useCallback(async (token) => {
         try {
-            const response = await getMeApi(token);
-
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                localStorage.clear();
-                history.push("/");
-            }
-
-            return response;
+            return await getMeApi(token);
 
         } catch (error) {
             throw error;
         }
-    }, [history]);
+    }, []);
 
     const getUsers = useCallback(async () => {
         try {
@@ -64,13 +57,8 @@ export function useUser() {
     const addUser = async (data) => {
         try {
             setLoadingCrud(true);
-            const response = await addUserApi(data, auth.token);
+            await addUserApi(data, auth.token);
             setLoadingCrud(false);
-
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                localStorage.clear();
-                history.push("/");
-            }
         } catch (error) {
             setLoadingCrud(false);
             throw error;
@@ -80,13 +68,8 @@ export function useUser() {
     const deleteUser = async (id) => {
         try {
             setLoadingCrud(true);
-            const response = await deleteUserApi(id, auth.token);
+            await deleteUserApi(id, auth.token);
             setLoadingCrud(false);
-
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                localStorage.clear();
-                history.push("/");
-            }
         } catch (error) {
             setLoadingCrud(false);
             throw (error);
@@ -96,13 +79,8 @@ export function useUser() {
     const updateUser = async (id, data) => {
         try {
             setLoadingCrud(true);
-            const response = await updateUserApi(id, data, auth.token);
+            await updateUserApi(id, data, auth.token);
             setLoadingCrud(false);
-
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                localStorage.clear();
-                history.push("/");
-            }
         } catch (error) {
             setLoadingCrud(false);
             throw error;
@@ -135,13 +113,8 @@ export function useUser() {
     const addUserAll = async (data) => {
         try {
             setLoadingCrud(true);
-            const response = await addUserAllApi(data, auth.token);
+            await addUserAllApi(data, auth.token);
             setLoadingCrud(false);
-
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                localStorage.clear();
-                history.push("/");
-            }
         } catch (error) {
             setLoadingCrud(false);
             throw error;
@@ -151,13 +124,8 @@ export function useUser() {
     const updateUserAll = async (id, data) => {
         try {
             setLoadingCrud(true);
-            const response = await updateUserAllApi(id, data, auth.token);
+            await updateUserAllApi(id, data, auth.token);
             setLoadingCrud(false);
-
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                localStorage.clear();
-                history.push("/");
-            }
         } catch (error) {
             setLoadingCrud(false);
             throw error;
@@ -167,13 +135,8 @@ export function useUser() {
     const deleteUserAll = async (id) => {
         try {
             setLoadingCrud(true);
-            const response = await deleteUserAllApi(id, auth.token);
+            await deleteUserAllApi(id, auth.token);
             setLoadingCrud(false);
-
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                localStorage.clear();
-                history.push("/");
-            }
         } catch (error) {
             setLoadingCrud(false);
             throw (error);

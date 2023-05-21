@@ -38,13 +38,8 @@ export function useCategory() {
     const addCategory = async (data) => {
         try {
             setLoadingCrud(true);
-            const response = await addCategoryApi(data, auth.token);
+            await addCategoryApi(data, auth.token);
             setLoadingCrud(false);
-
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                localStorage.clear();
-                history.push("/");
-            }
         } catch (error) {
             setLoadingCrud(false);
             throw error;
@@ -54,13 +49,8 @@ export function useCategory() {
     const updateCategory = async (id, data) => {
         try {
             setLoadingCrud(true);
-            const response = await updateCategoryApi(id, data, auth.token);
+            await updateCategoryApi(id, data, auth.token);
             setLoadingCrud(false);
-
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                localStorage.clear();
-                history.push("/");
-            }
         } catch (error) {
             setLoadingCrud(false);
             throw error;
@@ -70,13 +60,8 @@ export function useCategory() {
     const deleteCategory = async (id) => {
         try {
             setLoadingCrud(true);
-            const response = await deleteCategoryApi(id, auth.token);
+            await deleteCategoryApi(id, auth.token);
             setLoadingCrud(false);
-
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                localStorage.clear();
-                history.push("/");
-            }
         } catch (error) {
             setLoadingCrud(false);
             throw error;

@@ -32,13 +32,8 @@ export function useEstablishment() {
     const addEstablishment = async (data) => {
         try {
             setLoadingCrud(true);
-            const response = await addEstablishmentApi(data, auth.token);
+            await addEstablishmentApi(data, auth.token);
             setLoadingCrud(false);
-
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                localStorage.clear();
-                history.push("/");
-            }
         } catch (error) {
             setLoadingCrud(false);
             throw error;
@@ -48,13 +43,8 @@ export function useEstablishment() {
     const updateEstablishment = async (id, data) => {
         try {
             setLoadingCrud(true);
-            const response = await updateEstablishmentApi(id, data, auth.token);
+            await updateEstablishmentApi(id, data, auth.token);
             setLoadingCrud(false);
-
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                localStorage.clear();
-                history.push("/");
-            }
         } catch (error) {
             setLoadingCrud(false);
             throw error;
@@ -64,13 +54,8 @@ export function useEstablishment() {
     const deleteEstablishment = async (id) => {
         try {
             setLoadingCrud(true);
-            const response = await deleteEstablishmentApi(id, auth.token);
+            await deleteEstablishmentApi(id, auth.token);
             setLoadingCrud(false);
-
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                localStorage.clear();
-                history.push("/");
-            }
         } catch (error) {
             setLoadingCrud(false);
             throw error;

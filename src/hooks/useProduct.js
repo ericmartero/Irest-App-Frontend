@@ -38,13 +38,8 @@ export function useProduct() {
     const addProduct = async (data) => {
         try {
             setLoadingCrud(true);
-            const response = await addProductApi(data, auth.token);
+            await addProductApi(data, auth.token);
             setLoadingCrud(false);
-
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                localStorage.clear();
-                history.push("/");
-            }
         } catch (error) {
             setLoadingCrud(false);
             throw error;
@@ -54,13 +49,8 @@ export function useProduct() {
     const updateProduct = async (id, data) => {
         try {
             setLoadingCrud(true);
-            const response = await updateProductApi(id, data, auth.token);
+            await updateProductApi(id, data, auth.token);
             setLoadingCrud(false);
-
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                localStorage.clear();
-                history.push("/");
-            }
         } catch (error) {
             setLoadingCrud(false);
             throw error;
@@ -70,13 +60,8 @@ export function useProduct() {
     const deleteProduct = async (id) => {
         try {
             setLoadingCrud(true);
-            const response = await deleteProductApi(id, auth.token);
+            await deleteProductApi(id, auth.token);
             setLoadingCrud(false);
-
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                localStorage.clear();
-                history.push("/");
-            }
         } catch (error) {
             setLoadingCrud(false);
             throw error;
