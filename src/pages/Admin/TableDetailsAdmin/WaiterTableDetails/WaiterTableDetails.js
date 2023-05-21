@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useOrder, useTable, useProduct, usePayment } from '../../../../hooks';
-import { ORDER_STATUS, PAYMENT_TYPE } from '../../../../utils/constants';
+import { ORDER_STATUS, PAYMENT_TYPE, PAYMENT_STATUS } from '../../../../utils/constants';
 import { AccessDenied } from '../../../AccessdDenied';
 import { useHistory } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
@@ -155,9 +155,9 @@ export function WaiterTableDetails() {
     }
 
     if (autoRefreshEnabled) {
-      intervalRef.current = setInterval(autoRefreshTables, 10000);
+      intervalRef.current = setInterval(autoRefreshTables, 10000000000000);
     }
-
+    //10000
     return () => {
       clearInterval(intervalRef.current);
     };
@@ -368,13 +368,13 @@ export function WaiterTableDetails() {
     try {
       await closePayment(paymentData.id);
 
-      for await (const order of orders) {
+      /*for await (const order of orders) {
         await closeOrder(order.id);
-      }
+      }*/
 
-      await updateTable(table.id, { tableBooking: null });
+      //await updateTable(table.id, { tableBooking: null });
 
-      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Pago finalizado correctamente', life: 3000 });
+      toast.current.show({ severity: 'success', summary: 'Operacion Exitosa', detail: 'Cuenta pagada correctamente', life: 3000 });
       history.push("/admin");
     } catch (error) {
       showError(error);
@@ -382,7 +382,7 @@ export function WaiterTableDetails() {
     onRefreshOrders();
     setFinishPaymentDialog(false);
   };
-
+  console.log(paymentData);
   const onPayment = async () => {
     let totalPayment = 0;
     forEach(orders, (order) => {
@@ -485,8 +485,17 @@ export function WaiterTableDetails() {
     <div className='footerBill'>
       {showDownloadButtons &&
         <>
-          <Button label='Descargar Cuenta' onClick={downloadAccountPDF} style={{ width: "13rem" }} />
-          <Button label="Marcar como pagado" onClick={openDialogFinishPayment} severity="success" style={{ margin: 0, marginLeft: "1rem", width: "13rem" }} />
+          {paymentData?.statusPayment === PAYMENT_STATUS.PAID ?
+            <>
+              <Button label='Descargar Cuenta' onClick={downloadAccountPDF} style={{ width: "13rem" }} />
+            </>
+            :
+            <>
+              <Button label='Descargar Cuenta' onClick={downloadAccountPDF} style={{ width: "13rem" }} />
+              <Button label="Marcar como pagado" onClick={openDialogFinishPayment} severity="success" style={{ margin: 0, marginLeft: "1rem", width: "13rem" }} />
+            </>
+          }
+
         </>
       }
     </div>
@@ -550,20 +559,28 @@ export function WaiterTableDetails() {
 
   const rightToolbarTemplate = () => {
     return (
-      <div className="flex flex-wrap gap-2">
-        {!paymentData ? <Button label="Añadir pedido" severity="success" className='ml-5' onClick={openNew} />
-          : <Button label="Ver Cuenta" severity="secondary" className='ml-5' style={{ width: "10rem" }} onClick={onShowBill} />}
-        {!paymentData ? <Button label="Generar Cuenta" severity="secondary" className='ml-2' disabled={enablePayment} onClick={onConfirmPayment} />
-          : null
-        }
-        <Button label="Cerrar mesa" severity="danger" className='ml-2' style={{ width: "10rem" }} disabled={closeTable} onClick={() => setCloseTableDialog(true)} />
-      </div>
+      <>
+
+        <div className="flex flex-wrap gap-2">
+          {!paymentData ? <Button label="Añadir pedido" severity="success" className='ml-5' onClick={openNew} />
+            : <Button label="Ver Cuenta" severity="secondary" className='ml-2' style={{ width: "10rem" }} onClick={onShowBill} />}
+          {!paymentData ? <Button label="Generar Cuenta" severity="secondary" className='ml-2' disabled={enablePayment} onClick={onConfirmPayment} />
+            : null
+          }
+          <Button label="Cerrar mesa" severity="danger" className='ml-2' style={{ width: "10rem" }} disabled={closeTable} onClick={() => setCloseTableDialog(true)} />
+        </div>
+      </>
     );
   };
 
   const header = () => {
     return (
-      <Toolbar className='toolbarOrders' left={leftToolbarTemplate} right={rightToolbarTemplate}></Toolbar>
+      <Toolbar
+        className='toolbarOrders'
+        center={<Tag icon="pi pi-euro" severity="success" value="PAGADO" />}
+        left={leftToolbarTemplate}
+        right={rightToolbarTemplate}>
+      </Toolbar>
     );
   };
 
@@ -640,10 +657,14 @@ export function WaiterTableDetails() {
                     <>
                       {
                         !order.product.category.chefVisible && order.status === ORDER_STATUS.PENDING ?
-                          <Button label="Entregar pedido" icon="pi pi-check" onClick={() => onCheckDeliveredOrder(ORDER_STATUS.DELIVERED)} /> :
+                          <>
+                            <Button label="Entregar pedido" icon="pi pi-check" onClick={() => onCheckDeliveredOrder(ORDER_STATUS.DELIVERED)} />
+                          </>
+                          :
                           order.status === ORDER_STATUS.PREPARED &&
                           <>
                             <Button label='Entregar pedido' icon="pi pi-check" onClick={() => onCheckDeliveredOrder(ORDER_STATUS.DELIVERED)} />
+
                           </>
                       }
                     </>
