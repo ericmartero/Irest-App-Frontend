@@ -86,7 +86,8 @@ export function ClientLayout(props) {
                             onRefreshOrders: onRefreshOrders,
                             loadingOrders: loading,
                             payment: paymentData
-                        })}
+                        }
+                    )}
                 </div>
             </div>
 
