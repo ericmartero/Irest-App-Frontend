@@ -439,7 +439,7 @@ export function WaiterTableDetails() {
 
   const showBillDialogFooter = (
     <div className='footerBill'>
-      <Button label="Finalizar cuenta y cerrar mesa" onClick={openDialogFinishPayment} style={{ margin: 0 }} />
+      <Button label="Finalizar cuenta" onClick={openDialogFinishPayment} style={{ margin: 0, width: "12rem" }} />
     </div>
   );
 
