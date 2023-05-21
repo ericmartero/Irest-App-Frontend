@@ -57,7 +57,7 @@ export function PaymentsHistoryAdmin() {
     const rowExpansionTemplate = (data) => {
         return (
             <>
-                {loading && loadingUpdatePayments ? null
+                {loading || loadingUpdatePayments ? null
                     :
                     <div className="orders-subtable">
                         <div style={{ marginLeft: '4rem', marginRight: '4rem', marginBottom: '3rem' }}>
@@ -139,7 +139,7 @@ export function PaymentsHistoryAdmin() {
             <>
                 {error ? <AccessDenied /> :
                     <>
-                        {loading && loadingUpdatePayments ?
+                        {loading || loadingUpdatePayments ?
                             <div className="align-container">
                                 <ProgressSpinner />
                             </div>
