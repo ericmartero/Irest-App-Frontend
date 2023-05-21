@@ -88,7 +88,7 @@ export function OrdersTracking(props) {
                             </div>
                             : payment?.statusPayment === PAYMENT_STATUS.PENDING ?
                                 <div className='status-payment-tracking-container'>
-                                    <Tag icon="pi pi-euro" severity="danger" value="PAGO PENDIENTE" />
+                                    <Tag icon="pi pi-euro" severity="warning" value="PAGO PENDIENTE" />
                                 </div>
                                 : null
                         }

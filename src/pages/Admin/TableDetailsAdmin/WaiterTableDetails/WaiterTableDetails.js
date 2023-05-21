@@ -603,7 +603,7 @@ export function WaiterTableDetails() {
         className='toolbarOrders'
         center={
           paymentData?.statusPayment === PAYMENT_STATUS.PAID ? <Tag icon="pi pi-euro" severity="success" value="PAGADO" />
-            : paymentData?.statusPayment === PAYMENT_STATUS.PENDING ? <Tag icon="pi pi-euro" severity="danger" value="PAGO PENDIENTE" />
+            : paymentData?.statusPayment === PAYMENT_STATUS.PENDING ? <Tag icon="pi pi-euro" severity="warning" value="PAGO PENDIENTE" />
               : null
         }
         left={leftToolbarTemplate}
