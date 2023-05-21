@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useProduct, useOrder, useTable } from '../../../hooks';
 import { getProductShoppingCart, cleanProductShoppingCart } from '../../../api/shoppingCart';
-import { PAYMENT_TYPE } from '../../../utils/constants';
+import { PAYMENT_TYPE, ORDER_STATUS } from '../../../utils/constants';
 import { ShoppingCart } from '../ShoppingCart';
 import { useHistory } from 'react-router-dom';
 import { classNames } from 'primereact/utils';
@@ -38,6 +38,7 @@ export function Header(props) {
     const [finishPaymentDialog, setFinishPaymentDialog] = useState(false);
     const [showDownloadButtons, setShowDownloadButtons] = useState(true);
     const [loadingPDF, setLoadingPDF] = useState(false);
+    const [allOrdersDelivered, setAllOrdersDelivered] = useState(false);
 
     useEffect(() => {
         (async () => {
@@ -67,6 +68,23 @@ export function Header(props) {
     useEffect(() => {
         onRefresh();
     }, [refreshCartNumber]);
+
+    useEffect(() => {
+        let ordersDelivered = 0;
+        forEach(orders, (order) => {
+            if (order.status === ORDER_STATUS.DELIVERED) {
+                ordersDelivered += 1;
+            }
+        })
+
+        if (size(orders) === ordersDelivered) {
+            setAllOrdersDelivered(true);
+        }
+
+        else {
+            setAllOrdersDelivered(false);
+        }
+    }, [orders])
 
     const downloadAccountPDF = () => {
         setShowDownloadButtons(false);
@@ -202,8 +220,14 @@ export function Header(props) {
     };
 
     const onFinishPayment = () => {
-        setFinishPaymentDialog(true);
-        setShowBillDialog(false);
+        if (!allOrdersDelivered) {
+            toast.current.show({ severity: 'info', summary: 'Finalizar mesa', detail: `No se puede finalizar la mesa si hay pedidos pendientes`, life: 3000 });
+        }
+
+        else {
+            setFinishPaymentDialog(true);
+            setShowBillDialog(false);
+        }
     };
 
     const showBillDialogSripePaymentFooter = (
