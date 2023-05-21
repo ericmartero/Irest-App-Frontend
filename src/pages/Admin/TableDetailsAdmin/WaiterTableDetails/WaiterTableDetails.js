@@ -323,6 +323,7 @@ export function WaiterTableDetails() {
 
   const hideCloseTableDialog = () => {
     setCloseTableDialog(false);
+    setAutoRefreshEnabled(true);
   };
 
   const hideConfirmTypePaymentDialog = () => {
@@ -565,6 +566,11 @@ export function WaiterTableDetails() {
     setAutoRefreshEnabled(false);
   };
 
+  const onCloseTableDialog = () => {
+    setCloseTableDialog(true);
+    setAutoRefreshEnabled(false);
+  }
+
   const totalPaymentFooter = (
     <ColumnGroup>
       <Row>
@@ -585,8 +591,8 @@ export function WaiterTableDetails() {
           {!paymentData ? <Button label="Generar Cuenta" severity="secondary" className='ml-2' disabled={enablePayment} onClick={onConfirmPayment} />
             : null
           }
-          {!paymentData ? <Button label="Cerrar mesa" severity="danger" className='ml-2' style={{ width: "10rem" }} disabled={closeTable} onClick={() => setCloseTableDialog(true)} />
-            : <Button label="Cerrar mesa" severity="danger" className='ml-2' style={{ width: "10rem" }} disabled={!allOrdersDelivered} onClick={() => setCloseTableDialog(true)} />
+          {!paymentData ? <Button label="Cerrar mesa" severity="danger" className='ml-2' style={{ width: "10rem" }} disabled={closeTable} onClick={onCloseTableDialog} />
+            : <Button label="Cerrar mesa" severity="danger" className='ml-2' style={{ width: "10rem" }} disabled={!allOrdersDelivered} onClick={onCloseTableDialog} />
           }
 
         </div>
