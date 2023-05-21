@@ -56,9 +56,11 @@ export function WaiterTableDetails() {
   const [paymentType, setPaymentType] = useState(PAYMENT_TYPE.CARD);
   const [paymentData, setPaymentData] = useState(null);
   const [showBillDialog, setShowBillDialog] = useState(false);
+  const [closeTableDialog, setCloseTableDialog] = useState(false);
 
   const [onPaymentChange, setOnPaymentChange] = useState(false);
   const [enablePayment, setEnablePayment] = useState(false);
+  const [closeTable, setCloseTable] = useState(false);
   const [finishPaymentDialog, setFinishPaymentDialog] = useState(false);
   const [confirmCreateAccountDialog, setConfirmCreateAccountDialog] = useState(false);
   const [autoRefreshEnabled, setAutoRefreshEnabled] = useState(true);
@@ -133,10 +135,12 @@ export function WaiterTableDetails() {
     if (orders) {
       if (size(orders) === 0) {
         setEnablePayment(true);
+        setCloseTable(false);
       }
 
       else {
         setEnablePayment(false);
+        setCloseTable(true);
       }
     }
   }, [onPaymentChange, orders])
@@ -255,6 +259,10 @@ export function WaiterTableDetails() {
     setConfirmTypePaymentDialog(true);
   };
 
+  const hideCloseTableDialog = () => {
+    setCloseTableDialog(false);
+  };
+
   const hideConfirmTypePaymentDialog = () => {
     setConfirmTypePaymentDialog(false);
     setPaymentType(PAYMENT_TYPE.CARD);
@@ -296,7 +304,7 @@ export function WaiterTableDetails() {
       setAutoRefreshEnabled(true);
       document.body.classList.remove('body-scroll-lock');
     }
-  }
+  };
 
   const deleteSelectedOrder = async () => {
     try {
@@ -354,6 +362,11 @@ export function WaiterTableDetails() {
     setPaymentType(PAYMENT_TYPE.CARD);
     setConfirmCreateAccountDialog(false);
     setAutoRefreshEnabled(true);
+  };
+
+  const onCloseTable = async () => {
+    await updateTable(table.id, { tableBooking: null });
+    history.push("/admin");
   };
 
   const onConfirmCreateAccount = () => {
@@ -444,6 +457,13 @@ export function WaiterTableDetails() {
     </React.Fragment>
   );
 
+  const closeTableDialogFooter = (
+    <React.Fragment>
+      <Button label="No" icon="pi pi-times" outlined onClick={hideCloseTableDialog} />
+      <Button label="Si" icon="pi pi-check" onClick={onCloseTable} />
+    </React.Fragment>
+  );
+
   const formatCurrency = (value) => {
     return value?.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' });
   };
@@ -487,7 +507,7 @@ export function WaiterTableDetails() {
         {!paymentData ? <Button label="Generar Cuenta" severity="secondary" className='ml-2' disabled={enablePayment} onClick={onConfirmPayment} />
           : null
         }
-        <Button label="Cerrar mesa" severity="danger" className='ml-2' style={{ width: "10rem" }} onClick={onShowBill} />
+        <Button label="Cerrar mesa" severity="danger" className='ml-2' style={{ width: "10rem" }} disabled={closeTable} onClick={() => setCloseTableDialog(true)} />
       </div>
     );
   };
@@ -701,10 +721,16 @@ export function WaiterTableDetails() {
                 </div>
               </Dialog>
 
-              <Dialog visible={confirmCreateAccountDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Finalizar mesa" modal footer={confirmCreateAccountDialogFooter} onHide={hideConfirmCreateAccountDialog}>
+              <Dialog visible={confirmCreateAccountDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Crear cuenta" modal footer={confirmCreateAccountDialogFooter} onHide={hideConfirmCreateAccountDialog}>
                 <div className="confirmation-content">
                   <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                   {table && <span>Estas seguro que quieres generar la cuenta de la mesa {table.number}?</span>}
+                </div>
+              </Dialog>
+              <Dialog visible={closeTableDialog} style={{ width: '32rem' }} breakpoints={{ '960px': '75vw', '641px': '90vw' }} header="Finalizar mesa" modal footer={closeTableDialogFooter} onHide={hideCloseTableDialog}>
+                <div className="confirmation-content">
+                  <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                  {table && <span>Estas seguro que quieres cerrar la mesa {table.number}?</span>}
                 </div>
               </Dialog>
             </>
