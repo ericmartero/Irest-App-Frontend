@@ -67,6 +67,7 @@ export function WaiterTableDetails() {
   const [autoRefreshEnabled, setAutoRefreshEnabled] = useState(true);
 
   const [showDownloadButtons, setShowDownloadButtons] = useState(true);
+  const [loadingPDF, setLoadingPDF] = useState(false);
 
   const onRefreshOrders = () => setRefreshOrders((prev) => !prev);
   const onRefreshPayment = () => setOnPaymentChange((prev) => !prev);
@@ -164,6 +165,7 @@ export function WaiterTableDetails() {
 
   const downloadAccountPDF = () => {
     setShowDownloadButtons(false);
+    setLoadingPDF(true);
 
     setTimeout(() => {
       const dialogElement = document.querySelector('.dialog-account-container');
@@ -193,6 +195,7 @@ export function WaiterTableDetails() {
             if (i === pageCount - 1) {
               pdf.save(`Cuenta-Mesa${table?.number}-${moment(paymentData?.createdAt).format('DD/MM/YYYY')}${moment(paymentData?.createdAt).format('HH:mm:ss')}.pdf`);
               setShowDownloadButtons(true);
+              setLoadingPDF(false);
             }
           },
         });
@@ -731,6 +734,7 @@ export function WaiterTableDetails() {
                   "dialog-account-container hide-iconClose-onDonwload": !showDownloadButtons,
                   "dialog-account-container show-iconClose-onDonwload": showDownloadButtons
                 })}>
+                {loadingPDF && <ProgressSpinner style={{ position: 'absolute', left: '50%', top: '50%', transform: 'translate(-50%, -50%)', zIndex: 1 }} />}
                 <div className='product-add-order'>
                   <div className='account-info'>
                     <div>
