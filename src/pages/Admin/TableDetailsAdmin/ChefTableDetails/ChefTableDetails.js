@@ -42,7 +42,7 @@ export function ChefTableDetails() {
       onRefreshOrders();
     }
 
-    intervalRef.current = setInterval(autoRefreshTables, 10000);
+    intervalRef.current = setInterval(autoRefreshTables, 15000);
 
     return () => {
       clearInterval(intervalRef.current);
@@ -51,11 +51,22 @@ export function ChefTableDetails() {
 
   const groupOrdersStatus = (data) => {
     return data.reduce((acc, order) => {
-      const existingOrder = acc.find((o) => o.product.id === order.product.id);
+      const existingOrder = acc.find(
+        (o) =>
+          o.product.id === order.product.id &&
+          o.tableBooking.table.number === order.tableBooking.table.number
+      );
       if (existingOrder) {
         existingOrder.quantity += 1;
       } else {
-        acc.push({ id: order.id, product: order.product, status: order.status, tableBooking: order.tableBooking, quantity: 1, createdAt: order.createdAt });
+        acc.push({
+          id: order.id,
+          product: order.product,
+          status: order.status,
+          tableBooking: order.tableBooking,
+          quantity: 1,
+          createdAt: order.createdAt
+        });
       }
       return acc;
     }, []);
