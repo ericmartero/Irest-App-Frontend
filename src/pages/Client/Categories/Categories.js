@@ -57,6 +57,7 @@ export function Categories(props) {
             <Header
               name="Nuestra Carta"
               isMain={true}
+              isOrderTracking={false}
               orders={orders}
               table={table}
               onRefreshOrders={onRefreshOrders}

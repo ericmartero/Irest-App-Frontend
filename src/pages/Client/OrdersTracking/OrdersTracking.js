@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ORDER_STATUS, PAYMENT_STATUS } from '../../../utils/constants';
+import { ORDER_STATUS } from '../../../utils/constants';
 import { useParams, useHistory } from 'react-router-dom';
 import { Header } from '../../../components/Client';
 import { classNames } from 'primereact/utils';
@@ -65,6 +65,7 @@ export function OrdersTracking(props) {
                 <Header
                     name="Pedidos mesa"
                     isMain={false}
+                    isOrderTracking={true}
                     goBack={goBack}
                     orders={orders}
                     table={table}
@@ -82,16 +83,6 @@ export function OrdersTracking(props) {
                     </div>
                     :
                     <div className='orders-container'>
-                        {payment?.statusPayment === PAYMENT_STATUS.PAID ?
-                            <div className='status-payment-tracking-container'>
-                                <Tag icon="pi pi-euro" severity="success" value="PAGADO" />
-                            </div>
-                            : payment?.statusPayment === PAYMENT_STATUS.PENDING ?
-                                <div className='status-payment-tracking-container'>
-                                    <Tag icon="pi pi-euro" severity="warning" value="PAGO PENDIENTE" />
-                                </div>
-                                : null
-                        }
                         <div
                             className={classNames({
                                 "orders-payment-tracking-container": payment,

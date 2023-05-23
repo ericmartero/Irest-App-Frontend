@@ -1,11 +1,21 @@
 .header-main-container {
     position: fixed;
+    background-color: var(--surface-ground);
+    z-index: 997;
+    width: 90%;
+}
+
+.header-top-main-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 90%;
-    background-color: var(--surface-ground);
-    z-index: 997;
+}
+
+.header-bot-main-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 1rem;
 }
 
 .header-container {
@@ -35,7 +45,7 @@
 }
 
 .button-payment {
-    margin-right: 1.8rem !important;
+    margin-right: 1.7rem !important;
     height: 2.5rem !important;
     padding: 0.75rem 1rem !important;
 }

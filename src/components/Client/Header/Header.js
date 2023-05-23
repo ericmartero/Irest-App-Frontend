@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useProduct, useOrder, useTable } from '../../../hooks';
 import { getProductShoppingCart, cleanProductShoppingCart } from '../../../api/shoppingCart';
-import { PAYMENT_TYPE, ORDER_STATUS } from '../../../utils/constants';
+import { PAYMENT_TYPE, ORDER_STATUS, PAYMENT_STATUS } from '../../../utils/constants';
 import { ShoppingCart } from '../ShoppingCart';
 import { useHistory } from 'react-router-dom';
 import { classNames } from 'primereact/utils';
@@ -12,6 +12,7 @@ import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
+import { Tag } from 'primereact/tag';
 import { size, forEach } from 'lodash';
 import jsPDF from 'jspdf';
 import moment from 'moment';
@@ -21,7 +22,18 @@ import '../../../scss/Dialogs.scss';
 
 export function Header(props) {
 
-    const { name, isMain, goBack, refreshCartNumber, orders, table, onRefreshOrders, payment, setAutoRefreshEnabled } = props;
+    const {
+        name,
+        isMain,
+        isOrderTracking,
+        goBack,
+        refreshCartNumber,
+        orders,
+        table,
+        onRefreshOrders,
+        payment,
+        setAutoRefreshEnabled
+    } = props;
 
     const toast = useRef(null);
     const history = useHistory();
@@ -272,39 +284,57 @@ export function Header(props) {
             <Toast ref={toast} position="bottom-center" />
             {isMain ?
                 <div className='header-main-container'>
-                    <h2>{name}</h2>
-                    {!payment ?
-                        <>
-                            {products ?
-                                <i className="pi pi-shopping-cart p-overlay-badge shoppingCart-icon" onClick={onShoppingCart}>
-                                    <Badge value={size(products)}></Badge>
-                                </i>
-                                :
-                                <i className="pi pi-shopping-cart p-overlay-badge shoppingCart-icon" onClick={onShoppingCart} />
-                            }
-                        </>
-                        :
-                        <Button label='Cuenta' className="p-button-secondary button-payment" onClick={onShowBillDialog} />
-                    }
+                    <div className='header-top-main-container'>
+                        <h2>{name}</h2>
+                        {!payment ?
+                            <>
+                                {products ?
+                                    <i className="pi pi-shopping-cart p-overlay-badge shoppingCart-icon" onClick={onShoppingCart}>
+                                        <Badge value={size(products)}></Badge>
+                                    </i>
+                                    :
+                                    <i className="pi pi-shopping-cart p-overlay-badge shoppingCart-icon" onClick={onShoppingCart} />
+                                }
+                            </>
+                            :
+                            <Button label='Cuenta' className="p-button-secondary button-payment" onClick={onShowBillDialog} />
+                        }
+                    </div>
                 </div>
                 :
                 <div className='header-main-container'>
-                    <div className='header-container'>
-                        <i className="pi pi-arrow-left" style={{ fontSize: '1rem', marginRight: '1rem' }} onClick={goBack}></i>
-                        <h2>{name}</h2>
+                    <div className='header-top-main-container'>
+                        <div className='header-container'>
+                            <i className="pi pi-arrow-left" style={{ fontSize: '1rem', marginRight: '1rem' }} onClick={goBack}></i>
+                            <h2>{name}</h2>
+                        </div>
+                        {!payment ?
+                            <>
+                                {products ?
+                                    <i className="pi pi-shopping-cart p-overlay-badge shoppingCart-icon" onClick={onShoppingCart}>
+                                        <Badge value={size(products)}></Badge>
+                                    </i>
+                                    :
+                                    <i className="pi pi-shopping-cart p-overlay-badge shoppingCart-icon" onClick={onShoppingCart} />
+                                }
+                            </>
+                            :
+                            <Button label='Cuenta' className="p-button-secondary button-payment" onClick={onShowBillDialog} />
+                        }
                     </div>
-                    {!payment ?
+                    {isOrderTracking &&
                         <>
-                            {products ?
-                                <i className="pi pi-shopping-cart p-overlay-badge shoppingCart-icon" onClick={onShoppingCart}>
-                                    <Badge value={size(products)}></Badge>
-                                </i>
-                                :
-                                <i className="pi pi-shopping-cart p-overlay-badge shoppingCart-icon" onClick={onShoppingCart} />
+                            {payment?.statusPayment === PAYMENT_STATUS.PAID ?
+                                <div className='header-bot-main-container'>
+                                    <Tag icon="pi pi-euro" severity="success" value="PAGADO" />
+                                </div>
+                                : payment?.statusPayment === PAYMENT_STATUS.PENDING ?
+                                    <div className='header-bot-main-container'>
+                                        <Tag icon="pi pi-euro" severity="warning" value="PAGO PENDIENTE" />
+                                    </div>
+                                    : null
                             }
                         </>
-                        :
-                        <Button label='Cuenta' className="p-button-secondary button-payment" onClick={onShowBillDialog} />
                     }
                 </div>
             }

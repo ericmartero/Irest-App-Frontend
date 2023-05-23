@@ -54,6 +54,7 @@ export function Products(props) {
                         <Header
                             name={categoryName}
                             isMain={false}
+                            isOrderTracking={false}
                             goBack={goBack}
                             refreshCartNumber={refreshCartNumber}
                             orders={orders}

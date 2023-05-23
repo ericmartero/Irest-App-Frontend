@@ -42,17 +42,6 @@
     border-radius: 12px;
 }
 
-.status-payment-tracking-container {
-    position: fixed;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 90%;
-    background-color: var(--surface-ground);
-    z-index: 997;
-    padding-bottom: 1rem;
-}
-
 .orders-payment-tracking-container {
     margin-top: 3rem;
 }
