@@ -158,14 +158,14 @@ export function WaiterTableDetails() {
       }
     })
 
-    if (size(ordersBooking) === ordersDelivered) {
+    if ((size(ordersBooking) === ordersDelivered) && paymentData?.statusPayment === PAYMENT_STATUS.PAID) {
       setAllOrdersDelivered(true);
     }
 
     else {
       setAllOrdersDelivered(false);
     }
-  }, [ordersBooking])
+  }, [ordersBooking, paymentData])
 
   useEffect(() => {
     const autoRefreshTables = () => {
