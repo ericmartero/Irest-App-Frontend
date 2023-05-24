@@ -24,11 +24,11 @@ export function useStripePayment() {
                 return { error: error, result: null };
             } else {
                 const result = await checkoutStripeApi(totalPayment, paymentMethod.id, authClient.token);
-                setLoading(false);
 
                 const clientSecret = result.client_secret;
 
                 const confirmCard = await stripe.confirmCardPayment(clientSecret);
+                setLoading(false);
 
                 if (confirmCard.error) {
                     setLoading(false);
