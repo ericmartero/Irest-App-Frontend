@@ -173,9 +173,9 @@ export function WaiterTableDetails() {
     }
 
     if (autoRefreshEnabled) {
-      intervalRef.current = setInterval(autoRefreshTables, 1000000);
+      intervalRef.current = setInterval(autoRefreshTables, 10000);
     }
-    //10000
+
     return () => {
       clearInterval(intervalRef.current);
     };
