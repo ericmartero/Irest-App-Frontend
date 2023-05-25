@@ -72,3 +72,23 @@
         content: "\e90b";
     }
 }
+
+.order-info-container-pending {
+    min-width: 22rem !important;
+}
+
+.order-info-container-delivered {
+    min-width: 10rem !important;
+}
+
+.order-info-container-prepared {
+    min-width: 22rem !important;
+}
+
+.order-info-container-pendingKitchen {
+    min-width: 10rem !important;
+}
+
+.order-info-container {
+    min-width: 12rem !important;
+}

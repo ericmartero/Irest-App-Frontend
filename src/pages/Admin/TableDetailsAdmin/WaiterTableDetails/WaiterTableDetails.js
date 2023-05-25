@@ -173,9 +173,9 @@ export function WaiterTableDetails() {
     }
 
     if (autoRefreshEnabled) {
-      intervalRef.current = setInterval(autoRefreshTables, 10000);
+      intervalRef.current = setInterval(autoRefreshTables, 1000000);
     }
-
+    //10000
     return () => {
       clearInterval(intervalRef.current);
     };
@@ -631,7 +631,18 @@ export function WaiterTableDetails() {
           }>
           <img className="w-9 sm:w-16rem xl:w-11rem shadow-2 block xl:block mx-auto border-round image-fill" src={order.product.image} alt={order.product.title} />
           <div className="flex flex-column sm:flex-row justify-content-between align-items-center flex-1 gap-4">
-            <div className="product-info flex flex-column align-items-center sm:align-items-start gap-3">
+            <div
+              className={classNames({
+                "flex flex-column align-items-center sm:align-items-start gap-3 order-info-container-pending": 
+                  paymentData && (!order.product.category.chefVisible && order.status === ORDER_STATUS.PENDING),
+                  "flex flex-column align-items-center sm:align-items-start gap-3 order-info-container-pendingKitchen": 
+                  paymentData && (order.product.category.chefVisible && order.status === ORDER_STATUS.PENDING),
+                  "flex flex-column align-items-center sm:align-items-start gap-3 order-info-container-delivered": 
+                  paymentData && order.status === ORDER_STATUS.DELIVERED,
+                  "flex flex-column align-items-center sm:align-items-start gap-3 order-info-container-prepared": 
+                  paymentData && order.status === ORDER_STATUS.PREPARED,
+                "flex flex-column align-items-center sm:align-items-start gap-3 order-info-container": !paymentData,
+              })} >
               <div className="text-2xl font-bold text-900">{order.product.title}</div>
               <span className="font-semibold">
                 {moment(order.createdAt).format('HH:mm')} - {moment(order.createdAt).startOf('seconds').fromNow()}
