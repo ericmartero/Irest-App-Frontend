@@ -175,27 +175,36 @@ export function OrdersAdmin() {
         <div className="flex flex-column xl:flex-row p-4 gap-4">
           <img className="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block mx-auto border-round" src="https://res.cloudinary.com/djwjh0wpw/image/upload/v1679927284/mesa_h2bdwt.jpg" alt={table.number} />
           <div className="flex flex-column sm:flex-row justify-content-between align-items-center flex-1 gap-4">
-            <div className="flex flex-column align-items-center sm:align-items-start gap-3">
+            <div className="flex flex-column align-items-center sm:align-items-start gap-3 list-info-tables-container">
               <div className="text-2xl font-bold text-900">Mesa {table.number}</div>
               <div className="flex align-items-center gap-3">
                 {table.tableBooking === null ? null :
                   <>
                     {size(table.tableBooking.payments) > 0 ?
                       <>
-                        <i>Cuenta pedida: <Badge value={table.tableBooking.payments[0].paymentType === PAYMENT_TYPE.CARD || table.tableBooking.payments[0].paymentType === PAYMENT_TYPE.APP ?
-                          <i className="pi pi-credit-card mt-1"></i> :
-                          <i className="pi pi-wallet mt-1"></i>
-                        } style={{ background: '#A855F7' }}></Badge>
-                        </i>
-                        <Badge value={ordersPending + ordersPrepared} severity="warning"></Badge>
+                        {table.tableBooking.payments[0].statusPayment === PAYMENT_STATUS.PAID ?
+                          <i>Cuenta pagada: <Badge value={<i className="pi pi-euro mt-1"></i>} severity={'success'}></Badge></i>
+                          :
+                          <i>Cuenta pedida: <Badge value={table.tableBooking.payments[0].paymentType === PAYMENT_TYPE.CARD || table.tableBooking.payments[0].paymentType === PAYMENT_TYPE.APP ?
+                            <i className="pi pi-credit-card mt-1"></i> :
+                            <i className="pi pi-wallet mt-1"></i>
+                          } style={{ background: '#A855F7' }}></Badge>
+                          </i>
+                        }
+                        {(ordersPending > 0 || ordersPrepared > 0) &&
+                          <Badge value={ordersPending + ordersPrepared} severity="warning"></Badge>
+                        }
+
                       </>
                       :
                       <i>Pedidos pendientes: <Badge value={ordersPending + ordersPrepared} severity="warning"></Badge></i>
                     }
                   </>
                 }
-                <Tag value={table.tableBooking === null ? 'VACÍA' : 'OCUPADA'} severity={getSeverity(table)}></Tag>
               </div>
+            </div>
+            <div className='flex flex-column align-items-center gap-3'>
+              <Tag value={table.tableBooking === null ? 'VACÍA' : 'OCUPADA'} severity={getSeverity(table)}></Tag>
             </div>
             <div className="flex flex-column align-items-center gap-3">
               {table.tableBooking ?
