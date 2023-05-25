@@ -281,6 +281,10 @@ export function UsersEstablishmentsAdmin() {
       errors.firstName = "El nombre tiene que tener mínimo 2 letras";
     }
 
+    if (selectedEstablishment == null && !selectedRoles.includes('superuser')) {
+      errors.establishment = "El establecimiento es requerido";
+    }
+
     if (size(selectedRoles) > 1 && selectedRoles.includes('superuser')) {
       errors.roles = "El usuario con el rol de superusuario no puede tener más roles";
     } else if (size(selectedRoles) > 1 && selectedRoles.includes('customer')) {
@@ -315,7 +319,7 @@ export function UsersEstablishmentsAdmin() {
     let errors = { ...validationErrors };
     setSelectedEstablishment(value);
 
-    if (value === null) {
+    if (value === null && !selectedRoles.includes('superuser')) {
       errors.establishment = "El establecimiento es requerido";
     } else {
       delete errors.establishment;
