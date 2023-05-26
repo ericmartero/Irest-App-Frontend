@@ -1,11 +1,9 @@
 import { useState, useCallback } from "react";
 import { getTablesApi, addTableApi, updateTableApi, deleteTableApi, getTableApi, getTableClientApi } from '../api/table';
 import { useAuth } from './';
-import { useHistory } from "react-router-dom";
 
 export function useTable() {
 
-    const history = useHistory();
     const [tables, setTables] = useState(null);
     const [loading, setLoading] = useState(true);
     const [loadingCrud, setLoadingCrud] = useState(false);
@@ -76,18 +74,12 @@ export function useTable() {
     const getTableById = useCallback(async (id) => {
         try {
             const response = await getTableApi(id, auth.token);
-
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                localStorage.clear();
-                history.push("/");
-            }
-
             setTables(response);
 
         } catch (error) {
             throw error;
         }
-    }, [auth?.token, history])
+    }, [auth?.token])
 
     const getTableClient = useCallback(async (id) => {
         try {
@@ -95,17 +87,12 @@ export function useTable() {
             const response = await getTableClientApi(id);
             setLoading(false);
 
-            if (response.statusCode === 401 || response.statusCode === 500) {
-                localStorage.clear();
-                history.push("/");
-            }
-
             setTables(response);
         } catch (error) {
             setLoading(false);
             throw error;
         }
-    }, [history]);
+    }, []);
 
     return {
         tables,
