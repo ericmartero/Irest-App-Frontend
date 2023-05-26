@@ -75,7 +75,7 @@ export function WaiterTableDetails() {
 
   useEffect(() => {
     getTableById(tableURL.id);
-  }, [tableURL.id, getTableById]);
+  }, [tableURL.id, getTableById, refreshOrders]);
 
   useEffect(() => {
     if (tables) {
@@ -128,7 +128,7 @@ export function WaiterTableDetails() {
   }, [productList, getProductById]);
 
   useEffect(() => {
-    if (table) {
+    if (table?.tableBooking) {
       (async () => {
         const response = await getPaymentByTable(table?.tableBooking?.id);
         if (size(response) > 0) setPaymentData(response[0]);
@@ -165,7 +165,15 @@ export function WaiterTableDetails() {
     else {
       setAllOrdersDelivered(false);
     }
-  }, [ordersBooking, paymentData])
+  }, [ordersBooking, paymentData]);
+
+  useEffect(() => {
+    if (tables) {
+      if (tables.tableBooking === null) {
+        history.push('/admin');
+      }
+    }
+  }, [tables, history]);
 
   useEffect(() => {
     const autoRefreshTables = () => {
@@ -633,13 +641,13 @@ export function WaiterTableDetails() {
           <div className="flex flex-column sm:flex-row justify-content-between align-items-center flex-1 gap-4">
             <div
               className={classNames({
-                "flex flex-column align-items-center sm:align-items-start gap-3 order-info-container-pending": 
+                "flex flex-column align-items-center sm:align-items-start gap-3 order-info-container-pending":
                   paymentData && (!order.product.category.chefVisible && order.status === ORDER_STATUS.PENDING),
-                  "flex flex-column align-items-center sm:align-items-start gap-3 order-info-container-pendingKitchen": 
+                "flex flex-column align-items-center sm:align-items-start gap-3 order-info-container-pendingKitchen":
                   paymentData && (order.product.category.chefVisible && order.status === ORDER_STATUS.PENDING),
-                  "flex flex-column align-items-center sm:align-items-start gap-3 order-info-container-delivered": 
+                "flex flex-column align-items-center sm:align-items-start gap-3 order-info-container-delivered":
                   paymentData && order.status === ORDER_STATUS.DELIVERED,
-                  "flex flex-column align-items-center sm:align-items-start gap-3 order-info-container-prepared": 
+                "flex flex-column align-items-center sm:align-items-start gap-3 order-info-container-prepared":
                   paymentData && order.status === ORDER_STATUS.PREPARED,
                 "flex flex-column align-items-center sm:align-items-start gap-3 order-info-container": !paymentData,
               })} >
