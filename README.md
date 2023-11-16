@@ -1,7 +1,7 @@
 # iRest APP
 
 <p>
-  <img src="https://res.cloudinary.com/djwjh0wpw/image/upload/v1678621782/favicon_agaioz.png" width="130" alt="iRest Logo" /></a>
+  <img src="https://res.cloudinary.com/dcn97unki/image/upload/v1700175772/iRest/WireFrame-iRest_wrti4g.png" alt="iRestWireframe" /></a>
 </p>
 
 ## Descripción
