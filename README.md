@@ -1,26 +1,8 @@
-<p>
-  <a href="https://irest.netlify.app" target="blank"><img src="https://res.cloudinary.com/djwjh0wpw/image/upload/v1678621782/favicon_agaioz.png" width="130" alt="iRest Logo" /></a>
-</p>
-
 # iRest APP
 
-1. Clonar el repositorio
+<p>
+  <img src="https://res.cloudinary.com/djwjh0wpw/image/upload/v1678621782/favicon_agaioz.png" width="130" alt="iRest Logo" /></a>
+</p>
 
-2. Ejecutar
-```
-npm install
-```
-
-3. Clonar el archivo __.env.template__ y renombrar la copia a __.env__
-
-4. Llenar las variables de entorno definidas en el __.env__
-
-5. Ejecutar la aplicación en desarrollo:
-```
-npm start
-```
-
-6. Acceder a la aplicación
-```
-http://localhost:3000
-```
+## Descripción
+Este proyecto es el resultado de mi trabajo de final de grado. Consiste en la implementación de un software para restaurantes que gestiona las comandas de los comensales dentro del establecimiento. Ofrece a los clientes una carta digital donde podrán realizar sus pedidos sin necesidad de solicitar la ayuda de un empleado. Además, si lo desean, los comensales podrán realizar el pago directamente desde la misma aplicación. Los trabajadores recibirán las comandas y las gestionarán a través de un software al cual solo ellos tendrán acceso. La aplicación está diseñada para ser utilizada en varios establecimientos, lo que permite gestionar diferentes locales desde una única plataforma.
