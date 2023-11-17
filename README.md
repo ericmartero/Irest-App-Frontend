@@ -12,6 +12,8 @@ Tecnologías utilizadas para el **Fronted**:
 * [ReactJS](https://react.dev/)
 * [JavaScript](https://developer.mozilla.org/es/docs/Web/JavaScript)
 * [PrimeReact](https://primereact.org/)
+* [HTML](https://developer.mozilla.org/es/docs/Web/HTML)
+* [SCSS](https://sass-lang.com/)
 
 Tecnologías utilizadas para el **Backend**:
 * [NestJS](https://nestjs.com/)
