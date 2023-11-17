@@ -17,3 +17,9 @@ Tecnologías utilizadas para el **Backend**:
 * [NestJS](https://nestjs.com/)
 * [TypeScript](https://www.typescriptlang.org/)
 * [TypeORM](https://typeorm.io/)
+
+## Arquitectura
+<p align="center">
+  <img src="https://res.cloudinary.com/dcn97unki/image/upload/v1700182910/iRest/iRest-Architecture_taum6w.png" alt="iRestArchitecture" /></a>
+</p>
+
