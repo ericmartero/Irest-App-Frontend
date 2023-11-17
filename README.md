@@ -12,3 +12,13 @@ Este proyecto es el resultado de mi trabajo de final de grado. Consiste en la im
 <p align="center">
   <img src="https://res.cloudinary.com/dcn97unki/image/upload/v1700181161/iRest/iRest-TechStack_llmod9.png" alt="iRestTechStack" /></a>
 </p>
+
+Tecnologías utilizadas para el Fronted:
+* [Technologie name](https://example.com): Version 12.3 
+* [Technologie name](https://example.com): Version 2.34
+* [Library name](https://example.com): Version 1234
+
+Tecnologías utilizadas para el Backend:
+* [Technologie name](https://example.com): Version 12.3 
+* [Technologie name](https://example.com): Version 2.34
+* [Library name](https://example.com): Version 1234
